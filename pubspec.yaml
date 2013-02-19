@@ -1,6 +1,6 @@
 name: markdown
 author: "Dart Team <misc@dartlang.org>"
-# homepage: https://github.com/dart-lang/csslib
+homepage: https://github.com/dpeek/dart-markdown
 description: A library for converting markdown to HTML.
 version: 0.3.4
 dependencies:
