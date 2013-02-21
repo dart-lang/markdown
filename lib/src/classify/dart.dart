@@ -1,3 +1,7 @@
+// Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 library classify;
 
 import 'package:analyzer_experimental/src/generated/java_core.dart';
@@ -27,7 +31,9 @@ String classifyDart(String src) {
   while (token.type != TokenType.EOF) {
     // If not a token and not whitespace assume comment. 
     var comment = src.slice(pos, token.offset);
-    if (comment.trim().length > 0) out.add('<span class="${Classification.COMMENT}">$comment</span>');
+    if (comment.trim().length > 0) {
+      out.add('<span class="${Classification.COMMENT}">$comment</span>');
+    }
     else out.add(comment);
     pos = token.end;
     
