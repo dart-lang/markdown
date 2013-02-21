@@ -267,7 +267,6 @@ class GitHubCodeBlockSyntax extends BlockSyntax {
   Node parse(BlockParser parser) {
     // Get the syntax identifier, if there is one.
     var syntax = pattern.firstMatch(parser.current).group(1);
-    print('syntax: $syntax');
     
     final childLines = parseChildLines(parser);
 
@@ -275,7 +274,7 @@ class GitHubCodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    final escaped = childLines.join('\n').trim();
+    final escaped = parser.document.classify(syntax, childLines.join('\n').trim());
 
     return new Element.text('pre', escaped);
   }

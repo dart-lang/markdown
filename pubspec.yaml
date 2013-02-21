@@ -5,3 +5,4 @@ description: A library for converting markdown to HTML.
 homepage: https://github.com/dpeek/dart-markdown
 dependencies:
   unittest: any
+  analyzer_experimental: any
