@@ -32,20 +32,15 @@ main() {
 ```
 
 Version 0.4 adds support for GitHub style triple backtick code blocks, with 
-built in Dart syntax coloring. Custom classifiers can be added using a callback:
+built in Dart syntax coloring. Custom classifiers can be added using a syntax list:
 
 ```dart
-import 'package:markdown/markdown.dart' show markdownToHtml;
+import 'package:markdown/markdown.dart';
 
 main() {
-  print(markdownToHtml("Hello *Markdown*"), (syntax, source) {
-    if (syntax == 'mysyntax') return classifySyntax(source);
-    return source;
-  });
-}
-
-String classifySyntax(String source) {
-	return '<span class="mysyntax">$source</span>';
+  List<InlineSyntax> nyanSyntax =
+      [new TextSyntax('nyan', sub: '~=[,,_,,]:3')];
+  print(markdownToHtml('nyan', inlineSyntaxes: nyanSyntax));
 }
 ```
 
