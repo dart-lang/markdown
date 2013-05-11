@@ -3,6 +3,5 @@ version: 0.4.0
 author: Dart Team <misc@dartlang.org>
 description: A library for converting markdown to HTML.
 homepage: https://github.com/dpeek/dart-markdown
-dependencies:
+dev_dependencies:
   unittest: any
-  analyzer_experimental: ">=0.3.7+6 <0.3.8"

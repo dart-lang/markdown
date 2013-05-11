@@ -20,7 +20,7 @@ final _RE_BLOCKQUOTE = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 final _RE_INDENT = new RegExp(r'^(?:    |\t)(.*)$');
 
 /// GitHub style triple quoted code block.
-final _RE_CODE = new RegExp(r'^```(\w*)$');
+final _RE_CODE = new RegExp(r'^```(.*)$');
 
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
@@ -238,9 +238,9 @@ class CodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    final escaped = childLines.join('n');//classifySource();
+    final escaped = escapeHtml(childLines.join('\n'));
 
-    return new Element.text('pre', escaped);
+    return new Element('pre', [new Element.text('code', escaped)]);
   }
 }
 
@@ -274,9 +274,9 @@ class GitHubCodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    final escaped = parser.document.classify(syntax, childLines.join('\n').trim());
+    final escaped = escapeHtml(childLines.join('\n'));
 
-    return new Element.text('pre', escaped);
+    return new Element('pre', [new Element.text('code', escaped)]);
   }
 }
 
@@ -315,7 +315,7 @@ class BlockHtmlSyntax extends BlockSyntax {
       parser.advance();
     }
 
-    return new Text(Strings.join(childLines, '\n'));
+    return new Text(childLines.join('\n'));
   }
 }
 
@@ -497,8 +497,7 @@ class ParagraphSyntax extends BlockSyntax {
       parser.advance();
     }
 
-    final contents = parser.document.parseInline(
-        Strings.join(childLines, '\n'));
+    final contents = parser.document.parseInline(childLines.join('\n'));
     return new Element('p', contents);
   }
 }
