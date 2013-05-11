@@ -5,19 +5,18 @@
 /// Parses text in a markdown-like format and renders to HTML.
 library markdown;
 
-import 'src/classify/dart.dart';
-
 // TODO(rnystrom): Use "package:" URL (#4968).
 part 'src/markdown/ast.dart';
 part 'src/markdown/block_parser.dart';
 part 'src/markdown/html_renderer.dart';
 part 'src/markdown/inline_parser.dart';
 
-typedef String ClassifierFunction(String syntax, String source); 
+typedef Node Resolver(String name);
 
 /// Converts the given string of markdown to HTML.
-String markdownToHtml(String markdown, [ClassifierFunction classifier]) {
-  final document = new Document(classifier);
+String markdownToHtml(String markdown, {inlineSyntaxes, linkResolver}) {
+  final document = new Document(inlineSyntaxes: inlineSyntaxes,
+      linkResolver: linkResolver);
 
   // Replace windows line endings with unix line endings, and split.
   final lines = markdown.replaceAll('\r\n','\n').split('\n');
@@ -33,26 +32,15 @@ String escapeHtml(String html) {
              .replaceAll('>', '&gt;');
 }
 
-var _implicitLinkResolver;
-
-Node setImplicitLinkResolver(Node resolver(String text)) {
-  _implicitLinkResolver = resolver;
-}
-
 /// Maintains the context needed to parse a markdown document.
 class Document {
   final Map<String, Link> refLinks;
-  final ClassifierFunction classifier;
-  
-  Document(this.classifier)
+  List<InlineSyntax> inlineSyntaxes;
+  Resolver linkResolver;
+
+  Document({this.inlineSyntaxes, this.linkResolver})
     : refLinks = <String, Link>{};
-  
-  String classify(String syntax, String source) {
-    if (syntax == 'dart') return classifyDart(source);
-    if (classifier == null) return source;
-    return classifier(syntax, source);
-  }
-    
+
   parseRefLinks(List<String> lines) {
     // This is a hideous regex. It matches:
     // [id]: http:foo.com "some title"
