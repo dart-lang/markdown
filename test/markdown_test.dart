@@ -882,11 +882,16 @@ void main() {
         <p>~=[,,_,,]:3</p>
         ''', inlineSyntaxes: nyanSyntax);
 
+    validate('dart custom links', 'links [are<foo>] awesome',
+      '<p>links <a>are&lt;foo></a> awesome</p>',
+      linkResolver: (text) => new Element.text('a', text.replaceAll('<',
+      '&lt;')));
+
     // TODO(amouravski): need more tests here for custom syntaxes, as some
     // things are not quite working properly. The regexps are sometime a little
     // too greedy, I think.
   });
-  
+
   group('Inline only', () {
     validate('simple line', '''
         This would normally create a paragraph.
@@ -957,7 +962,7 @@ String cleanUpLiteral(String text) {
 }
 
 validate(String description, String markdown, String html,
-         {bool verbose: false, inlineSyntaxes, linkResolver, 
+         {bool verbose: false, inlineSyntaxes, linkResolver,
           bool inlineOnly: false}) {
   test(description, () {
     markdown = cleanUpLiteral(markdown);
