@@ -19,11 +19,8 @@ final _RE_BLOCKQUOTE = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 /// A line indented four spaces. Used for code blocks and lists.
 final _RE_INDENT = new RegExp(r'^(?:    |\t)(.*)$');
 
-/// GitHub style triple quoted code block.
-final _RE_CODE = new RegExp(r'^```(.*)$');
-
-/// Pandoc style code block.
-final _RE_PANDOC_CODE = new RegExp(r'^(`{3,}|~{3,})(.*)$');
+/// Fenced code block.
+final _RE_CODE = new RegExp(r'^(`{3,}|~{3,})(.*)$');
 
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
@@ -100,8 +97,7 @@ abstract class BlockSyntax {
           new SetextHeaderSyntax(),
           new HeaderSyntax(),
           new CodeBlockSyntax(),
-          new GitHubCodeBlockSyntax(),
-          new PandocCodeBlockSyntax(),
+          new FencedCodeBlockSyntax(),
           new BlockquoteSyntax(),
           new HorizontalRuleSyntax(),
           new UnorderedListSyntax(),
@@ -248,46 +244,10 @@ class CodeBlockSyntax extends BlockSyntax {
   }
 }
 
-/// Parses preformatted code blocks between two ``` sequences.
-class GitHubCodeBlockSyntax extends BlockSyntax {
-  RegExp get pattern => _RE_CODE;
-
-  List<String> parseChildLines(BlockParser parser) {
-    final childLines = <String>[];
-    parser.advance();
-    while (!parser.isDone) {
-      var match = pattern.firstMatch(parser.current);
-      if (match == null) {
-        childLines.add(parser.current);
-        parser.advance();
-      } else {
-        parser.advance();
-        break;
-      }
-    }
-    return childLines;
-  }
-
-  Node parse(BlockParser parser) {
-    // Get the syntax identifier, if there is one.
-    var syntax = pattern.firstMatch(parser.current).group(1);
-    
-    final childLines = parseChildLines(parser);
-
-    // The Markdown tests expect a trailing newline.
-    childLines.add('');
-
-    // Escape the code.
-    final escaped = escapeHtml(childLines.join('\n'));
-
-    return new Element('pre', [new Element.text('code', escaped)]);
-  }
-}
-
 /// Parses preformatted code blocks between two ~~~ or ``` sequences.
 /// [Pandoc's markdown documentation](http://johnmacfarlane.net/pandoc/demo/example9/pandocs-markdown.html).
-class PandocCodeBlockSyntax extends BlockSyntax {
-  RegExp get pattern => _RE_PANDOC_CODE;
+class FencedCodeBlockSyntax extends BlockSyntax {
+  RegExp get pattern => _RE_CODE;
 
   List<String> parseChildLines(BlockParser parser, String endBlock) {
     final childLines = <String>[];

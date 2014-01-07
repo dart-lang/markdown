@@ -439,7 +439,7 @@ void main() {
         code
         ```
         ''', '''
-        <pre><code>code
+        <pre class="dart"><code>code
         </code></pre>
         ''');
 
