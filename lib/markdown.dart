@@ -14,15 +14,20 @@ part 'src/markdown/inline_parser.dart';
 typedef Node Resolver(String name);
 
 /// Converts the given string of markdown to HTML.
-String markdownToHtml(String markdown, {inlineSyntaxes, linkResolver}) {
+String markdownToHtml(String markdown, {inlineSyntaxes, linkResolver, 
+                      bool inlineOnly: false}) {
   final document = new Document(inlineSyntaxes: inlineSyntaxes,
       linkResolver: linkResolver);
 
-  // Replace windows line endings with unix line endings, and split.
-  final lines = markdown.replaceAll('\r\n','\n').split('\n');
-  document.parseRefLinks(lines);
-  final blocks = document.parseLines(lines);
-  return renderToHtml(blocks);
+  if (inlineOnly) {
+    return renderToHtml(document.parseInline(markdown));
+  } else {
+    // Replace windows line endings with unix line endings, and split.
+    final lines = markdown.replaceAll('\r\n','\n').split('\n');
+    document.parseRefLinks(lines);
+    final blocks = document.parseLines(lines);
+    return renderToHtml(blocks);
+  }
 }
 
 /// Replaces `<`, `&`, and `>`, with their HTML entity equivalents.
