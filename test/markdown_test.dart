@@ -439,7 +439,7 @@ void main() {
         code
         ```
         ''', '''
-        <pre><code>code
+        <pre class="dart"><code>code
         </code></pre>
         ''');
 
@@ -449,6 +449,37 @@ void main() {
         ```
         ''', '''
         <pre><code>&lt;&amp;&gt;
+        </code></pre>
+        ''');
+
+    validate('Pandoc style without language identifier', '''
+        ~~~~~
+        code
+        ~~~~~
+        ''', '''
+        <pre><code>code
+        </code></pre>
+        ''');
+
+    validate('Pandoc style with language identifier', '''
+        ~~~~~dart
+        code
+        ~~~~~
+        ''', '''
+        <pre class="dart"><code>code
+        </code></pre>
+        ''');
+
+    validate('Pandoc style with inner tildes row', '''
+        ~~~~~
+        ~~~
+        code
+        ~~~
+        ~~~~~
+        ''', '''
+        <pre><code>~~~
+        code
+        ~~~
         </code></pre>
         ''');
   });

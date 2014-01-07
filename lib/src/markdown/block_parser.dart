@@ -19,8 +19,8 @@ final _RE_BLOCKQUOTE = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 /// A line indented four spaces. Used for code blocks and lists.
 final _RE_INDENT = new RegExp(r'^(?:    |\t)(.*)$');
 
-/// GitHub style triple quoted code block.
-final _RE_CODE = new RegExp(r'^```(.*)$');
+/// Fenced code block.
+final _RE_CODE = new RegExp(r'^(`{3,}|~{3,})(.*)$');
 
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
@@ -97,7 +97,7 @@ abstract class BlockSyntax {
           new SetextHeaderSyntax(),
           new HeaderSyntax(),
           new CodeBlockSyntax(),
-          new GitHubCodeBlockSyntax(),
+          new FencedCodeBlockSyntax(),
           new BlockquoteSyntax(),
           new HorizontalRuleSyntax(),
           new UnorderedListSyntax(),
@@ -244,16 +244,17 @@ class CodeBlockSyntax extends BlockSyntax {
   }
 }
 
-/// Parses preformatted code blocks between two ``` sequences.
-class GitHubCodeBlockSyntax extends BlockSyntax {
+/// Parses preformatted code blocks between two ~~~ or ``` sequences.
+/// [Pandoc's markdown documentation](http://johnmacfarlane.net/pandoc/demo/example9/pandocs-markdown.html).
+class FencedCodeBlockSyntax extends BlockSyntax {
   RegExp get pattern => _RE_CODE;
 
-  List<String> parseChildLines(BlockParser parser) {
+  List<String> parseChildLines(BlockParser parser, String endBlock) {
     final childLines = <String>[];
     parser.advance();
     while (!parser.isDone) {
       var match = pattern.firstMatch(parser.current);
-      if (match == null) {
+      if (match == null || !match[1].startsWith(endBlock)) {
         childLines.add(parser.current);
         parser.advance();
       } else {
@@ -266,9 +267,11 @@ class GitHubCodeBlockSyntax extends BlockSyntax {
 
   Node parse(BlockParser parser) {
     // Get the syntax identifier, if there is one.
-    var syntax = pattern.firstMatch(parser.current).group(1);
-    
-    final childLines = parseChildLines(parser);
+    var match = pattern.firstMatch(parser.current);
+    var endBlock = match.group(1);
+    var syntax = match.group(2);
+
+    final childLines = parseChildLines(parser, endBlock);
 
     // The Markdown tests expect a trailing newline.
     childLines.add('');
@@ -276,7 +279,15 @@ class GitHubCodeBlockSyntax extends BlockSyntax {
     // Escape the code.
     final escaped = escapeHtml(childLines.join('\n'));
 
-    return new Element('pre', [new Element.text('code', escaped)]);
+    var element = new Element('pre', [new Element.text('code', escaped)]);
+    if (syntax != '') {
+      element.attributes['class'] = syntax;
+    }
+    return element;
+  }
+
+  void _addElementAttributes(Element element) {
+
   }
 }
 
