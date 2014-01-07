@@ -280,13 +280,13 @@ class LinkSyntax extends TagSyntax {
 
       // Only allow implicit links if the content is just text.
       // TODO(rnystrom): Do we want to relax this?
-      if (state.children.length != 1) return false;
-      if (state.children[0] is! Text) return false;
-
-      Text link = state.children[0];
-
+      if (state.children.any((child) => child is! Text)) return false;
+      // If there are multiple children, but they are all text, send the
+      // combined text to linkResolver.
+      var textToResolve = state.children.fold('',
+          (oldVal, child) => oldVal + child.text);
       // See if we have a resolver that will generate a link for us.
-      final node = linkResolver(link.text);
+      final node = linkResolver(textToResolve);
       if (node == null) return false;
 
       parser.addNode(node);
