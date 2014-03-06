@@ -3,7 +3,6 @@ library markdown.document;
 import 'ast.dart';
 import 'block_parser.dart';
 import 'inline_parser.dart';
-import 'util.dart';
 
 /// Maintains the context needed to parse a markdown document.
 class Document {
