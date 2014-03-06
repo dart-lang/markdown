@@ -6,9 +6,7 @@
 library markdownTests;
 
 import 'package:unittest/unittest.dart';
-
-// TODO(rnystrom): Use "package:" URL (#4968).
-import '../lib/markdown.dart';
+import 'package:markdown/markdown.dart';
 
 /// Most of these tests are based on observing how showdown behaves:
 /// http://softwaremaniacs.org/playground/showdown-highlight/
@@ -961,7 +959,7 @@ String cleanUpLiteral(String text) {
   return lines.join('\n');
 }
 
-validate(String description, String markdown, String html,
+void validate(String description, String markdown, String html,
          {bool verbose: false, inlineSyntaxes, linkResolver,
           bool inlineOnly: false}) {
   test(description, () {
@@ -976,19 +974,18 @@ validate(String description, String markdown, String html,
       // Remove trailing newline.
       html = html.substring(0, html.length - 1);
 
-      print('FAIL: $description');
-      print('  expect: ${html.replaceAll("\n", "\n          ")}');
-      print('  actual: ${result.replaceAll("\n", "\n          ")}');
-      print('');
-    }
+      var sb = new StringBuffer();
+      sb.writeln('Expected: ${html.replaceAll("\n", "\n          ")}');
+      sb.writeln('  Actual: ${result.replaceAll("\n", "\n          ")}');
 
-    expect(passed, isTrue, verbose: verbose);
+      fail(sb.toString());
+    }
   });
 }
 
 /// Does a loose comparison of the two strings of HTML. Ignores differences in
 /// newlines and indentation.
-compareOutput(String a, String b) {
+bool compareOutput(String a, String b) {
   int i = 0;
   int j = 0;
 

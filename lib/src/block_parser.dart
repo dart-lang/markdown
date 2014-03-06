@@ -2,7 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of markdown;
+library markdown.block_parser;
+
+import 'ast.dart';
+import 'document.dart';
+import 'util.dart';
 
 /// The line contains only whitespace or is empty.
 final _RE_EMPTY = new RegExp(r'^([ \t]*)$');
@@ -51,26 +55,26 @@ class BlockParser {
   final Document document;
 
   /// Index of the current line.
-  int pos;
+  int _pos;
 
   BlockParser(this.lines, this.document)
-    : pos = 0;
+    : _pos = 0;
 
   /// Gets the current line.
-  String get current => lines[pos];
+  String get current => lines[_pos];
 
   /// Gets the line after the current one or `null` if there is none.
   String get next {
     // Don't read past the end.
-    if (pos >= lines.length - 1) return null;
-    return lines[pos + 1];
+    if (_pos >= lines.length - 1) return null;
+    return lines[_pos + 1];
   }
 
   void advance() {
-    pos++;
+    _pos++;
   }
 
-  bool get isDone => pos >= lines.length;
+  bool get isDone => _pos >= lines.length;
 
   /// Gets whether or not the current line matches the given pattern.
   bool matches(RegExp regex) {
@@ -88,28 +92,21 @@ class BlockParser {
 abstract class BlockSyntax {
   /// Gets the collection of built-in block parsers. To turn a series of lines
   /// into blocks, each of these will be tried in turn. Order matters here.
-  static List<BlockSyntax> get syntaxes {
-    // Lazy initialize.
-    if (_syntaxes == null) {
-      _syntaxes = [
-          new EmptyBlockSyntax(),
-          new BlockHtmlSyntax(),
-          new SetextHeaderSyntax(),
-          new HeaderSyntax(),
-          new CodeBlockSyntax(),
-          new FencedCodeBlockSyntax(),
-          new BlockquoteSyntax(),
-          new HorizontalRuleSyntax(),
-          new UnorderedListSyntax(),
-          new OrderedListSyntax(),
-          new ParagraphSyntax()
-        ];
-    }
+  static const List<BlockSyntax> syntaxes = const[
+    const EmptyBlockSyntax(),
+    const BlockHtmlSyntax(),
+    const SetextHeaderSyntax(),
+    const HeaderSyntax(),
+    const CodeBlockSyntax(),
+    const FencedCodeBlockSyntax(),
+    const BlockquoteSyntax(),
+    const HorizontalRuleSyntax(),
+    const UnorderedListSyntax(),
+    const OrderedListSyntax(),
+    const ParagraphSyntax()
+  ];
 
-    return _syntaxes;
-  }
-
-  static List<BlockSyntax> _syntaxes;
+  const BlockSyntax();
 
   /// Gets the regex used to identify the beginning of this block, if any.
   RegExp get pattern => null;
@@ -146,6 +143,8 @@ abstract class BlockSyntax {
 class EmptyBlockSyntax extends BlockSyntax {
   RegExp get pattern => _RE_EMPTY;
 
+  const EmptyBlockSyntax();
+
   Node parse(BlockParser parser) {
     parser.advance();
 
@@ -156,6 +155,9 @@ class EmptyBlockSyntax extends BlockSyntax {
 
 /// Parses setext-style headers.
 class SetextHeaderSyntax extends BlockSyntax {
+
+  const SetextHeaderSyntax();
+
   bool canParse(BlockParser parser) {
     // Note: matches *next* line, not the current one. We're looking for the
     // underlining after this line.
@@ -178,6 +180,8 @@ class SetextHeaderSyntax extends BlockSyntax {
 class HeaderSyntax extends BlockSyntax {
   RegExp get pattern => _RE_HEADER;
 
+  const HeaderSyntax();
+
   Node parse(BlockParser parser) {
     final match = pattern.firstMatch(parser.current);
     parser.advance();
@@ -190,6 +194,8 @@ class HeaderSyntax extends BlockSyntax {
 /// Parses email-style blockquotes: `> quote`.
 class BlockquoteSyntax extends BlockSyntax {
   RegExp get pattern => _RE_BLOCKQUOTE;
+
+  const BlockquoteSyntax();
 
   Node parse(BlockParser parser) {
     final childLines = parseChildLines(parser);
@@ -204,6 +210,8 @@ class BlockquoteSyntax extends BlockSyntax {
 /// Parses preformatted code blocks that are indented four spaces.
 class CodeBlockSyntax extends BlockSyntax {
   RegExp get pattern => _RE_INDENT;
+
+  const CodeBlockSyntax();
 
   List<String> parseChildLines(BlockParser parser) {
     final childLines = <String>[];
@@ -249,7 +257,11 @@ class CodeBlockSyntax extends BlockSyntax {
 class FencedCodeBlockSyntax extends BlockSyntax {
   RegExp get pattern => _RE_CODE;
 
-  List<String> parseChildLines(BlockParser parser, String endBlock) {
+  const FencedCodeBlockSyntax();
+
+  List<String> parseChildLines(BlockParser parser, [String endBlock]) {
+    if(endBlock == null) endBlock = '';
+
     final childLines = <String>[];
     parser.advance();
     while (!parser.isDone) {
@@ -285,15 +297,13 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     }
     return element;
   }
-
-  void _addElementAttributes(Element element) {
-
-  }
 }
 
 /// Parses horizontal rules like `---`, `_ _ _`, `*  *  *`, etc.
 class HorizontalRuleSyntax extends BlockSyntax {
   RegExp get pattern => _RE_HR;
+
+  const HorizontalRuleSyntax();
 
   Node parse(BlockParser parser) {
     final match = pattern.firstMatch(parser.current);
@@ -316,6 +326,8 @@ class BlockHtmlSyntax extends BlockSyntax {
   RegExp get pattern => _RE_HTML;
 
   bool get canEndBlock => false;
+
+  const BlockHtmlSyntax();
 
   Node parse(BlockParser parser) {
     final childLines = [];
@@ -342,6 +354,8 @@ abstract class ListSyntax extends BlockSyntax {
   bool get canEndBlock => false;
 
   String get listTag;
+
+  const ListSyntax();
 
   Node parse(BlockParser parser) {
     final items = <ListItem>[];
@@ -485,17 +499,23 @@ abstract class ListSyntax extends BlockSyntax {
 class UnorderedListSyntax extends ListSyntax {
   RegExp get pattern => _RE_UL;
   String get listTag => 'ul';
+
+  const UnorderedListSyntax();
 }
 
 /// Parses ordered lists.
 class OrderedListSyntax extends ListSyntax {
   RegExp get pattern => _RE_OL;
   String get listTag => 'ol';
+
+  const OrderedListSyntax();
 }
 
 /// Parses paragraphs of regular text.
 class ParagraphSyntax extends BlockSyntax {
   bool get canEndBlock => false;
+
+  const ParagraphSyntax();
 
   bool canParse(BlockParser parser) => true;
 
