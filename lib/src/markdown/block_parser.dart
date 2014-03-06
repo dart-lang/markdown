@@ -51,26 +51,26 @@ class BlockParser {
   final Document document;
 
   /// Index of the current line.
-  int pos;
+  int _pos;
 
   BlockParser(this.lines, this.document)
-    : pos = 0;
+    : _pos = 0;
 
   /// Gets the current line.
-  String get current => lines[pos];
+  String get current => lines[_pos];
 
   /// Gets the line after the current one or `null` if there is none.
   String get next {
     // Don't read past the end.
-    if (pos >= lines.length - 1) return null;
-    return lines[pos + 1];
+    if (_pos >= lines.length - 1) return null;
+    return lines[_pos + 1];
   }
 
   void advance() {
-    pos++;
+    _pos++;
   }
 
-  bool get isDone => pos >= lines.length;
+  bool get isDone => _pos >= lines.length;
 
   /// Gets whether or not the current line matches the given pattern.
   bool matches(RegExp regex) {
