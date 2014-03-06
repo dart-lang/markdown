@@ -5,8 +5,8 @@
 /// Parses text in a markdown-like format and renders to HTML.
 library markdown;
 
-export 'src/markdown/ast.dart';
-export 'src/markdown/block_parser.dart';
-export 'src/markdown/document.dart';
-export 'src/markdown/html_renderer.dart';
-export 'src/markdown/inline_parser.dart';
+export 'src/ast.dart';
+export 'src/block_parser.dart';
+export 'src/document.dart';
+export 'src/html_renderer.dart';
+export 'src/inline_parser.dart';
