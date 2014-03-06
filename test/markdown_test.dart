@@ -6,9 +6,7 @@
 library markdownTests;
 
 import 'package:unittest/unittest.dart';
-
-// TODO(rnystrom): Use "package:" URL (#4968).
-import '../lib/markdown.dart';
+import 'package:markdown/markdown.dart';
 
 /// Most of these tests are based on observing how showdown behaves:
 /// http://softwaremaniacs.org/playground/showdown-highlight/

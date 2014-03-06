@@ -5,16 +5,18 @@
 /// Parses text in a markdown-like format and renders to HTML.
 library markdown;
 
-// TODO(rnystrom): Use "package:" URL (#4968).
-part 'src/markdown/ast.dart';
-part 'src/markdown/block_parser.dart';
-part 'src/markdown/html_renderer.dart';
-part 'src/markdown/inline_parser.dart';
+import 'src/markdown/ast.dart';
+import 'src/markdown/block_parser.dart';
+import 'src/markdown/html_renderer.dart';
+import 'src/markdown/inline_parser.dart';
+
+export 'src/markdown/ast.dart';
+export 'src/markdown/inline_parser.dart';
 
 typedef Node Resolver(String name);
 
 /// Converts the given string of markdown to HTML.
-String markdownToHtml(String markdown, {inlineSyntaxes, linkResolver, 
+String markdownToHtml(String markdown, {inlineSyntaxes, linkResolver,
                       bool inlineOnly: false}) {
   final document = new Document(inlineSyntaxes: inlineSyntaxes,
       linkResolver: linkResolver);
