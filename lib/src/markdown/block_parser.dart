@@ -5,7 +5,8 @@
 library markdown.block_parser;
 
 import 'ast.dart';
-import '../../markdown.dart';
+import 'document.dart';
+import 'util.dart';
 
 /// The line contains only whitespace or is empty.
 final _RE_EMPTY = new RegExp(r'^([ \t]*)$');

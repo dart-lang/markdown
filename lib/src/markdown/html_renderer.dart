@@ -5,6 +5,24 @@
 library markdown.html_renderer;
 
 import 'ast.dart';
+import 'document.dart';
+
+/// Converts the given string of markdown to HTML.
+String markdownToHtml(String markdown, {inlineSyntaxes, linkResolver,
+    bool inlineOnly: false}) {
+  var document = new Document(inlineSyntaxes: inlineSyntaxes,
+      linkResolver: linkResolver);
+
+  if (inlineOnly) {
+    return renderToHtml(document.parseInline(markdown));
+  } else {
+    // Replace windows line endings with unix line endings, and split.
+    var lines = markdown.replaceAll('\r\n','\n').split('\n');
+    document.parseRefLinks(lines);
+    var blocks = document.parseLines(lines);
+    return renderToHtml(blocks);
+  }
+}
 
 String renderToHtml(List<Node> nodes) => new HtmlRenderer().render(nodes);
 
