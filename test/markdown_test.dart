@@ -862,6 +862,94 @@ void main() {
         ''');
   });
 
+  group('Inline Images', () {
+    validate('image','''
+        ![](http://foo.com/foo.png)
+        ''','''
+        <p>
+          <a href="http://foo.com/foo.png">
+            <img src="http://foo.com/foo.png"></img>
+          </a>
+        </p>
+        ''');
+
+    validate('alternate text','''
+        ![alternate text](http://foo.com/foo.png)
+        ''','''
+        <p>
+          <a href="http://foo.com/foo.png">
+            <img alt="alternate text" src="http://foo.com/foo.png"></img>
+          </a>
+        </p>
+        ''');
+
+    validate('title','''
+        ![](http://foo.com/foo.png "optional title")
+        ''','''
+        <p>
+          <a href="http://foo.com/foo.png" title="optional title">
+            <img src="http://foo.com/foo.png" title="optional title"></img>
+          </a>
+        </p>
+        ''');
+    validate('invalid alt text','''
+        ![`alt`](http://foo.com/foo.png)
+        ''','''
+        <p>
+          <a href="http://foo.com/foo.png">
+            <img src="http://foo.com/foo.png"></img>
+          </a>
+        </p>
+        ''');
+  });
+
+  group('Reference Images', () {
+    validate('image','''
+        ![][foo]
+        [foo]: http://foo.com/foo.png
+        ''','''
+        <p>
+          <a href="http://foo.com/foo.png">
+            <img src="http://foo.com/foo.png"></img>
+          </a>
+        </p>
+        ''');
+
+    validate('alternate text','''
+        ![alternate text][foo]
+        [foo]: http://foo.com/foo.png
+        ''','''
+        <p>
+          <a href="http://foo.com/foo.png">
+            <img alt="alternate text" src="http://foo.com/foo.png"></img>
+          </a>
+        </p>
+        ''');
+
+    validate('title','''
+        ![][foo]
+        [foo]: http://foo.com/foo.png "optional title"
+        ''','''
+        <p>
+          <a href="http://foo.com/foo.png" title="optional title">
+            <img src="http://foo.com/foo.png" title="optional title"></img>
+          </a>
+        </p>
+        ''');
+
+    validate('invalid alt text','''
+        ![`alt`][foo]
+        [foo]: http://foo.com/foo.png "optional title"
+        ''','''
+        <p>
+          <a href="http://foo.com/foo.png" title="optional title">
+            <img src="http://foo.com/foo.png" title="optional title"></img>
+          </a>
+        </p>
+        ''');
+
+  });
+
   group('Resolver', () {
     var nyanResolver = (text) => new Text('~=[,,_${text}_,,]:3');
     validate('simple resolver', '''

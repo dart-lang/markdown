@@ -29,6 +29,7 @@ class InlineParser {
 
     new AutolinkSyntax(),
     new LinkSyntax(),
+    new ImageLinkSyntax(),
     // "*" surrounded by spaces is left alone.
     new TextSyntax(r' \* '),
     // "_" surrounded by spaces is left alone.
@@ -83,8 +84,11 @@ class InlineParser {
     } else {
       syntaxes = defaultSyntaxes;
     }
-    // Custom link resolver goes after the generic text syntax.
-    syntaxes.insert(1, new LinkSyntax(linkResolver: document.linkResolver));
+    // Custom link resolvers goes after the generic text syntax.
+    syntaxes.insertAll(1, [
+      new LinkSyntax(linkResolver: document.linkResolver),
+      new ImageLinkSyntax(linkResolver: document.linkResolver)
+    ]);
   }
 
   List<Node> parse() {
@@ -214,8 +218,8 @@ class AutolinkSyntax extends InlineSyntax {
   bool onMatch(InlineParser parser, Match match) {
     final url = match[1];
 
-    final anchor = new Element.text('a', escapeHtml(url));
-    anchor.attributes['href'] = url;
+    final anchor = new Element.text('a', escapeHtml(url))
+      ..attributes['href'] = url;
     parser.addNode(anchor);
 
     return true;
@@ -267,75 +271,104 @@ class LinkSyntax extends TagSyntax {
     // 4: Contains the title, if present, for an inline link.
   }
 
-  LinkSyntax({this.linkResolver})
-    : super(r'\[', end: linkPattern);
+  LinkSyntax({this.linkResolver, String pattern: r'\['})
+    : super(pattern, end: linkPattern);
 
-  bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-    var url;
-    var title;
-
+  Node createNode(InlineParser parser, Match match, TagState state) {
     // If we didn't match refLink or inlineLink, then it means there was
     // nothing after the first square bracket, so it isn't a normal markdown
     // link at all. Instead, we allow users of the library to specify a special
     // resolver function ([linkResolver]) that may choose to handle
     // this. Otherwise, it's just treated as plain text.
-    if ((match[1] == null) || (match[1] == '')) {
-      if (linkResolver == null) return false;
+    if (isNullOrEmpty(match[1])) {
+      if (linkResolver == null) return null;
 
       // Only allow implicit links if the content is just text.
       // TODO(rnystrom): Do we want to relax this?
-      if (state.children.any((child) => child is! Text)) return false;
+      if (state.children.any((child) => child is! Text)) return null;
       // If there are multiple children, but they are all text, send the
       // combined text to linkResolver.
       var textToResolve = state.children.fold('',
           (oldVal, child) => oldVal + child.text);
+
       // See if we have a resolver that will generate a link for us.
-      final node = linkResolver(textToResolve);
-      if (node == null) return false;
+      return linkResolver(textToResolve);
+    } else {
+      Link link = getLink(parser, match, state);
+      if (link == null) return null;
 
-      parser.addNode(node);
-      return true;
+      final Element node = new Element('a', state.children)
+        ..attributes["href"] = escapeHtml(link.url)
+        ..attributes['title'] = escapeHtml(link.title);
+
+      cleanMap(node.attributes);
+      return node;
     }
+  }
 
+  Link getLink(InlineParser parser, Match match, TagState state) {
     if ((match[3] != null) && (match[3] != '')) {
       // Inline link like [foo](url).
-      url = match[3];
-      title = match[4];
+      var url = match[3];
+      var title = match[4];
 
       // For whatever reason, markdown allows angle-bracketed URLs here.
       if (url.startsWith('<') && url.endsWith('>')) {
         url = url.substring(1, url.length - 1);
       }
+
+      return new Link(null, url, title);
     } else {
+      var id;
       // Reference link like [foo] [bar].
-      var id = match[2];
-      if (id == '') {
+      if (match[2] == '')
         // The id is empty ("[]") so infer it from the contents.
         id = parser.source.substring(state.startPos + 1, parser.pos);
-      }
+      else
+        id = match[2];
 
       // References are case-insensitive.
       id = id.toLowerCase();
-
-      // Look up the link.
-      final link = parser.document.refLinks[id];
-      // If it's an unknown link just emit plaintext.
-      if (link == null) return false;
-
-      url = link.url;
-      title = link.title;
+      return parser.document.refLinks[id];
     }
+  }
 
-    final anchor = new Element('a', state.children);
-    anchor.attributes['href'] = escapeHtml(url);
-    if ((title != null) && (title != '')) {
-      anchor.attributes['title'] = escapeHtml(title);
-    }
-
-    parser.addNode(anchor);
+  bool onMatchEnd(InlineParser parser, Match match, TagState state) {
+    Node node = createNode(parser, match, state);
+    if (node == null) return false;
+    parser.addNode(node);
     return true;
   }
 }
+
+/// Matches images like `![alternate text](url "optional title")` and
+/// `![alternate text][url reference]`.
+class ImageLinkSyntax extends LinkSyntax {
+  Resolver linkResolver;
+  ImageLinkSyntax({this.linkResolver})
+    : super(pattern: r'!\[');
+
+  Node createNode(InlineParser parser, Match match, TagState state) {
+    Node node = super.createNode(parser, match, state);
+    if (node == null) return null;
+
+    final Element imageElement = new Element.withTag("img")
+      ..attributes["src"] = node.attributes["href"]
+      ..attributes["title"] = node.attributes["title"]
+      ..attributes["alt"] = node.children
+        .map((e) => isNullOrEmpty(e) || e is! Text ? '' : e.text)
+        .join(' ');
+
+    cleanMap(imageElement.attributes);
+
+    node.children
+      ..clear()
+      ..add(imageElement);
+
+    return node;
+  }
+}
+
 
 /// Matches backtick-enclosed inline code blocks.
 class CodeSyntax extends InlineSyntax {
