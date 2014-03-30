@@ -274,7 +274,7 @@ class LinkSyntax extends TagSyntax {
   LinkSyntax({this.linkResolver, String pattern: r'\['})
     : super(pattern, end: linkPattern);
 
-  Node createNode(InlineParser parser, Match match, TagState state) {
+  Element createNode(InlineParser parser, Match match, TagState state) {
     // If we didn't match refLink or inlineLink, then it means there was
     // nothing after the first square bracket, so it isn't a normal markdown
     // link at all. Instead, we allow users of the library to specify a special
@@ -334,7 +334,7 @@ class LinkSyntax extends TagSyntax {
   }
 
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-    Node node = createNode(parser, match, state);
+    Element node = createNode(parser, match, state);
     if (node == null) return false;
     parser.addNode(node);
     return true;
@@ -348,8 +348,8 @@ class ImageLinkSyntax extends LinkSyntax {
   ImageLinkSyntax({this.linkResolver})
     : super(pattern: r'!\[');
 
-  Node createNode(InlineParser parser, Match match, TagState state) {
-    Node node = super.createNode(parser, match, state);
+  Element createNode(InlineParser parser, Match match, TagState state) {
+    Element node = super.createNode(parser, match, state);
     if (node == null) return null;
 
     final Element imageElement = new Element.withTag("img")
