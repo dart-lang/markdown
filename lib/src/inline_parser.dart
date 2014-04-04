@@ -11,7 +11,7 @@ import 'util.dart';
 /// Maintains the internal state needed to parse inline span elements in
 /// markdown.
 class InlineParser {
-  static List<InlineSyntax>  defaultSyntaxes = <InlineSyntax>[
+  static List<InlineSyntax> _defaultSyntaxes = <InlineSyntax>[
     // This first regexp matches plain text to accelerate parsing.  It must
     // be written so that it does not match any prefix of any following
     // syntax.  Most markdown is plain text, so it is faster to match one
@@ -64,7 +64,7 @@ class InlineParser {
   /// The markdown document this parser is parsing.
   final Document document;
 
-  List<InlineSyntax> syntaxes;
+  final List<InlineSyntax> syntaxes = <InlineSyntax>[];
 
   /// The current read position.
   int pos = 0;
@@ -78,12 +78,9 @@ class InlineParser {
     : _stack = <TagState>[] {
     /// User specified syntaxes will be the first syntaxes to be evaluated.
     if (document.inlineSyntaxes != null) {
-      syntaxes = [];
       syntaxes.addAll(document.inlineSyntaxes);
-      syntaxes.addAll(defaultSyntaxes);
-    } else {
-      syntaxes = defaultSyntaxes;
     }
+    syntaxes.addAll(_defaultSyntaxes);
     // Custom link resolvers goes after the generic text syntax.
     syntaxes.insertAll(1, [
       new LinkSyntax(linkResolver: document.linkResolver),
@@ -125,12 +122,12 @@ class InlineParser {
     return _stack[0].close(this, null);
   }
 
-  writeText() {
+  void writeText() {
     writeTextRange(start, pos);
     start = pos;
   }
 
-  writeTextRange(int start, int end) {
+  void writeTextRange(int start, int end) {
     if (end > start) {
       final text = source.substring(start, end);
       final nodes = _stack.last.children;
@@ -145,7 +142,7 @@ class InlineParser {
     }
   }
 
-  addNode(Node node) {
+  void addNode(Node node) {
     _stack.last.children.add(node);
   }
 
@@ -191,7 +188,7 @@ abstract class InlineSyntax {
 
 /// Matches stuff that should just be passed through as straight text.
 class TextSyntax extends InlineSyntax {
-  String substitute;
+  final String substitute;
   TextSyntax(String pattern, {String sub})
     : super(pattern),
       substitute = sub;
@@ -252,7 +249,7 @@ class TagSyntax extends InlineSyntax {
 
 /// Matches inline links like `[blah] [id]` and `[blah] (url)`.
 class LinkSyntax extends TagSyntax {
-  Resolver linkResolver;
+  final Resolver linkResolver;
 
   /// The regex for the end of a link needs to handle both reference style and
   /// inline styles as well as optional titles for inline links. To make that
@@ -274,7 +271,7 @@ class LinkSyntax extends TagSyntax {
   LinkSyntax({this.linkResolver, String pattern: r'\['})
     : super(pattern, end: linkPattern);
 
-  Element createNode(InlineParser parser, Match match, TagState state) {
+  Node createNode(InlineParser parser, Match match, TagState state) {
     // If we didn't match refLink or inlineLink, then it means there was
     // nothing after the first square bracket, so it isn't a normal markdown
     // link at all. Instead, we allow users of the library to specify a special
@@ -334,7 +331,7 @@ class LinkSyntax extends TagSyntax {
   }
 
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-    Element node = createNode(parser, match, state);
+    Node node = createNode(parser, match, state);
     if (node == null) return false;
     parser.addNode(node);
     return true;
@@ -344,7 +341,7 @@ class LinkSyntax extends TagSyntax {
 /// Matches images like `![alternate text](url "optional title")` and
 /// `![alternate text][url reference]`.
 class ImageLinkSyntax extends LinkSyntax {
-  Resolver linkResolver;
+  final Resolver linkResolver;
   ImageLinkSyntax({this.linkResolver})
     : super(pattern: r'!\[');
 
@@ -385,10 +382,10 @@ class CodeSyntax extends InlineSyntax {
 /// maintains a stack of these so it can handle nested tags.
 class TagState {
   /// The point in the original source where this tag started.
-  int startPos;
+  final int startPos;
 
   /// The point in the original source where open tag ended.
-  int endPos;
+  final int endPos;
 
   /// The syntax that created this node.
   final TagSyntax syntax;
