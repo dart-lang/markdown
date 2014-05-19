@@ -84,7 +84,7 @@ class InlineParser {
     // Custom link resolvers goes after the generic text syntax.
     syntaxes.insertAll(1, [
       new LinkSyntax(linkResolver: document.linkResolver),
-      new ImageLinkSyntax(linkResolver: document.linkResolver)
+      new ImageLinkSyntax(linkResolver: document.imageLinkResolver)
     ]);
   }
 
@@ -251,6 +251,9 @@ class TagSyntax extends InlineSyntax {
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;
 
+  /// Weather or not this link was resolved by a [Resolver]
+  bool resolved = false;
+
   /// The regex for the end of a link needs to handle both reference style and
   /// inline styles as well as optional titles for inline links. To make that
   /// a bit more palatable, this breaks it into pieces.
@@ -289,6 +292,7 @@ class LinkSyntax extends TagSyntax {
           (oldVal, child) => oldVal + child.text);
 
       // See if we have a resolver that will generate a link for us.
+      resolved = true;
       return linkResolver(textToResolve);
     } else {
       Link link = getLink(parser, match, state);
@@ -345,8 +349,9 @@ class ImageLinkSyntax extends LinkSyntax {
   ImageLinkSyntax({this.linkResolver})
     : super(pattern: r'!\[');
 
-  Element createNode(InlineParser parser, Match match, TagState state) {
-    Element node = super.createNode(parser, match, state);
+  Node createNode(InlineParser parser, Match match, TagState state) {
+    Node node = super.createNode(parser, match, state);
+    if (resolved) return node;
     if (node == null) return null;
 
     final Element imageElement = new Element.withTag("img")
