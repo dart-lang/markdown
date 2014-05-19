@@ -9,8 +9,9 @@ class Document {
   final Map<String, Link> refLinks;
   List<InlineSyntax> inlineSyntaxes;
   Resolver linkResolver;
+  Resolver imageLinkResolver;
 
-  Document({this.inlineSyntaxes, this.linkResolver})
+  Document({this.inlineSyntaxes, this.linkResolver, this.imageLinkResolver})
     : refLinks = <String, Link>{};
 
   parseRefLinks(List<String> lines) {

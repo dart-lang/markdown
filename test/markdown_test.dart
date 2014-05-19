@@ -952,11 +952,16 @@ void main() {
 
   group('Resolver', () {
     var nyanResolver = (text) => new Text('~=[,,_${text}_,,]:3');
-    validate('simple resolver', '''
+    validate('simple link resolver', '''
         resolve [this] thing
         ''', '''
         <p>resolve ~=[,,_this_,,]:3 thing</p>
         ''', linkResolver: nyanResolver);
+    validate('simple image resolver', '''
+        resolve ![this] thing
+        ''', '''
+        <p>resolve ~=[,,_this_,,]:3 thing</p>
+        ''', imageLinkResolver: nyanResolver);
   });
 
   group('Custom inline syntax', () {
@@ -1048,14 +1053,15 @@ String cleanUpLiteral(String text) {
 }
 
 void validate(String description, String markdown, String html,
-         {bool verbose: false, inlineSyntaxes, linkResolver,
-          bool inlineOnly: false}) {
+  {bool verbose: false, List<InlineSyntax> inlineSyntaxes,
+  Resolver linkResolver, Resolver imageLinkResolver, bool inlineOnly: false}) {
   test(description, () {
     markdown = cleanUpLiteral(markdown);
     html = cleanUpLiteral(html);
 
     var result = markdownToHtml(markdown, inlineSyntaxes: inlineSyntaxes,
-        linkResolver: linkResolver, inlineOnly: inlineOnly);
+        linkResolver: linkResolver, imageLinkResolver: imageLinkResolver,
+        inlineOnly: inlineOnly);
     var passed = compareOutput(html, result);
 
     if (!passed) {
