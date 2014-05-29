@@ -35,6 +35,9 @@ class HtmlRenderer implements NodeVisitor {
   static final _SPACE_TAGS = new RegExp(
       '[ou]l');
 
+  static final _VOID_TAGS = new RegExp(
+      'img');
+
   StringBuffer buffer;
 
   HtmlRenderer();
@@ -70,13 +73,16 @@ class HtmlRenderer implements NodeVisitor {
 
     if (element.isEmpty) {
       // Empty element like <hr/>.
-      buffer.write(' />');
-      buffer.write('\n');
+      buffer.writeln(' />');
       return false;
     } else {
       buffer.write('>');
       if (_SPACE_TAGS.hasMatch(element.tag))
         buffer.write('\n');
+
+      if (_VOID_TAGS.hasMatch(element.tag))
+        return false;
+
       return true;
     }
   }
