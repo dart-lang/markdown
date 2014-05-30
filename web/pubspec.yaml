@@ -1,0 +1,9 @@
+name: markdown-demo
+dependencies:
+  markdown:
+    git: https://github.com/caffinatedmonkey/dart-markdown
+  polymer: any
+transformers:
+- polymer:
+    entry_points: web/index.html
+

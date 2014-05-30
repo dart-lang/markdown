@@ -1,0 +1,34 @@
+<link rel="import" href="x-markdown.html">
+<polymer-element name="my-app">
+  <template>
+    <style>
+    #editor {
+      width: calc(50% - 2em);
+      position:absolute;
+      top:0;
+      bottom:0;
+      padding:1em;
+      margin:0;
+      border:none;
+      font-size:14px;
+      font-family:monospace;
+      outline:none;
+    }
+
+    #output {
+      left: 50%;
+      width: calc(50% - 2em);
+      right:0;
+      top:0;
+      bottom:0;
+      position:absolute;
+      padding: 1em;
+      overflow-y:scroll;
+    }
+    </style>
+    <textarea id="editor" value="{{ content }}"></textarea>
+    <x-markdown id="output" markdown="{{ content }}"></x-markdown>
+  </template>
+  <script type="application/dart" src="my-app.dart"></script>
+</polymer-element>
+
