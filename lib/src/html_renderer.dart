@@ -30,7 +30,13 @@ String renderToHtml(List<Node> nodes) => new HtmlRenderer().render(nodes);
 /// Translates a parsed AST to HTML.
 class HtmlRenderer implements NodeVisitor {
   static final _BLOCK_TAGS = new RegExp(
-      'blockquote|h1|h2|h3|h4|h5|h6|hr|p|pre');
+      'blockquote|h[1-6r]|p(re)?|[ou]l|li');
+
+  static final _SPACE_TAGS = new RegExp(
+      '[ou]l');
+
+  static final _VOID_TAGS = new RegExp(
+      'img');
 
   StringBuffer buffer;
 
@@ -49,12 +55,11 @@ class HtmlRenderer implements NodeVisitor {
   }
 
   bool visitElementBefore(Element element) {
-    // Hackish. Separate block-level elements with newlines.
-    if (!buffer.isEmpty &&
-        _BLOCK_TAGS.firstMatch(element.tag) != null) {
+    // TODO: fix this disgraceful hack!
+    String bufferString = buffer.toString();
+    if (_BLOCK_TAGS.hasMatch(element.tag) && !buffer.isEmpty && !bufferString.endsWith('\n')) {
       buffer.write('\n');
     }
-
     buffer.write('<${element.tag}');
 
     // Sort the keys so that we generate stable output.
@@ -68,15 +73,23 @@ class HtmlRenderer implements NodeVisitor {
 
     if (element.isEmpty) {
       // Empty element like <hr/>.
-      buffer.write(' />');
+      buffer.writeln(' />');
       return false;
     } else {
       buffer.write('>');
+      if (_SPACE_TAGS.hasMatch(element.tag))
+        buffer.write('\n');
+
+      if (_VOID_TAGS.hasMatch(element.tag))
+        return false;
+
       return true;
     }
   }
 
   void visitElementAfter(Element element) {
     buffer.write('</${element.tag}>');
+    if (_BLOCK_TAGS.hasMatch(element.tag))
+      buffer.write('\n');
   }
 }

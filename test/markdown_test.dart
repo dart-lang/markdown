@@ -2,9 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Unit tests for markdown.
-library markdownTests;
-
 import 'package:unittest/unittest.dart';
 import 'package:markdown/markdown.dart';
 
@@ -867,9 +864,7 @@ void main() {
         ![](http://foo.com/foo.png)
         ''','''
         <p>
-          <a href="http://foo.com/foo.png">
-            <img src="http://foo.com/foo.png"></img>
-          </a>
+          <img src="http://foo.com/foo.png">
         </p>
         ''');
 
@@ -877,9 +872,7 @@ void main() {
         ![alternate text](http://foo.com/foo.png)
         ''','''
         <p>
-          <a href="http://foo.com/foo.png">
-            <img alt="alternate text" src="http://foo.com/foo.png"></img>
-          </a>
+          <img alt="alternate text" src="http://foo.com/foo.png">
         </p>
         ''');
 
@@ -887,18 +880,14 @@ void main() {
         ![](http://foo.com/foo.png "optional title")
         ''','''
         <p>
-          <a href="http://foo.com/foo.png" title="optional title">
-            <img src="http://foo.com/foo.png" title="optional title"></img>
-          </a>
+          <img src="http://foo.com/foo.png" title="optional title">
         </p>
         ''');
     validate('invalid alt text','''
         ![`alt`](http://foo.com/foo.png)
         ''','''
         <p>
-          <a href="http://foo.com/foo.png">
-            <img src="http://foo.com/foo.png"></img>
-          </a>
+          <img src="http://foo.com/foo.png">
         </p>
         ''');
   });
@@ -909,9 +898,7 @@ void main() {
         [foo]: http://foo.com/foo.png
         ''','''
         <p>
-          <a href="http://foo.com/foo.png">
-            <img src="http://foo.com/foo.png"></img>
-          </a>
+          <img src="http://foo.com/foo.png">
         </p>
         ''');
 
@@ -920,9 +907,7 @@ void main() {
         [foo]: http://foo.com/foo.png
         ''','''
         <p>
-          <a href="http://foo.com/foo.png">
-            <img alt="alternate text" src="http://foo.com/foo.png"></img>
-          </a>
+          <img alt="alternate text" src="http://foo.com/foo.png">
         </p>
         ''');
 
@@ -931,9 +916,7 @@ void main() {
         [foo]: http://foo.com/foo.png "optional title"
         ''','''
         <p>
-          <a href="http://foo.com/foo.png" title="optional title">
-            <img src="http://foo.com/foo.png" title="optional title"></img>
-          </a>
+          <img src="http://foo.com/foo.png" title="optional title">
         </p>
         ''');
 
@@ -942,9 +925,7 @@ void main() {
         [foo]: http://foo.com/foo.png "optional title"
         ''','''
         <p>
-          <a href="http://foo.com/foo.png" title="optional title">
-            <img src="http://foo.com/foo.png" title="optional title"></img>
-          </a>
+          <img src="http://foo.com/foo.png" title="optional title">
         </p>
         ''');
 

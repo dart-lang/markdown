@@ -363,11 +363,7 @@ class ImageLinkSyntax extends LinkSyntax {
 
     cleanMap(imageElement.attributes);
 
-    node.children
-      ..clear()
-      ..add(imageElement);
-
-    return node;
+    return imageElement;
   }
 }
 
