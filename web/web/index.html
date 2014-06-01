@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Markdown Editor</title>
+  <link rel="import" href="my-app.html">
+  <link rel="import" href="x-markdown.html">
+  <script type="application/dart">export "package:polymer/init.dart";</script>
+  <script src="packages/browser/dart.js"></script>
+  <style>
+    /* introduce sanity */
+    * { box-sizing:border-box; }
+    
+    html, body {
+      height: 100%;
+    }
+    
+    body {
+      background-color: #F8F8F8;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 14px;
+      font-weight: normal;
+      line-height: 1.2em;
+      margin: 0;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <my-app id="container"></my-app>
+</body>
+</html>
+

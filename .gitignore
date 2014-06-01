@@ -1,5 +1,7 @@
 packages
-pubspec.lock
+/pubspec.lock
+build
 .project
 .children
 out
+
