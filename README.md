@@ -25,12 +25,17 @@ specifying an Array of extension syntaxes in the `blockSyntaxes` or
 The currently supported inline extension syntaxes are:
 
 * `new InlineHtmlSyntax()` - approximately CommonMark's
-  [definition](http://spec.commonmark.org/0.22/#raw-html) of "Raw HTML".
+  [definition][commonmark-raw-html] of "Raw HTML".
 
 The currently supported block extension syntaxes are:
 
 * `const FencedCodeBlockSyntax()` - Code blocks familiar to Pandoc and PHP
   Markdown Extra users.
+* `const HeaderWithIdSyntax()` - ATX-style headers have generated IDs, for link
+  anchors (akin to Pandoc's [`auto_identifiers`][pandoc-auto_identifiers]).
+* `const SetextHeaderWithIdSyntax()` - Setext-style headers have generated IDs
+  for link anchors (akin to Pandoc's
+  [`auto_identifiers`][pandoc-auto_identifiers]).
 
 For example:
 
@@ -75,3 +80,5 @@ void main() {
 
 [Perl Markdown]: http://daringfireball.net/projects/markdown/
 [CommonMark]: http://commonmark.org/
+[commonMark-raw-html]: http://spec.commonmark.org/0.22/#raw-html
+[pandoc-auto_identifiers]: http://pandoc.org/README.html#extension-auto_identifiers

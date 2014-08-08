@@ -105,4 +105,10 @@ nyan''', '''<p>~=[,,_,,]:3</p>
 
   testFile('extensions/inline_html.unit',
       inlineSyntaxes: [new InlineHtmlSyntax()]);
+
+  testFile('extensions/headers_with_ids.unit',
+      blockSyntaxes: [const HeaderWithIdSyntax()]);
+
+  testFile('extensions/setext_headers_with_ids.unit',
+      blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
 }

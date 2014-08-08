@@ -17,6 +17,7 @@ class Element implements Node {
   final String tag;
   final List<Node> children;
   final Map<String, String> attributes;
+  String generatedId;
 
   Element(this.tag, this.children) : attributes = <String, String>{};
 
