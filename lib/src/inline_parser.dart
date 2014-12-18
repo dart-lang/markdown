@@ -350,7 +350,7 @@ class ImageLinkSyntax extends LinkSyntax {
     : super(pattern: r'!\[');
 
   Node createNode(InlineParser parser, Match match, TagState state) {
-    Node node = super.createNode(parser, match, state);
+    var node = super.createNode(parser, match, state);
     if (resolved) return node;
     if (node == null) return null;
 
