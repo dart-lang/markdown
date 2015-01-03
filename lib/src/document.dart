@@ -12,7 +12,7 @@ class Document {
   Resolver imageLinkResolver;
 
   Document({this.inlineSyntaxes, this.linkResolver, this.imageLinkResolver})
-    : refLinks = <String, Link>{};
+      : refLinks = <String, Link>{};
 
   parseRefLinks(List<String> lines) {
     // This is a hideous regex. It matches:
@@ -20,10 +20,10 @@ class Document {
     // Where there may whitespace in there, and where the title may be in
     // single quotes, double quotes, or parentheses.
     final indent = r'^[ ]{0,3}'; // Leading indentation.
-    final id = r'\[([^\]]+)\]';  // Reference id in [brackets].
-    final quote = r'"[^"]+"';    // Title in "double quotes".
-    final apos = r"'[^']+'";     // Title in 'single quotes'.
-    final paren = r"\([^)]+\)";  // Title in (parentheses).
+    final id = r'\[([^\]]+)\]'; // Reference id in [brackets].
+    final quote = r'"[^"]+"'; // Title in "double quotes".
+    final apos = r"'[^']+'"; // Title in 'single quotes'.
+    final paren = r"\([^)]+\)"; // Title in (parentheses).
     final pattern = new RegExp(
         '$indent$id:\\s+(\\S+)\\s*($quote|$apos|$paren|)\\s*\$');
 

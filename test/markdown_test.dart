@@ -174,7 +174,6 @@ void main() {
         ''', '''
         <h1>header</h1>
         ''');
-
   });
 
   group('Unordered lists', () {
@@ -863,9 +862,9 @@ void main() {
   });
 
   group('Inline Images', () {
-    validate('image','''
+    validate('image', '''
         ![](http://foo.com/foo.png)
-        ''','''
+        ''', '''
         <p>
           <a href="http://foo.com/foo.png">
             <img src="http://foo.com/foo.png"></img>
@@ -873,9 +872,9 @@ void main() {
         </p>
         ''');
 
-    validate('alternate text','''
+    validate('alternate text', '''
         ![alternate text](http://foo.com/foo.png)
-        ''','''
+        ''', '''
         <p>
           <a href="http://foo.com/foo.png">
             <img alt="alternate text" src="http://foo.com/foo.png"></img>
@@ -883,18 +882,18 @@ void main() {
         </p>
         ''');
 
-    validate('title','''
+    validate('title', '''
         ![](http://foo.com/foo.png "optional title")
-        ''','''
+        ''', '''
         <p>
           <a href="http://foo.com/foo.png" title="optional title">
             <img src="http://foo.com/foo.png" title="optional title"></img>
           </a>
         </p>
         ''');
-    validate('invalid alt text','''
+    validate('invalid alt text', '''
         ![`alt`](http://foo.com/foo.png)
-        ''','''
+        ''', '''
         <p>
           <a href="http://foo.com/foo.png">
             <img src="http://foo.com/foo.png"></img>
@@ -904,10 +903,10 @@ void main() {
   });
 
   group('Reference Images', () {
-    validate('image','''
+    validate('image', '''
         ![][foo]
         [foo]: http://foo.com/foo.png
-        ''','''
+        ''', '''
         <p>
           <a href="http://foo.com/foo.png">
             <img src="http://foo.com/foo.png"></img>
@@ -915,10 +914,10 @@ void main() {
         </p>
         ''');
 
-    validate('alternate text','''
+    validate('alternate text', '''
         ![alternate text][foo]
         [foo]: http://foo.com/foo.png
-        ''','''
+        ''', '''
         <p>
           <a href="http://foo.com/foo.png">
             <img alt="alternate text" src="http://foo.com/foo.png"></img>
@@ -926,10 +925,10 @@ void main() {
         </p>
         ''');
 
-    validate('title','''
+    validate('title', '''
         ![][foo]
         [foo]: http://foo.com/foo.png "optional title"
-        ''','''
+        ''', '''
         <p>
           <a href="http://foo.com/foo.png" title="optional title">
             <img src="http://foo.com/foo.png" title="optional title"></img>
@@ -937,17 +936,16 @@ void main() {
         </p>
         ''');
 
-    validate('invalid alt text','''
+    validate('invalid alt text', '''
         ![`alt`][foo]
         [foo]: http://foo.com/foo.png "optional title"
-        ''','''
+        ''', '''
         <p>
           <a href="http://foo.com/foo.png" title="optional title">
             <img src="http://foo.com/foo.png" title="optional title"></img>
           </a>
         </p>
         ''');
-
   });
 
   group('Resolver', () {
@@ -965,8 +963,9 @@ void main() {
   });
 
   group('Custom inline syntax', () {
-    List<InlineSyntax> nyanSyntax =
-      [new TextSyntax('nyan', sub: '~=[,,_,,]:3')];
+    List<InlineSyntax> nyanSyntax = [
+      new TextSyntax('nyan', sub: '~=[,,_,,]:3')
+    ];
     validate('simple inline syntax', '''
         nyan
         ''', '''
@@ -974,9 +973,9 @@ void main() {
         ''', inlineSyntaxes: nyanSyntax);
 
     validate('dart custom links', 'links [are<foo>] awesome',
-      '<p>links <a>are&lt;foo></a> awesome</p>',
-      linkResolver: (text) => new Element.text('a', text.replaceAll('<',
-      '&lt;')));
+        '<p>links <a>are&lt;foo></a> awesome</p>',
+        linkResolver: (text) => new Element.text(
+            'a', text.replaceAll('<', '&lt;')));
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some
     // things are not quite working properly. The regexps are sometime a little
@@ -1053,14 +1052,17 @@ String cleanUpLiteral(String text) {
 }
 
 void validate(String description, String markdown, String html,
-  {bool verbose: false, List<InlineSyntax> inlineSyntaxes,
-  Resolver linkResolver, Resolver imageLinkResolver, bool inlineOnly: false}) {
+    {bool verbose: false, List<InlineSyntax> inlineSyntaxes,
+    Resolver linkResolver, Resolver imageLinkResolver,
+    bool inlineOnly: false}) {
   test(description, () {
     markdown = cleanUpLiteral(markdown);
     html = cleanUpLiteral(html);
 
-    var result = markdownToHtml(markdown, inlineSyntaxes: inlineSyntaxes,
-        linkResolver: linkResolver, imageLinkResolver: imageLinkResolver,
+    var result = markdownToHtml(markdown,
+        inlineSyntaxes: inlineSyntaxes,
+        linkResolver: linkResolver,
+        imageLinkResolver: imageLinkResolver,
         inlineOnly: inlineOnly);
     var passed = compareOutput(html, result);
 
