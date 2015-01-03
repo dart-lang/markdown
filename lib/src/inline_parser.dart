@@ -11,7 +11,7 @@ import 'util.dart';
 /// Maintains the internal state needed to parse inline span elements in
 /// markdown.
 class InlineParser {
-  static List<InlineSyntax> _defaultSyntaxes = <InlineSyntax>[
+  static final List<InlineSyntax> _defaultSyntaxes = <InlineSyntax>[
     // This first regexp matches plain text to accelerate parsing.  It must
     // be written so that it does not match any prefix of any following
     // syntax.  Most markdown is plain text, so it is faster to match one
@@ -81,7 +81,7 @@ class InlineParser {
     }
     syntaxes.addAll(_defaultSyntaxes);
     // Custom link resolvers goes after the generic text syntax.
-    syntaxes.insertAll(1, [
+    syntaxes.insertAll(1, <InlineSyntax>[
       new LinkSyntax(linkResolver: document.linkResolver),
       new ImageLinkSyntax(linkResolver: document.imageLinkResolver)
     ]);
