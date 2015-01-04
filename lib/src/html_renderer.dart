@@ -25,7 +25,7 @@ String markdownToHtml(String markdown,
   var lines = markdown.replaceAll('\r\n', '\n').split('\n');
   document.parseRefLinks(lines);
 
-  return renderToHtml(document.parseLines(lines));
+  return renderToHtml(document.parseLines(lines)) + '\n';
 }
 
 String renderToHtml(List<Node> nodes) => new HtmlRenderer().render(nodes);

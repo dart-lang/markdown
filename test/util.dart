@@ -1,95 +1,71 @@
-// Copyright (c) 2015, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) 2011, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library markdown.test.utils;
+library markdown.test.util;
 
-import 'package:test/test.dart';
+import 'dart:io';
 
 import 'package:markdown/markdown.dart';
+import 'package:path/path.dart' as p;
+import 'package:test/test.dart';
 
-/// Removes eight spaces of leading indentation from a multiline string.
-///
-/// Note that this is very sensitive to how the literals are styled. They should
-/// be:
-///     '''
-///     Text starts on own line. Lines up with subsequent lines.
-///     Lines are indented exactly 8 characters from the left margin.'''
-///
-/// This does nothing if text is only a single line.
-// TODO(nweiz): Make this auto-detect the indentation level from the first
-// non-whitespace line.
-String cleanUpLiteral(String text) {
-  var lines = text.split('\n');
-  if (lines.length <= 1) return text;
+final _indentPattern = new RegExp(r"^\(indent (\d+)\)\s*");
 
-  for (var j = 0; j < lines.length; j++) {
-    if (lines[j].length > 8) {
-      lines[j] = lines[j].substring(8, lines[j].length);
-    } else {
-      lines[j] = '';
-    }
+/// Run tests defined in "*.unit" files inside directory [name].
+void testDirectory(String name) {
+  var dir = p.join(p.dirname(p.fromUri(Platform.script)), name);
+  var entries =
+      new Directory(dir).listSync().where((e) => e.path.endsWith('.unit'));
+
+  for (var entry in entries) {
+    group("$name ${p.basename(entry.path)}", () {
+      var lines = (entry as File).readAsLinesSync();
+
+      var i = 0;
+      while (i < lines.length) {
+        var description = lines[i++].replaceAll(">>>", "").trim();
+
+        // Let the test specify a leading indentation. This is handy for
+        // regression tests which often come from a chunk of nested code.
+        var indentMatch = _indentPattern.firstMatch(description);
+        if (indentMatch != null) {
+          // The test specifies it in spaces, but the formatter expects levels.
+          description = description.substring(indentMatch.end);
+        }
+
+        if (description == "") {
+          description = "line ${i + 1}";
+        } else {
+          description = "line ${i + 1}: $description";
+        }
+
+        var input = "";
+        while (!lines[i].startsWith("<<<")) {
+          input += lines[i++] + "\n";
+        }
+
+        var expectedOutput = "";
+        while (++i < lines.length && !lines[i].startsWith(">>>")) {
+          expectedOutput += lines[i] + "\n";
+        }
+
+        validateCore(description, input, expectedOutput);
+      }
+    });
   }
-
-  return lines.join('\n');
 }
 
-void validate(String description, String markdown, String html,
-    {List<InlineSyntax> inlineSyntaxes,
-    Resolver linkResolver,
-    Resolver imageLinkResolver,
-    bool inlineOnly: false}) {
+void validateCore(String description, String markdown, String html,
+    {List<InlineSyntax> inlineSyntaxes, Resolver linkResolver,
+    Resolver imageLinkResolver, bool inlineOnly: false}) {
   test(description, () {
-    markdown = cleanUpLiteral(markdown);
-    html = cleanUpLiteral(html);
-
     var result = markdownToHtml(markdown,
         inlineSyntaxes: inlineSyntaxes,
         linkResolver: linkResolver,
         imageLinkResolver: imageLinkResolver,
         inlineOnly: inlineOnly);
-    var passed = compareOutput(html, result);
 
-    if (!passed) {
-      // Remove trailing newline.
-      html = html.substring(0, html.length - 1);
-
-      var sb = new StringBuffer();
-      sb.writeln('Expected: ${html.replaceAll("\n", "\n          ")}');
-      sb.writeln('  Actual: ${result.replaceAll("\n", "\n          ")}');
-
-      fail(sb.toString());
-    }
+    expect(result, html);
   });
-}
-
-/// Does a loose comparison of the two strings of HTML. Ignores differences in
-/// newlines and indentation.
-bool compareOutput(String a, String b) {
-  int i = 0;
-  int j = 0;
-
-  skipIgnored(String s, int i) {
-    // Ignore newlines.
-    while ((i < s.length) && (s[i] == '\n')) {
-      i++;
-      // Ignore indentation.
-      while ((i < s.length) && (s[i] == ' ')) i++;
-    }
-
-    return i;
-  }
-
-  while (true) {
-    i = skipIgnored(a, i);
-    j = skipIgnored(b, j);
-
-    // If one string runs out of non-ignored strings, the other must too.
-    if (i == a.length) return j == b.length;
-    if (j == b.length) return i == a.length;
-
-    if (a[i] != b[j]) return false;
-    i++;
-    j++;
-  }
 }
