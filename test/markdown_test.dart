@@ -1052,7 +1052,7 @@ String cleanUpLiteral(String text) {
 }
 
 void validate(String description, String markdown, String html,
-    {bool verbose: false, List<InlineSyntax> inlineSyntaxes,
+    {List<InlineSyntax> inlineSyntaxes,
     Resolver linkResolver, Resolver imageLinkResolver,
     bool inlineOnly: false}) {
   test(description, () {
