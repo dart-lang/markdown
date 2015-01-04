@@ -24,7 +24,7 @@ String markdownToHtml(String markdown, {List<InlineSyntax> inlineSyntaxes,
     var lines = markdown.replaceAll('\r\n', '\n').split('\n');
     document.parseRefLinks(lines);
     var blocks = document.parseLines(lines);
-    return renderToHtml(blocks);
+    return renderToHtml(blocks) + '\n';
   }
 }
 
