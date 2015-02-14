@@ -33,7 +33,7 @@ resolve ![this] thing
     validateCore('can resolve link containing inline tags', '''
 resolve [*star* _underline_] thing
 ''', '''
-<p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>\n
+<p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>
 ''', linkResolver: nyanResolver);
   });
 

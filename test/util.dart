@@ -5,6 +5,7 @@
 library markdown.test.util;
 
 import 'dart:io';
+import 'dart:mirrors';
 
 import 'package:markdown/markdown.dart';
 import 'package:path/path.dart' as p;
@@ -14,7 +15,15 @@ final _indentPattern = new RegExp(r"^\(indent (\d+)\)\s*");
 
 /// Run tests defined in "*.unit" files inside directory [name].
 void testDirectory(String name) {
-  var dir = p.join(p.dirname(p.fromUri(Platform.script)), name);
+
+  // Locate the "test" directory. Use mirrors so that this works with the test
+  // package, which loads this suite into an isolate.
+  var testDir = p.dirname(currentMirrorSystem()
+      .findLibrary(#markdown.test.util)
+      .uri
+      .path);
+
+  var dir = p.join(testDir, name);
   var entries =
       new Directory(dir).listSync().where((e) => e.path.endsWith('.unit'));
 
