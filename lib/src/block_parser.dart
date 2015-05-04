@@ -289,10 +289,11 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     // Escape the code.
     final escaped = escapeHtml(childLines.join('\n'));
 
-    var element = new Element('pre', [new Element.text('code', escaped)]);
+    var codeElement = new Element.text('code', escaped);
     if (syntax != '') {
-      element.attributes['class'] = syntax;
+      codeElement.attributes['class'] = syntax;
     }
+    var element = new Element('pre', [codeElement]);
     return element;
   }
 }
