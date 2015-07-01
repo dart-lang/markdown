@@ -9,13 +9,16 @@ import 'document.dart';
 import 'util.dart';
 
 /// The line contains only whitespace or is empty.
-final _RE_EMPTY = new RegExp(r'^([ \t]*)$');
+final _RE_EMPTY = new RegExp(r'^(?:[ \t]*)$');
 
 /// A series of `=` or `-` (on the next line) define setext-style headers.
-final _RE_SETEXT = new RegExp(r'^((=+)|(-+))$');
+final _RE_SETEXT = new RegExp(r'^(=+|-+)$');
 
 /// Leading (and trailing) `#` define atx-style headers.
-final _RE_HEADER = new RegExp(r'^(#{1,6})(.*?)#*$');
+///
+/// Stats with 1-6 unescaped `#` characters which must not be followed by a
+/// non-space character. Line may end with any number of `#` characters,.
+final _RE_HEADER = new RegExp(r'^(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
 
 /// The line starts with `>` with one optional space after.
 final _RE_BLOCKQUOTE = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
@@ -24,14 +27,12 @@ final _RE_BLOCKQUOTE = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 final _RE_INDENT = new RegExp(r'^(?:    |\t)(.*)$');
 
 /// Fenced code block.
-final _RE_CODE = new RegExp(r'^(`{3,}|~{3,})(.*)$');
+final _RE_CODE = new RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
 /// SETEXT should win.
-final _RE_HR = new RegExp(r'^[ ]{0,3}((-+[ ]{0,2}){3,}|'
-    r'(_+[ ]{0,2}){3,}|'
-    r'(\*+[ ]{0,2}){3,})$');
+final _RE_HR = new RegExp(r'^ {0,3}([-*_]) *\1 *\1(?:\1| )*$');
 
 /// Really hacky way to detect block-level embedded HTML. Just looks for
 /// "<somename".
