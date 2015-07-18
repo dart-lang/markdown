@@ -15,7 +15,6 @@ final _indentPattern = new RegExp(r"^\(indent (\d+)\)\s*");
 
 /// Run tests defined in "*.unit" files inside directory [name].
 void testDirectory(String name) {
-
   // Locate the "test" directory. Use mirrors so that this works with the test
   // package, which loads this suite into an isolate.
   var testDir = p.dirname(currentMirrorSystem()
