@@ -3,3 +3,4 @@ pubspec.lock
 .project
 .children
 .pub
+.packages
