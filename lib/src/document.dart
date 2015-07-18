@@ -24,8 +24,8 @@ class Document {
     final quote = r'"[^"]+"'; // Title in "double quotes".
     final apos = r"'[^']+'"; // Title in 'single quotes'.
     final paren = r"\([^)]+\)"; // Title in (parentheses).
-    final pattern = new RegExp(
-        '$indent$id:\\s+(\\S+)\\s*($quote|$apos|$paren|)\\s*\$');
+    final pattern =
+        new RegExp('$indent$id:\\s+(\\S+)\\s*($quote|$apos|$paren|)\\s*\$');
 
     for (int i = 0; i < lines.length; i++) {
       final match = pattern.firstMatch(lines[i]);

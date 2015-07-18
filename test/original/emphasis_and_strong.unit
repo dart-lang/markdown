@@ -1,0 +1,72 @@
+>>> single asterisks
+before *em* after
+
+<<<
+<p>before <em>em</em> after</p>
+>>> single underscores
+before _em_ after
+
+<<<
+<p>before <em>em</em> after</p>
+>>> double asterisks
+before **strong** after
+
+<<<
+<p>before <strong>strong</strong> after</p>
+>>> double underscores
+before __strong__ after
+
+<<<
+<p>before <strong>strong</strong> after</p>
+>>> unmatched asterisk
+before *after
+
+<<<
+<p>before *after</p>
+>>> unmatched underscore
+before _after
+
+<<<
+<p>before _after</p>
+>>> multiple spans in one text
+a *one* b _two_ c
+
+<<<
+<p>a <em>one</em> b <em>two</em> c</p>
+>>> multi-line
+before *first
+second* after
+
+<<<
+<p>before <em>first
+second</em> after</p>
+>>> not processed when surrounded by spaces
+a * b * c _ d _ e
+
+<<<
+<p>a * b * c _ d _ e</p>
+>>> strong then emphasis
+**strong***em*
+
+<<<
+<p><strong>strong</strong><em>em</em></p>
+>>> emphasis then strong
+*em***strong**
+
+<<<
+<p><em>em</em><strong>strong</strong></p>
+>>> emphasis inside strong
+**strong *em***
+
+<<<
+<p><strong>strong <em>em</em></strong></p>
+>>> mismatched in nested
+*a _b* c_
+
+<<<
+<p><em>a _b</em> c_</p>
+>>> cannot nest tags of same type
+*a _b *c* d_ e*
+
+<<<
+<p><em>a _b </em>c<em> d_ e</em></p>

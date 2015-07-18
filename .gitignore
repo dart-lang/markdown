@@ -2,4 +2,5 @@ packages
 pubspec.lock
 .project
 .children
-out
+.pub
+.packages

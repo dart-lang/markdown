@@ -233,8 +233,8 @@ class TagSyntax extends InlineSyntax {
   // TODO(rnystrom): Doing this.field doesn't seem to work with named args.
 
   bool onMatch(InlineParser parser, Match match) {
-    parser._stack.add(
-        new TagState(parser.pos, parser.pos + match[0].length, this));
+    parser._stack
+        .add(new TagState(parser.pos, parser.pos + match[0].length, this));
     return true;
   }
 
@@ -353,8 +353,8 @@ class ImageLinkSyntax extends LinkSyntax {
       ..attributes["src"] = node.attributes["href"]
       ..attributes["title"] = node.attributes["title"]
       ..attributes["alt"] = node.children
-      .map((e) => isNullOrEmpty(e) || e is! Text ? '' : e.text)
-      .join(' ');
+          .map((e) => isNullOrEmpty(e) || e is! Text ? '' : e.text)
+          .join(' ');
 
     cleanMap(imageElement.attributes);
 

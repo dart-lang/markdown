@@ -24,7 +24,7 @@ String markdownToHtml(String markdown, {List<InlineSyntax> inlineSyntaxes,
     var lines = markdown.replaceAll('\r\n', '\n').split('\n');
     document.parseRefLinks(lines);
     var blocks = document.parseLines(lines);
-    return renderToHtml(blocks);
+    return renderToHtml(blocks) + '\n';
   }
 }
 
@@ -32,8 +32,8 @@ String renderToHtml(List<Node> nodes) => new HtmlRenderer().render(nodes);
 
 /// Translates a parsed AST to HTML.
 class HtmlRenderer implements NodeVisitor {
-  static final _BLOCK_TAGS = new RegExp(
-      'blockquote|h1|h2|h3|h4|h5|h6|hr|p|pre');
+  static final _BLOCK_TAGS =
+      new RegExp('blockquote|h1|h2|h3|h4|h5|h6|hr|p|pre');
 
   StringBuffer buffer;
 
