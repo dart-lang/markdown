@@ -8,13 +8,13 @@ import 'dart:io';
 
 import 'package:markdown/markdown.dart';
 import 'package:path/path.dart' as p;
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 final _indentPattern = new RegExp(r"^\(indent (\d+)\)\s*");
 
 /// Run tests defined in "*.unit" files inside directory [name].
 void testDirectory(String name) {
-  var dir = p.join(p.dirname(p.fromUri(Platform.script)), name);
+  var dir = p.join('test', name);
   var entries =
       new Directory(dir).listSync().where((e) => e.path.endsWith('.unit'));
 
