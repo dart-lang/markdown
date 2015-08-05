@@ -280,13 +280,10 @@ class LinkSyntax extends TagSyntax {
     if (isNullOrEmpty(match[1])) {
       if (linkResolver == null) return null;
 
-      // Only allow implicit links if the content is just text.
-      // TODO(rnystrom): Do we want to relax this?
-      if (state.children.any((child) => child is! Text)) return null;
-      // If there are multiple children, but they are all text, send the
-      // combined text to linkResolver.
-      var textToResolve =
-          state.children.fold('', (oldVal, child) => oldVal + child.text);
+      // Treat the contents as unparsed text even if they happen to match. This
+      // way, we can handle things like [LINK_WITH_UNDERSCORES] as a link and
+      // not get confused by the emphasis.
+      var textToResolve = parser.source.substring(state.endPos, parser.pos);
 
       // See if we have a resolver that will generate a link for us.
       resolved = true;

@@ -3,10 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 /// Unit tests for markdown.
-library markdownTests;
+library markdown.test.markdown_test;
 
 import 'package:unittest/unittest.dart';
+
 import 'package:markdown/markdown.dart';
+
+import 'utils.dart';
 
 /// Most of these tests are based on observing how showdown behaves:
 /// http://softwaremaniacs.org/playground/showdown-highlight/
@@ -949,7 +952,8 @@ void main() {
   });
 
   group('Resolver', () {
-    var nyanResolver = (text) => new Text('~=[,,_${text}_,,]:3');
+    nyanResolver(text) => new Text('~=[,,_${text}_,,]:3');
+
     validate('simple link resolver', '''
         resolve [this] thing
         ''', '''
@@ -960,12 +964,17 @@ void main() {
         ''', '''
         <p>resolve ~=[,,_this_,,]:3 thing</p>
         ''', imageLinkResolver: nyanResolver);
+
+    validate('can resolve link containing inline tags', '''
+        resolve [*star* _underline_] thing
+        ''', '''
+        <p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>
+        ''', linkResolver: nyanResolver);
   });
 
   group('Custom inline syntax', () {
-    List<InlineSyntax> nyanSyntax = [
-      new TextSyntax('nyan', sub: '~=[,,_,,]:3')
-    ];
+    var nyanSyntax = [new TextSyntax('nyan', sub: '~=[,,_,,]:3')];
+
     validate('simple inline syntax', '''
         nyan
         ''', '''
@@ -1021,91 +1030,4 @@ void main() {
         1. This will not be an &lt;ol>.
         ''', inlineOnly: true);
   });
-}
-
-/**
- * Removes eight spaces of leading indentation from a multiline string.
- *
- * Note that this is very sensitive to how the literals are styled. They should
- * be:
- *     '''
- *     Text starts on own line. Lines up with subsequent lines.
- *     Lines are indented exactly 8 characters from the left margin.'''
- *
- * This does nothing if text is only a single line.
- */
-// TODO(nweiz): Make this auto-detect the indentation level from the first
-// non-whitespace line.
-String cleanUpLiteral(String text) {
-  var lines = text.split('\n');
-  if (lines.length <= 1) return text;
-
-  for (var j = 0; j < lines.length; j++) {
-    if (lines[j].length > 8) {
-      lines[j] = lines[j].substring(8, lines[j].length);
-    } else {
-      lines[j] = '';
-    }
-  }
-
-  return lines.join('\n');
-}
-
-void validate(String description, String markdown, String html,
-    {List<InlineSyntax> inlineSyntaxes,
-    Resolver linkResolver, Resolver imageLinkResolver,
-    bool inlineOnly: false}) {
-  test(description, () {
-    markdown = cleanUpLiteral(markdown);
-    html = cleanUpLiteral(html);
-
-    var result = markdownToHtml(markdown,
-        inlineSyntaxes: inlineSyntaxes,
-        linkResolver: linkResolver,
-        imageLinkResolver: imageLinkResolver,
-        inlineOnly: inlineOnly);
-    var passed = compareOutput(html, result);
-
-    if (!passed) {
-      // Remove trailing newline.
-      html = html.substring(0, html.length - 1);
-
-      var sb = new StringBuffer();
-      sb.writeln('Expected: ${html.replaceAll("\n", "\n          ")}');
-      sb.writeln('  Actual: ${result.replaceAll("\n", "\n          ")}');
-
-      fail(sb.toString());
-    }
-  });
-}
-
-/// Does a loose comparison of the two strings of HTML. Ignores differences in
-/// newlines and indentation.
-bool compareOutput(String a, String b) {
-  int i = 0;
-  int j = 0;
-
-  skipIgnored(String s, int i) {
-    // Ignore newlines.
-    while ((i < s.length) && (s[i] == '\n')) {
-      i++;
-      // Ignore indentation.
-      while ((i < s.length) && (s[i] == ' ')) i++;
-    }
-
-    return i;
-  }
-
-  while (true) {
-    i = skipIgnored(a, i);
-    j = skipIgnored(b, j);
-
-    // If one string runs out of non-ignored strings, the other must too.
-    if (i == a.length) return j == b.length;
-    if (j == b.length) return i == a.length;
-
-    if (a[i] != b[j]) return false;
-    i++;
-    j++;
-  }
 }
