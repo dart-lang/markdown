@@ -9,16 +9,19 @@ import 'package:unittest/unittest.dart';
 
 import 'package:markdown/markdown.dart';
 
-import 'utils.dart';
+import 'util.dart';
 
 /// Most of these tests are based on observing how showdown behaves:
 /// http://softwaremaniacs.org/playground/showdown-highlight/
 void main() {
   group('Paragraphs', () {
-    validate('consecutive lines form a single paragraph', '''
+    validate(
+        'consecutive lines form a single paragraph',
+        '''
         This is the first line.
         This is the second line.
-        ''', '''
+        ''',
+        '''
         <p>This is the first line.
         This is the second line.</p>
         ''');
@@ -28,163 +31,229 @@ void main() {
     // code significantly cleaner, we should consider ourselves free to change
     // these tests.
 
-    validate('are terminated by a header', '''
+    validate(
+        'are terminated by a header',
+        '''
         para
         # header
-        ''', '''
+        ''',
+        '''
         <p>para</p>
         <h1>header</h1>
         ''');
 
-    validate('are terminated by a setext header', '''
+    validate(
+        'are terminated by a setext header',
+        '''
         para
         header
         ==
-        ''', '''
+        ''',
+        '''
         <p>para</p>
         <h1>header</h1>
         ''');
 
-    validate('are terminated by a hr', '''
+    validate(
+        'are terminated by a hr',
+        '''
         para
         ___
-        ''', '''
+        ''',
+        '''
         <p>para</p>
         <hr />
         ''');
 
-    validate('consume an unordered list', '''
+    validate(
+        'consume an unordered list',
+        '''
         para
         * list
-        ''', '''
+        ''',
+        '''
         <p>para
         * list</p>
         ''');
 
-    validate('consume an ordered list', '''
+    validate(
+        'consume an ordered list',
+        '''
         para
         1. list
-        ''', '''
+        ''',
+        '''
         <p>para
         1. list</p>
         ''');
 
     // Windows line endings have a \r\n format
     // instead of the unix \n format.
-    validate('take account of windows line endings', '''
+    validate(
+        'take account of windows line endings',
+        '''
         line1\r\n\r\n        line2\r\n
-        ''', '''
+        ''',
+        '''
         <p>line1</p>
         <p>line2</p>
         ''');
   });
 
   group('Setext headers', () {
-    validate('h1', '''
+    validate(
+        'h1',
+        '''
         text
         ===
-        ''', '''
+        ''',
+        '''
         <h1>text</h1>
         ''');
 
-    validate('h2', '''
+    validate(
+        'h2',
+        '''
         text
         ---
-        ''', '''
+        ''',
+        '''
         <h2>text</h2>
         ''');
 
-    validate('h1 on first line becomes text', '''
+    validate(
+        'h1 on first line becomes text',
+        '''
         ===
-        ''', '''
+        ''',
+        '''
         <p>===</p>
         ''');
 
-    validate('h2 on first line becomes text', '''
+    validate(
+        'h2 on first line becomes text',
+        '''
         -
-        ''', '''
+        ''',
+        '''
         <p>-</p>
         ''');
 
-    validate('h1 turns preceding list into text', '''
+    validate(
+        'h1 turns preceding list into text',
+        '''
         - list
         ===
-        ''', '''
+        ''',
+        '''
         <h1>- list</h1>
         ''');
 
-    validate('h2 turns preceding list into text', '''
+    validate(
+        'h2 turns preceding list into text',
+        '''
         - list
         ===
-        ''', '''
+        ''',
+        '''
         <h1>- list</h1>
         ''');
 
-    validate('h1 turns preceding blockquote into text', '''
+    validate(
+        'h1 turns preceding blockquote into text',
+        '''
         > quote
         ===
-        ''', '''
+        ''',
+        '''
         <h1>> quote</h1>
         ''');
 
-    validate('h2 turns preceding blockquote into text', '''
+    validate(
+        'h2 turns preceding blockquote into text',
+        '''
         > quote
         ===
-        ''', '''
+        ''',
+        '''
         <h1>> quote</h1>
         ''');
   });
 
   group('Headers', () {
-    validate('h1', '''
+    validate(
+        'h1',
+        '''
         # header
-        ''', '''
+        ''',
+        '''
         <h1>header</h1>
         ''');
 
-    validate('h2', '''
+    validate(
+        'h2',
+        '''
         ## header
-        ''', '''
+        ''',
+        '''
         <h2>header</h2>
         ''');
 
-    validate('h3', '''
+    validate(
+        'h3',
+        '''
         ### header
-        ''', '''
+        ''',
+        '''
         <h3>header</h3>
         ''');
 
-    validate('h4', '''
+    validate(
+        'h4',
+        '''
         #### header
-        ''', '''
+        ''',
+        '''
         <h4>header</h4>
         ''');
 
-    validate('h5', '''
+    validate(
+        'h5',
+        '''
         ##### header
-        ''', '''
+        ''',
+        '''
         <h5>header</h5>
         ''');
 
-    validate('h6', '''
+    validate(
+        'h6',
+        '''
         ###### header
-        ''', '''
+        ''',
+        '''
         <h6>header</h6>
         ''');
 
-    validate('trailing "#" are removed', '''
+    validate(
+        'trailing "#" are removed',
+        '''
         # header ######
-        ''', '''
+        ''',
+        '''
         <h1>header</h1>
         ''');
   });
 
   group('Unordered lists', () {
-    validate('asterisk, plus and hyphen', '''
+    validate(
+        'asterisk, plus and hyphen',
+        '''
         * star
         - dash
         + plus
-        ''', '''
+        ''',
+        '''
         <ul>
           <li>star</li>
           <li>dash</li>
@@ -192,22 +261,28 @@ void main() {
         </ul>
         ''');
 
-    validate('allow numbered lines after first', '''
+    validate(
+        'allow numbered lines after first',
+        '''
         * a
         1. b
-        ''', '''
+        ''',
+        '''
         <ul>
           <li>a</li>
           <li>b</li>
         </ul>
         ''');
 
-    validate('allow a tab after the marker', '''
+    validate(
+        'allow a tab after the marker',
+        '''
         *\ta
         +\tb
         -\tc
         1.\td
-        ''', '''
+        ''',
+        '''
         <ul>
           <li>a</li>
           <li>b</li>
@@ -216,23 +291,29 @@ void main() {
         </ul>
         ''');
 
-    validate('wrap items in paragraphs if blank lines separate', '''
+    validate(
+        'wrap items in paragraphs if blank lines separate',
+        '''
         * one
 
         * two
-        ''', '''
+        ''',
+        '''
         <ul>
           <li><p>one</p></li>
           <li><p>two</p></li>
         </ul>
         ''');
 
-    validate('force paragraph on item before and after blank lines', '''
+    validate(
+        'force paragraph on item before and after blank lines',
+        '''
         *   one
         *   two
 
         *   three
-        ''', '''
+        ''',
+        '''
         <ul>
           <li>one</li>
           <li>
@@ -244,24 +325,30 @@ void main() {
         </ul>
         ''');
 
-    validate('do not force paragraph if item is already block', '''
+    validate(
+        'do not force paragraph if item is already block',
+        '''
         * > quote
 
         * # header
-        ''', '''
+        ''',
+        '''
         <ul>
           <li><blockquote><p>quote</p></blockquote></li>
           <li><h1>header</h1></li>
         </ul>
         ''');
 
-    validate('can contain multiple paragraphs', '''
+    validate(
+        'can contain multiple paragraphs',
+        '''
         *   one
 
             two
 
         *   three
-        ''', '''
+        ''',
+        '''
         <ul>
           <li>
             <p>one</p>
@@ -273,11 +360,14 @@ void main() {
         </ul>
         ''');
 
-    validate('can span newlines', '''
+    validate(
+        'can span newlines',
+        '''
         *   one
             two
         *   three
-        ''', '''
+        ''',
+        '''
         <ul>
           <li>
             <p>one
@@ -306,11 +396,14 @@ void main() {
   });
 
   group('Ordered lists', () {
-    validate('start with numbers', '''
+    validate(
+        'start with numbers',
+        '''
         1. one
         45.  two
            12345. three
-        ''', '''
+        ''',
+        '''
         <ol>
           <li>one</li>
           <li>two</li>
@@ -318,10 +411,13 @@ void main() {
         </ol>
         ''');
 
-    validate('allow unordered lines after first', '''
+    validate(
+        'allow unordered lines after first',
+        '''
         1. a
         * b
-        ''', '''
+        ''',
+        '''
         <ol>
           <li>a</li>
           <li>b</li>
@@ -330,30 +426,39 @@ void main() {
   });
 
   group('Blockquotes', () {
-    validate('single line', '''
+    validate(
+        'single line',
+        '''
         > blah
-        ''', '''
+        ''',
+        '''
         <blockquote>
           <p>blah</p>
         </blockquote>
         ''');
 
-    validate('with two paragraphs', '''
+    validate(
+        'with two paragraphs',
+        '''
         > first
         >
         > second
-        ''', '''
+        ''',
+        '''
         <blockquote>
           <p>first</p>
           <p>second</p>
         </blockquote>
         ''');
 
-    validate('nested', '''
+    validate(
+        'nested',
+        '''
         > one
         >> two
         > > > three
-        ''', '''
+        ''',
+        '''
         <blockquote>
           <p>one</p>
           <blockquote>
@@ -367,32 +472,41 @@ void main() {
   });
 
   group('Code blocks', () {
-    validate('single line', '''
+    validate(
+        'single line',
+        '''
             code
-        ''', '''
+        ''',
+        '''
         <pre><code>code</code></pre>
         ''');
 
-    validate('include leading whitespace after indentation', '''
+    validate(
+        'include leading whitespace after indentation',
+        '''
             zero
              one
               two
                three
-        ''', '''
+        ''',
+        '''
         <pre><code>zero
          one
           two
            three</code></pre>
         ''');
 
-    validate('code blocks separated by newlines form one block', '''
+    validate(
+        'code blocks separated by newlines form one block',
+        '''
             zero
             one
 
             two
 
             three
-        ''', '''
+        ''',
+        '''
         <pre><code>zero
          one
 
@@ -401,7 +515,9 @@ void main() {
          three</code></pre>
         ''');
 
-    validate('code blocks separated by two newlines form multiple blocks', '''
+    validate(
+        'code blocks separated by two newlines form multiple blocks',
+        '''
             zero
             one
 
@@ -410,73 +526,95 @@ void main() {
 
 
             three
-        ''', '''
+        ''',
+        '''
         <pre><code>zero
          one</code></pre>
         <pre><code>two</code></pre>
         <pre><code>three</code></pre>
         ''');
 
-    validate('escape HTML characters', '''
+    validate(
+        'escape HTML characters',
+        '''
             <&>
-        ''', '''
+        ''',
+        '''
         <pre><code>&lt;&amp;&gt;</code></pre>
         ''');
   });
 
   group('Fenced code blocks', () {
-    validate('without an optional language identifier', '''
+    validate(
+        'without an optional language identifier',
+        '''
         ```
         code
         ```
-        ''', '''
+        ''',
+        '''
         <pre><code>code
         </code></pre>
         ''');
 
-    validate('with an optional language identifier', '''
+    validate(
+        'with an optional language identifier',
+        '''
         ```dart
         code
         ```
-        ''', '''
+        ''',
+        '''
         <pre class="dart"><code>code
         </code></pre>
         ''');
 
-    validate('escape HTML characters', '''
+    validate(
+        'escape HTML characters',
+        '''
         ```
         <&>
         ```
-        ''', '''
+        ''',
+        '''
         <pre><code>&lt;&amp;&gt;
         </code></pre>
         ''');
 
-    validate('Pandoc style without language identifier', '''
+    validate(
+        'Pandoc style without language identifier',
+        '''
         ~~~~~
         code
         ~~~~~
-        ''', '''
+        ''',
+        '''
         <pre><code>code
         </code></pre>
         ''');
 
-    validate('Pandoc style with language identifier', '''
+    validate(
+        'Pandoc style with language identifier',
+        '''
         ~~~~~dart
         code
         ~~~~~
-        ''', '''
+        ''',
+        '''
         <pre class="dart"><code>code
         </code></pre>
         ''');
 
-    validate('Pandoc style with inner tildes row', '''
+    validate(
+        'Pandoc style with inner tildes row',
+        '''
         ~~~~~
         ~~~
         code
         ~~~
         ~~~~~
-        ''', '''
+        ''',
+        '''
         <pre><code>~~~
         code
         ~~~
@@ -485,68 +623,92 @@ void main() {
   });
 
   group('Horizontal rules', () {
-    validate('from dashes', '''
+    validate(
+        'from dashes',
+        '''
         ---
-        ''', '''
+        ''',
+        '''
         <hr />
         ''');
 
-    validate('from asterisks', '''
+    validate(
+        'from asterisks',
+        '''
         ***
-        ''', '''
+        ''',
+        '''
         <hr />
         ''');
 
-    validate('from underscores', '''
+    validate(
+        'from underscores',
+        '''
         ___
-        ''', '''
+        ''',
+        '''
         <hr />
         ''');
 
-    validate('can include up to two spaces', '''
+    validate(
+        'can include up to two spaces',
+        '''
         _ _  _
-        ''', '''
+        ''',
+        '''
         <hr />
         ''');
   });
 
   group('Block-level HTML', () {
-    validate('single line', '''
+    validate(
+        'single line',
+        '''
         <table></table>
-        ''', '''
+        ''',
+        '''
         <table></table>
         ''');
 
-    validate('multi-line', '''
+    validate(
+        'multi-line',
+        '''
         <table>
             blah
         </table>
-        ''', '''
+        ''',
+        '''
         <table>
             blah
         </table>
         ''');
 
-    validate('blank line ends block', '''
+    validate(
+        'blank line ends block',
+        '''
         <table>
             blah
         </table>
 
         para
-        ''', '''
+        ''',
+        '''
         <table>
             blah
         </table>
         <p>para</p>
         ''');
 
-    validate('HTML can be bogus', '''
+    validate(
+        'HTML can be bogus',
+        '''
         <bogus>
         blah
         </weird>
 
         para
-        ''', '''
+        ''',
+        '''
         <bogus>
         blah
         </weird>
@@ -555,319 +717,466 @@ void main() {
   });
 
   group('Strong', () {
-    validate('using asterisks', '''
+    validate(
+        'using asterisks',
+        '''
         before **strong** after
-        ''', '''
+        ''',
+        '''
         <p>before <strong>strong</strong> after</p>
         ''');
 
-    validate('using underscores', '''
+    validate(
+        'using underscores',
+        '''
         before __strong__ after
-        ''', '''
+        ''',
+        '''
         <p>before <strong>strong</strong> after</p>
         ''');
 
-    validate('unmatched asterisks', '''
+    validate(
+        'unmatched asterisks',
+        '''
         before ** after
-        ''', '''
+        ''',
+        '''
         <p>before ** after</p>
         ''');
 
-    validate('unmatched underscores', '''
+    validate(
+        'unmatched underscores',
+        '''
         before __ after
-        ''', '''
+        ''',
+        '''
         <p>before __ after</p>
         ''');
 
-    validate('multiple spans in one text', '''
+    validate(
+        'multiple spans in one text',
+        '''
         a **one** b __two__ c
-        ''', '''
+        ''',
+        '''
         <p>a <strong>one</strong> b <strong>two</strong> c</p>
         ''');
 
-    validate('multi-line', '''
+    validate(
+        'multi-line',
+        '''
         before **first
         second** after
-        ''', '''
+        ''',
+        '''
         <p>before <strong>first
         second</strong> after</p>
         ''');
   });
 
   group('Emphasis and strong', () {
-    validate('single asterisks', '''
+    validate(
+        'single asterisks',
+        '''
         before *em* after
-        ''', '''
+        ''',
+        '''
         <p>before <em>em</em> after</p>
         ''');
 
-    validate('single underscores', '''
+    validate(
+        'single underscores',
+        '''
         before _em_ after
-        ''', '''
+        ''',
+        '''
         <p>before <em>em</em> after</p>
         ''');
 
-    validate('double asterisks', '''
+    validate(
+        'double asterisks',
+        '''
         before **strong** after
-        ''', '''
+        ''',
+        '''
         <p>before <strong>strong</strong> after</p>
         ''');
 
-    validate('double underscores', '''
+    validate(
+        'double underscores',
+        '''
         before __strong__ after
-        ''', '''
+        ''',
+        '''
         <p>before <strong>strong</strong> after</p>
         ''');
 
-    validate('unmatched asterisk', '''
+    validate(
+        'unmatched asterisk',
+        '''
         before *after
-        ''', '''
+        ''',
+        '''
         <p>before *after</p>
         ''');
 
-    validate('unmatched underscore', '''
+    validate(
+        'unmatched underscore',
+        '''
         before _after
-        ''', '''
+        ''',
+        '''
         <p>before _after</p>
         ''');
 
-    validate('multiple spans in one text', '''
+    validate(
+        'multiple spans in one text',
+        '''
         a *one* b _two_ c
-        ''', '''
+        ''',
+        '''
         <p>a <em>one</em> b <em>two</em> c</p>
         ''');
 
-    validate('multi-line', '''
+    validate(
+        'multi-line',
+        '''
         before *first
         second* after
-        ''', '''
+        ''',
+        '''
         <p>before <em>first
         second</em> after</p>
         ''');
 
-    validate('not processed when surrounded by spaces', '''
+    validate(
+        'not processed when surrounded by spaces',
+        '''
         a * b * c _ d _ e
-        ''', '''
+        ''',
+        '''
         <p>a * b * c _ d _ e</p>
         ''');
 
-    validate('strong then emphasis', '''
+    validate(
+        'strong then emphasis',
+        '''
         **strong***em*
-        ''', '''
+        ''',
+        '''
         <p><strong>strong</strong><em>em</em></p>
         ''');
 
-    validate('emphasis then strong', '''
+    validate(
+        'emphasis then strong',
+        '''
         *em***strong**
-        ''', '''
+        ''',
+        '''
         <p><em>em</em><strong>strong</strong></p>
         ''');
 
-    validate('emphasis inside strong', '''
+    validate(
+        'emphasis inside strong',
+        '''
         **strong *em***
-        ''', '''
+        ''',
+        '''
         <p><strong>strong <em>em</em></strong></p>
         ''');
 
-    validate('mismatched in nested', '''
+    validate(
+        'mismatched in nested',
+        '''
         *a _b* c_
-        ''', '''
+        ''',
+        '''
         <p><em>a _b</em> c_</p>
         ''');
 
-    validate('cannot nest tags of same type', '''
+    validate(
+        'cannot nest tags of same type',
+        '''
         *a _b *c* d_ e*
-        ''', '''
+        ''',
+        '''
         <p><em>a _b </em>c<em> d_ e</em></p>
         ''');
   });
 
   group('Inline code', () {
-    validate('simple case', '''
+    validate(
+        'simple case',
+        '''
         before `source` after
-        ''', '''
+        ''',
+        '''
         <p>before <code>source</code> after</p>
         ''');
 
-    validate('unmatched backtick', '''
+    validate(
+        'unmatched backtick',
+        '''
         before ` after
-        ''', '''
+        ''',
+        '''
         <p>before ` after</p>
         ''');
-    validate('multiple spans in one text', '''
+    validate(
+        'multiple spans in one text',
+        '''
         a `one` b `two` c
-        ''', '''
+        ''',
+        '''
         <p>a <code>one</code> b <code>two</code> c</p>
         ''');
 
-    validate('multi-line', '''
+    validate(
+        'multi-line',
+        '''
         before `first
         second` after
-        ''', '''
+        ''',
+        '''
         <p>before <code>first
         second</code> after</p>
         ''');
 
-    validate('simple double backticks', '''
+    validate(
+        'simple double backticks',
+        '''
         before ``source`` after
-        ''', '''
+        ''',
+        '''
         <p>before <code>source</code> after</p>
         ''');
 
-    validate('double backticks', '''
+    validate(
+        'double backticks',
+        '''
         before ``can `contain` backticks`` after
-        ''', '''
+        ''',
+        '''
         <p>before <code>can `contain` backticks</code> after</p>
         ''');
 
-    validate('double backticks with spaces', '''
+    validate(
+        'double backticks with spaces',
+        '''
         before `` `tick` `` after
-        ''', '''
+        ''',
+        '''
         <p>before <code>`tick`</code> after</p>
         ''');
 
-    validate('multiline double backticks with spaces', '''
+    validate(
+        'multiline double backticks with spaces',
+        '''
         before ``in `tick`
         another`` after
-        ''', '''
+        ''',
+        '''
         <p>before <code>in `tick`
         another</code> after</p>
         ''');
 
-    validate('ignore markup inside code', '''
+    validate(
+        'ignore markup inside code',
+        '''
         before `*b* _c_` after
-        ''', '''
+        ''',
+        '''
         <p>before <code>*b* _c_</code> after</p>
         ''');
 
-    validate('escape HTML characters', '''
+    validate(
+        'escape HTML characters',
+        '''
         `<&>`
-        ''', '''
+        ''',
+        '''
         <p><code>&lt;&amp;&gt;</code></p>
         ''');
 
-    validate('escape HTML tags', '''
+    validate(
+        'escape HTML tags',
+        '''
         '*' `<em>`
-        ''', '''
+        ''',
+        '''
         <p>'*' <code>&lt;em&gt;</code></p>
         ''');
   });
 
   group('HTML encoding', () {
-    validate('less than and ampersand are escaped', '''
+    validate(
+        'less than and ampersand are escaped',
+        '''
         < &
-        ''', '''
+        ''',
+        '''
         <p>&lt; &amp;</p>
         ''');
-    validate('greater than is not escaped', '''
+    validate(
+        'greater than is not escaped',
+        '''
         not you >
-        ''', '''
+        ''',
+        '''
         <p>not you ></p>
         ''');
-    validate('existing entities are untouched', '''
+    validate(
+        'existing entities are untouched',
+        '''
         &amp;
-        ''', '''
+        ''',
+        '''
         <p>&amp;</p>
         ''');
   });
 
   group('Autolinks', () {
-    validate('basic link', '''
+    validate(
+        'basic link',
+        '''
         before <http://foo.com/> after
-        ''', '''
+        ''',
+        '''
         <p>before <a href="http://foo.com/">http://foo.com/</a> after</p>
         ''');
-    validate('handles ampersand in url', '''
+    validate(
+        'handles ampersand in url',
+        '''
         <http://foo.com/?a=1&b=2>
-        ''', '''
+        ''',
+        '''
         <p><a href="http://foo.com/?a=1&b=2">http://foo.com/?a=1&amp;b=2</a></p>
         ''');
   });
 
   group('Reference links', () {
-    validate('double quotes for title', '''
+    validate(
+        'double quotes for title',
+        '''
         links [are] [a] awesome
 
         [a]: http://foo.com "woo"
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
         ''');
-    validate('single quoted title', """
+    validate(
+        'single quoted title',
+        """
         links [are] [a] awesome
 
         [a]: http://foo.com 'woo'
-        """, '''
+        """,
+        '''
         <p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
         ''');
-    validate('parentheses for title', '''
+    validate(
+        'parentheses for title',
+        '''
         links [are] [a] awesome
 
         [a]: http://foo.com (woo)
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
         ''');
-    validate('no title', '''
+    validate(
+        'no title',
+        '''
         links [are] [a] awesome
 
         [a]: http://foo.com
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com">are</a> awesome</p>
         ''');
-    validate('unknown link becomes plaintext', '''
+    validate(
+        'unknown link becomes plaintext',
+        '''
         [not] [known]
-        ''', '''
+        ''',
+        '''
         <p>[not] [known]</p>
         ''');
-    validate('can style link contents', '''
+    validate(
+        'can style link contents',
+        '''
         links [*are*] [a] awesome
 
         [a]: http://foo.com
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com"><em>are</em></a> awesome</p>
         ''');
-    validate('inline styles after a bad link are processed', '''
+    validate(
+        'inline styles after a bad link are processed',
+        '''
         [bad] `code`
-        ''', '''
+        ''',
+        '''
         <p>[bad] <code>code</code></p>
         ''');
-    validate('empty reference uses text from link', '''
+    validate(
+        'empty reference uses text from link',
+        '''
         links [are][] awesome
 
         [are]: http://foo.com
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com">are</a> awesome</p>
         ''');
-    validate('references are case-insensitive', '''
+    validate(
+        'references are case-insensitive',
+        '''
         links [ARE][] awesome
 
         [are]: http://foo.com
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com">ARE</a> awesome</p>
         ''');
   });
 
   group('Inline links', () {
-    validate('double quotes for title', '''
+    validate(
+        'double quotes for title',
+        '''
         links [are](http://foo.com "woo") awesome
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
         ''');
-    validate('no title', '''
+    validate(
+        'no title',
+        '''
         links [are] (http://foo.com) awesome
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com">are</a> awesome</p>
         ''');
-    validate('can style link contents', '''
+    validate(
+        'can style link contents',
+        '''
         links [*are*](http://foo.com) awesome
-        ''', '''
+        ''',
+        '''
         <p>links <a href="http://foo.com"><em>are</em></a> awesome</p>
         ''');
   });
 
   group('Inline Images', () {
-    validate('image', '''
+    validate(
+        'image',
+        '''
         ![](http://foo.com/foo.png)
-        ''', '''
+        ''',
+        '''
         <p>
           <a href="http://foo.com/foo.png">
             <img src="http://foo.com/foo.png"></img>
@@ -875,9 +1184,12 @@ void main() {
         </p>
         ''');
 
-    validate('alternate text', '''
+    validate(
+        'alternate text',
+        '''
         ![alternate text](http://foo.com/foo.png)
-        ''', '''
+        ''',
+        '''
         <p>
           <a href="http://foo.com/foo.png">
             <img alt="alternate text" src="http://foo.com/foo.png"></img>
@@ -885,18 +1197,24 @@ void main() {
         </p>
         ''');
 
-    validate('title', '''
+    validate(
+        'title',
+        '''
         ![](http://foo.com/foo.png "optional title")
-        ''', '''
+        ''',
+        '''
         <p>
           <a href="http://foo.com/foo.png" title="optional title">
             <img src="http://foo.com/foo.png" title="optional title"></img>
           </a>
         </p>
         ''');
-    validate('invalid alt text', '''
+    validate(
+        'invalid alt text',
+        '''
         ![`alt`](http://foo.com/foo.png)
-        ''', '''
+        ''',
+        '''
         <p>
           <a href="http://foo.com/foo.png">
             <img src="http://foo.com/foo.png"></img>
@@ -906,10 +1224,13 @@ void main() {
   });
 
   group('Reference Images', () {
-    validate('image', '''
+    validate(
+        'image',
+        '''
         ![][foo]
         [foo]: http://foo.com/foo.png
-        ''', '''
+        ''',
+        '''
         <p>
           <a href="http://foo.com/foo.png">
             <img src="http://foo.com/foo.png"></img>
@@ -917,10 +1238,13 @@ void main() {
         </p>
         ''');
 
-    validate('alternate text', '''
+    validate(
+        'alternate text',
+        '''
         ![alternate text][foo]
         [foo]: http://foo.com/foo.png
-        ''', '''
+        ''',
+        '''
         <p>
           <a href="http://foo.com/foo.png">
             <img alt="alternate text" src="http://foo.com/foo.png"></img>
@@ -928,10 +1252,13 @@ void main() {
         </p>
         ''');
 
-    validate('title', '''
+    validate(
+        'title',
+        '''
         ![][foo]
         [foo]: http://foo.com/foo.png "optional title"
-        ''', '''
+        ''',
+        '''
         <p>
           <a href="http://foo.com/foo.png" title="optional title">
             <img src="http://foo.com/foo.png" title="optional title"></img>
@@ -939,10 +1266,13 @@ void main() {
         </p>
         ''');
 
-    validate('invalid alt text', '''
+    validate(
+        'invalid alt text',
+        '''
         ![`alt`][foo]
         [foo]: http://foo.com/foo.png "optional title"
-        ''', '''
+        ''',
+        '''
         <p>
           <a href="http://foo.com/foo.png" title="optional title">
             <img src="http://foo.com/foo.png" title="optional title"></img>
@@ -954,37 +1284,53 @@ void main() {
   group('Resolver', () {
     nyanResolver(text) => new Text('~=[,,_${text}_,,]:3');
 
-    validate('simple link resolver', '''
+    validate(
+        'simple link resolver',
+        '''
         resolve [this] thing
-        ''', '''
+        ''',
+        '''
         <p>resolve ~=[,,_this_,,]:3 thing</p>
-        ''', linkResolver: nyanResolver);
-    validate('simple image resolver', '''
+        ''',
+        linkResolver: nyanResolver);
+    validate(
+        'simple image resolver',
+        '''
         resolve ![this] thing
-        ''', '''
+        ''',
+        '''
         <p>resolve ~=[,,_this_,,]:3 thing</p>
-        ''', imageLinkResolver: nyanResolver);
+        ''',
+        imageLinkResolver: nyanResolver);
 
-    validate('can resolve link containing inline tags', '''
+    validate(
+        'can resolve link containing inline tags',
+        '''
         resolve [*star* _underline_] thing
-        ''', '''
+        ''',
+        '''
         <p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>
-        ''', linkResolver: nyanResolver);
+        ''',
+        linkResolver: nyanResolver);
   });
 
   group('Custom inline syntax', () {
     var nyanSyntax = [new TextSyntax('nyan', sub: '~=[,,_,,]:3')];
 
-    validate('simple inline syntax', '''
+    validate(
+        'simple inline syntax',
+        '''
         nyan
-        ''', '''
+        ''',
+        '''
         <p>~=[,,_,,]:3</p>
-        ''', inlineSyntaxes: nyanSyntax);
+        ''',
+        inlineSyntaxes: nyanSyntax);
 
     validate('dart custom links', 'links [are<foo>] awesome',
         '<p>links <a>are&lt;foo></a> awesome</p>',
-        linkResolver: (text) => new Element.text(
-            'a', text.replaceAll('<', '&lt;')));
+        linkResolver: (text) =>
+            new Element.text('a', text.replaceAll('<', '&lt;')));
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some
     // things are not quite working properly. The regexps are sometime a little
@@ -992,42 +1338,70 @@ void main() {
   });
 
   group('Inline only', () {
-    validate('simple line', '''
+    validate(
+        'simple line',
+        '''
         This would normally create a paragraph.
-        ''', '''
+        ''',
+        '''
         This would normally create a paragraph.
-        ''', inlineOnly: true);
-    validate('strong and em', '''
+        ''',
+        inlineOnly: true);
+    validate(
+        'strong and em',
+        '''
         This would _normally_ create a **paragraph**.
-        ''', '''
+        ''',
+        '''
         This would <em>normally</em> create a <strong>paragraph</strong>.
-        ''', inlineOnly: true);
-    validate('link', '''
+        ''',
+        inlineOnly: true);
+    validate(
+        'link',
+        '''
         This [link](http://www.example.com/) will work normally.
-        ''', '''
+        ''',
+        '''
         This <a href="http://www.example.com/">link</a> will work normally.
-        ''', inlineOnly: true);
-    validate('references do not work', '''
+        ''',
+        inlineOnly: true);
+    validate(
+        'references do not work',
+        '''
         [This][] shouldn't work, though.
-        ''', '''
+        ''',
+        '''
         [This][] shouldn't work, though.
-        ''', inlineOnly: true);
-    validate('less than and ampersand are escaped', '''
+        ''',
+        inlineOnly: true);
+    validate(
+        'less than and ampersand are escaped',
+        '''
         < &
-        ''', '''
+        ''',
+        '''
         &lt; &amp;
-        ''', inlineOnly: true);
-    validate('keeps newlines', '''
+        ''',
+        inlineOnly: true);
+    validate(
+        'keeps newlines',
+        '''
         This paragraph
         continues after a newline.
-        ''', '''
+        ''',
+        '''
         This paragraph
         continues after a newline.
-        ''', inlineOnly: true);
-    validate('ignores block-level markdown syntax', '''
+        ''',
+        inlineOnly: true);
+    validate(
+        'ignores block-level markdown syntax',
+        '''
         1. This will not be an <ol>.
-        ''', '''
+        ''',
+        '''
         1. This will not be an &lt;ol>.
-        ''', inlineOnly: true);
+        ''',
+        inlineOnly: true);
   });
 }

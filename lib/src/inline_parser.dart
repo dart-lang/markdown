@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-library markdown.inline_parser;
+library markdown.src.inline_parser;
 
 import 'ast.dart';
 import 'document.dart';
@@ -26,7 +26,6 @@ class InlineParser {
     new TextSyntax(r'\s*[A-Za-z0-9]+'),
 
     // The real syntaxes.
-
     new AutolinkSyntax(),
     new LinkSyntax(),
     new ImageLinkSyntax(),
@@ -75,13 +74,15 @@ class InlineParser {
   final List<TagState> _stack;
 
   InlineParser(this.source, this.document) : _stack = <TagState>[] {
-    /// User specified syntaxes will be the first syntaxes to be evaluated.
+    // User specified syntaxes are the first syntaxes to be evaluated.
     if (document.inlineSyntaxes != null) {
       syntaxes.addAll(document.inlineSyntaxes);
     }
+
     syntaxes.addAll(_defaultSyntaxes);
+
     // Custom link resolvers goes after the generic text syntax.
-    syntaxes.insertAll(1, <InlineSyntax>[
+    syntaxes.insertAll(1, [
       new LinkSyntax(linkResolver: document.linkResolver),
       new ImageLinkSyntax(linkResolver: document.imageLinkResolver)
     ]);
@@ -92,25 +93,28 @@ class InlineParser {
     _stack.add(new TagState(0, 0, null));
 
     while (!isDone) {
-      bool matched = false;
+      var matched = false;
 
       // See if any of the current tags on the stack match. We don't allow tags
-      // of the same kind to nest, so this takes priority over other possible // matches.
-      for (int i = _stack.length - 1; i > 0; i--) {
+      // of the same kind to nest, so this takes priority over other possible
+      // matches.
+      for (var i = _stack.length - 1; i > 0; i--) {
         if (_stack[i].tryMatch(this)) {
           matched = true;
           break;
         }
       }
+
       if (matched) continue;
 
       // See if the current text matches any defined markdown syntax.
-      for (final syntax in syntaxes) {
+      for (var syntax in syntaxes) {
         if (syntax.tryMatch(this)) {
           matched = true;
           break;
         }
       }
+
       if (matched) continue;
 
       // If we got here, it's just text.
@@ -127,17 +131,16 @@ class InlineParser {
   }
 
   void writeTextRange(int start, int end) {
-    if (end > start) {
-      final text = source.substring(start, end);
-      final nodes = _stack.last.children;
+    if (end <= start) return;
 
-      // If the previous node is text too, just append.
-      if ((nodes.length > 0) && (nodes.last is Text)) {
-        final newNode = new Text('${nodes.last.text}$text');
-        nodes[nodes.length - 1] = newNode;
-      } else {
-        nodes.add(new Text(text));
-      }
+    var text = source.substring(start, end);
+    var nodes = _stack.last.children;
+
+    // If the previous node is text too, just append.
+    if (nodes.length > 0 && nodes.last is Text) {
+      nodes[nodes.length - 1] = new Text('${nodes.last.text}$text');
+    } else {
+      nodes.add(new Text(text));
     }
   }
 
@@ -147,6 +150,7 @@ class InlineParser {
 
   // TODO(rnystrom): Only need this because RegExp doesn't let you start
   // searching from a given offset.
+  @deprecated
   String get currentSource => source.substring(pos, source.length);
 
   bool get isDone => pos == source.length;
@@ -168,16 +172,15 @@ abstract class InlineSyntax {
   InlineSyntax(String pattern) : pattern = new RegExp(pattern, multiLine: true);
 
   bool tryMatch(InlineParser parser) {
-    final startMatch = pattern.firstMatch(parser.currentSource);
-    if ((startMatch != null) && (startMatch.start == 0)) {
+    var startMatch = pattern.matchAsPrefix(parser.source, parser.pos);
+    if (startMatch != null) {
       // Write any existing plain text up to this point.
       parser.writeText();
 
-      if (onMatch(parser, startMatch)) {
-        parser.consume(startMatch[0].length);
-      }
+      if (onMatch(parser, startMatch)) parser.consume(startMatch[0].length);
       return true;
     }
+
     return false;
   }
 
@@ -187,6 +190,7 @@ abstract class InlineSyntax {
 /// Matches stuff that should just be passed through as straight text.
 class TextSyntax extends InlineSyntax {
   final String substitute;
+
   TextSyntax(String pattern, {String sub})
       : super(pattern),
         substitute = sub;
@@ -210,10 +214,9 @@ class AutolinkSyntax extends InlineSyntax {
   // TODO(rnystrom): Make case insensitive.
 
   bool onMatch(InlineParser parser, Match match) {
-    final url = match[1];
-
-    final anchor = new Element.text('a', escapeHtml(url))
-      ..attributes['href'] = url;
+    var url = match[1];
+    var anchor = new Element.text('a', escapeHtml(url));
+    anchor.attributes['href'] = url;
     parser.addNode(anchor);
 
     return true;
@@ -226,15 +229,13 @@ class TagSyntax extends InlineSyntax {
   final RegExp endPattern;
   final String tag;
 
-  TagSyntax(String pattern, {String tag, String end})
+  TagSyntax(String pattern, {this.tag, String end})
       : super(pattern),
-        endPattern = new RegExp((end != null) ? end : pattern, multiLine: true),
-        tag = tag;
-  // TODO(rnystrom): Doing this.field doesn't seem to work with named args.
+        endPattern = new RegExp((end != null) ? end : pattern, multiLine: true);
 
   bool onMatch(InlineParser parser, Match match) {
-    parser._stack.add(
-        new TagState(parser.pos, parser.pos + match[0].length, this));
+    parser._stack
+        .add(new TagState(parser.pos, parser.pos + match[0].length, this));
     return true;
   }
 
@@ -255,9 +256,9 @@ class LinkSyntax extends TagSyntax {
   /// inline styles as well as optional titles for inline links. To make that
   /// a bit more palatable, this breaks it into pieces.
   static get linkPattern {
-    final refLink = r'\s?\[([^\]]*)\]'; // "[id]" reflink id.
-    final title = r'(?:[ ]*"([^"]+)"|)'; // Optional title in quotes.
-    final inlineLink = '\\s?\\(([^ )]+)$title\\)'; // "(url "title")" link.
+    var refLink = r'\s?\[([^\]]*)\]'; // "[id]" reflink id.
+    var title = r'(?:[ ]*"([^"]+)"|)'; // Optional title in quotes.
+    var inlineLink = '\\s?\\(([^ )]+)$title\\)'; // "(url "title")" link.
     return '\](?:($refLink|$inlineLink)|)';
 
     // The groups matched by this are:
@@ -277,7 +278,7 @@ class LinkSyntax extends TagSyntax {
     // link at all. Instead, we allow users of the library to specify a special
     // resolver function ([linkResolver]) that may choose to handle
     // this. Otherwise, it's just treated as plain text.
-    if (isNullOrEmpty(match[1])) {
+    if (match[1] == null) {
       if (linkResolver == null) return null;
 
       // Treat the contents as unparsed text even if they happen to match. This
@@ -289,20 +290,20 @@ class LinkSyntax extends TagSyntax {
       resolved = true;
       return linkResolver(textToResolve);
     } else {
-      Link link = getLink(parser, match, state);
+      var link = getLink(parser, match, state);
       if (link == null) return null;
 
-      final Element node = new Element('a', state.children)
-        ..attributes["href"] = escapeHtml(link.url)
-        ..attributes['title'] = escapeHtml(link.title);
+      var node = new Element('a', state.children);
 
-      cleanMap(node.attributes);
+      node.attributes["href"] = escapeHtml(link.url);
+      if (link.title != null) node.attributes['title'] = escapeHtml(link.title);
+
       return node;
     }
   }
 
   Link getLink(InlineParser parser, Match match, TagState state) {
-    if ((match[3] != null) && (match[3] != '')) {
+    if (match[3] != null && match[3] != '') {
       // Inline link like [foo](url).
       var url = match[3];
       var title = match[4];
@@ -316,10 +317,12 @@ class LinkSyntax extends TagSyntax {
     } else {
       var id;
       // Reference link like [foo] [bar].
-      if (match[2] == '')
-          // The id is empty ("[]") so infer it from the contents.
-          id = parser.source.substring(state.startPos + 1, parser.pos);
-      else id = match[2];
+      if (match[2] == '') {
+        // The id is empty ("[]") so infer it from the contents.
+        id = parser.source.substring(state.startPos + 1, parser.pos);
+      } else {
+        id = match[2];
+      }
 
       // References are case-insensitive.
       id = id.toLowerCase();
@@ -328,8 +331,9 @@ class LinkSyntax extends TagSyntax {
   }
 
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-    Node node = createNode(parser, match, state);
+    var node = createNode(parser, match, state);
     if (node == null) return false;
+
     parser.addNode(node);
     return true;
   }
@@ -339,21 +343,24 @@ class LinkSyntax extends TagSyntax {
 /// `![alternate text][url reference]`.
 class ImageLinkSyntax extends LinkSyntax {
   final Resolver linkResolver;
+
   ImageLinkSyntax({this.linkResolver}) : super(pattern: r'!\[');
 
   Node createNode(InlineParser parser, Match match, TagState state) {
     var node = super.createNode(parser, match, state);
+
     if (resolved) return node;
     if (node == null) return null;
 
-    final Element imageElement = new Element.withTag("img")
-      ..attributes["src"] = node.attributes["href"]
-      ..attributes["title"] = node.attributes["title"]
-      ..attributes["alt"] = node.children
-      .map((e) => isNullOrEmpty(e) || e is! Text ? '' : e.text)
-      .join(' ');
+    var imageElement = new Element.withTag("img");
+    imageElement.attributes["src"] = node.attributes["href"];
 
-    cleanMap(imageElement.attributes);
+    if (node.attributes.containsKey("title")) {
+      imageElement.attributes["title"] = node.attributes["title"];
+    }
+
+    var alt = node.children.map((e) => e is! Text ? '' : e.text).join(" ");
+    if (alt != "") imageElement.attributes["alt"] = alt;
 
     node.children
       ..clear()
@@ -393,8 +400,8 @@ class TagState {
   /// Attempts to close this tag by matching the current text against its end
   /// pattern.
   bool tryMatch(InlineParser parser) {
-    Match endMatch = syntax.endPattern.firstMatch(parser.currentSource);
-    if ((endMatch != null) && (endMatch.start == 0)) {
+    var endMatch = syntax.endPattern.matchAsPrefix(parser.source, parser.pos);
+    if (endMatch != null) {
       // Close the tag.
       close(parser, endMatch);
       return true;
@@ -411,14 +418,14 @@ class TagState {
     // means they are mismatched. Mismatched tags are treated as plain text in
     // markdown. So for each tag above this one, we write its start tag as text
     // and then adds its children to this one's children.
-    int index = parser._stack.indexOf(this);
+    var index = parser._stack.indexOf(this);
 
     // Remove the unmatched children.
-    final unmatchedTags = parser._stack.sublist(index + 1);
+    var unmatchedTags = parser._stack.sublist(index + 1);
     parser._stack.removeRange(index + 1, parser._stack.length);
 
     // Flatten them out onto this tag.
-    for (final unmatched in unmatchedTags) {
+    for (var unmatched in unmatchedTags) {
       // Write the start tag as text.
       parser.writeTextRange(unmatched.startPos, unmatched.endPos);
 
