@@ -138,7 +138,8 @@ class InlineParser {
 
     // If the previous node is text too, just append.
     if (nodes.length > 0 && nodes.last is Text) {
-      nodes[nodes.length - 1] = new Text('${nodes.last.text}$text');
+      var textNode = nodes.last as Text;
+      nodes[nodes.length - 1] = new Text('${textNode.text}$text');
     } else {
       nodes.add(new Text(text));
     }
@@ -192,8 +193,8 @@ class TextSyntax extends InlineSyntax {
   final String substitute;
 
   TextSyntax(String pattern, {String sub})
-      : super(pattern),
-        substitute = sub;
+      : substitute = sub,
+        super(pattern);
 
   bool onMatch(InlineParser parser, Match match) {
     if (substitute == null) {
@@ -230,8 +231,8 @@ class TagSyntax extends InlineSyntax {
   final String tag;
 
   TagSyntax(String pattern, {this.tag, String end})
-      : super(pattern),
-        endPattern = new RegExp((end != null) ? end : pattern, multiLine: true);
+      : endPattern = new RegExp((end != null) ? end : pattern, multiLine: true),
+        super(pattern);
 
   bool onMatch(InlineParser parser, Match match) {
     parser._stack
@@ -248,9 +249,6 @@ class TagSyntax extends InlineSyntax {
 /// Matches inline links like `[blah] [id]` and `[blah] (url)`.
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;
-
-  /// Weather or not this link was resolved by a [Resolver]
-  bool resolved = false;
 
   /// The regex for the end of a link needs to handle both reference style and
   /// inline styles as well as optional titles for inline links. To make that
@@ -287,19 +285,26 @@ class LinkSyntax extends TagSyntax {
       var textToResolve = parser.source.substring(state.endPos, parser.pos);
 
       // See if we have a resolver that will generate a link for us.
-      resolved = true;
       return linkResolver(textToResolve);
     } else {
-      var link = getLink(parser, match, state);
-      if (link == null) return null;
-
-      var node = new Element('a', state.children);
-
-      node.attributes["href"] = escapeHtml(link.url);
-      if (link.title != null) node.attributes['title'] = escapeHtml(link.title);
-
-      return node;
+      return _createElement(parser, match, state);
     }
+  }
+
+  /// Given that [match] has matched both a title and URL, creates an `<a>`
+  /// [Element] for it.
+  Element _createElement(InlineParser parser, Match match, TagState state) {
+    var link = getLink(parser, match, state);
+    if (link == null) return null;
+
+    var element = new Element('a', state.children);
+
+    element.attributes["href"] = escapeHtml(link.url);
+    if (link.title != null) {
+      element.attributes['title'] = escapeHtml(link.title);
+    }
+
+    return element;
   }
 
   Link getLink(InlineParser parser, Match match, TagState state) {
@@ -342,31 +347,29 @@ class LinkSyntax extends TagSyntax {
 /// Matches images like `![alternate text](url "optional title")` and
 /// `![alternate text][url reference]`.
 class ImageLinkSyntax extends LinkSyntax {
-  final Resolver linkResolver;
+  ImageLinkSyntax({Resolver linkResolver})
+      : super(linkResolver: linkResolver, pattern: r'!\[');
 
-  ImageLinkSyntax({this.linkResolver}) : super(pattern: r'!\[');
+  /// Creates an <a> element from the given complete [match].
+  Element _createElement(InlineParser parser, Match match, TagState state) {
+    var element = super._createElement(parser, match, state);
+    if (element == null) return null;
 
-  Node createNode(InlineParser parser, Match match, TagState state) {
-    var node = super.createNode(parser, match, state);
+    var image = new Element.withTag("img");
+    image.attributes["src"] = element.attributes["href"];
 
-    if (resolved) return node;
-    if (node == null) return null;
-
-    var imageElement = new Element.withTag("img");
-    imageElement.attributes["src"] = node.attributes["href"];
-
-    if (node.attributes.containsKey("title")) {
-      imageElement.attributes["title"] = node.attributes["title"];
+    if (element.attributes.containsKey("title")) {
+      image.attributes["title"] = element.attributes["title"];
     }
 
-    var alt = node.children.map((e) => e is! Text ? '' : e.text).join(" ");
-    if (alt != "") imageElement.attributes["alt"] = alt;
+    var alt = element.children.map((e) => e is! Text ? "" : e.text).join(" ");
+    if (alt != "") image.attributes["alt"] = alt;
 
-    node.children
+    element.children
       ..clear()
-      ..add(imageElement);
+      ..add(image);
 
-    return node;
+    return element;
   }
 }
 

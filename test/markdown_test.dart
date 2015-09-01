@@ -1282,7 +1282,7 @@ void main() {
   });
 
   group('Resolver', () {
-    nyanResolver(text) => new Text('~=[,,_${text}_,,]:3');
+    Node nyanResolver(String text) => new Text('~=[,,_${text}_,,]:3');
 
     validate(
         'simple link resolver',
@@ -1315,8 +1315,6 @@ void main() {
   });
 
   group('Custom inline syntax', () {
-    var nyanSyntax = [new TextSyntax('nyan', sub: '~=[,,_,,]:3')];
-
     validate(
         'simple inline syntax',
         '''
@@ -1325,7 +1323,7 @@ void main() {
         '''
         <p>~=[,,_,,]:3</p>
         ''',
-        inlineSyntaxes: nyanSyntax);
+        inlineSyntaxes: [new TextSyntax('nyan', sub: '~=[,,_,,]:3')]);
 
     validate('dart custom links', 'links [are<foo>] awesome',
         '<p>links <a>are&lt;foo></a> awesome</p>',
