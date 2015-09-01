@@ -5,7 +5,7 @@
 /// Unit tests for markdown.
 library markdown.test.markdown_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import 'package:markdown/markdown.dart';
 
