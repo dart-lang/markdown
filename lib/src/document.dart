@@ -4,14 +4,19 @@ import 'ast.dart';
 import 'block_parser.dart';
 import 'inline_parser.dart';
 
-/// Maintains the context needed to parse a markdown document.
+/// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, Link> refLinks;
+  List<BlockSyntax> blockSyntaxes;
   List<InlineSyntax> inlineSyntaxes;
   Resolver linkResolver;
   Resolver imageLinkResolver;
 
-  Document({this.inlineSyntaxes, this.linkResolver, this.imageLinkResolver})
+  Document(
+      {this.blockSyntaxes: const [],
+      this.inlineSyntaxes: const [],
+      this.linkResolver,
+      this.imageLinkResolver})
       : refLinks = <String, Link>{};
 
   parseRefLinks(List<String> lines) {
@@ -61,7 +66,7 @@ class Document {
 
     var blocks = <Node>[];
     while (!parser.isDone) {
-      for (var syntax in BlockSyntax.syntaxes) {
+      for (var syntax in parser.blockSyntaxes) {
         if (syntax.canParse(parser)) {
           var block = syntax.parse(parser);
           if (block != null) blocks.add(block);

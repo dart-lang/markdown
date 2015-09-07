@@ -55,10 +55,31 @@ class BlockParser {
   /// The markdown document this parser is parsing.
   final Document document;
 
-  /// Index of the current line.
-  int _pos;
+  /// The enabled block syntaxes. To turn a series of lines into blocks, each of
+  /// these will be tried in turn. Order matters here.
+  final List<BlockSyntax> blockSyntaxes = [];
 
-  BlockParser(this.lines, this.document) : _pos = 0;
+  /// Index of the current line.
+  int _pos = 0;
+
+  /// The collection of built-in block parsers.
+  final List<BlockSyntax> standardBlockSyntaxes = const [
+    const EmptyBlockSyntax(),
+    const BlockHtmlSyntax(),
+    const SetextHeaderSyntax(),
+    const HeaderSyntax(),
+    const CodeBlockSyntax(),
+    const BlockquoteSyntax(),
+    const HorizontalRuleSyntax(),
+    const UnorderedListSyntax(),
+    const OrderedListSyntax(),
+    const ParagraphSyntax()
+  ];
+
+  BlockParser(this.lines, this.document) {
+    blockSyntaxes.addAll(document.blockSyntaxes);
+    blockSyntaxes.addAll(standardBlockSyntaxes);
+  }
 
   /// Gets the current line.
   String get current => lines[_pos];
@@ -90,21 +111,6 @@ class BlockParser {
 }
 
 abstract class BlockSyntax {
-  /// Gets the collection of built-in block parsers. To turn a series of lines
-  /// into blocks, each of these will be tried in turn. Order matters here.
-  static const List<BlockSyntax> syntaxes = const [
-    const EmptyBlockSyntax(),
-    const BlockHtmlSyntax(),
-    const SetextHeaderSyntax(),
-    const HeaderSyntax(),
-    const CodeBlockSyntax(),
-    const FencedCodeBlockSyntax(),
-    const BlockquoteSyntax(),
-    const HorizontalRuleSyntax(),
-    const UnorderedListSyntax(),
-    const OrderedListSyntax(),
-    const ParagraphSyntax()
-  ];
 
   const BlockSyntax();
 
@@ -136,7 +142,7 @@ abstract class BlockSyntax {
   /// Gets whether or not [parser]'s current line should end the previous block.
   static bool isAtBlockEnd(BlockParser parser) {
     if (parser.isDone) return true;
-    return syntaxes.any((s) => s.canParse(parser) && s.canEndBlock);
+    return parser.blockSyntaxes.any((s) => s.canParse(parser) && s.canEndBlock);
   }
 }
 

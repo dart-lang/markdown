@@ -1,3 +1,10 @@
+## 0.9.0
+
+* Formalize an API for Markdown extensions (#43).
+* **Breaking:** Fenced code blocks are now considered an extension, as
+  they are not part of Markdown.pl.
+* Inline HTML syntax supported. This is also considered an extension (#18).
+
 ## 0.8.0
 
 * **Breaking:** Remove (probably unused) fields: `LinkSyntax.resolved`,
