@@ -311,7 +311,7 @@ class HorizontalRuleSyntax extends BlockSyntax {
   }
 }
 
-/// Parses inline HTML at the block level. This differs from other markdown
+/// Parses inline HTML at the block level. This differs from other Markdown
 /// implementations in several ways:
 ///
 /// 1.  This one is way way WAY simpler.
@@ -319,8 +319,8 @@ class HorizontalRuleSyntax extends BlockSyntax {
 ///     start a paragraph with `<em>`, it will not wrap it in a `<p>` for you.
 ///     As soon as it sees something like HTML, it stops mucking with it until
 ///     it hits the next block.
-/// 3.  Absolutely no HTML parsing or validation is done. We're a markdown
-///     parser not an HTML parser!
+/// 3.  Absolutely no HTML parsing or validation is done. We're a Markdown
+///     parser, not an HTML parser!
 class BlockHtmlSyntax extends BlockSyntax {
   RegExp get pattern => _htmlPattern;
 
@@ -405,7 +405,8 @@ abstract class ListSyntax extends BlockSyntax {
     // * one
     // * two
     //
-    // Then it will insert the conents of the lines directly in the <li>, like:
+    // Then it will insert the contents of the lines directly in the <li>, like:
+    //
     // <ul>
     //   <li>one</li>
     //   <li>two</li>
@@ -441,7 +442,7 @@ abstract class ListSyntax extends BlockSyntax {
     for (var i = 0; i < items.length; i++) {
       for (var j = items[i].lines.length - 1; j > 0; j--) {
         if (_emptyPattern.firstMatch(items[i].lines[j]) != null) {
-          // Found an empty line. Item and one after it are blocks.
+          // Found an empty line. This item and the one after it are blocks.
           if (i < items.length - 1) {
             items[i].forceBlock = true;
             items[i + 1].forceBlock = true;
