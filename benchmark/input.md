@@ -1,9 +1,15 @@
 **TODO: Add more examples to cover all of the syntax.**
 
+# Regressions
+
+Bad backtracking in the HR parser:
+
+-------------------------- | -------------------------------------------------
+
+# Real-world sample
+
 This input was taken from the test package's README to get a representative
 sample of real-world markdown:
-
-## Writing Tests
 
 Tests are specified using the top-level [`test()`][test] function, and test
 assertions are made using [`expect()`][expect]:

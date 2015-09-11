@@ -236,6 +236,24 @@ void main() {
         ''');
 
     validate(
+        'h7 is not a header',
+        '''
+        ####### header
+        ''',
+        '''
+        <p>####### header</p>
+        ''');
+
+    validate(
+        'h6 must not be followed by non-space ',
+        '''
+        ######A header
+        ''',
+        '''
+        <p>######A header</p>
+        ''');
+
+    validate(
         'trailing "#" are removed',
         '''
         # header ######
