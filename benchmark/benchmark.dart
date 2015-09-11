@@ -17,7 +17,7 @@ final source = loadFile("input.md");
 final expected = loadFile("output.html");
 
 void main(List<String> args) {
-  var best = 99999999.0;
+  var best = double.INFINITY;
 
   // Run the benchmark several times. This ensures the VM is warmed up and lets
   // us see how much variance there is.
