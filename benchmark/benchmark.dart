@@ -39,7 +39,7 @@ void main(List<String> args) {
 
     // Sanity check to make sure the output is what we expect and to make sure
     // the VM doesn't optimize "dead" code away.
-    if (result != expected) {
+    if (result.trimRight() != expected) {
       print("Incorrect output:\n$result");
       exit(1);
     }
@@ -55,7 +55,7 @@ void main(List<String> args) {
 
 String loadFile(String name) {
   var path = p.join(p.dirname(p.fromUri(Platform.script)), name);
-  return new File(path).readAsStringSync();
+  return new File(path).readAsStringSync().trimRight();
 }
 
 void printResult(String label, double time) {
