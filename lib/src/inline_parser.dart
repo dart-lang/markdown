@@ -149,11 +149,6 @@ class InlineParser {
     _stack.last.children.add(node);
   }
 
-  // TODO(rnystrom): Only need this because RegExp doesn't let you start
-  // searching from a given offset.
-  @deprecated
-  String get currentSource => source.substring(pos, source.length);
-
   bool get isDone => pos == source.length;
 
   void advanceBy(int length) {
