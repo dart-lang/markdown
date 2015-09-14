@@ -43,13 +43,11 @@ class InlineParser {
     // Parse "**strong**" tags.
     new TagSyntax(r'\*\*', tag: 'strong'),
     // Parse "__strong__" tags.
-    new TagSyntax(r'__', tag: 'strong'),
+    new TagSyntax(r'\b__', tag: 'strong', end: r'__\b'),
     // Parse "*emphasis*" tags.
     new TagSyntax(r'\*', tag: 'em'),
     // Parse "_emphasis_" tags.
-    // TODO(rnystrom): Underscores in the middle of a word should not be
-    // parsed as emphasis like_in_this.
-    new TagSyntax(r'_', tag: 'em'),
+    new TagSyntax(r'\b_', tag: 'em', end: r'_\b'),
     new CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ];
