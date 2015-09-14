@@ -3,6 +3,11 @@ before `source` after
 
 <<<
 <p>before <code>source</code> after</p>
+>>> single characters
+before `x` and `_` after
+
+<<<
+<p>before <code>x</code> and <code>_</code> after</p>
 >>> unmatched backtick
 before ` after
 
@@ -25,6 +30,11 @@ before ``source`` after
 
 <<<
 <p>before <code>source</code> after</p>
+>>> even more backticks
+before ````source with ``` and```` after
+
+<<<
+<p>before <code>source with ``` and</code> after</p>
 >>> double backticks
 before ``can `contain` backticks`` after
 
@@ -35,6 +45,13 @@ before `` `tick` `` after
 
 <<<
 <p>before <code>`tick`</code> after</p>
+>>> multiline single backticks with spaces
+before `in tick
+another` after
+
+<<<
+<p>before <code>in tick
+another</code> after</p>
 >>> multiline double backticks with spaces
 before ``in `tick`
 another`` after
@@ -57,3 +74,13 @@ before `*b* _c_` after
 
 <<<
 <p>'*' <code>&lt;em&gt;</code></p>
+>>> leave unmatched backticks when first are too long
+before ``` tick `` after
+
+<<<
+<p>before ``` tick `` after</p>
+>>> leave unmatched backticks when first are too short
+before `` tick ``` after
+
+<<<
+<p>before `` tick ``` after</p>

@@ -50,10 +50,7 @@ class InlineParser {
     // TODO(rnystrom): Underscores in the middle of a word should not be
     // parsed as emphasis like_in_this.
     new TagSyntax(r'_', tag: 'em'),
-    // Parse inline code within double backticks: "``code``".
-    new CodeSyntax(r'``\s?((?:.|\n)*?)\s?``'),
-    // Parse inline code within backticks: "`code`".
-    new CodeSyntax(r'`([^`]*)`')
+    new CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ];
 
@@ -167,6 +164,9 @@ abstract class InlineSyntax {
 
   InlineSyntax(String pattern) : pattern = new RegExp(pattern, multiLine: true);
 
+  /// Try to match at the parser's current position.
+  ///
+  /// Returns whether or not the pattern successfully matched.
   bool tryMatch(InlineParser parser) {
     var startMatch = pattern.matchAsPrefix(parser.source, parser.pos);
     if (startMatch != null) {
@@ -370,10 +370,41 @@ class ImageLinkSyntax extends LinkSyntax {
 
 /// Matches backtick-enclosed inline code blocks.
 class CodeSyntax extends InlineSyntax {
-  CodeSyntax(String pattern) : super(pattern);
+  // This pattern matches:
+  //
+  // * a string of backticks (not followed by any more), followed by
+  // * a non-greedy string of anying, including newlines, ending with anything
+  //   except a backtick, followed by
+  // * a string of backticks the same length as the first, not followed by any
+  //   more.
+  //
+  // This conforms to the delimiters of inline code, both in Markdown.pl, and
+  // CommonMark.
+  static String _pattern = r'(`+(?!`))((?:.|\n)*?[^`])\1(?!`)';
+
+  CodeSyntax() : super(_pattern);
+
+  bool tryMatch(InlineParser parser) {
+    if (parser.pos > 0 && parser.source[parser.pos-1] == '`') {
+      // Not really a match! We can't just sneak past one backtick to try the
+      // next character. An example of this situation would be:
+      //
+      //     before ``` and `` after.
+      //             ^--parser.pos
+      return false;
+    }
+
+    var match = pattern.matchAsPrefix(parser.source, parser.pos);
+    if (match == null) {
+      return false;
+    }
+    parser.writeText();
+    if (onMatch(parser, match)) parser.consume(match[0].length);
+    return true;
+  }
 
   bool onMatch(InlineParser parser, Match match) {
-    parser.addNode(new Element.text('code', escapeHtml(match[1])));
+    parser.addNode(new Element.text('code', escapeHtml(match[2].trim())));
     return true;
   }
 }
