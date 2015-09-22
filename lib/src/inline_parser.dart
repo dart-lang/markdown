@@ -70,13 +70,10 @@ class InlineParser {
 
   InlineParser(this.source, this.document) : _stack = <TagState>[] {
     // User specified syntaxes are the first syntaxes to be evaluated.
-    if (document.inlineSyntaxes != null) {
-      syntaxes.addAll(document.inlineSyntaxes);
-    }
-
+    syntaxes.addAll(document.inlineSyntaxes);
     syntaxes.addAll(_defaultSyntaxes);
 
-    // Custom link resolvers goes after the generic text syntax.
+    // Custom link resolvers go after the generic text syntax.
     syntaxes.insertAll(1, [
       new LinkSyntax(linkResolver: document.linkResolver),
       new ImageLinkSyntax(linkResolver: document.imageLinkResolver)
@@ -200,6 +197,19 @@ class TextSyntax extends InlineSyntax {
     parser.addNode(new Text(substitute));
     return true;
   }
+}
+
+/// Leave inline HTML tags alone, from
+/// [CommonMark 0.22](http://spec.commonmark.org/0.22/#raw-html).
+///
+/// This is not actually a good definition (nor CommonMark's) of an HTML tag,
+/// but it is fast. It will leave text like <a href='hi"> alone, which is
+/// incorrect.
+///
+/// TODO(srawlins): improve accuracy while ensuring performance, once
+/// Markdown benchmarking is more mature.
+class InlineHtmlSyntax extends TextSyntax {
+  InlineHtmlSyntax() : super(r'</?[A-Za-z][^>]*>');
 }
 
 /// Matches autolinks like `<http://foo.com>`.

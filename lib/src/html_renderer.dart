@@ -10,11 +10,13 @@ import 'inline_parser.dart';
 
 /// Converts the given string of markdown to HTML.
 String markdownToHtml(String markdown,
-    {List<InlineSyntax> inlineSyntaxes,
+    {List<BlockSyntax> blockSyntaxes: const [],
+    List<InlineSyntax> inlineSyntaxes: const [],
     Resolver linkResolver,
     Resolver imageLinkResolver,
     bool inlineOnly: false}) {
   var document = new Document(
+      blockSyntaxes: blockSyntaxes,
       inlineSyntaxes: inlineSyntaxes,
       imageLinkResolver: imageLinkResolver,
       linkResolver: linkResolver);

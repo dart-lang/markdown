@@ -99,4 +99,10 @@ nyan''', '''<p>~=[,,_,,]:3</p>
         1. This will not be an &lt;ol>.
         ''', inlineOnly: true);
   });
+
+  testFile('extensions/fenced_code_blocks.unit',
+      blockSyntaxes: [const FencedCodeBlockSyntax()]);
+
+  testFile('extensions/inline_html.unit',
+      inlineSyntaxes: [new InlineHtmlSyntax()]);
 }

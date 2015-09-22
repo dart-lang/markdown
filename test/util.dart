@@ -15,60 +15,90 @@ final _indentPattern = new RegExp(r"^\(indent (\d+)\)\s*");
 
 /// Run tests defined in "*.unit" files inside directory [name].
 void testDirectory(String name) {
-  // Locate the "test" directory. Use mirrors so that this works with the test
-  // package, which loads this suite into an isolate.
-  var testDir = p.dirname(currentMirrorSystem()
-      .findLibrary(#markdown.test.util)
-      .uri
-      .path);
-
-  var dir = p.join(testDir, name);
+  var dir = p.join(_testDir, name);
   var entries =
       new Directory(dir).listSync().where((e) => e.path.endsWith('.unit'));
 
   for (var entry in entries) {
-    group("$name ${p.basename(entry.path)}", () {
-      var lines = (entry as File).readAsLinesSync();
-
-      var i = 0;
-      while (i < lines.length) {
-        var description = lines[i++].replaceAll(">>>", "").trim();
-
-        // Let the test specify a leading indentation. This is handy for
-        // regression tests which often come from a chunk of nested code.
-        var indentMatch = _indentPattern.firstMatch(description);
-        if (indentMatch != null) {
-          // The test specifies it in spaces, but the formatter expects levels.
-          description = description.substring(indentMatch.end);
-        }
-
-        if (description == "") {
-          description = "line ${i + 1}";
-        } else {
-          description = "line ${i + 1}: $description";
-        }
-
-        var input = "";
-        while (!lines[i].startsWith("<<<")) {
-          input += lines[i++] + "\n";
-        }
-
-        var expectedOutput = "";
-        while (++i < lines.length && !lines[i].startsWith(">>>")) {
-          expectedOutput += lines[i] + "\n";
-        }
-
-        validateCore(description, input, expectedOutput);
-      }
-    });
+    testUnitFile(name, entry);
   }
 }
 
-void validateCore(String description, String markdown, String html,
-    {List<InlineSyntax> inlineSyntaxes, Resolver linkResolver,
-    Resolver imageLinkResolver, bool inlineOnly: false}) {
+// Locate the "test" directory. Use mirrors so that this works with the test
+// package, which loads this suite into an isolate.
+String get _testDir => p.dirname(currentMirrorSystem()
+      .findLibrary(#markdown.test.util)
+      .uri
+      .path);
+
+void testFile(String file,
+    {List<BlockSyntax> blockSyntaxes: const [],
+    List<InlineSyntax> inlineSyntaxes: const []}) =>
+  testUnitFile(
+      file,
+      new File(p.join(_testDir, file)),
+      blockSyntaxes: blockSyntaxes,
+      inlineSyntaxes: inlineSyntaxes);
+
+void testUnitFile(
+    String directory,
+    File entry,
+    {List<BlockSyntax> blockSyntaxes: const [],
+    List<InlineSyntax> inlineSyntaxes: const []}) {
+  group('$directory ${p.basename(entry.path)}', () {
+    var lines = entry.readAsLinesSync();
+
+    var i = 0;
+    while (i < lines.length) {
+      var description = lines[i++].replaceAll(">>>", "").trim();
+
+      // Let the test specify a leading indentation. This is handy for
+      // regression tests which often come from a chunk of nested code.
+      var indentMatch = _indentPattern.firstMatch(description);
+      if (indentMatch != null) {
+        // The test specifies it in spaces, but the formatter expects levels.
+        description = description.substring(indentMatch.end);
+      }
+
+      if (description == "") {
+        description = "line ${i + 1}";
+      } else {
+        description = "line ${i + 1}: $description";
+      }
+
+      var input = "";
+      while (!lines[i].startsWith("<<<")) {
+        input += lines[i++] + "\n";
+      }
+
+      var expectedOutput = "";
+      while (++i < lines.length && !lines[i].startsWith(">>>")) {
+        expectedOutput += lines[i] + "\n";
+      }
+
+      validateCore(
+          description,
+          input,
+          expectedOutput,
+          blockSyntaxes: blockSyntaxes,
+          inlineSyntaxes: inlineSyntaxes
+          );
+    }
+  });
+}
+
+void validateCore(
+    String description,
+    String markdown,
+    String html,
+    {List<BlockSyntax> blockSyntaxes: const [],
+    List<InlineSyntax> inlineSyntaxes: const [],
+    Resolver linkResolver,
+    Resolver imageLinkResolver,
+    bool inlineOnly: false}) {
   test(description, () {
     var result = markdownToHtml(markdown,
+        blockSyntaxes: blockSyntaxes,
         inlineSyntaxes: inlineSyntaxes,
         linkResolver: linkResolver,
         imageLinkResolver: imageLinkResolver,
