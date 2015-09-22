@@ -1,9 +1,11 @@
 ## 0.9.0
 
 * Formalize an API for Markdown extensions (#43).
-* **Breaking:** Fenced code blocks are now considered an extension, as
-  they are not part of Markdown.pl.
-* Inline HTML syntax supported. This is also considered an extension (#18).
+* Introduce ExtensionSets. FencedCodeBlock is considered an extension, but
+  existing usage of `markdownToHtml()` and `new Document()` will use the
+  default extension set, which is `ExtensionSet.commonMark`, which includes
+  FencedCodeBlock.
+* Inline HTML syntax support; This is also considered an extension (#18).
 * The text `[foo] (bar)` now parses as an inline link (#53).
 * The text `[foo]()` now renders as an inline link.
 

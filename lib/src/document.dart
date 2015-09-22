@@ -2,22 +2,30 @@ library markdown.src.document;
 
 import 'ast.dart';
 import 'block_parser.dart';
+import 'extension_set.dart';
 import 'inline_parser.dart';
 
 /// Maintains the context needed to parse a Markdown document.
 class Document {
-  final Map<String, Link> refLinks;
+  final Map<String, Link> refLinks = {};
   List<BlockSyntax> blockSyntaxes;
   List<InlineSyntax> inlineSyntaxes;
+  ExtensionSet extensionSet;
   Resolver linkResolver;
   Resolver imageLinkResolver;
 
   Document(
-      {this.blockSyntaxes: const [],
-      this.inlineSyntaxes: const [],
+      {this.blockSyntaxes,
+      this.inlineSyntaxes,
+      extensionSet,
       this.linkResolver,
-      this.imageLinkResolver})
-      : refLinks = <String, Link>{};
+      this.imageLinkResolver}) {
+    blockSyntaxes ??= [];
+    inlineSyntaxes ??= [];
+    extensionSet ??= ExtensionSet.commonMark;
+    blockSyntaxes.addAll(extensionSet.blockSyntaxes);
+    inlineSyntaxes.addAll(extensionSet.inlineSyntaxes);
+  }
 
   parseRefLinks(List<String> lines) {
     // This is a hideous regex. It matches:

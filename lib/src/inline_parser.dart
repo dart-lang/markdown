@@ -209,7 +209,7 @@ class TextSyntax extends InlineSyntax {
 /// TODO(srawlins): improve accuracy while ensuring performance, once
 /// Markdown benchmarking is more mature.
 class InlineHtmlSyntax extends TextSyntax {
-  InlineHtmlSyntax() : super(r'</?[A-Za-z][^>]*>');
+  InlineHtmlSyntax() : super(r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?: [^>]*)?>');
 }
 
 /// Matches autolinks like `<http://foo.com>`.

@@ -6,20 +6,23 @@ library markdown.src.html_renderer;
 
 import 'ast.dart';
 import 'document.dart';
+import 'extension_set.dart';
 import 'inline_parser.dart';
 
 /// Converts the given string of markdown to HTML.
 String markdownToHtml(String markdown,
-    {List<BlockSyntax> blockSyntaxes: const [],
-    List<InlineSyntax> inlineSyntaxes: const [],
+    {List<BlockSyntax> blockSyntaxes,
+    List<InlineSyntax> inlineSyntaxes,
+    ExtensionSet extensionSet,
     Resolver linkResolver,
     Resolver imageLinkResolver,
     bool inlineOnly: false}) {
   var document = new Document(
       blockSyntaxes: blockSyntaxes,
       inlineSyntaxes: inlineSyntaxes,
-      imageLinkResolver: imageLinkResolver,
-      linkResolver: linkResolver);
+      extensionSet: extensionSet,
+      linkResolver: linkResolver,
+      imageLinkResolver: imageLinkResolver);
 
   if (inlineOnly) return renderToHtml(document.parseInline(markdown));
 
