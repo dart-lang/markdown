@@ -249,17 +249,17 @@ class TagSyntax extends InlineSyntax {
   }
 }
 
-/// Matches inline links like `[blah] [id]` and `[blah] (url)`.
+/// Matches inline links like `[blah][id]` and `[blah](url)`.
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;
 
-  /// The regex for the end of a link needs to handle both reference style and
-  /// inline styles as well as optional titles for inline links. To make that
+  /// The regex for the end of a link needs to handle both reference-style and
+  /// inline-style links as well as optional titles for inline links. To make that
   /// a bit more palatable, this breaks it into pieces.
   static get linkPattern {
-    var refLink = r'\s?\[([^\]]*)\]'; // "[id]" reflink id.
+    var refLink = r'\[([^\]]*)\]'; // "[id]" reflink id.
     var title = r'(?:[ ]*"([^"]+)"|)'; // Optional title in quotes.
-    var inlineLink = '\\s?\\(([^ )]+)$title\\)'; // "(url "title")" link.
+    var inlineLink = '\\(([^ )]*)$title\\)'; // "(url "title")" link.
     return '\](?:($refLink|$inlineLink)|)';
 
     // The groups matched by this are:
@@ -275,7 +275,7 @@ class LinkSyntax extends TagSyntax {
 
   Node createNode(InlineParser parser, Match match, TagState state) {
     // If we didn't match refLink or inlineLink, then it means there was
-    // nothing after the first square bracket, so it isn't a normal markdown
+    // nothing after the first square bracket, so it isn't a normal Markdown
     // link at all. Instead, we allow users of the library to specify a special
     // resolver function ([linkResolver]) that may choose to handle
     // this. Otherwise, it's just treated as plain text.
@@ -311,12 +311,12 @@ class LinkSyntax extends TagSyntax {
   }
 
   Link getLink(InlineParser parser, Match match, TagState state) {
-    if (match[3] != null && match[3] != '') {
+    if (match[3] != null) {
       // Inline link like [foo](url).
       var url = match[3];
       var title = match[4];
 
-      // For whatever reason, markdown allows angle-bracketed URLs here.
+      // For whatever reason, Markdown allows angle-bracketed URLs here.
       if (url.startsWith('<') && url.endsWith('>')) {
         url = url.substring(1, url.length - 1);
       }
@@ -324,7 +324,7 @@ class LinkSyntax extends TagSyntax {
       return new Link(null, url, title);
     } else {
       var id;
-      // Reference link like [foo] [bar].
+      // Reference link like [foo][bar].
       if (match[2] == '') {
         // The id is empty ("[]") so infer it from the contents.
         id = parser.source.substring(state.startPos + 1, parser.pos);
