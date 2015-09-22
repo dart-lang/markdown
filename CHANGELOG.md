@@ -4,6 +4,8 @@
 * **Breaking:** Fenced code blocks are now considered an extension, as
   they are not part of Markdown.pl.
 * Inline HTML syntax supported. This is also considered an extension (#18).
+* The text `[foo] (bar)` now parses as an inline link (#53).
+* The text `[foo]()` now renders as an inline link.
 
 ## 0.8.0
 

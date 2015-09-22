@@ -1,26 +1,26 @@
 >>> double quotes for title
-links [are] [a] awesome
+links [are][a] awesome
 
 [a]: http://foo.com "woo"
 
 <<<
 <p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
 >>> single quoted title
-links [are] [a] awesome
+links [are][a] awesome
 
 [a]: http://foo.com 'woo'
 
 <<<
 <p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
 >>> parentheses for title
-links [are] [a] awesome
+links [are][a] awesome
 
 [a]: http://foo.com (woo)
 
 <<<
 <p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
 >>> no title
-links [are] [a] awesome
+links [are][a] awesome
 
 [a]: http://foo.com
 
@@ -32,7 +32,7 @@ links [are] [a] awesome
 <<<
 <p>[not] [known]</p>
 >>> can style link contents
-links [*are*] [a] awesome
+links [*are*][a] awesome
 
 [a]: http://foo.com
 

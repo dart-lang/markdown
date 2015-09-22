@@ -4,7 +4,7 @@ links [are](http://foo.com "woo") awesome
 <<<
 <p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
 >>> no title
-links [are] (http://foo.com) awesome
+links [are](http://foo.com) awesome
 
 <<<
 <p>links <a href="http://foo.com">are</a> awesome</p>
@@ -13,3 +13,18 @@ links [*are*](http://foo.com) awesome
 
 <<<
 <p>links <a href="http://foo.com"><em>are</em></a> awesome</p>
+>>> no URL
+links [are]() awesome
+
+<<<
+<p>links <a href="">are</a> awesome</p>
+>>> URL wrapped in angle brackets
+links [are](<http://example.com>) awesome
+
+<<<
+<p>links <a href="http://example.com">are</a> awesome</p>
+>>> not a real link
+links [are] (http://foo.com) awesome
+
+<<<
+<p>links [are] (http://foo.com) awesome</p>
