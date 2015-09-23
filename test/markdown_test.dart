@@ -96,7 +96,7 @@ nyan''', '''<p>~=[,,_,,]:3</p>
         1. This will not be an <ol>.
         ''',
         '''
-        1. This will not be an &lt;ol>.
+        1. This will not be an <ol>.
         ''', inlineOnly: true);
   });
 

@@ -32,8 +32,8 @@ String get _testDir => p.dirname(currentMirrorSystem()
       .path);
 
 void testFile(String file,
-    {List<BlockSyntax> blockSyntaxes: const [],
-    List<InlineSyntax> inlineSyntaxes: const []}) =>
+    {List<BlockSyntax> blockSyntaxes,
+    List<InlineSyntax> inlineSyntaxes}) =>
   testUnitFile(
       file,
       new File(p.join(_testDir, file)),
@@ -43,8 +43,8 @@ void testFile(String file,
 void testUnitFile(
     String directory,
     File entry,
-    {List<BlockSyntax> blockSyntaxes: const [],
-    List<InlineSyntax> inlineSyntaxes: const []}) {
+    {List<BlockSyntax> blockSyntaxes,
+    List<InlineSyntax> inlineSyntaxes}) {
   group('$directory ${p.basename(entry.path)}', () {
     var lines = entry.readAsLinesSync();
 
@@ -91,8 +91,8 @@ void validateCore(
     String description,
     String markdown,
     String html,
-    {List<BlockSyntax> blockSyntaxes: const [],
-    List<InlineSyntax> inlineSyntaxes: const [],
+    {List<BlockSyntax> blockSyntaxes,
+    List<InlineSyntax> inlineSyntaxes,
     Resolver linkResolver,
     Resolver imageLinkResolver,
     bool inlineOnly: false}) {

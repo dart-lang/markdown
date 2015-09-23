@@ -16,9 +16,11 @@ void main() {
 Syntax extensions
 -----------------
 
-A few Markdown extensions are supported. They are all disabled by default, and
-can be enabled by specifying an Array of extension syntaxes in the `blockSyntaxes` or `inlineSyntaxes`
-argument of `markdownToHtml`.
+A few Markdown extensions, beyond what was specified in the original
+[Perl Markdown][] implementation, are supported. By default, the ones supported
+in [CommonMark] are enabled. Any individual extension can be enabled by
+specifying an Array of extension syntaxes in the `blockSyntaxes` or
+`inlineSyntaxes` argument of `markdownToHtml`.
 
 The currently supported inline extension syntaxes are:
 
@@ -42,6 +44,21 @@ void main() {
 }
 ```
 
+### Extension Sets
+
+To make extension management easy, you can also just specify an extension set.
+Both `markdownToHtml()` and `new Document()` accept an `extensionSet` named
+parameter. Right now there are two extension sets:
+
+* `ExtensionSet.none` includes no extensions. With no extensions, Markdown
+  documents will be parsed closely to how they might be parsed by the original
+  [Perl Markdown][] implementation.
+* `ExtensionSet.commonMark` includes two extensions so far, which bring this
+  package's Markdown parsing closer to what is found in the [CommonMark] spec:
+
+  * `new InlineHtmlSyntax()`
+  * `const FencedCodeBlockSyntax()`
+
 ### Custom syntax extensions
 
 You can create and use your own syntaxes.
@@ -55,3 +72,6 @@ void main() {
   //=> <p>~=[,,_,,]:3</p>
 }
 ```
+
+[Perl Markdown]: http://daringfireball.net/projects/markdown/
+[CommonMark]: http://commonmark.org/
