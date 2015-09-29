@@ -8,23 +8,25 @@ import 'inline_parser.dart';
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, Link> refLinks = {};
-  List<BlockSyntax> blockSyntaxes;
-  List<InlineSyntax> inlineSyntaxes;
+  Iterable<BlockSyntax> blockSyntaxes;
+  Iterable<InlineSyntax> inlineSyntaxes;
   ExtensionSet extensionSet;
   Resolver linkResolver;
   Resolver imageLinkResolver;
 
   Document(
-      {this.blockSyntaxes,
-      this.inlineSyntaxes,
-      extensionSet,
+      {Iterable<BlockSyntax> blockSyntaxes,
+      Iterable<InlineSyntax> inlineSyntaxes,
+      ExtensionSet extensionSet,
       this.linkResolver,
       this.imageLinkResolver}) {
-    blockSyntaxes ??= [];
-    inlineSyntaxes ??= [];
     extensionSet ??= ExtensionSet.commonMark;
-    blockSyntaxes.addAll(extensionSet.blockSyntaxes);
-    inlineSyntaxes.addAll(extensionSet.inlineSyntaxes);
+    this.blockSyntaxes = new Set()
+      ..addAll(blockSyntaxes ?? [])
+      ..addAll(extensionSet.blockSyntaxes);
+    this.inlineSyntaxes = new Set()
+      ..addAll(inlineSyntaxes ?? [])
+      ..addAll(extensionSet.inlineSyntaxes);
   }
 
   parseRefLinks(List<String> lines) {

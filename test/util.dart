@@ -26,25 +26,18 @@ void testDirectory(String name) {
 
 // Locate the "test" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
-String get _testDir => p.dirname(currentMirrorSystem()
-      .findLibrary(#markdown.test.util)
-      .uri
-      .path);
+String get _testDir =>
+    p.dirname(currentMirrorSystem().findLibrary(#markdown.test.util).uri.path);
 
 void testFile(String file,
-    {List<BlockSyntax> blockSyntaxes,
-    List<InlineSyntax> inlineSyntaxes}) =>
-  testUnitFile(
-      file,
-      new File(p.join(_testDir, file)),
-      blockSyntaxes: blockSyntaxes,
-      inlineSyntaxes: inlineSyntaxes);
+        {Iterable<BlockSyntax> blockSyntaxes,
+        Iterable<InlineSyntax> inlineSyntaxes}) =>
+    testUnitFile(file, new File(p.join(_testDir, file)),
+        blockSyntaxes: blockSyntaxes, inlineSyntaxes: inlineSyntaxes);
 
-void testUnitFile(
-    String directory,
-    File entry,
-    {List<BlockSyntax> blockSyntaxes,
-    List<InlineSyntax> inlineSyntaxes}) {
+void testUnitFile(String directory, File entry,
+    {Iterable<BlockSyntax> blockSyntaxes,
+    Iterable<InlineSyntax> inlineSyntaxes}) {
   group('$directory ${p.basename(entry.path)}', () {
     var lines = entry.readAsLinesSync();
 
@@ -76,23 +69,15 @@ void testUnitFile(
         expectedOutput += lines[i] + "\n";
       }
 
-      validateCore(
-          description,
-          input,
-          expectedOutput,
-          blockSyntaxes: blockSyntaxes,
-          inlineSyntaxes: inlineSyntaxes
-          );
+      validateCore(description, input, expectedOutput,
+          blockSyntaxes: blockSyntaxes, inlineSyntaxes: inlineSyntaxes);
     }
   });
 }
 
-void validateCore(
-    String description,
-    String markdown,
-    String html,
-    {List<BlockSyntax> blockSyntaxes,
-    List<InlineSyntax> inlineSyntaxes,
+void validateCore(String description, String markdown, String html,
+    {Iterable<BlockSyntax> blockSyntaxes,
+    Iterable<InlineSyntax> inlineSyntaxes,
     Resolver linkResolver,
     Resolver imageLinkResolver,
     bool inlineOnly: false}) {
