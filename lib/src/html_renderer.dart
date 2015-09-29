@@ -4,6 +4,8 @@
 
 library markdown.src.html_renderer;
 
+import 'dart:collection';
+
 import 'ast.dart';
 import 'document.dart';
 import 'extension_set.dart';
@@ -40,11 +42,13 @@ class HtmlRenderer implements NodeVisitor {
   static final _blockTags = new RegExp('blockquote|h1|h2|h3|h4|h5|h6|hr|p|pre');
 
   StringBuffer buffer;
+  Set<String> uniqueIds;
 
   HtmlRenderer();
 
   String render(List<Node> nodes) {
     buffer = new StringBuffer();
+    uniqueIds = new LinkedHashSet<String>();
 
     for (final node in nodes) node.accept(this);
 
@@ -71,6 +75,11 @@ class HtmlRenderer implements NodeVisitor {
       buffer.write(' $name="${element.attributes[name]}"');
     }
 
+    // attach header anchor ids generated from text
+    if (element.generatedId != null) {
+      buffer.write(' id="${uniquifyId(element.generatedId)}"');
+    }
+
     if (element.isEmpty) {
       // Empty element like <hr/>.
       buffer.write(' />');
@@ -83,5 +92,21 @@ class HtmlRenderer implements NodeVisitor {
 
   void visitElementAfter(Element element) {
     buffer.write('</${element.tag}>');
+  }
+
+  /// Uniquifies an id generated from text.
+  String uniquifyId(String id) {
+    if (!uniqueIds.contains(id)) {
+      uniqueIds.add(id);
+      return id;
+    }
+
+    int suffix = 2;
+    String suffixedId = '$id-$suffix';
+    while (uniqueIds.contains(suffixedId)) {
+      suffixedId = '$id-${suffix++}';
+    }
+    uniqueIds.add(suffixedId);
+    return suffixedId;
   }
 }

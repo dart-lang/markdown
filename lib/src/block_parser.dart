@@ -111,7 +111,6 @@ class BlockParser {
 }
 
 abstract class BlockSyntax {
-
   const BlockSyntax();
 
   /// Gets the regex used to identify the beginning of this block, if any.
@@ -144,6 +143,20 @@ abstract class BlockSyntax {
     if (parser.isDone) return true;
     return parser.blockSyntaxes.any((s) => s.canParse(parser) && s.canEndBlock);
   }
+
+  /// Generates a valid HTML anchor from the inner text of [element].
+  static String generateAnchorHash(Element element) =>
+      _concatenatedText(element)
+          .toLowerCase()
+          .trim()
+          .replaceFirst(new RegExp(r'^[^a-z]+'), '')
+          .replaceAll(new RegExp(r'[^a-z0-9 _-]'), '')
+          .replaceAll(new RegExp(r'\s'), '-');
+
+  /// Concatenates the text found in all the children of [element].
+  static String _concatenatedText(Element element) => element.children
+      .map((child) => (child is Text) ? child.text : _concatenatedText(child))
+      .join('');
 }
 
 class EmptyBlockSyntax extends BlockSyntax {
@@ -181,6 +194,18 @@ class SetextHeaderSyntax extends BlockSyntax {
   }
 }
 
+/// Parses setext-style headers, and adds generated IDs to the generated
+/// elements.
+class SetextHeaderWithIdSyntax extends SetextHeaderSyntax {
+  const SetextHeaderWithIdSyntax();
+
+  Node parse(BlockParser parser) {
+    var element = super.parse(parser);
+    element.generatedId = BlockSyntax.generateAnchorHash(element);
+    return element;
+  }
+}
+
 /// Parses atx-style headers: `## Header ##`.
 class HeaderSyntax extends BlockSyntax {
   RegExp get pattern => _headerPattern;
@@ -193,6 +218,17 @@ class HeaderSyntax extends BlockSyntax {
     var level = match[1].length;
     var contents = parser.document.parseInline(match[2].trim());
     return new Element('h$level', contents);
+  }
+}
+
+/// Parses atx-style headers, and adds generated IDs to the generated elements.
+class HeaderWithIdSyntax extends HeaderSyntax {
+  const HeaderWithIdSyntax();
+
+  Node parse(BlockParser parser) {
+    var element = super.parse(parser);
+    element.generatedId = BlockSyntax.generateAnchorHash(element);
+    return element;
   }
 }
 
