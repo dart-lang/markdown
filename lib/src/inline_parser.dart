@@ -29,6 +29,8 @@ class InlineParser {
     new AutolinkSyntax(),
     new LinkSyntax(),
     new ImageLinkSyntax(),
+    // Allow any punctuation to be escaped.
+    new EscapeSyntax(),
     // "*" surrounded by spaces is left alone.
     new TextSyntax(r' \* '),
     // "_" surrounded by spaces is left alone.
@@ -195,6 +197,19 @@ class TextSyntax extends InlineSyntax {
 
     // Insert the substitution.
     parser.addNode(new Text(substitute));
+    return true;
+  }
+}
+
+/// Escape punctuation preceded by a backslash.
+class EscapeSyntax extends InlineSyntax {
+  final String substitute;
+
+  EscapeSyntax() : super(r'''\\[!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]''');
+
+  bool onMatch(InlineParser parser, Match match) {
+    // Insert the substitution.
+    parser.addNode(new Text(match[0][1]));
     return true;
   }
 }

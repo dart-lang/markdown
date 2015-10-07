@@ -10,6 +10,8 @@
 * The text `[foo]()` now renders as an inline link.
 * Header identifier support in the HeaderWithIdSyntax and
   SetextHeaderWithIdSyntax extensions.
+* Implement backslash-escaping so that Markdown syntax can be escaped, such as
+  `[foo]\(bar) ==> <p>[foo](bar)</p>`.
 
 ## 0.8.0
 
