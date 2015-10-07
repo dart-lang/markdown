@@ -12,6 +12,7 @@
   SetextHeaderWithIdSyntax extensions.
 * Implement backslash-escaping so that Markdown syntax can be escaped, such as
   `[foo]\(bar) ==> <p>[foo](bar)</p>`.
+* New public method for BlockParser: `peek(int linesAhead)`.
 
 ## 0.8.0
 

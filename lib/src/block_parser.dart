@@ -91,6 +91,20 @@ class BlockParser {
     return lines[_pos + 1];
   }
 
+  /// Gets the line that is [linesAhead] lines ahead of the current one, or
+  /// `null` if there is none.
+  ///
+  /// `peek(0)` is equivalent to [current].
+  ///
+  /// `peek(1)` is equivalent to [next].
+  String peek(int linesAhead) {
+    if (linesAhead < 0)
+      throw new ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.')
+    // Don't read past the end.
+    if (_pos >= lines.length - linesAhead) return null;
+    return lines[_post + linesAhead];
+  }
+
   void advance() {
     _pos++;
   }
@@ -103,7 +117,7 @@ class BlockParser {
     return regex.firstMatch(current) != null;
   }
 
-  /// Gets whether or not the current line matches the given pattern.
+  /// Gets whether or not the next line matches the given pattern.
   bool matchesNext(RegExp regex) {
     if (next == null) return false;
     return regex.firstMatch(next) != null;
