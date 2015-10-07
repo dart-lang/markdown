@@ -99,10 +99,10 @@ class BlockParser {
   /// `peek(1)` is equivalent to [next].
   String peek(int linesAhead) {
     if (linesAhead < 0)
-      throw new ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.')
+      throw new ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.');
     // Don't read past the end.
     if (_pos >= lines.length - linesAhead) return null;
-    return lines[_post + linesAhead];
+    return lines[_pos + linesAhead];
   }
 
   void advance() {
