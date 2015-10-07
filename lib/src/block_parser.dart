@@ -413,6 +413,16 @@ abstract class ListSyntax extends BlockSyntax {
 
   const ListSyntax();
 
+  /// A list of patterns that can start a valid block within a list item.
+  static final blocksInList = [
+    _blockquotePattern,
+    _headerPattern,
+    _hrPattern,
+    _indentPattern,
+    _ulPattern,
+    _olPattern
+  ];
+
   Node parse(BlockParser parser) {
     var items = <ListItem>[];
     var childLines = <String>[];
@@ -455,7 +465,29 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     endItem();
+    determineBlockItems(items);
+    var itemNodes = <Node>[];
 
+    for (var item in items) {
+      if (item.forceBlock) {
+        // Block list item.
+        var children = parser.document.parseLines(item.lines);
+        itemNodes.add(new Element('li', children));
+      } else {
+        // Raw list item.
+        var contents = parser.document.parseInline(item.lines[0]);
+        itemNodes.add(new Element('li', contents));
+      }
+    }
+
+    return new Element(listTag, itemNodes);
+  }
+
+  /// Determines whether each item in [items] is a block item.
+  ///
+  /// Also removes any trailing empty lines and notes which items are separated
+  /// by empty lines.
+  void determineBlockItems(List items) {
     // Markdown, because it hates us, specifies two kinds of list items. If you
     // have a list like:
     //
@@ -498,56 +530,26 @@ abstract class ListSyntax extends BlockSyntax {
     // trailing empty lines on the last item don't force it into being a block.
     for (var i = 0; i < items.length; i++) {
       for (var j = items[i].lines.length - 1; j > 0; j--) {
-        if (_emptyPattern.firstMatch(items[i].lines[j]) != null) {
-          // Found an empty line. This item and the one after it are blocks.
-          if (i < items.length - 1) {
-            items[i].forceBlock = true;
-            items[i + 1].forceBlock = true;
-          }
-          items[i].lines.removeLast();
-        } else {
-          break;
+        if (!_emptyPattern.hasMatch(items[i].lines[j])) break;
+
+        // Found an empty line. This item and the one after it are blocks.
+        if (i < items.length - 1) {
+          items[i].forceBlock = true;
+          items[i + 1].forceBlock = true;
         }
+        items[i].lines.removeLast();
       }
+
+      // Items with more than one line are block items.
+      items[i].forceBlock = items[i].forceBlock || items[i].lines.length > 1;
+
+      if (items[i].forceBlock) continue;
+
+      // Items (even one-lined items) that start with a block syntax are block
+      // items.
+      items[i].forceBlock =
+          blocksInList.any((p) => p.hasMatch(items[i].lines[0]));
     }
-
-    // Convert the list items to Nodes.
-    var itemNodes = <Node>[];
-    for (var item in items) {
-      var blockItem = item.forceBlock || (item.lines.length > 1);
-
-      // See if it matches some block parser.
-      var blocksInList = [
-        _blockquotePattern,
-        _headerPattern,
-        _hrPattern,
-        _indentPattern,
-        _ulPattern,
-        _olPattern
-      ];
-
-      if (!blockItem) {
-        for (var pattern in blocksInList) {
-          if (pattern.firstMatch(item.lines[0]) != null) {
-            blockItem = true;
-            break;
-          }
-        }
-      }
-
-      // Parse the item as a block or inline.
-      if (blockItem) {
-        // Block list item.
-        var children = parser.document.parseLines(item.lines);
-        itemNodes.add(new Element('li', children));
-      } else {
-        // Raw list item.
-        var contents = parser.document.parseInline(item.lines[0]);
-        itemNodes.add(new Element('li', contents));
-      }
-    }
-
-    return new Element(listTag, itemNodes);
   }
 }
 

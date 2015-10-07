@@ -6,13 +6,16 @@
   default extension set, which is `ExtensionSet.commonMark`, which includes
   FencedCodeBlock.
 * Inline HTML syntax support; This is also considered an extension (#18).
-* The text `[foo] (bar)` now parses as an inline link (#53).
+* The text `[foo] (bar)` no longer renders as an inline link (#53).
 * The text `[foo]()` now renders as an inline link.
 * Header identifier support in the HeaderWithIdSyntax and
   SetextHeaderWithIdSyntax extensions.
 * Implement backslash-escaping so that Markdown syntax can be escaped, such as
   `[foo]\(bar) ==> <p>[foo](bar)</p>`.
-* New public method for BlockParser: `peek(int linesAhead)`.
+* New public method for BlockParser: `peek(int linesAhead)`, meant for use in
+  subclasses.
+* New public members for ListSyntax: `blocksInList` and `determineBlockItems()`,
+  meant for use in subclasses.
 
 ## 0.8.0
 
