@@ -12,6 +12,7 @@
   SetextHeaderWithIdSyntax extensions.
 * Implement backslash-escaping so that Markdown syntax can be escaped, such as
   `[foo]\(bar) ==> <p>[foo](bar)</p>`.
+* Support for hard line breaks with either `\\\n` or `  \n` (#30, #60).
 * New public method for BlockParser: `peek(int linesAhead)`, meant for use in
   subclasses.
 * New public members for ListSyntax: `blocksInList` and `determineBlockItems()`,

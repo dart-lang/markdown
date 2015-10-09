@@ -23,7 +23,7 @@ class InlineParser {
 
     // TODO(amouravski): this regex will glom up any custom syntaxes unless
     // they're at the beginning.
-    new TextSyntax(r'\s*[A-Za-z0-9]+'),
+    new TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9]'),
 
     // The real syntaxes.
     new AutolinkSyntax(),
@@ -42,6 +42,10 @@ class InlineParser {
     new TextSyntax(r'&', sub: '&amp;'),
     // Encode "<". (Why not encode ">" too? Gruber is toying with us.)
     new TextSyntax(r'<', sub: '&lt;'),
+    // Escaped newlines become hard line breaks.
+    new TextSyntax(r'\\\n', sub: '<br />\n'),
+    // Two or more spaces at the end of a line become hard line breaks.
+    new TextSyntax(r'  +\n', sub: '<br />\n'),
     // Parse "**strong**" tags.
     new TagSyntax(r'\*\*', tag: 'strong'),
     // Parse "__strong__" tags.
