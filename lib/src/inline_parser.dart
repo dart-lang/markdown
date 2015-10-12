@@ -276,9 +276,9 @@ class LinkSyntax extends TagSyntax {
   /// inline-style links as well as optional titles for inline links. To make that
   /// a bit more palatable, this breaks it into pieces.
   static get linkPattern {
-    var refLink = r'\[([^\]]*)\]'; // "[id]" reflink id.
-    var title = r'(?:[ ]*"([^"]+)"|)'; // Optional title in quotes.
-    var inlineLink = '\\(([^ )]*)$title\\)'; // "(url "title")" link.
+    var refLink = r'\[([^\]]*)\]'; // `[id]` reflink id.
+    var title = r'(?:\s*"([^"]+)"|)'; // Optional title in quotes.
+    var inlineLink = '\\((\\S*)$title\\)'; // `(url "title")` link.
     return '\](?:($refLink|$inlineLink)|)';
 
     // The groups matched by this are:

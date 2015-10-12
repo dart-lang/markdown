@@ -8,6 +8,7 @@
 * Inline HTML syntax support; This is also considered an extension (#18).
 * The text `[foo] (bar)` no longer renders as an inline link (#53).
 * The text `[foo]()` now renders as an inline link.
+* Whitespace now allowed between a link's destination and title (#65).
 * Header identifier support in the HeaderWithIdSyntax and
   SetextHeaderWithIdSyntax extensions.
 * Implement backslash-escaping so that Markdown syntax can be escaped, such as
