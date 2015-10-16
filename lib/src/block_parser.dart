@@ -48,15 +48,17 @@ final _ulPattern = new RegExp(r'^[ ]{0,3}[*+-][ \t]+(.*)$');
 final _olPattern = new RegExp(r'^[ ]{0,3}\d+\.[ \t]+(.*)$');
 
 /// Maintains the internal state needed to parse a series of lines into blocks
-/// of markdown suitable for further inline parsing.
+/// of Markdown suitable for further inline parsing.
 class BlockParser {
   final List<String> lines;
 
-  /// The markdown document this parser is parsing.
+  /// The Markdown document this parser is parsing.
   final Document document;
 
-  /// The enabled block syntaxes. To turn a series of lines into blocks, each of
-  /// these will be tried in turn. Order matters here.
+  /// The enabled block syntaxes.
+  ///
+  /// To turn a series of lines into blocks, each of these will be tried in
+  /// turn. Order matters here.
   final List<BlockSyntax> blockSyntaxes = [];
 
   /// Index of the current line.
@@ -309,7 +311,7 @@ class CodeBlockSyntax extends BlockSyntax {
 
 /// Parses preformatted code blocks between two ~~~ or ``` sequences.
 ///
-/// See [Pandoc's documentation](http://johnmacfarlane.net/pandoc/demo/example9/pandocs-markdown.html).
+/// See [Pandoc's documentation](http://pandoc.org/README.html#fenced-code-blocks).
 class FencedCodeBlockSyntax extends BlockSyntax {
   RegExp get pattern => _codePattern;
 

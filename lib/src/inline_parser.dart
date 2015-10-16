@@ -9,17 +9,14 @@ import 'document.dart';
 import 'util.dart';
 
 /// Maintains the internal state needed to parse inline span elements in
-/// markdown.
+/// Markdown.
 class InlineParser {
   static final List<InlineSyntax> _defaultSyntaxes = <InlineSyntax>[
-    // This first regexp matches plain text to accelerate parsing.  It must
-    // be written so that it does not match any prefix of any following
-    // syntax.  Most markdown is plain text, so it is faster to match one
-    // regexp per 'word' rather than fail to match all the following regexps
-    // at each non-syntax character position.  It is much more important
-    // that the regexp is fast than complete (for example, adding grouping
-    // is likely to slow the regexp down enough to negate its benefit).
-    // Since it is purely for optimization, it can be removed for debugging.
+    // This first RegExp matches plain text to accelerate parsing. It's written
+    // so that it does not match any prefix of any following syntaxes. Most
+    // Markdown is plain text, so it's faster to match one RegExp per 'word'
+    // rather than fail to match all the following RegExps at each non-syntax
+    // character position.
 
     // TODO(amouravski): this regex will glom up any custom syntaxes unless
     // they're at the beginning.
@@ -58,10 +55,10 @@ class InlineParser {
     // We will add the LinkSyntax once we know about the specific link resolver.
   ];
 
-  /// The string of markdown being parsed.
+  /// The string of Markdown being parsed.
   final String source;
 
-  /// The markdown document this parser is parsing.
+  /// The Markdown document this parser is parsing.
   final Document document;
 
   final List<InlineSyntax> syntaxes = <InlineSyntax>[];
@@ -159,13 +156,13 @@ class InlineParser {
   }
 }
 
-/// Represents one kind of markdown tag that can be parsed.
+/// Represents one kind of Markdown tag that can be parsed.
 abstract class InlineSyntax {
   final RegExp pattern;
 
   InlineSyntax(String pattern) : pattern = new RegExp(pattern, multiLine: true);
 
-  /// Try to match at the parser's current position.
+  /// Tries to match at the parser's current position.
   ///
   /// Returns whether or not the pattern successfully matched.
   bool tryMatch(InlineParser parser) {
@@ -181,6 +178,10 @@ abstract class InlineSyntax {
     return false;
   }
 
+  /// Processes [match], adding nodes to [parser] and possibly advancing
+  /// [parser].
+  ///
+  /// Returns whether the caller should advance [parser] by `match[0].length`.
   bool onMatch(InlineParser parser, Match match);
 }
 
@@ -222,7 +223,7 @@ class EscapeSyntax extends InlineSyntax {
 /// [CommonMark 0.22](http://spec.commonmark.org/0.22/#raw-html).
 ///
 /// This is not actually a good definition (nor CommonMark's) of an HTML tag,
-/// but it is fast. It will leave text like <a href='hi"> alone, which is
+/// but it is fast. It will leave text like `<a href='hi">` alone, which is
 /// incorrect.
 ///
 /// TODO(srawlins): improve accuracy while ensuring performance, once
@@ -272,9 +273,11 @@ class TagSyntax extends InlineSyntax {
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;
 
-  /// The regex for the end of a link needs to handle both reference-style and
-  /// inline-style links as well as optional titles for inline links. To make that
-  /// a bit more palatable, this breaks it into pieces.
+  /// The regex for the end of a link.
+  ///
+  /// This handles both reference-style and inline-style links as well as
+  /// optional titles for inline links. To make that a bit more palatable, this
+  /// breaks it into pieces.
   static get linkPattern {
     var refLink = r'\[([^\]]*)\]'; // `[id]` reflink id.
     var title = r'(?:\s*"([^"]+)"|)'; // Optional title in quotes.
@@ -436,8 +439,9 @@ class CodeSyntax extends InlineSyntax {
   }
 }
 
-/// Keeps track of a currently open tag while it is being parsed. The parser
-/// maintains a stack of these so it can handle nested tags.
+/// Keeps track of a currently open tag while it is being parsed.
+///
+/// The parser maintains a stack of these so it can handle nested tags.
 class TagState {
   /// The point in the original source where this tag started.
   final int startPos;
@@ -467,6 +471,7 @@ class TagState {
   }
 
   /// Pops this tag off the stack, completes it, and adds it to the output.
+  ///
   /// Will discard any unmatched tags that happen to be above it on the stack.
   /// If this is the last node in the stack, returns its children.
   List<Node> close(InlineParser parser, Match endMatch) {

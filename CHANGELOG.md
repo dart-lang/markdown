@@ -19,6 +19,7 @@
   subclasses.
 * New public members for ListSyntax: `blocksInList` and `determineBlockItems()`,
   meant for use in subclasses.
+* Improve public docs (better, and more of them).
 
 ## 0.8.0
 
