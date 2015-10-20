@@ -23,6 +23,19 @@ links [are](<http://example.com>) awesome
 
 <<<
 <p>links <a href="http://example.com">are</a> awesome</p>
+>>> multi-line link
+links [are
+awesome](<http://example.com>).
+
+<<<
+<p>links <a href="http://example.com">are
+awesome</a>.</p>
+>>> multi-line link with a title
+links [are](http://foo.com
+"woo") awesome
+
+<<<
+<p>links <a href="http://foo.com" title="woo">are</a> awesome</p>
 >>> not a real link
 links [are] (http://foo.com) awesome
 
