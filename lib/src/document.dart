@@ -29,6 +29,8 @@ class Document {
       ..addAll(extensionSet.inlineSyntaxes);
   }
 
+  /// Parses [lines] for reference links, adding them to [refLinks] and
+  /// replaces their source lines with blank lines.
   parseRefLinks(List<String> lines) {
     // This is a hideous regex. It matches:
     // [id]: http:foo.com "some title"
@@ -70,7 +72,7 @@ class Document {
     }
   }
 
-  /// Parse the given [lines] of markdown to a series of AST nodes.
+  /// Parses the given [lines] of Markdown to a series of AST nodes.
   List<Node> parseLines(List<String> lines) {
     var parser = new BlockParser(lines, this);
 
@@ -88,10 +90,7 @@ class Document {
     return blocks;
   }
 
-  /// Takes a string of raw text and processes all inline markdown tags,
-  /// returning a list of AST nodes. For example, given ``"*this **is** a*
-  /// `markdown`"``, returns:
-  /// `<em>this <strong>is</strong> a</em> <code>markdown</code>`.
+  /// Parses the given inline Markdown [text] to a series of AST nodes.
   List<Node> parseInline(String text) => new InlineParser(text, this).parse();
 }
 

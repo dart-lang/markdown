@@ -11,7 +11,7 @@ import 'document.dart';
 import 'extension_set.dart';
 import 'inline_parser.dart';
 
-/// Converts the given string of markdown to HTML.
+/// Converts the given string of Markdown to HTML.
 String markdownToHtml(String markdown,
     {Iterable<BlockSyntax> blockSyntaxes,
     Iterable<InlineSyntax> inlineSyntaxes,
@@ -35,6 +35,7 @@ String markdownToHtml(String markdown,
   return renderToHtml(document.parseLines(lines)) + '\n';
 }
 
+/// Renders [nodes] to HTML.
 String renderToHtml(List<Node> nodes) => new HtmlRenderer().render(nodes);
 
 /// Translates a parsed AST to HTML.
