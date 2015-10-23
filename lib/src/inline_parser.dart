@@ -13,17 +13,6 @@ import 'util.dart';
 class InlineParser {
   static final List<InlineSyntax> _defaultSyntaxes =
       new List<InlineSyntax>.unmodifiable(<InlineSyntax>[
-    // This first RegExp matches plain text to accelerate parsing. It's written
-    // so that it does not match any prefix of any following syntaxes. Most
-    // Markdown is plain text, so it's faster to match one RegExp per 'word'
-    // rather than fail to match all the following RegExps at each non-syntax
-    // character position.
-
-    // TODO(amouravski): this regex will glom up any custom syntaxes unless
-    // they're at the beginning.
-    new TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9]'),
-
-    // The real syntaxes.
     new AutolinkSyntax(),
     new LinkSyntax(),
     new ImageLinkSyntax(),
@@ -75,6 +64,22 @@ class InlineParser {
   InlineParser(this.source, this.document) : _stack = <TagState>[] {
     // User specified syntaxes are the first syntaxes to be evaluated.
     syntaxes.addAll(document.inlineSyntaxes);
+
+    var documentHasCustomInlineSyntaxes = document.inlineSyntaxes
+        .any((s) => !document.extensionSet.inlineSyntaxes.contains(s));
+
+    // This first RegExp matches plain text to accelerate parsing. It's written
+    // so that it does not match any prefix of any following syntaxes. Most
+    // Markdown is plain text, so it's faster to match one RegExp per 'word'
+    // rather than fail to match all the following RegExps at each non-syntax
+    // character position.
+    if (documentHasCustomInlineSyntaxes) {
+      // We should be less aggressive in blowing past "words".
+      syntaxes.add(new TextSyntax(r'[A-Za-z0-9]+\b'));
+    } else {
+      syntaxes.add(new TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9]'));
+    }
+
     syntaxes.addAll(_defaultSyntaxes);
 
     // Custom link resolvers go after the generic text syntax.
@@ -414,7 +419,7 @@ class CodeSyntax extends InlineSyntax {
   CodeSyntax() : super(_pattern);
 
   bool tryMatch(InlineParser parser) {
-    if (parser.pos > 0 && parser.source[parser.pos-1] == '`') {
+    if (parser.pos > 0 && parser.source[parser.pos - 1] == '`') {
       // Not really a match! We can't just sneak past one backtick to try the
       // next character. An example of this situation would be:
       //

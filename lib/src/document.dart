@@ -20,13 +20,13 @@ class Document {
       ExtensionSet extensionSet,
       this.linkResolver,
       this.imageLinkResolver}) {
-    extensionSet ??= ExtensionSet.commonMark;
+    this.extensionSet = extensionSet ?? ExtensionSet.commonMark;
     this.blockSyntaxes = new Set()
       ..addAll(blockSyntaxes ?? [])
-      ..addAll(extensionSet.blockSyntaxes);
+      ..addAll(this.extensionSet.blockSyntaxes);
     this.inlineSyntaxes = new Set()
       ..addAll(inlineSyntaxes ?? [])
-      ..addAll(extensionSet.inlineSyntaxes);
+      ..addAll(this.extensionSet.inlineSyntaxes);
   }
 
   /// Parses [lines] for reference links, adding them to [refLinks] and
