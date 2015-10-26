@@ -208,8 +208,6 @@ class TextSyntax extends InlineSyntax {
 
 /// Escape punctuation preceded by a backslash.
 class EscapeSyntax extends InlineSyntax {
-  final String substitute;
-
   EscapeSyntax() : super(r'''\\[!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]''');
 
   bool onMatch(InlineParser parser, Match match) {
