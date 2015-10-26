@@ -7,6 +7,7 @@ library markdown.src.html_renderer;
 import 'dart:collection';
 
 import 'ast.dart';
+import 'block_parser.dart';
 import 'document.dart';
 import 'extension_set.dart';
 import 'inline_parser.dart';

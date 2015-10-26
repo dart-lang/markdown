@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:markdown/markdown.dart';
 
-void main(List<String> args) async {
+main(List<String> args) async {
   if (args.length > 1) {
     print('Usage: markdown.dart [file]');
     exit(1);

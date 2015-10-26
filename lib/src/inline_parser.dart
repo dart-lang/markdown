@@ -11,7 +11,8 @@ import 'util.dart';
 /// Maintains the internal state needed to parse inline span elements in
 /// Markdown.
 class InlineParser {
-  static final List<InlineSyntax> _defaultSyntaxes = <InlineSyntax>[
+  static final List<InlineSyntax> _defaultSyntaxes =
+      new List<InlineSyntax>.unmodifiable(<InlineSyntax>[
     // This first RegExp matches plain text to accelerate parsing. It's written
     // so that it does not match any prefix of any following syntaxes. Most
     // Markdown is plain text, so it's faster to match one RegExp per 'word'
@@ -53,7 +54,7 @@ class InlineParser {
     new TagSyntax(r'\b_', tag: 'em', end: r'_\b'),
     new CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
-  ];
+  ]);
 
   /// The string of Markdown being parsed.
   final String source;
@@ -208,8 +209,6 @@ class TextSyntax extends InlineSyntax {
 
 /// Escape punctuation preceded by a backslash.
 class EscapeSyntax extends InlineSyntax {
-  final String substitute;
-
   EscapeSyntax() : super(r'''\\[!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]''');
 
   bool onMatch(InlineParser parser, Match match) {
