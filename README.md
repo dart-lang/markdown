@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dart-lang/markdown.svg?branch=master)](https://travis-ci.org/dart-lang/markdown)
+
 A portable Markdown library written in Dart. It can parse Markdown into
 HTML on both the client and server.
 
