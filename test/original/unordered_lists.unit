@@ -69,3 +69,18 @@
 <ul><li>
 <p>one
 two</p></li><li>three</li></ul>
+>>> can nest lists
+*   one
+
+    * nested one
+
+    * nested two
+
+*   two
+
+<<<
+<ul><li>
+<p>one</p><ul><li>
+<p>nested one</p></li><li>
+<p>nested two</p></li></ul></li><li>
+<p>two</p></li></ul>
