@@ -27,20 +27,18 @@ ___
 <<<
 <p>para</p>
 <hr />
->>> consume an unordered list
+>>> are terminated by an unordered list
 para
 * list
 
 <<<
-<p>para
-* list</p>
->>> consume an ordered list
+<p>para</p><ul><li>list</li></ul>
+>>> are terminated by an ordered list
 para
 1. list
 
 <<<
-<p>para
-1. list</p>
+<p>para</p><ol><li>list</li></ol>
 >>> take account of windows line endings
 line1
 

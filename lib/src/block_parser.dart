@@ -409,7 +409,7 @@ class ListItem {
 
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
-  bool get canEndBlock => false;
+  bool get canEndBlock => true;
 
   String get listTag;
 
