@@ -1,12 +1,14 @@
 ## 0.9.0
 
+* BREAKING: The text `[foo] (bar)` no longer renders as an inline link (#53).
+* BREAKING: Change list parsing to allow lists to begin immediately after a
+  preceding block element, without a blank line in between.
 * Formalize an API for Markdown extensions (#43).
 * Introduce ExtensionSets. FencedCodeBlock is considered an extension, but
   existing usage of `markdownToHtml()` and `new Document()` will use the
   default extension set, which is `ExtensionSet.commonMark`, which includes
   FencedCodeBlock.
 * Inline HTML syntax support; This is also considered an extension (#18).
-* The text `[foo] (bar)` no longer renders as an inline link (#53).
 * The text `[foo]()` now renders as an inline link.
 * Whitespace now allowed between a link's destination and title (#65).
 * Header identifier support in the HeaderWithIdSyntax and
