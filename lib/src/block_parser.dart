@@ -48,6 +48,9 @@ final _ulPattern = new RegExp(r'^([ ]{0,3})()([*+-])(([ \t])([ \t]*)(.*))?$');
 final _olPattern =
     new RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
 
+/// A line of hyphens separated by at least one pipe.
+final _tablePattern = new RegExp(r'^[ ]{0,3}\|?(\-+\|)+\-*$');
+
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
 class BlockParser {
@@ -113,8 +116,8 @@ class BlockParser {
   ///
   /// `peek(1)` is equivalent to [next].
   String peek(int linesAhead) {
-    if (linesAhead < 0)
-      throw new ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.');
+    if (linesAhead < 0) throw new ArgumentError(
+        'Invalid linesAhead: $linesAhead; must be >= 0.');
     // Don't read past the end.
     if (_pos >= lines.length - linesAhead) return null;
     return lines[_pos + linesAhead];
@@ -704,6 +707,68 @@ class OrderedListSyntax extends ListSyntax {
   String get listTag => 'ol';
 
   const OrderedListSyntax();
+}
+
+/// Parses tables.
+class TableSyntax extends BlockSyntax {
+  bool get canEndBlock => false;
+
+  const TableSyntax();
+
+  bool canParse(BlockParser parser) {
+    // Note: matches *next* line, not the current one. We're looking for the
+    // bar separating the head row from the body rows.
+    return parser.matchesNext(_tablePattern);
+  }
+
+  /// Parses a table into its three parts:
+  ///
+  /// * a head row of head cells (`<th>` cells)
+  /// * a divider of hyphens and pipes (not rendered)
+  /// * many body rows of body cells (`<td>` cells)
+  Node parse(BlockParser parser) {
+    var head = new Element('thead', [parseRow(parser, 'th')]);
+
+    // Advance past the divider of hyphens.
+    parser.advance();
+
+    var rows = <Element>[];
+    while (!parser.isDone && !parser.matches(_emptyPattern)) {
+      rows.add(parseRow(parser, 'td'));
+    }
+    var body = new Element('tbody', rows);
+
+    return new Element('table', [head, body]);
+  }
+
+  Node parseRow(BlockParser parser, String cellType) {
+    var line = parser.current
+        .replaceFirst(new RegExp(r'^\|\s*'), '')
+        .replaceFirst(new RegExp(r'\s*\|$'), '');
+    var contents = parser.document.parseInline(line);
+    parser.advance();
+    var row = <Node>[];
+    var cellContents = <Node>[];
+    var pipe = new RegExp(r'\s*\|\s*');
+
+    contents.forEach((Node node) {
+      if (node is Text) {
+        var cells = node.text.split(pipe);
+        cells.sublist(0, cells.length - 1).forEach((String cell) {
+          cellContents.add(new Text(cell));
+          row.add(new Element(cellType, cellContents));
+          cellContents = <Node>[];
+        });
+        cellContents.add(new Text(cells.last));
+      } else {
+        // An Element or something else.
+        cellContents.add(node);
+      }
+    });
+    row.add(new Element(cellType, cellContents));
+
+    return new Element('tr', row);
+  }
 }
 
 /// Parses paragraphs of regular text.

@@ -1,0 +1,47 @@
+>>> basic table
+head | cells
+-----|------
+body | cells
+
+<<<
+<table><thead><tr><th>head</th><th>cells</th></tr></thead><tbody><tr><td>body</td><td>cells</td></tr></tbody></table>
+>>> multiple rows
+head | cells
+-----|------
+body | cells
+more | cells
+
+<<<
+<table><thead><tr><th>head</th><th>cells</th></tr></thead><tbody><tr><td>body</td><td>cells</td></tr><tr><td>more</td><td>cells</td></tr></tbody></table>
+>>> rows wrapped in pipes
+| head | cells |
+|------|-------|
+| body | cells |
+
+<<<
+<table><thead><tr><th>head</th><th>cells</th></tr></thead><tbody><tr><td>body</td><td>cells</td></tr></tbody></table>
+>>> cells with inline syntax
+head `code` | _cells_
+------------|--------
+*text*      | <span>text</span>
+<<<
+<table><thead><tr><th>head <code>code</code></th><th><em>cells</em></th></tr></thead><tbody><tr><td><em>text</em></td><td><span>text</span></td></tr></tbody></table>
+>>> cells with inline syntax with pipes
+header | _foo | bar_
+-------|------------
+text   | text
+<<<
+<table><thead><tr><th>header</th><th><em>foo | bar</em></th></tr></thead><tbody><tr><td>text</td><td>text</td></tr></tbody></table>
+>>> one column tables
+head
+-----|-----
+body
+<<<
+<table><thead><tr><th>head</th></tr></thead><tbody><tr><td>body</td></tr></tbody></table>
+>>> varying cells per row
+head | foo | bar
+-----|-----
+body
+row with | two cells
+<<<
+<table><thead><tr><th>head</th><th>foo</th><th>bar</th></tr></thead><tbody><tr><td>body</td></tr><tr><td>row with</td><td>two cells</td></tr></tbody></table>
