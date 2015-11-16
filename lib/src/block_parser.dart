@@ -49,7 +49,7 @@ final _olPattern =
     new RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
 
 /// A line of hyphens separated by at least one pipe.
-final _tablePattern = new RegExp(r'^[ ]{0,3}\|?(\-+\|)+\-*$');
+final _tablePattern = new RegExp(r'^[ ]{0,3}\|?(:?\-+:?\|)+(:?\-+:?)?$');
 
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
@@ -727,21 +727,34 @@ class TableSyntax extends BlockSyntax {
   /// * a divider of hyphens and pipes (not rendered)
   /// * many body rows of body cells (`<td>` cells)
   Node parse(BlockParser parser) {
-    var head = new Element('thead', [parseRow(parser, 'th')]);
+    var alignments = parseAlignments(parser.next);
+    var head = new Element('thead', [parseRow(parser, alignments, 'th')]);
 
     // Advance past the divider of hyphens.
     parser.advance();
 
     var rows = <Element>[];
     while (!parser.isDone && !parser.matches(_emptyPattern)) {
-      rows.add(parseRow(parser, 'td'));
+      rows.add(parseRow(parser, alignments, 'td'));
     }
     var body = new Element('tbody', rows);
 
     return new Element('table', [head, body]);
   }
 
-  Node parseRow(BlockParser parser, String cellType) {
+  List<String> parseAlignments(String line) {
+    line = line
+        .replaceFirst(new RegExp(r'^\|'), '')
+        .replaceFirst(new RegExp(r'\|$'), '');
+    return line.split('|').map((column) {
+      if (column.startsWith(':') && column.endsWith(':')) return 'center';
+      if (column.startsWith(':')) return 'left';
+      if (column.endsWith(':')) return 'right';
+      return null;
+    }).toList();
+  }
+
+  Node parseRow(BlockParser parser, List<String> alignments, String cellType) {
     var line = parser.current
         .replaceFirst(new RegExp(r'^\|\s*'), '')
         .replaceFirst(new RegExp(r'\s*\|$'), '');
@@ -766,6 +779,11 @@ class TableSyntax extends BlockSyntax {
       }
     });
     row.add(new Element(cellType, cellContents));
+
+    for (int i = 0; i < row.length && i < alignments.length; i++) {
+      if (alignments[i] == null) continue;
+      row[i].attributes['style'] = 'text-align: ${alignments[i]};';
+    }
 
     return new Element('tr', row);
   }

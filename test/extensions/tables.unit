@@ -45,3 +45,11 @@ body
 row with | two cells
 <<<
 <table><thead><tr><th>head</th><th>foo</th><th>bar</th></tr></thead><tbody><tr><td>body</td></tr><tr><td>row with</td><td>two cells</td></tr></tbody></table>
+>>> left, center, and right alignment
+head | cells | here
+:----|:-----:|----:
+body | cells | here
+too | many | cells | here
+
+<<<
+<table><thead><tr><th style="text-align: left;">head</th><th style="text-align: center;">cells</th><th style="text-align: right;">here</th></tr></thead><tbody><tr><td style="text-align: left;">body</td><td style="text-align: center;">cells</td><td style="text-align: right;">here</td></tr><tr><td style="text-align: left;">too</td><td style="text-align: center;">many</td><td style="text-align: right;">cells</td><td>here</td></tr></tbody></table>
