@@ -12,7 +12,7 @@ code
 ```
 
 <<<
-<pre class="dart"><code>code
+<pre><code class="language-dart">code
 </code></pre>
 >>> escape HTML characters
 ```
@@ -36,7 +36,7 @@ code
 ~~~~~
 
 <<<
-<pre class="dart"><code>code
+<pre><code class="language-dart">code
 </code></pre>
 >>> Pandoc style with inner tildes row
 ~~~~~

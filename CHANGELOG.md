@@ -1,3 +1,9 @@
+## 0.10.0
+
+* BREAKING: Now following the CommonMark spec for fenced code blocks.
+  If a language (info string) is provided, it is added as a class to the `code`
+  element with a `language-` prefix.
+
 ## 0.9.0
 
 * BREAKING: The text `[foo] (bar)` no longer renders as an inline link (#53).

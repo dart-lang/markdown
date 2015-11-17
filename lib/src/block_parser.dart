@@ -341,7 +341,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     // Get the syntax identifier, if there is one.
     var match = pattern.firstMatch(parser.current);
     var endBlock = match.group(1);
-    var syntax = match.group(2);
+    var infoString = match.group(2);
 
     var childLines = parseChildLines(parser, endBlock);
 
@@ -351,8 +351,19 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     // Escape the code.
     var escaped = escapeHtml(childLines.join('\n'));
 
-    var element = new Element('pre', [new Element.text('code', escaped)]);
-    if (syntax != '') element.attributes['class'] = syntax;
+    var code = new Element.text('code', escaped);
+
+    // the info-string should be trimmed
+    // http://spec.commonmark.org/0.22/#example-100
+    infoString = infoString.trim();
+    if (infoString.isNotEmpty) {
+      // only use the first word in the syntax
+      // http://spec.commonmark.org/0.22/#example-100
+      infoString = infoString.split(' ').first;
+      code.attributes['class'] = "language-$infoString";
+    }
+
+    var element = new Element('pre', [code]);
 
     return element;
   }
