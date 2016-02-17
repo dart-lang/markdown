@@ -15,7 +15,7 @@ class InlineParser {
       new List<InlineSyntax>.unmodifiable(<InlineSyntax>[
     new AutolinkSyntax(),
     new LinkSyntax(),
-    new ImageLinkSyntax(),
+    new ImageSyntax(),
     // Allow any punctuation to be escaped.
     new EscapeSyntax(),
     // "*" surrounded by spaces is left alone.
@@ -85,7 +85,7 @@ class InlineParser {
     // Custom link resolvers go after the generic text syntax.
     syntaxes.insertAll(1, [
       new LinkSyntax(linkResolver: document.linkResolver),
-      new ImageLinkSyntax(linkResolver: document.imageLinkResolver)
+      new ImageSyntax(linkResolver: document.imageLinkResolver)
     ]);
   }
 
@@ -284,8 +284,8 @@ class LinkSyntax extends TagSyntax {
   /// breaks it into pieces.
   static get linkPattern {
     var refLink = r'\[([^\]]*)\]'; // `[id]` reflink id.
-    var title = r'(?:\s*"([^"]+)"|)'; // Optional title in quotes.
-    var inlineLink = '\\((\\S*)$title\\)'; // `(url "title")` link.
+    var title = r'(?:\s*"([^"]+?)"|)'; // Optional title in quotes.
+    var inlineLink = '\\((\\S*?)$title\\)'; // `(url "title")` link.
     return '\](?:($refLink|$inlineLink)|)';
 
     // The groups matched by this are:
@@ -375,30 +375,24 @@ class LinkSyntax extends TagSyntax {
 
 /// Matches images like `![alternate text](url "optional title")` and
 /// `![alternate text][url reference]`.
-class ImageLinkSyntax extends LinkSyntax {
-  ImageLinkSyntax({Resolver linkResolver})
+class ImageSyntax extends LinkSyntax {
+  ImageSyntax({Resolver linkResolver})
       : super(linkResolver: linkResolver, pattern: r'!\[');
 
-  /// Creates an <a> element from the given complete [match].
+  /// Creates an <img> element from the given complete [match].
   Element _createElement(InlineParser parser, Match match, TagState state) {
-    var element = super._createElement(parser, match, state);
-    if (element == null) return null;
+    var link = getLink(parser, match, state);
+    var image = new Element.empty("img");
+    image.attributes["src"] = escapeHtml(link.url);
 
-    var image = new Element.withTag("img");
-    image.attributes["src"] = element.attributes["href"];
-
-    if (element.attributes.containsKey("title")) {
-      image.attributes["title"] = element.attributes["title"];
+    if (link.title != null) {
+      image.attributes["title"] = escapeHtml(link.title);;
     }
 
-    var alt = element.children.map((e) => e is! Text ? "" : e.text).join(" ");
+    var alt = state.children.map((e) => e is! Text ? "" : e.text).join(" ");
     if (alt != "") image.attributes["alt"] = alt;
 
-    element.children
-      ..clear()
-      ..add(image);
-
-    return element;
+    return image;
   }
 }
 
