@@ -1,0 +1,27 @@
+  11 of   18 –  61.1%  ATX headers
+   3 of   16 –  18.8%  Autolinks
+   7 of   13 –  53.8%  Backslash escapes
+   1 of    1 – 100.0%  Blank lines
+   1 of   25 –   4.0%  Block quotes
+   9 of   15 –  60.0%  Code spans
+  71 of  129 –  55.0%  Emphasis and strong emphasis
+   4 of   12 –  33.3%  Entities
+  16 of   27 –  59.3%  Fenced code blocks
+   8 of   15 –  53.3%  Hard line breaks
+  12 of   19 –  63.2%  Horizontal rules
+  18 of   42 –  42.9%  HTML blocks
+   1 of   22 –   4.5%  Images
+   6 of   12 –  50.0%  Indented code blocks
+   1 of    1 – 100.0%  Inlines
+   2 of   23 –   8.7%  Link reference definitions
+  35 of   79 –  44.3%  Links
+   4 of   45 –   8.9%  List items
+   0 of   24 –   0.0%  Lists
+   4 of    8 –  50.0%  Paragraphs
+   0 of    1 –   0.0%  Precedence
+   4 of   21 –  19.0%  Raw HTML
+   7 of   20 –  35.0%  Setext headers
+   1 of    2 –  50.0%  Soft line breaks
+   3 of    6 –  50.0%  Tabs
+   3 of    3 – 100.0%  Textual content
+ 232 of  599 –  38.7%  TOTAL
