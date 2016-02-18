@@ -85,11 +85,6 @@ class HtmlRenderer implements NodeVisitor {
     if (element.isEmpty) {
       // Empty element like <hr/>.
       buffer.write(' />');
-
-      if (element.tag == 'br') {
-        buffer.write('\n');
-      }
-
       return false;
     } else {
       buffer.write('>');
