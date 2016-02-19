@@ -73,14 +73,14 @@ void main() {
 }
 
 /// Compare two DOM trees for equality.
-bool compareHtml(List<Element> expectedEls, List<Element> actualEls) {
-  if (expectedEls.length != actualEls.length) {
+bool compareHtml(List<Element> expectedElements, List<Element> actualElements) {
+  if (expectedElements.length != actualElements.length) {
     return false;
   }
 
-  for (int childNum in new List.generate(expectedEls.length, (i) => i)) {
-    var expected = expectedEls[childNum];
-    var actual = actualEls[childNum];
+  for (var childNum = 0; childNum < expectedElements.length; childNum++) {
+    var expected = expectedElements[childNum];
+    var actual = actualElements[childNum];
 
     if (expected.runtimeType != actual.runtimeType) {
       return false;
@@ -95,13 +95,13 @@ bool compareHtml(List<Element> expectedEls, List<Element> actualEls) {
         return false;
       }
 
-      List expectedAttrKeys = new List.from(expected.attributes.keys);
+      var expectedAttrKeys = expected.attributes.keys.toList();
       expectedAttrKeys.sort();
 
-      List actualAttrKeys = new List.from(actual.attributes.keys);
+      var actualAttrKeys = actual.attributes.keys.toList();
       actualAttrKeys.sort();
 
-      for (int attrNum in new List.generate(actualAttrKeys.length, (i) => i)) {
+      for (var attrNum = 0; attrNum < actualAttrKeys.length; attrNum++) {
         var expectedAttrKey = expectedAttrKeys[attrNum];
         var actualAttrKey = actualAttrKeys[attrNum];
 
@@ -116,7 +116,7 @@ bool compareHtml(List<Element> expectedEls, List<Element> actualEls) {
       }
     }
 
-    bool childrenEqual = compareHtml(expected.children, actual.children);
+    var childrenEqual = compareHtml(expected.children, actual.children);
 
     if (!childrenEqual) {
       return false;
