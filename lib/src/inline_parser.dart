@@ -389,7 +389,7 @@ class ImageSyntax extends LinkSyntax {
       image.attributes["title"] = escapeHtml(link.title);
     }
 
-    var alt = state.children.map((e) => e is! Text ? "" : e.text).join(" ");
+    var alt = state.children.map((e) => e is Text ? e.text : "").join(" ");
     if (alt != "") image.attributes["alt"] = alt;
 
     return image;
