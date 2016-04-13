@@ -60,11 +60,11 @@ class DartdocCompare {
     var out_after = run_dartdoc(markdown_after, package);
 
     // Compare outputs
-    var diff = "diff -r -B ${out_before} ${out_after}";
-    var result = Process.runSync("${diff}", [], runInShell: true);
+    var diffOptions = ["-r", "-B", out_before, out_after];
+    var result = Process.runSync("diff", diffOptions, runInShell: true);
     var nlines = "\n".allMatches(result.stdout).length;
     print("Diff lines: ${ nlines }");
-    print(diff);
+    print("diff ${diffOptions.join(" ")}");
     return result == 0;
   }
 
@@ -72,14 +72,16 @@ class DartdocCompare {
     print("==========================================================");
     print("Running dartdoc for ${markdown_ref}...");
     print("==========================================================");
-    update_dartdoc_pubspec(markdown_ref);
+    doInPath(dartdoc_dir, () => update_dartdoc_pubspec(markdown_ref));
     return doInPath(package, () {
-      system('pub', ['get']);
+      if (!sdk)
+        system('pub', ['get']);
       var out = Directory.systemTemp
           .createTempSync("dartdoc-compare-${markdown_ref}__");
-      var sdk_options = sdk ? "--sdk-docs --dart-sdk=$package" : "";
+      var sdk_options = sdk ? ["--sdk-docs", "--dart-sdk=$package"] : [];
       var cmd = "dart";
-      var args = ["${dartdoc_bin}", "--output=${out.path} ${sdk_options}"];
+      var args = ["${dartdoc_bin}", "--output=${out.path}"]
+          ..addAll(sdk_options);
       print("Command: $cmd ${args.join(" ")}");
       system(cmd, args);
       print("");
