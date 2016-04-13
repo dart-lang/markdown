@@ -336,6 +336,10 @@ class LinkSyntax extends TagSyntax {
     return element;
   }
 
+  /// Get the Link represented by [match].
+  ///
+  /// This method can return null, if the link is a reference link, and has no
+  /// accompanying link reference definition.
   Link getLink(InlineParser parser, Match match, TagState state) {
     if (match[3] != null) {
       // Inline link like [foo](url).
@@ -382,6 +386,7 @@ class ImageSyntax extends LinkSyntax {
   /// Creates an <img> element from the given complete [match].
   Element _createElement(InlineParser parser, Match match, TagState state) {
     var link = getLink(parser, match, state);
+    if (link == null) return null;
     var image = new Element.empty("img");
     image.attributes["src"] = escapeHtml(link.url);
 
