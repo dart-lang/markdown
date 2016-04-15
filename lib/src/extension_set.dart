@@ -7,8 +7,8 @@ class ExtensionSet {
   static ExtensionSet commonMark = new ExtensionSet._(
       [const FencedCodeBlockSyntax()], [new InlineHtmlSyntax()]);
 
-  final List blockSyntaxes;
-  final List inlineSyntaxes;
+  final List<BlockSyntax> blockSyntaxes;
+  final List<InlineSyntax> inlineSyntaxes;
 
   ExtensionSet._(this.blockSyntaxes, this.inlineSyntaxes);
 }

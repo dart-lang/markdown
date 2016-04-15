@@ -1,10 +1,11 @@
 library markdown.tool.common_mark_stats;
 
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math' as math;
 import 'dart:mirrors';
 
+import 'package:collection/collection.dart';
 import 'package:html/parser.dart' show parseFragment;
 import 'package:markdown/markdown.dart';
 import 'package:path/path.dart' as p;
@@ -18,58 +19,85 @@ String get _currentDir => p.dirname(currentMirrorSystem()
     .uri
     .path);
 
-void main() {
+void main(List<String> args) {
+  var raw = args.any((s) => s == '--raw');
+
   var sections = loadCommonMarkSections();
 
-  var scores = <String, int>{};
-
-  int maxSectionLength = 0;
-  int totalExamples = 0;
-  int totalValid = 0;
+  var scores = new SplayTreeMap<String, SplayTreeMap<int, bool>>(
+      compareAsciiLowerCaseNatural);
 
   sections.forEach((section, examples) {
-    int validCount = 0;
     for (var e in examples) {
       var output;
+      var nestedMap =
+          scores.putIfAbsent(section, () => new SplayTreeMap<int, bool>());
 
       try {
         output = markdownToHtml(e.markdown);
       } catch (exc) {
+        nestedMap[e.example] = false;
         continue;
       }
 
       var expected = parseFragment(e.html);
       var actual = parseFragment(output);
-
-      if (compareHtml(expected.children, actual.children)) {
-        validCount++;
-      }
+      nestedMap[e.example] = compareHtml(expected.children, actual.children);
     }
-
-    maxSectionLength = math.max(maxSectionLength, section.length);
-
-    scores[section] = validCount;
-
-    totalValid += validCount;
-    totalExamples += examples.length;
   });
 
-  scores.forEach((section, count) {
-    var total = sections[section].length;
-    var pct = (100 * count / total).toStringAsFixed(1).padLeft(5);
+  if (raw) {
+    var encoder = const JsonEncoder.withIndent(' ', _convert);
+    try {
+      print(encoder.convert(scores));
+    } on JsonUnsupportedObjectError catch (e) {
+      print(e.cause);
+      print(e.unsupportedObject.runtimeType);
+      rethrow;
+    }
+  } else {
+    _printFriendly(scores);
+  }
+}
 
-    print('${section.padLeft(maxSectionLength)} '
-        '${count.toString().padLeft(3)} '
-        'of ${total.toString().padLeft(3)} '
-        '– ${pct}%');
+_convert(obj) {
+  if (obj is Map) {
+    var map = {};
+    obj.forEach((k, v) {
+      var newKey = k.toString();
+      map[newKey] = v;
+    });
+    return map;
+  }
+  return obj;
+}
+
+void _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores) {
+  const countWidth = 4;
+
+  var totalValid = 0;
+  var totalExamples = 0;
+
+  scores.forEach((section, map) {
+    var total = map.values.length;
+    totalExamples += total;
+
+    var sectionValidCount = map.values.where((val) => val).length;
+
+    totalValid += sectionValidCount;
+
+    var pct = (100 * sectionValidCount / total).toStringAsFixed(1).padLeft(5);
+
+    print('${sectionValidCount.toString().padLeft(countWidth)} '
+        'of ${total.toString().padLeft(countWidth)} '
+        '– ${pct}%  $section');
   });
 
   var pct = (100 * totalValid / totalExamples).toStringAsFixed(1).padLeft(5);
 
-  print('${"TOTAL".padLeft(maxSectionLength)} '
-      '${totalValid.toString().padLeft(3)} '
-      'of ${totalExamples.toString().padLeft(3)} '
-      '– ${pct}%');
+  print('${totalValid.toString().padLeft(countWidth)} '
+      'of ${totalExamples.toString().padLeft(countWidth)} '
+      '– ${pct}%  TOTAL');
 }
 
 /// Compare two DOM trees for equality.
@@ -130,7 +158,7 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections() {
   var testFile = new File(p.join(_currentDir, _commonMarkTests));
   var testsJson = testFile.readAsStringSync();
 
-  var testArray = JSON.decode(testsJson) as List<Map>;
+  var testArray = JSON.decode(testsJson) as List<Map<String, dynamic>>;
 
   var sections = new Map<String, List<CommonMarkTestCase>>();
 

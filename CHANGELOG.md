@@ -3,6 +3,13 @@
 * BREAKING: Now following the CommonMark spec for fenced code blocks.
   If a language (info string) is provided, it is added as a class to the `code`
   element with a `language-` prefix.
+* BREAKING: Now following the CommonMark spec for images. Previously,
+  `![text](img.png)` would compile too
+  `<a href="img.prg"><img src="img.prg" alt="text"></img></a>`. That same code
+  will now compile to `<img src="img.png" alt="text" />`.
+* Fix all [strong mode][] errors.
+
+[strong mode]: https://github.com/dart-lang/dev_compiler/blob/master/STRONG_MODE.md
 
 ## 0.9.0
 

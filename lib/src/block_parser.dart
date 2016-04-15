@@ -216,7 +216,7 @@ class SetextHeaderWithIdSyntax extends SetextHeaderSyntax {
   const SetextHeaderWithIdSyntax();
 
   Node parse(BlockParser parser) {
-    var element = super.parse(parser);
+    var element = super.parse(parser) as Element;
     element.generatedId = BlockSyntax.generateAnchorHash(element);
     return element;
   }
@@ -242,7 +242,7 @@ class HeaderWithIdSyntax extends HeaderSyntax {
   const HeaderWithIdSyntax();
 
   Node parse(BlockParser parser) {
-    var element = super.parse(parser);
+    var element = super.parse(parser) as Element;
     element.generatedId = BlockSyntax.generateAnchorHash(element);
     return element;
   }
