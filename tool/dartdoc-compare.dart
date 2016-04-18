@@ -74,14 +74,13 @@ class DartdocCompare {
     print("==========================================================");
     doInPath(dartdoc_dir, () => update_dartdoc_pubspec(markdown_ref));
     return doInPath(package, () {
-      if (!sdk)
-        system('pub', ['get']);
+      if (!sdk) system('pub', ['get']);
       var out = Directory.systemTemp
           .createTempSync("dartdoc-compare-${markdown_ref}__");
       var sdk_options = sdk ? ["--sdk-docs", "--dart-sdk=$package"] : [];
       var cmd = "dart";
       var args = ["${dartdoc_bin}", "--output=${out.path}"]
-          ..addAll(sdk_options);
+        ..addAll(sdk_options);
       print("Command: $cmd ${args.join(" ")}");
       system(cmd, args);
       print("");
@@ -91,21 +90,21 @@ class DartdocCompare {
   }
 
   update_dartdoc_pubspec(markdown_ref) {
-      var dartdoc_pubspec =
-          loadYaml(new File(dartdoc_pubspec_path).readAsStringSync());
-      // make modifiable copy
-      dartdoc_pubspec = JSON.decode(JSON.encode(dartdoc_pubspec));
+    var dartdoc_pubspec =
+        loadYaml(new File(dartdoc_pubspec_path).readAsStringSync());
+    // make modifiable copy
+    dartdoc_pubspec = JSON.decode(JSON.encode(dartdoc_pubspec));
 
-      dartdoc_pubspec['dependencies']['markdown'] = {
-        'git': {
-          'url': 'git://github.com/dart-lang/markdown.git',
-          'ref': markdown_ref
-        }
-      };
+    dartdoc_pubspec['dependencies']['markdown'] = {
+      'git': {
+        'url': 'git://github.com/dart-lang/markdown.git',
+        'ref': markdown_ref
+      }
+    };
 
-      new File(dartdoc_pubspec_path)
-          .writeAsStringSync(JSON.encode(dartdoc_pubspec));
-      return system('pub', ['get']);
+    new File(dartdoc_pubspec_path)
+        .writeAsStringSync(JSON.encode(dartdoc_pubspec));
+    return system('pub', ['get']);
   }
 
   static system(cmd, args) {
