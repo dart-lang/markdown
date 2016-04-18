@@ -6,6 +6,7 @@ import 'dart:io';
 import 'dart:mirrors';
 
 import 'package:collection/collection.dart';
+import 'package:html/parser.dart' show parseFragment;
 import 'package:markdown/markdown.dart';
 import 'package:path/path.dart' as p;
 
@@ -28,12 +29,20 @@ void main(List<String> args) {
 
   sections.forEach((section, examples) {
     for (var e in examples) {
-      var output = markdownToHtml(e.markdown);
-
+      var output;
       var nestedMap =
           scores.putIfAbsent(section, () => new SplayTreeMap<int, bool>());
 
-      nestedMap[e.example] = (output == e.html);
+      try {
+        output = markdownToHtml(e.markdown);
+      } catch (exc) {
+        nestedMap[e.example] = false;
+        continue;
+      }
+
+      var expected = parseFragment(e.html);
+      var actual = parseFragment(output);
+      nestedMap[e.example] = compareHtml(expected.children, actual.children);
     }
   });
 
@@ -89,6 +98,60 @@ void _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores) {
   print('${totalValid.toString().padLeft(countWidth)} '
       'of ${totalExamples.toString().padLeft(countWidth)} '
       '– ${pct}%  TOTAL');
+}
+
+/// Compare two DOM trees for equality.
+bool compareHtml(List<Element> expectedElements, List<Element> actualElements) {
+  if (expectedElements.length != actualElements.length) {
+    return false;
+  }
+
+  for (var childNum = 0; childNum < expectedElements.length; childNum++) {
+    var expected = expectedElements[childNum];
+    var actual = actualElements[childNum];
+
+    if (expected.runtimeType != actual.runtimeType) {
+      return false;
+    }
+
+    if (expected is Element) {
+      if (expected.localName != actual.localName) {
+        return false;
+      }
+
+      if (expected.attributes.length != actual.attributes.length) {
+        return false;
+      }
+
+      var expectedAttrKeys = expected.attributes.keys.toList();
+      expectedAttrKeys.sort();
+
+      var actualAttrKeys = actual.attributes.keys.toList();
+      actualAttrKeys.sort();
+
+      for (var attrNum = 0; attrNum < actualAttrKeys.length; attrNum++) {
+        var expectedAttrKey = expectedAttrKeys[attrNum];
+        var actualAttrKey = actualAttrKeys[attrNum];
+
+        if (expectedAttrKey != actualAttrKey) {
+          return false;
+        }
+
+        if (expected.attributes[expectedAttrKey] !=
+            actual.attributes.keys[actualAttrKey]) {
+          return false;
+        }
+      }
+    }
+
+    var childrenEqual = compareHtml(expected.children, actual.children);
+
+    if (!childrenEqual) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 Map<String, List<CommonMarkTestCase>> loadCommonMarkSections() {
