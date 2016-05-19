@@ -518,6 +518,7 @@ class TagState {
     } else {
       // Didn't close correctly so revert to text.
       parser.start = startPos;
+      parser.pos = parser.start;
       parser.advanceBy(endMatch[0].length);
     }
 
