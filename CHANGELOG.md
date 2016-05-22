@@ -1,3 +1,9 @@
+## 0.10.1
+
+* Parse [hard line breaks](http://spec.commonmark.org/0.24/#hard-line-breaks)
+  properly (#86). Thanks @mehaase!
+* Fix processing of `[ ... ]` syntax when no resolver is specified (#92).
+
 ## 0.10.0
 
 * BREAKING: Now following the CommonMark spec for fenced code blocks.
