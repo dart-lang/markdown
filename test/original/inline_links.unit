@@ -56,3 +56,8 @@ links [are] (http://foo.com) awesome
 
 <<<
 <p>links [are] (http://foo.com) awesome</p>
+>>> resolver link without a resolver
+links [are *awesome*]
+
+<<<
+<p>links [are <em>awesome</em>]</p>
