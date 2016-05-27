@@ -308,12 +308,16 @@ class LinkSyntax extends TagSyntax {
       : super(pattern, end: linkPattern);
 
   Node createNode(InlineParser parser, Match match, TagState state) {
-    // If we didn't match refLink or inlineLink, then it means there was
-    // nothing after the first square bracket, so it isn't a normal Markdown
-    // link at all. Instead, we allow users of the library to specify a special
-    // resolver function ([linkResolver]) that may choose to handle
-    // this. Otherwise, it's just treated as plain text.
     if (match[1] == null) {
+      // Try for a shortcut reference link, like `[foo]`.
+      var element = _createElement(parser, match, state);
+      if (element != null) return element;
+
+      // If we didn't match refLink or inlineLink, and it's not a _shortcut_
+      // reflink, then it means it isn't a normal Markdown link at all. Instead,
+      // we allow users of the library to specify a special resolver function
+      // ([linkResolver]) that may choose to handle this. Otherwise, it's just
+      // treated as plain text.
       if (linkResolver == null) return null;
 
       // Treat the contents as unparsed text even if they happen to match. This
@@ -362,10 +366,18 @@ class LinkSyntax extends TagSyntax {
       return new Link(null, url, title);
     } else {
       var id;
+      String _contents() {
+        int offset = pattern.pattern.length - 1;
+        return parser.source.substring(state.startPos + offset, parser.pos);
+      }
       // Reference link like [foo][bar].
-      if (match[2] == '') {
+      if (match[1] == null) {
+        // There are no reference brackets ("shortcut reference link"), so infer
+        // the id from the contents.
+        id = _contents();
+      } else if (match[2] == '') {
         // The id is empty ("[]") so infer it from the contents.
-        id = parser.source.substring(state.startPos + 1, parser.pos);
+        id = _contents();
       } else {
         id = match[2];
       }
