@@ -268,6 +268,8 @@ class BlockquoteSyntax extends BlockSyntax {
 class CodeBlockSyntax extends BlockSyntax {
   RegExp get pattern => _indentPattern;
 
+  bool get canEndBlock => false;
+
   const CodeBlockSyntax();
 
   List<String> parseChildLines(BlockParser parser) {
