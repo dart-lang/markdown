@@ -21,11 +21,14 @@ String get _currentDir => p.dirname(currentMirrorSystem()
 
 void main(List<String> args) {
   var raw = args.any((s) => s == '--raw');
+  var verbose = args.any((s) => s == '--verbose');
 
   var sections = loadCommonMarkSections();
 
   var scores = new SplayTreeMap<String, SplayTreeMap<int, bool>>(
       compareAsciiLowerCaseNatural);
+
+  String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
 
   sections.forEach((section, examples) {
     for (var e in examples) {
@@ -43,6 +46,16 @@ void main(List<String> args) {
       var expected = parseFragment(e.html);
       var actual = parseFragment(output);
       nestedMap[e.example] = compareHtml(expected.children, actual.children);
+      if (verbose && !nestedMap[e.example]) {
+        print('FAIL');
+        print('input:');
+        print(indent(e.markdown));
+        print('expected:');
+        print(indent(expected.outerHtml));
+        print('actual:');
+        print(indent(actual.outerHtml));
+        print('-----------------------');
+      }
     }
   });
 
