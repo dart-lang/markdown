@@ -48,3 +48,10 @@ line2
 <<<
 <p>line1</p>
 <p>line2</p>
+>>> cannot be terminated by indented code blocks
+para
+    not code
+
+<<<
+<p>para
+    not code</p>
