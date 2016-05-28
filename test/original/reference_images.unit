@@ -22,3 +22,9 @@
 
 <<<
 <p><img src="http://foo.com/foo.png" title="optional title" /></p>
+>>> shortcut reference image
+![foo]
+
+[foo]: http://foo.com/foo.png
+<<<
+<p><img alt="foo" src="http://foo.com/foo.png" /></p>

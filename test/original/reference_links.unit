@@ -57,3 +57,9 @@ links [ARE][] awesome
 
 <<<
 <p>links <a href="http://foo.com">ARE</a> awesome</p>
+>>> shortcut reference links
+links [are] awesome
+
+[are]: http://foo.com
+<<<
+<p>links <a href="http://foo.com">are</a> awesome</p>
