@@ -34,10 +34,6 @@ final _codePattern = new RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 /// SETEXT should win.
 final _hrPattern = new RegExp(r'^ {0,3}([-*_]) *\1 *\1(?:\1| )*$');
 
-/// Really hacky way to detect block-level embedded HTML. Just looks for
-/// "<somename".
-final _htmlPattern = new RegExp(r'^<[ ]*\w+[ >]');
-
 /// A line starting with one of these markers: `-`, `*`, `+`. May have up to
 /// three leading spaces before the marker and any number of spaces or tabs
 /// after.
@@ -65,9 +61,17 @@ class BlockParser {
   int _pos = 0;
 
   /// The collection of built-in block parsers.
-  final List<BlockSyntax> standardBlockSyntaxes = const [
+  final List<BlockSyntax> standardBlockSyntaxes = [
     const EmptyBlockSyntax(),
-    const BlockHtmlSyntax(),
+    const BlockTagBlockHtmlSyntax(),
+    new LongBlockHtmlSyntax(r'^ {0,3}<pre(?:\s|>|$)', '</pre>'),
+    new LongBlockHtmlSyntax(r'^ {0,3}<script(?:\s|>|$)', '</script>'),
+    new LongBlockHtmlSyntax(r'^ {0,3}<style(?:\s|>|$)', '</style>'),
+    new LongBlockHtmlSyntax('^ {0,3}<!--', '-->'),
+    new LongBlockHtmlSyntax('^ {0,3}<\\?', '\\?>'),
+    new LongBlockHtmlSyntax('^ {0,3}<![A-Z]', '>'),
+    new LongBlockHtmlSyntax('^ {0,3}<!\\[CDATA\\[', '\\]\\]>'),
+    const OtherTagBlockHtmlSyntax(),
     const SetextHeaderSyntax(),
     const HeaderSyntax(),
     const CodeBlockSyntax(),
@@ -387,18 +391,25 @@ class HorizontalRuleSyntax extends BlockSyntax {
 /// implementations in several ways:
 ///
 /// 1.  This one is way way WAY simpler.
-/// 2.  All HTML tags at the block level will be treated as blocks. If you
-///     start a paragraph with `<em>`, it will not wrap it in a `<p>` for you.
-///     As soon as it sees something like HTML, it stops mucking with it until
-///     it hits the next block.
-/// 3.  Absolutely no HTML parsing or validation is done. We're a Markdown
+/// 2.  Essentially no HTML parsing or validation is done. We're a Markdown
 ///     parser, not an HTML parser!
-class BlockHtmlSyntax extends BlockSyntax {
-  RegExp get pattern => _htmlPattern;
-
-  bool get canEndBlock => false;
+abstract class BlockHtmlSyntax extends BlockSyntax {
+  bool get canEndBlock => true;
 
   const BlockHtmlSyntax();
+}
+
+class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
+  RegExp get pattern => new RegExp(
+      r'^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
+      r'caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|'
+      r'figcaption|figure|footer|form|frame|frameset|h1|head|header|hr|html|'
+      r'iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|'
+      r'option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|'
+      'title|tr|track|ul)'
+      r'(?:\s|>|/>|$)');
+
+  const BlockTagBlockHtmlSyntax();
 
   Node parse(BlockParser parser) {
     var childLines = <String>[];
@@ -409,6 +420,52 @@ class BlockHtmlSyntax extends BlockSyntax {
       parser.advance();
     }
 
+    return new Text(childLines.join('\n'));
+  }
+}
+
+class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
+  bool get canEndBlock => false;
+
+  // Really hacky way to detect "other" HTML. This matches:
+  //
+  // * any opening spaces
+  // * open bracket and maybe a slash ("<" or "</")
+  // * some word characters
+  // * either:
+  //   * a close bracket, or
+  //   * whitespace followed by not-brackets follwed by a close bracket
+  // * possible whitespace and the end of the line.
+  RegExp get pattern => new RegExp(r'^ {0,3}</?\w+(?:>|\s+[^>]*>)\s*$');
+
+  const OtherTagBlockHtmlSyntax();
+}
+
+/// A BlockHtmlSyntax that has a specific [endPattern].
+///
+/// In practice this means that the syntax dominates; it is allowed to eat
+/// many lines, including blank lines, before matching its [endPattern].
+class LongBlockHtmlSyntax extends BlockHtmlSyntax {
+  RegExp _pattern;
+  RegExp _endPattern;
+
+  LongBlockHtmlSyntax(pattern, endPattern) {
+    _pattern = new RegExp(pattern);
+    _endPattern = new RegExp(endPattern);
+  }
+
+  RegExp get pattern => _pattern;
+
+  Node parse(BlockParser parser) {
+    var childLines = <String>[];
+    // Eat until we hit [endPattern].
+    while (!parser.isDone) {
+      childLines.add(parser.current);
+      if (parser.matches(_endPattern)) break;
+      parser.advance();
+    }
+
+    parser.advance();
     return new Text(childLines.join('\n'));
   }
 }
