@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:mirrors';
 
+import 'package:args/args.dart' show ArgParser;
 import 'package:collection/collection.dart';
 import 'package:html/parser.dart' show parseFragment;
 import 'package:markdown/markdown.dart';
@@ -20,8 +21,15 @@ String get _currentDir => p.dirname(currentMirrorSystem()
     .path);
 
 void main(List<String> args) {
-  var raw = args.any((s) => s == '--raw');
-  var verbose = args.any((s) => s == '--verbose');
+  final parser = new ArgParser()
+    ..addOption('section', help: 'Restrict tests to one section')
+    ..addFlag('raw', defaultsTo: false, help: 'raw JSON format')
+    ..addFlag('verbose', defaultsTo: false, help: 'verbose output');
+  var options = parser.parse(args);
+
+  var specifiedSection = options['section'];
+  var raw = options['raw'];
+  var verbose = options['verbose'];
 
   var sections = loadCommonMarkSections();
 
@@ -31,6 +39,9 @@ void main(List<String> args) {
   String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
 
   sections.forEach((section, examples) {
+    if (specifiedSection != null && section != specifiedSection) {
+      return;
+    }
     for (var e in examples) {
       var output;
       var nestedMap =
@@ -47,7 +58,7 @@ void main(List<String> args) {
       var actual = parseFragment(output);
       nestedMap[e.example] = compareHtml(expected.children, actual.children);
       if (verbose && !nestedMap[e.example]) {
-        print('FAIL');
+        print('FAIL: http://spec.commonmark.org/0.24/#example-${e.example}');
         print('input:');
         print(indent(e.markdown));
         print('expected:');
