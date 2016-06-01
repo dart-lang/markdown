@@ -1,8 +1,18 @@
+## 0.10.2-dev
+
+* Parse HTML blocks more accurately, according to
+  [CommonMark](http://spec.commonmark.org/0.24/#html-blocks).
+* Support [shortcut reference
+  links](http://spec.commonmark.org/0.24/#reference-link).
+* Don't allow an indented code block to interrupt a paragraph.
+* There are now 463/613 (76%) passing CommonMark v0.24 specs.
+
 ## 0.10.1
 
 * Parse [hard line breaks](http://spec.commonmark.org/0.24/#hard-line-breaks)
   properly (#86). Thanks @mehaase!
 * Fix processing of `[ ... ]` syntax when no resolver is specified (#92).
+* There are now 401/613 (65%) passing CommonMark v0.24 specs.
 
 ## 0.10.0
 
