@@ -21,7 +21,7 @@
   18 of   21 –  85.7%  Raw HTML
   16 of   26 –  61.5%  Setext headings
    2 of    2 – 100.0%  Soft line breaks
-   4 of    6 –  66.7%  Tabs
+   6 of    9 –  66.7%  Tabs
    3 of    3 – 100.0%  Textual content
   16 of   19 –  84.2%  Thematic breaks
- 463 of  613 –  75.5%  TOTAL
+ 465 of  616 –  75.5%  TOTAL
