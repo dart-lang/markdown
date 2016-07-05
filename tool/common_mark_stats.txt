@@ -1,27 +1,27 @@
-  11 of   19 –  57.9%  ATX headings
-   4 of   19 –  21.1%  Autolinks
-   7 of   13 –  53.8%  Backslash escapes
+  18 of   19 –  94.7%  ATX headings
+  11 of   19 –  57.9%  Autolinks
+  12 of   13 –  92.3%  Backslash escapes
    1 of    1 – 100.0%  Blank lines
-   1 of   25 –   4.0%  Block quotes
-   9 of   15 –  60.0%  Code spans
-  71 of  129 –  55.0%  Emphasis and strong emphasis
-   4 of   12 –  33.3%  Entity and numeric character references
-  16 of   27 –  59.3%  Fenced code blocks
-   8 of   15 –  53.3%  Hard line breaks
-  18 of   42 –  42.9%  HTML blocks
-   1 of   22 –   4.5%  Images
-   6 of   12 –  50.0%  Indented code blocks
+  18 of   25 –  72.0%  Block quotes
+  14 of   15 –  93.3%  Code spans
+  86 of  129 –  66.7%  Emphasis and strong emphasis
+  12 of   12 – 100.0%  Entity and numeric character references
+  26 of   27 –  96.3%  Fenced code blocks
+  15 of   15 – 100.0%  Hard line breaks
+  42 of   42 – 100.0%  HTML blocks
+  21 of   22 –  95.5%  Images
+  10 of   12 –  83.3%  Indented code blocks
    1 of    1 – 100.0%  Inlines
-   2 of   23 –   8.7%  Link reference definitions
-  35 of   81 –  43.2%  Links
-   4 of   47 –   8.5%  List items
-   0 of   24 –   0.0%  Lists
-   4 of    8 –  50.0%  Paragraphs
-   0 of    1 –   0.0%  Precedence
-   6 of   21 –  28.6%  Raw HTML
-  11 of   26 –  42.3%  Setext headings
-   1 of    2 –  50.0%  Soft line breaks
-   3 of    6 –  50.0%  Tabs
+  13 of   23 –  56.5%  Link reference definitions
+  66 of   81 –  81.5%  Links
+  25 of   47 –  53.2%  List items
+   4 of   24 –  16.7%  Lists
+   8 of    8 – 100.0%  Paragraphs
+   1 of    1 – 100.0%  Precedence
+  18 of   21 –  85.7%  Raw HTML
+  16 of   26 –  61.5%  Setext headings
+   2 of    2 – 100.0%  Soft line breaks
+   6 of    9 –  66.7%  Tabs
    3 of    3 – 100.0%  Textual content
-  12 of   19 –  63.2%  Thematic breaks
- 239 of  613 –  39.0%  TOTAL
+  16 of   19 –  84.2%  Thematic breaks
+ 465 of  616 –  75.5%  TOTAL
