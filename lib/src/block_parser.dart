@@ -60,6 +60,10 @@ class BlockParser {
   /// Index of the current line.
   int _pos = 0;
 
+  /// Whether the parser has encountered a blank line between two block-level
+  /// elements.
+  bool encounteredBlankLine = false;
+
   /// The collection of built-in block parsers.
   final List<BlockSyntax> standardBlockSyntaxes = [
     const EmptyBlockSyntax(),
@@ -128,6 +132,21 @@ class BlockParser {
     if (next == null) return false;
     return regex.firstMatch(next) != null;
   }
+
+  List<Node> parseLines() {
+    var blocks = <Node>[];
+    while (!isDone) {
+      for (var syntax in blockSyntaxes) {
+        if (syntax.canParse(this)) {
+          var block = syntax.parse(this);
+          if (block != null) blocks.add(block);
+          break;
+        }
+      }
+    }
+
+    return blocks;
+  }
 }
 
 abstract class BlockSyntax {
@@ -145,7 +164,7 @@ abstract class BlockSyntax {
   Node parse(BlockParser parser);
 
   List<String> parseChildLines(BlockParser parser) {
-    // Grab all of the lines that form the blockquote, stripping off the ">".
+    // Grab all of the lines that form the block element.
     var childLines = <String>[];
 
     while (!parser.isDone) {
@@ -185,6 +204,7 @@ class EmptyBlockSyntax extends BlockSyntax {
   const EmptyBlockSyntax();
 
   Node parse(BlockParser parser) {
+    parser.encounteredBlankLine = true;
     parser.advance();
 
     // Don't actually emit anything.
@@ -537,91 +557,53 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     endItem();
-    determineBlockItems(items);
     var itemNodes = <Node>[];
 
+    var anyEmptyLines = removeTrailingEmptyLines(items);
+    var anyEmptyLinesBetweenBlocks = false;
+
     for (var item in items) {
-      if (item.forceBlock) {
-        // Block list item.
-        var children = parser.document.parseLines(item.lines);
-        itemNodes.add(new Element('li', children));
-      } else {
-        // Raw list item.
-        var contents = parser.document.parseInline(item.lines[0]);
-        itemNodes.add(new Element('li', contents));
+      var itemParser = new BlockParser(item.lines, parser.document);
+      var children = itemParser.parseLines();
+      itemNodes.add(new Element('li', children));
+      anyEmptyLinesBetweenBlocks =
+          anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
+    }
+
+    // Must strip paragraph tags if the list is "tight".
+    // http://spec.commonmark.org/0.25/#lists
+    var listIsTight = !anyEmptyLines && !anyEmptyLinesBetweenBlocks;
+
+    if (listIsTight) {
+      // We must post-process the list items, converting any top-level paragraph
+      // elements to just text elements.
+      for (var item in itemNodes) {
+        for (var i = 0; i < item.children.length; i++) {
+          var child = item.children[i];
+          if (child is Element && child.tag == 'p') {
+            item.children.removeAt(i);
+            item.children.insertAll(i, child.children);
+          }
+        }
       }
     }
 
     return new Element(listTag, itemNodes);
   }
 
-  /// Determines whether each item in [items] is a block item.
-  ///
-  /// Also removes any trailing empty lines and notes which items are separated
-  /// by empty lines.
-  void determineBlockItems(List items) {
-    // Markdown, because it hates us, specifies two kinds of list items. If you
-    // have a list like:
-    //
-    // * one
-    // * two
-    //
-    // Then it will insert the contents of the lines directly in the <li>, like:
-    //
-    // <ul>
-    //   <li>one</li>
-    //   <li>two</li>
-    // <ul>
-    //
-    // If, however, there are blank lines between the items, each is wrapped in
-    // paragraphs:
-    //
-    // * one
-    //
-    // * two
-    //
-    // <ul>
-    //   <li><p>one</p></li>
-    //   <li><p>two</p></li>
-    // <ul>
-    //
-    // In other words, sometimes we parse the contents of a list item like a
-    // block, and sometimes line an inline. The rules our parser implements are:
-    //
-    // - If it has more than one line, it's a block.
-    // - If the line matches any block parser (BLOCKQUOTE, HEADER, HR, INDENT,
-    //   UL, OL) it's a block. (This is for cases like "* > quote".)
-    // - If there was a blank line between this item and the previous one, it's
-    //   a block.
-    // - If there was a blank line between this item and the next one, it's a
-    //   block.
-    // - Otherwise, parse it as an inline.
-
-    // Remove any trailing empty lines and note which items are separated by
-    // empty lines. Do this before seeing which items are single-line so that
-    // trailing empty lines on the last item don't force it into being a block.
+  /// Removes any trailing empty lines and notes whether any items are separated
+  /// by such lines.
+  bool removeTrailingEmptyLines(List items) {
+    var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
-      for (var j = items[i].lines.length - 1; j > 0; j--) {
-        if (!_emptyPattern.hasMatch(items[i].lines[j])) break;
-
-        // Found an empty line. This item and the one after it are blocks.
+      while (_emptyPattern.hasMatch(items[i].lines.last)) {
         if (i < items.length - 1) {
-          items[i].forceBlock = true;
-          items[i + 1].forceBlock = true;
+          anyEmpty = true;
         }
         items[i].lines.removeLast();
       }
-
-      // Items with more than one line are block items.
-      items[i].forceBlock = items[i].forceBlock || items[i].lines.length > 1;
-
-      if (items[i].forceBlock) continue;
-
-      // Items (even one-lined items) that start with a block syntax are block
-      // items.
-      items[i].forceBlock =
-          blocksInList.any((p) => p.hasMatch(items[i].lines[0]));
     }
+    return anyEmpty;
   }
 }
 
