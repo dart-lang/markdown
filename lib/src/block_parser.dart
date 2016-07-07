@@ -598,7 +598,7 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     endItem();
-    var itemNodes = <Node>[];
+    var itemNodes = <Element>[];
 
     var anyEmptyLines = removeTrailingEmptyLines(items);
     var anyEmptyLinesBetweenBlocks = false;
