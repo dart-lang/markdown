@@ -7,8 +7,9 @@ import 'dart:mirrors';
 
 import 'package:args/args.dart' show ArgParser;
 import 'package:collection/collection.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' show parseFragment;
-import 'package:markdown/markdown.dart';
+import 'package:markdown/markdown.dart' show markdownToHtml;
 import 'package:path/path.dart' as p;
 
 const _commonMarkTests = 'common_mark_tests.json';
@@ -58,7 +59,7 @@ void main(List<String> args) {
       var actual = parseFragment(output);
       nestedMap[e.example] = compareHtml(expected.children, actual.children);
       if (verbose && !nestedMap[e.example]) {
-        print('FAIL: http://spec.commonmark.org/0.24/#example-${e.example}');
+        print('FAIL: http://spec.commonmark.org/0.25/#example-${e.example}');
         print('input:');
         print(indent(e.markdown));
         print('expected:');
@@ -125,7 +126,8 @@ void _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores) {
 }
 
 /// Compare two DOM trees for equality.
-bool compareHtml(List<Element> expectedElements, List<Element> actualElements) {
+bool compareHtml(
+    List<dom.Element> expectedElements, List<dom.Element> actualElements) {
   if (expectedElements.length != actualElements.length) {
     return false;
   }
@@ -138,33 +140,31 @@ bool compareHtml(List<Element> expectedElements, List<Element> actualElements) {
       return false;
     }
 
-    if (expected is Element) {
-      if (expected.localName != actual.localName) {
+    if (expected.localName != actual.localName) {
+      return false;
+    }
+
+    if (expected.attributes.length != actual.attributes.length) {
+      return false;
+    }
+
+    var expectedAttrKeys = expected.attributes.keys.toList();
+    expectedAttrKeys.sort();
+
+    var actualAttrKeys = actual.attributes.keys.toList();
+    actualAttrKeys.sort();
+
+    for (var attrNum = 0; attrNum < actualAttrKeys.length; attrNum++) {
+      var expectedAttrKey = expectedAttrKeys[attrNum];
+      var actualAttrKey = actualAttrKeys[attrNum];
+
+      if (expectedAttrKey != actualAttrKey) {
         return false;
       }
 
-      if (expected.attributes.length != actual.attributes.length) {
+      if (expected.attributes[expectedAttrKey] !=
+          actual.attributes[actualAttrKey]) {
         return false;
-      }
-
-      var expectedAttrKeys = expected.attributes.keys.toList();
-      expectedAttrKeys.sort();
-
-      var actualAttrKeys = actual.attributes.keys.toList();
-      actualAttrKeys.sort();
-
-      for (var attrNum = 0; attrNum < actualAttrKeys.length; attrNum++) {
-        var expectedAttrKey = expectedAttrKeys[attrNum];
-        var actualAttrKey = actualAttrKeys[attrNum];
-
-        if (expectedAttrKey != actualAttrKey) {
-          return false;
-        }
-
-        if (expected.attributes[expectedAttrKey] !=
-            actual.attributes.keys[actualAttrKey]) {
-          return false;
-        }
       }
     }
 
