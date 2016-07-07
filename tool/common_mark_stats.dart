@@ -1,5 +1,3 @@
-library markdown.tool.common_mark_stats;
-
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
@@ -16,10 +14,8 @@ const _commonMarkTests = 'common_mark_tests.json';
 
 // Locate the "test" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
-String get _currentDir => p.dirname(currentMirrorSystem()
-    .findLibrary(#markdown.tool.common_mark_stats)
-    .uri
-    .path);
+String get _currentDir => p
+    .dirname((reflect(main) as ClosureMirror).function.location.sourceUri.path);
 
 void main(List<String> args) {
   final parser = new ArgParser()
@@ -32,7 +28,7 @@ void main(List<String> args) {
   var raw = options['raw'];
   var verbose = options['verbose'];
 
-  var sections = loadCommonMarkSections();
+  var sections = _loadCommonMarkSections();
 
   var scores = new SplayTreeMap<String, SplayTreeMap<int, bool>>(
       compareAsciiLowerCaseNatural);
@@ -178,7 +174,7 @@ bool compareHtml(
   return true;
 }
 
-Map<String, List<CommonMarkTestCase>> loadCommonMarkSections() {
+Map<String, List<CommonMarkTestCase>> _loadCommonMarkSections() {
   var testFile = new File(p.join(_currentDir, _commonMarkTests));
   var testsJson = testFile.readAsStringSync();
 
