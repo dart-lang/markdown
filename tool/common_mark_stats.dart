@@ -59,7 +59,7 @@ void main(List<String> args) {
       var actual = parseFragment(output);
       nestedMap[e.example] = compareHtml(expected.children, actual.children);
       if (verbose && !nestedMap[e.example]) {
-        print('FAIL: http://spec.commonmark.org/0.24/#example-${e.example}');
+        print('FAIL: http://spec.commonmark.org/0.25/#example-${e.example}');
         print('input:');
         print(indent(e.markdown));
         print('expected:');
