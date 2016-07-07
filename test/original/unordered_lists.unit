@@ -35,7 +35,8 @@
 *   three
 
 <<<
-<ul><li>one</li><li>
+<ul><li>
+<p>one</p></li><li>
 <p>two</p></li><li>
 <p>three</p></li></ul>
 >>> do not force paragraph if item is already block
@@ -66,9 +67,8 @@
 *   three
 
 <<<
-<ul><li>
-<p>one
-two</p></li><li>three</li></ul>
+<ul><li>one
+two</li><li>three</li></ul>
 >>> can nest lists
 *   one
     * nested one
