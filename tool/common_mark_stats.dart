@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:mirrors';
 
-import 'package:args/args.dart' show ArgParser;
+import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' show parseFragment;
@@ -32,7 +32,16 @@ main(List<String> args) async {
         defaultsTo: false, help: 'verbose output', negatable: false)
     ..addFlag('help', defaultsTo: false, negatable: false);
 
-  var options = parser.parse(args);
+  ArgResults options;
+
+  try {
+    options = parser.parse(args);
+  } on FormatException catch (e) {
+    stderr.writeln(e);
+    print(parser.usage);
+    exitCode = 64;
+    return;
+  }
 
   if (options['help']) {
     print(parser.usage);
@@ -45,7 +54,7 @@ main(List<String> args) async {
   var updateFiles = options['update-files'] as bool;
 
   if (updateFiles && (raw || verbose || (specifiedSection != null))) {
-    print('The `update-files` flag must be used by itself');
+    stderr.writeln('The `update-files` flag must be used by itself');
     print(parser.usage);
     exitCode = 64; // unix standard improper usage
     return;
