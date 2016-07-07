@@ -80,3 +80,16 @@ two</p></li><li>three</li></ul>
 <ul><li>
 <p>one</p><ul><li>nested one</li><li>nested two</li></ul></li><li>
 <p>two</p></li></ul>
+>>> list item turns what might be an h1 into nothing
+- list
+===
+
+<<<
+<ul><li>list===</li></ul>
+>>> list item turns what might be an h2 into nothing
+- list
+---
+
+<<<
+<ul><li>list</li></ul>
+<hr />

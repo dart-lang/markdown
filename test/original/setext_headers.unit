@@ -20,27 +20,3 @@ text
 
 <<<
 <p>-</p>
->>> h1 turns preceding list into text
-- list
-===
-
-<<<
-<h1>- list</h1>
->>> h2 turns preceding list into text
-- list
-===
-
-<<<
-<h1>- list</h1>
->>> h1 turns preceding blockquote into text
-> quote
-===
-
-<<<
-<h1>> quote</h1>
->>> h2 turns preceding blockquote into text
-> quote
-===
-
-<<<
-<h1>> quote</h1>
