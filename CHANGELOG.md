@@ -1,11 +1,18 @@
-## 0.10.2-dev
+## 0.11.0-dev
 
 * Parse HTML blocks more accurately, according to
   [CommonMark](http://spec.commonmark.org/0.24/#html-blocks).
 * Support [shortcut reference
   links](http://spec.commonmark.org/0.24/#reference-link).
 * Don't allow an indented code block to interrupt a paragraph.
-* There are now 463/613 (76%) passing CommonMark v0.24 specs.
+* Change definition of "loose" and "strict" lists (items wrapped in
+  paragraph tags vs not) to CommonMark's. The primary difference is that any
+  single list item can trigger the entire list to be marked as "loose", rather
+  than defining "looseness" on each specific item.
+* Fix paragraph continuations in blockquotes and list items.
+* Fix silly typing bug with `tool/common_mark_stats.dart`, which resulted in
+  a dramatic overestimate of our CommonMark compliance.
+* There are now 427/613 (69%) passing CommonMark v0.25 specs.
 
 ## 0.10.1
 
@@ -13,6 +20,8 @@
   properly (#86). Thanks @mehaase!
 * Fix processing of `[ ... ]` syntax when no resolver is specified (#92).
 * There are now 401/613 (65%) passing CommonMark v0.24 specs.
+  (_Actually: after 0f64c8f the actual number of passing tests was 352/613
+  (57%)._)
 
 ## 0.10.0
 
