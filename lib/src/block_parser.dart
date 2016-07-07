@@ -199,7 +199,14 @@ class SetextHeaderSyntax extends BlockSyntax {
   bool canParse(BlockParser parser) {
     // Note: matches *next* line, not the current one. We're looking for the
     // underlining after this line.
-    return parser.matchesNext(_setextPattern);
+    return parser.matchesNext(_setextPattern) &&
+        // The current line must look like a paragraph.
+        !(parser.matches(_codePattern) ||
+            parser.matches(_headerPattern) ||
+            parser.matches(_blockquotePattern) ||
+            parser.matches(_hrPattern) ||
+            parser.matches(_ulPattern) ||
+            parser.matches(_olPattern));
   }
 
   Node parse(BlockParser parser) {
@@ -257,6 +264,36 @@ class BlockquoteSyntax extends BlockSyntax {
   RegExp get pattern => _blockquotePattern;
 
   const BlockquoteSyntax();
+
+  List<String> parseChildLines(BlockParser parser) {
+    // Grab all of the lines that form the blockquote, stripping off the ">".
+    var childLines = <String>[];
+
+    while (!parser.isDone) {
+      var match = pattern.firstMatch(parser.current);
+      if (match != null) {
+        childLines.add(match[1]);
+        parser.advance();
+        continue;
+      }
+
+      // A paragraph continuation is OK. This is content that cannot be parsed
+      // as any other syntax except Paragraph, and it doesn't match the bar in
+      // a Setext header.
+      if (parser.blockSyntaxes.firstWhere((s) => s.canParse(parser))
+          is ParagraphSyntax) {
+        var continuedLine = childLines.last + parser.current;
+        childLines
+          ..removeLast()
+          ..add(continuedLine);
+        parser.advance();
+      } else {
+        break;
+      }
+    }
+
+    return childLines;
+  }
 
   Node parse(BlockParser parser) {
     var childLines = parseChildLines(parser);
@@ -527,11 +564,15 @@ abstract class ListSyntax extends BlockSyntax {
         // Done with the list.
         break;
       } else {
-        // Anything else is paragraph text or other stuff that can be in a list
-        // item. However, if the previous item is a blank line, this means we're
-        // done with the list and are starting a new top-level paragraph.
-        if ((childLines.length > 0) && (childLines.last == '')) break;
-        childLines.add(parser.current);
+        // If the previous item is a blank line, this means we're done with the
+        // list and are starting a new top-level paragraph.
+        if ((childLines.isNotEmpty) && (childLines.last == '')) break;
+
+        // Anything else is paragraph continuation text.
+        var continuedLine = childLines.last + parser.current;
+        childLines
+          ..removeLast()
+          ..add(continuedLine);
       }
       parser.advance();
     }

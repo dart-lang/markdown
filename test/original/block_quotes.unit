@@ -25,3 +25,18 @@
 <p>two</p>
 <blockquote>
 <p>three</p></blockquote></blockquote></blockquote>
+>>> quote turns what might be an h1 into nothing
+> quote
+===
+
+<<<
+<blockquote>
+<p>quote===</p></blockquote>
+>>> quote turns what might be an h2 into an hr
+> quote
+---
+
+<<<
+<blockquote>
+<p>quote</p></blockquote>
+<hr />
