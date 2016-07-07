@@ -73,22 +73,8 @@ class Document {
   }
 
   /// Parses the given [lines] of Markdown to a series of AST nodes.
-  List<Node> parseLines(List<String> lines) {
-    var parser = new BlockParser(lines, this);
-
-    var blocks = <Node>[];
-    while (!parser.isDone) {
-      for (var syntax in parser.blockSyntaxes) {
-        if (syntax.canParse(parser)) {
-          var block = syntax.parse(parser);
-          if (block != null) blocks.add(block);
-          break;
-        }
-      }
-    }
-
-    return blocks;
-  }
+  List<Node> parseLines(List<String> lines) =>
+      new BlockParser(lines, this).parseLines();
 
   /// Parses the given inline Markdown [text] to a series of AST nodes.
   List<Node> parseInline(String text) => new InlineParser(text, this).parse();

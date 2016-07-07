@@ -68,7 +68,7 @@ class DartdocCompare {
     return result == 0;
   }
 
-  run_dartdoc(markdown_ref, package) {
+  String run_dartdoc(markdown_ref, package) {
     print("==========================================================");
     print("Running dartdoc for ${markdown_ref}...");
     print("==========================================================");
@@ -77,7 +77,8 @@ class DartdocCompare {
       if (!sdk) system('pub', ['get']);
       var out = Directory.systemTemp
           .createTempSync("dartdoc-compare-${markdown_ref}__");
-      var sdk_options = sdk ? ["--sdk-docs", "--dart-sdk=$package"] : [];
+      var sdk_options =
+          sdk ? ["--sdk-docs", "--dart-sdk=$package"] : <String>[];
       var cmd = "dart";
       var args = ["${dartdoc_bin}", "--output=${out.path}"]
         ..addAll(sdk_options);
@@ -107,7 +108,7 @@ class DartdocCompare {
     return system('pub', ['get']);
   }
 
-  static system(cmd, args) {
+  static system(String cmd, List<String> args) {
     var result = Process.runSync(cmd, args);
     print(result.stdout);
     print(result.stderr);
