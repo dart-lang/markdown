@@ -17,7 +17,7 @@ links [*are*](http://foo.com) awesome
 links [![](/are.png)](http://foo.com) awesome
 
 <<<
-<p>links <a href="http://foo.com"><img src="/are.png" /></a> awesome</p>
+<p>links <a href="http://foo.com"><img alt="" src="/are.png" /></a> awesome</p>
 >>> image with alt inside link
 links [![my alt](/are.png)](http://foo.com) awesome
 
@@ -27,7 +27,7 @@ links [![my alt](/are.png)](http://foo.com) awesome
 links [![](/are.png "my title")](http://foo.com) awesome
 
 <<<
-<p>links <a href="http://foo.com"><img src="/are.png" title="my title" /></a> awesome</p>
+<p>links <a href="http://foo.com"><img alt="" src="/are.png" title="my title" /></a> awesome</p>
 >>> no URL
 links [are]() awesome
 
