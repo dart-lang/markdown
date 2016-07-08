@@ -292,7 +292,7 @@ class LinkSyntax extends TagSyntax {
   /// breaks it into pieces.
   static get linkPattern {
     var refLink = r'\[([^\]]*)\]'; // `[id]` reflink id.
-    var title = r'(?:\s*"([^"]+?)"|)'; // Optional title in quotes.
+    var title = r'(?:\s*"([^"]+?)"\s*|)'; // Optional title in quotes.
     var inlineLink = '\\((\\S*?)$title\\)'; // `(url "title")` link.
     return '\](?:($refLink|$inlineLink)|)';
 
@@ -409,13 +409,11 @@ class ImageSyntax extends LinkSyntax {
     if (link == null) return null;
     var image = new Element.empty("img");
     image.attributes["src"] = escapeHtml(link.url);
+    image.attributes["alt"] = state?.textContent ?? '';
 
     if (link.title != null) {
       image.attributes["title"] = escapeHtml(link.title);
     }
-
-    var alt = state.children.map((e) => e is Text ? e.text : "").join(" ");
-    if (alt != "") image.attributes["alt"] = alt;
 
     return image;
   }
@@ -536,4 +534,7 @@ class TagState {
 
     return null;
   }
+
+  String get textContent =>
+      children.map((Node child) => child.textContent).join('');
 }
