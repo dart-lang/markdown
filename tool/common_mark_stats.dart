@@ -1,11 +1,10 @@
-library markdown.tool.common_mark_stats;
-
+import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:mirrors';
 
-import 'package:args/args.dart' show ArgParser;
+import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' show parseFragment;
@@ -16,23 +15,52 @@ const _commonMarkTests = 'common_mark_tests.json';
 
 // Locate the "test" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
-String get _currentDir => p.dirname(currentMirrorSystem()
-    .findLibrary(#markdown.tool.common_mark_stats)
-    .uri
-    .path);
+String get _currentDir => p
+    .dirname((reflect(main) as ClosureMirror).function.location.sourceUri.path);
 
-void main(List<String> args) {
+main(List<String> args) async {
   final parser = new ArgParser()
-    ..addOption('section', help: 'Restrict tests to one section')
-    ..addFlag('raw', defaultsTo: false, help: 'raw JSON format')
-    ..addFlag('verbose', defaultsTo: false, help: 'verbose output');
-  var options = parser.parse(args);
+    ..addOption('section',
+        help: 'Restrict tests to one section, provided after the option.')
+    ..addFlag('raw',
+        defaultsTo: false, help: 'raw JSON format', negatable: false)
+    ..addFlag('update-files',
+        defaultsTo: false,
+        help: 'Update stats files in $_currentDir',
+        negatable: false)
+    ..addFlag('verbose',
+        defaultsTo: false, help: 'verbose output', negatable: false)
+    ..addFlag('help', defaultsTo: false, negatable: false);
 
-  var specifiedSection = options['section'];
-  var raw = options['raw'];
-  var verbose = options['verbose'];
+  ArgResults options;
 
-  var sections = loadCommonMarkSections();
+  try {
+    options = parser.parse(args);
+  } on FormatException catch (e) {
+    stderr.writeln(e);
+    print(parser.usage);
+    exitCode = 64;
+    return;
+  }
+
+  if (options['help']) {
+    print(parser.usage);
+    return;
+  }
+
+  var specifiedSection = options['section'] as String;
+  var raw = options['raw'] as bool;
+  var verbose = options['verbose'] as bool;
+  var updateFiles = options['update-files'] as bool;
+
+  if (updateFiles && (raw || verbose || (specifiedSection != null))) {
+    stderr.writeln('The `update-files` flag must be used by itself');
+    print(parser.usage);
+    exitCode = 64; // unix standard improper usage
+    return;
+  }
+
+  var sections = _loadCommonMarkSections();
 
   var scores = new SplayTreeMap<String, SplayTreeMap<int, bool>>(
       compareAsciiLowerCaseNatural);
@@ -71,17 +99,12 @@ void main(List<String> args) {
     }
   });
 
-  if (raw) {
-    var encoder = const JsonEncoder.withIndent(' ', _convert);
-    try {
-      print(encoder.convert(scores));
-    } on JsonUnsupportedObjectError catch (e) {
-      print(e.cause);
-      print(e.unsupportedObject.runtimeType);
-      rethrow;
-    }
-  } else {
-    _printFriendly(scores);
+  if (raw || updateFiles) {
+    _printRaw(scores, updateFiles);
+  }
+
+  if (!raw || updateFiles) {
+    _printFriendly(scores, updateFiles);
   }
 }
 
@@ -97,11 +120,46 @@ _convert(obj) {
   return obj;
 }
 
-void _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores) {
+Future _printRaw(scores, bool updateFiles) async {
+  IOSink sink;
+  if (updateFiles) {
+    var path = p.join(_currentDir, 'common_mark_stats.json');
+    print('Updating $path');
+    var file = new File(path);
+    sink = file.openWrite();
+  } else {
+    sink = stdout;
+  }
+
+  var encoder = const JsonEncoder.withIndent(' ', _convert);
+  try {
+    sink.writeln(encoder.convert(scores));
+  } on JsonUnsupportedObjectError catch (e) {
+    stderr.writeln(e.cause);
+    stderr.writeln(e.unsupportedObject.runtimeType);
+    rethrow;
+  }
+
+  await sink.flush();
+  await sink.close();
+}
+
+Future _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores,
+    bool updateFiles) async {
   const countWidth = 4;
 
   var totalValid = 0;
   var totalExamples = 0;
+
+  IOSink sink;
+  if (updateFiles) {
+    var path = p.join(_currentDir, 'common_mark_stats.txt');
+    print('Updating $path');
+    var file = new File(path);
+    sink = file.openWrite();
+  } else {
+    sink = stdout;
+  }
 
   scores.forEach((section, map) {
     var total = map.values.length;
@@ -113,16 +171,19 @@ void _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores) {
 
     var pct = (100 * sectionValidCount / total).toStringAsFixed(1).padLeft(5);
 
-    print('${sectionValidCount.toString().padLeft(countWidth)} '
+    sink.writeln('${sectionValidCount.toString().padLeft(countWidth)} '
         'of ${total.toString().padLeft(countWidth)} '
         '– ${pct}%  $section');
   });
 
   var pct = (100 * totalValid / totalExamples).toStringAsFixed(1).padLeft(5);
 
-  print('${totalValid.toString().padLeft(countWidth)} '
+  sink.writeln('${totalValid.toString().padLeft(countWidth)} '
       'of ${totalExamples.toString().padLeft(countWidth)} '
       '– ${pct}%  TOTAL');
+
+  await sink.flush();
+  await sink.close();
 }
 
 /// Compare two DOM trees for equality.
@@ -178,7 +239,7 @@ bool compareHtml(
   return true;
 }
 
-Map<String, List<CommonMarkTestCase>> loadCommonMarkSections() {
+Map<String, List<CommonMarkTestCase>> _loadCommonMarkSections() {
   var testFile = new File(p.join(_currentDir, _commonMarkTests));
   var testsJson = testFile.readAsStringSync();
 
