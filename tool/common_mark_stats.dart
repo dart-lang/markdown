@@ -6,7 +6,7 @@ import 'dart:mirrors';
 
 import 'package:args/args.dart';
 import 'package:collection/collection.dart';
-import 'package:html/dom.dart' as dom;
+import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parseFragment;
 import 'package:markdown/markdown.dart' show markdownToHtml;
 import 'package:path/path.dart' as p;
@@ -39,7 +39,7 @@ main(List<String> args) async {
   } on FormatException catch (e) {
     stderr.writeln(e);
     print(parser.usage);
-    exitCode = 64;
+    exitCode = 64; // unix standard improper usage
     return;
   }
 
@@ -100,11 +100,11 @@ main(List<String> args) async {
   });
 
   if (raw || updateFiles) {
-    _printRaw(scores, updateFiles);
+    await _printRaw(scores, updateFiles);
   }
 
   if (!raw || updateFiles) {
-    _printFriendly(scores, updateFiles);
+    await _printFriendly(scores, updateFiles);
   }
 }
 
@@ -187,8 +187,7 @@ Future _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores,
 }
 
 /// Compare two DOM trees for equality.
-bool compareHtml(
-    List<dom.Element> expectedElements, List<dom.Element> actualElements) {
+bool compareHtml(List<Element> expectedElements, List<Element> actualElements) {
   if (expectedElements.length != actualElements.length) {
     return false;
   }
