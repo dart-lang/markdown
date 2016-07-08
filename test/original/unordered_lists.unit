@@ -4,21 +4,19 @@
 + plus
 
 <<<
-<ul><li>star</li><li>dash</li><li>plus</li></ul>
->>> allow numbered lines after first
+<ul><li>star</li></ul><ul><li>dash</li></ul><ul><li>plus</li></ul>
+>>> new markers begin new lists
 * a
 1. b
 
 <<<
-<ul><li>a</li><li>b</li></ul>
+<ul><li>a</li></ul><ol><li>b</li></ol>
 >>> allow a tab after the marker
-* a
-+ b
-- c
-1.  d
+*	a
+1.	b
 
 <<<
-<ul><li>a</li><li>b</li><li>c</li><li>d</li></ul>
+<ul><li>a</li></ul><ol><li>b</li></ol>
 >>> wrap items in paragraphs if blank lines separate
 * one
 
@@ -29,10 +27,10 @@
 <p>one</p></li><li>
 <p>two</p></li></ul>
 >>> force paragraph on item before and after blank lines
-*   one
-*   two
+* one
+* two
 
-*   three
+* three
 
 <<<
 <ul><li>
@@ -50,11 +48,11 @@
 <p>quote</p></blockquote></li><li>
 <h1>header</h1></li></ul>
 >>> can contain multiple paragraphs
-*   one
+* one
 
-    two
+  two
 
-*   three
+* three
 
 <<<
 <ul><li>
@@ -62,19 +60,19 @@
 <p>two</p></li><li>
 <p>three</p></li></ul>
 >>> can span newlines
-*   one
-    two
-*   three
+* one
+  two
+* three
 
 <<<
 <ul><li>one
 two</li><li>three</li></ul>
 >>> can nest lists
-*   one
-    * nested one
-    * nested two
+* one
+  * nested one
+  * nested two
 
-*   two
+* two
 
 <<<
 <ul><li>

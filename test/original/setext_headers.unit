@@ -10,13 +10,13 @@ text
 
 <<<
 <h2>text</h2>
->>> h1 on first line becomes text
+>>> h1 bar on first line becomes text
 ===
 
 <<<
 <p>===</p>
->>> h2 on first line becomes text
+>>> h2 bar on first line becomes list
 -
 
 <<<
-<p>-</p>
+<ul><li></li></ul>

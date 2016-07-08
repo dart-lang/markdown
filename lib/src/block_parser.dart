@@ -37,11 +37,16 @@ final _hrPattern = new RegExp(r'^ {0,3}([-*_]) *\1 *\1(?:\1| )*$');
 /// A line starting with one of these markers: `-`, `*`, `+`. May have up to
 /// three leading spaces before the marker and any number of spaces or tabs
 /// after.
-final _ulPattern = new RegExp(r'^[ ]{0,3}[*+-][ \t]+(.*)$');
+///
+/// Contains a dummy group at [2], so that the groups in [_ulPattern] and
+/// [_olPattern] match up; in both, [2] is the length of the number that begins
+/// the list marker.
+final _ulPattern = new RegExp(r'^([ ]{0,3})()([*+-])(([ \t])([ \t]*)(.*))?$');
 
 /// A line starting with a number like `123.`. May have up to three leading
 /// spaces before the marker and any number of spaces or tabs after.
-final _olPattern = new RegExp(r'^[ ]{0,3}\d+\.[ \t]+(.*)$');
+final _olPattern =
+    new RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
 
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
@@ -569,17 +574,58 @@ abstract class ListSyntax extends BlockSyntax {
       return match != null;
     }
 
+    var listMarker = null;
+    var indent;
+
     while (!parser.isDone) {
       if (tryMatch(_emptyPattern)) {
+        if (_emptyPattern.firstMatch(parser.next ?? '') != null) {
+          // Two blank lines ends a list.
+          break;
+        }
         // Add a blank line to the current list item.
         childLines.add('');
+      } else if (indent != null && parser.current.startsWith(indent)) {
+        // Strip off indent and add to current item.
+        var line = parser.current.replaceFirst(indent, '');
+        childLines.add(line);
       } else if (tryMatch(_ulPattern) || tryMatch(_olPattern)) {
+        var precedingWhitespace = match[1];
+        var digits = match[2] ?? '';
+        var marker = match[3];
+        var isBlank = match[4] == null;
+        var firstWhitespace = match[5] ?? '';
+        var restWhitespace = match[6] ?? '';
+        var content = match[7] ?? '';
+        if (listMarker != null && listMarker != marker) {
+          // Changing the bullet or ordered list delimiter starts a new list.
+          break;
+        }
+        listMarker = marker;
+        var markerAsSpaces = ' ' * (digits.length + marker.length);
+        if (isBlank) {
+          // See http://spec.commonmark.org/0.25/#list-items under "3. Item
+          // starting with a blank line."
+          //
+          // If the list item starts with a blank line, the final piece of the
+          // indentation is just a single space.
+          indent = precedingWhitespace + markerAsSpaces + ' ';
+        } else if (match[5].length >= 4) {
+          // See http://spec.commonmark.org/0.25/#list-items under "2. Item
+          // starting with indented code."
+          //
+          // If the list item starts with indented code, we need to _not_ count
+          // any indentation past the required whitespace character.
+          indent = precedingWhitespace + markerAsSpaces + firstWhitespace;
+        } else {
+          indent = precedingWhitespace +
+              markerAsSpaces +
+              firstWhitespace +
+              restWhitespace;
+        }
         // End the current list item and start a new one.
         endItem();
-        childLines.add(match[1]);
-      } else if (tryMatch(_indentPattern)) {
-        // Strip off indent and add to current item.
-        childLines.add(match[1]);
+        childLines.add(restWhitespace + content);
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
@@ -637,7 +683,8 @@ abstract class ListSyntax extends BlockSyntax {
   bool removeTrailingEmptyLines(List items) {
     var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
-      while (_emptyPattern.hasMatch(items[i].lines.last)) {
+      while (items[i].lines.isNotEmpty &&
+          _emptyPattern.hasMatch(items[i].lines.last)) {
         if (i < items.length - 1) {
           anyEmpty = true;
         }
