@@ -683,7 +683,8 @@ abstract class ListSyntax extends BlockSyntax {
   bool removeTrailingEmptyLines(List items) {
     var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
-      while (_emptyPattern.hasMatch(items[i].lines.last)) {
+      while (items[i].lines.isNotEmpty &&
+          _emptyPattern.hasMatch(items[i].lines.last)) {
         if (i < items.length - 1) {
           anyEmpty = true;
         }
