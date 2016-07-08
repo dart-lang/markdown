@@ -11,6 +11,8 @@ typedef Node Resolver(String name);
 /// Roughly corresponds to Node in the DOM. Will be either an Element or Text.
 abstract class Node {
   void accept(NodeVisitor visitor);
+
+  String get textContent;
 }
 
 /// A named tag that can contain other nodes.
@@ -47,6 +49,10 @@ class Element implements Node {
       visitor.visitElementAfter(this);
     }
   }
+
+  String get textContent => children == null
+      ? ''
+      : children.map((Node child) => child.textContent).join('');
 }
 
 /// A plain text element.
@@ -55,6 +61,8 @@ class Text implements Node {
   Text(this.text);
 
   void accept(NodeVisitor visitor) => visitor.visitText(this);
+
+  String get textContent => text;
 }
 
 /// Visitor pattern for the AST.
