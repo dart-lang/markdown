@@ -80,5 +80,5 @@ void main() {
 
 [Perl Markdown]: http://daringfireball.net/projects/markdown/
 [CommonMark]: http://commonmark.org/
-[commonMark-raw-html]: http://spec.commonmark.org/0.22/#raw-html
+[commonMark-raw-html]: http://spec.commonmark.org/0.25/#raw-html
 [pandoc-auto_identifiers]: http://pandoc.org/README.html#extension-auto_identifiers
