@@ -78,7 +78,38 @@ void main() {
 }
 ```
 
+### CommonMark compliance
+
+This package contains a number of files in the `tool` directory for tracking
+compliance with [CommonMark].
+
+#### Updating CommonMark stats when changing the implementation
+
+ 1. Update the library and test code, making sure that tests still pass.
+ 2. Run `dart tool/common_mark_stats.dart --update-files` to update the
+    per-test results `tool/common_mark_stats.json` and the test summary
+    `tool/common_mark_stats.txt`.
+ 3. Verify that more tests now pass – or at least, no more tests fail.
+ 4. Make sure you include the updated stats files in your commit.
+
+#### Updating the CommonMark test file for a spec update
+
+ 1. Check out the [CommonMark source]. Make sure you checkout a *major* release.
+ 2. Dump the test output overwriting the existing tests file.
+
+    ``` terminal
+    /path/to/common_mark_dir> python3 test/spec_tests.py --dump-tests \
+      > /path/to/markdown.dart/tool/common_mark_tests.json
+    ```
+
+ 3. Update the stats files as described above. Note any changes in the results.
+ 4. Update any references to the existing spec by search for
+    `http://spec.commonmark.org/0.25` in the repository. (Including this one.)
+    Verify the updated links are still valid.
+ 5. Commit changes, including a corresponding note in `CHANGELOG.md`.
+
 [Perl Markdown]: http://daringfireball.net/projects/markdown/
 [CommonMark]: http://commonmark.org/
 [commonMark-raw-html]: http://spec.commonmark.org/0.25/#raw-html
+[CommonMark source]: https://github.com/jgm/CommonMark/
 [pandoc-auto_identifiers]: http://pandoc.org/README.html#extension-auto_identifiers
