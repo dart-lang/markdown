@@ -3,8 +3,7 @@
 A portable Markdown library written in Dart. It can parse Markdown into
 HTML on both the client and server.
 
-Usage
------
+### Usage
 
 ```dart
 import 'package:markdown/markdown.dart';
@@ -15,8 +14,7 @@ void main() {
 }
 ```
 
-Syntax extensions
------------------
+### Syntax extensions
 
 A few Markdown extensions, beyond what was specified in the original
 [Perl Markdown][] implementation, are supported. By default, the ones supported
