@@ -67,6 +67,22 @@ main(List<String> args) async {
 
   String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
 
+  printVerboseFailure(
+      String message, CommonMarkTestCase test, String expected, String actual) {
+    if (!verbose) {
+      return;
+    }
+
+    print('$message: http://spec.commonmark.org/0.25/#example-${test.example}');
+    print('input:');
+    print(indent(test.markdown));
+    print('expected:');
+    print(indent(expected));
+    print('actual:');
+    print(indent(actual));
+    print('-----------------------');
+  }
+
   sections.forEach((section, examples) {
     if (specifiedSection != null && section != specifiedSection) {
       return;
@@ -75,26 +91,21 @@ main(List<String> args) async {
       var output;
       var nestedMap =
           scores.putIfAbsent(section, () => new SplayTreeMap<int, bool>());
+      var expected = parseFragment(e.html);
 
       try {
         output = markdownToHtml(e.markdown);
-      } catch (exc) {
+      } catch (exc, stackTrace) {
         nestedMap[e.example] = false;
+        printVerboseFailure(
+            'ERROR', e, expected.outerHtml, 'Thrown: $exc\n$stackTrace');
         continue;
       }
 
-      var expected = parseFragment(e.html);
       var actual = parseFragment(output);
       nestedMap[e.example] = compareHtml(expected.children, actual.children);
-      if (verbose && !nestedMap[e.example]) {
-        print('FAIL: http://spec.commonmark.org/0.25/#example-${e.example}');
-        print('input:');
-        print(indent(e.markdown));
-        print('expected:');
-        print(indent(expected.outerHtml));
-        print('actual:');
-        print(indent(actual.outerHtml));
-        print('-----------------------');
+      if (!nestedMap[e.example]) {
+        printVerboseFailure('FAIL', e, expected.outerHtml, actual.outerHtml);
       }
     }
   });
