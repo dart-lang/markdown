@@ -1,23 +1,27 @@
 >>> image
 ![][foo]
+
 [foo]: http://foo.com/foo.png
 
 <<<
 <p><img alt="" src="http://foo.com/foo.png" /></p>
 >>> alternate text
 ![alternate text][foo]
+
 [foo]: http://foo.com/foo.png
 
 <<<
 <p><img alt="alternate text" src="http://foo.com/foo.png" /></p>
 >>> title
 ![][foo]
+
 [foo]: http://foo.com/foo.png "optional title"
 
 <<<
 <p><img alt="" src="http://foo.com/foo.png" title="optional title" /></p>
 >>> invalid alt text
 ![`alt`][foo]
+
 [foo]: http://foo.com/foo.png "optional title"
 
 <<<

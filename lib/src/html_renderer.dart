@@ -31,7 +31,6 @@ String markdownToHtml(String markdown,
 
   // Replace windows line endings with unix line endings, and split.
   var lines = markdown.replaceAll('\r\n', '\n').split('\n');
-  document.parseRefLinks(lines);
 
   return renderToHtml(document.parseLines(lines)) + '\n';
 }

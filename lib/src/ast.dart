@@ -65,6 +65,19 @@ class Text implements Node {
   String get textContent => text;
 }
 
+/// Inline content that has not been parsed into inline nodes (strong, links,
+/// etc).
+///
+/// These placeholder nodes should only remain in place while the block nodes
+/// of a document are still being parsed, in order to gather all reference link
+/// definitions.
+class UnparsedContent implements Node {
+  final String content;
+  UnparsedContent(this.content);
+
+  void accept(NodeVisitor visitor) => null;
+}
+
 /// Visitor pattern for the AST.
 ///
 /// Renderers or other AST transformers should implement this.
