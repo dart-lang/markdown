@@ -73,7 +73,7 @@ main(List<String> args) async {
       return;
     }
 
-    print('$message: http://spec.commonmark.org/0.25/#example-${test.example}');
+    print('$message: http://spec.commonmark.org/0.26/#example-${test.example}');
     print('input:');
     print(indent(test.markdown));
     print('expected:');
