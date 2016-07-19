@@ -26,12 +26,20 @@ head `code` | _cells_
 *text*      | <span>text</span>
 <<<
 <table><thead><tr><th>head <code>code</code></th><th><em>cells</em></th></tr></thead><tbody><tr><td><em>text</em></td><td><span>text</span></td></tr></tbody></table>
->>> cells with inline syntax with pipes
+>>> cells are parsed before inline syntax
 header | _foo | bar_
 -------|------------
 text   | text
 <<<
-<table><thead><tr><th>header</th><th><em>foo | bar</em></th></tr></thead><tbody><tr><td>text</td><td>text</td></tr></tbody></table>
+<table><thead><tr><th>header</th><th>_foo</th><th>bar_</th></tr></thead><tbody><tr><td>text</td><td>text</td></tr></tbody></table>
+>>> cells contain reference links
+header | header
+-------|--------
+text   | [link][here]
+
+[here]: http://url
+<<<
+<table><thead><tr><th>header</th><th>header</th></tr></thead><tbody><tr><td>text</td><td><a href="http://url">link</a></td></tr></tbody></table>
 >>> one column tables
 head
 -----|-----

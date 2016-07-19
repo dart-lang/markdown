@@ -116,8 +116,9 @@ class BlockParser {
   ///
   /// `peek(1)` is equivalent to [next].
   String peek(int linesAhead) {
-    if (linesAhead < 0) throw new ArgumentError(
-        'Invalid linesAhead: $linesAhead; must be >= 0.');
+    if (linesAhead < 0) {
+      throw new ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.');
+    }
     // Don't read past the end.
     if (_pos >= lines.length - linesAhead) return null;
     return lines[_pos + linesAhead];
@@ -711,6 +712,8 @@ class OrderedListSyntax extends ListSyntax {
 
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
+  static final _pipePattern = new RegExp(r'\s*\|\s*');
+
   bool get canEndBlock => false;
 
   const TableSyntax();
@@ -758,29 +761,16 @@ class TableSyntax extends BlockSyntax {
     var line = parser.current
         .replaceFirst(new RegExp(r'^\|\s*'), '')
         .replaceFirst(new RegExp(r'\s*\|$'), '');
-    var contents = parser.document.parseInline(line);
+    var cells = line.split(_pipePattern);
     parser.advance();
-    var row = <Node>[];
-    var cellContents = <Node>[];
-    var pipe = new RegExp(r'\s*\|\s*');
+    var row = <Element>[];
 
-    contents.forEach((Node node) {
-      if (node is Text) {
-        var cells = node.text.split(pipe);
-        cells.sublist(0, cells.length - 1).forEach((String cell) {
-          cellContents.add(new Text(cell));
-          row.add(new Element(cellType, cellContents));
-          cellContents = <Node>[];
-        });
-        cellContents.add(new Text(cells.last));
-      } else {
-        // An Element or something else.
-        cellContents.add(node);
-      }
-    });
-    row.add(new Element(cellType, cellContents));
+    for (String cell in cells) {
+      var contents = new UnparsedContent(cell);
+      row.add(new Element(cellType, [contents]));
+    }
 
-    for (int i = 0; i < row.length && i < alignments.length; i++) {
+    for (var i = 0; i < row.length && i < alignments.length; i++) {
       if (alignments[i] == null) continue;
       row[i].attributes['style'] = 'text-align: ${alignments[i]};';
     }
