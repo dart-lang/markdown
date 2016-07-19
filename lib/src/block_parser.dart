@@ -604,14 +604,14 @@ abstract class ListSyntax extends BlockSyntax {
         listMarker = marker;
         var markerAsSpaces = ' ' * (digits.length + marker.length);
         if (isBlank) {
-          // See http://spec.commonmark.org/0.25/#list-items under "3. Item
+          // See http://spec.commonmark.org/0.26/#list-items under "3. Item
           // starting with a blank line."
           //
           // If the list item starts with a blank line, the final piece of the
           // indentation is just a single space.
           indent = precedingWhitespace + markerAsSpaces + ' ';
         } else if (match[5].length >= 4) {
-          // See http://spec.commonmark.org/0.25/#list-items under "2. Item
+          // See http://spec.commonmark.org/0.26/#list-items under "2. Item
           // starting with indented code."
           //
           // If the list item starts with indented code, we need to _not_ count
@@ -658,7 +658,7 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     // Must strip paragraph tags if the list is "tight".
-    // http://spec.commonmark.org/0.25/#lists
+    // http://spec.commonmark.org/0.26/#lists
     var listIsTight = !anyEmptyLines && !anyEmptyLinesBetweenBlocks;
 
     if (listIsTight) {
