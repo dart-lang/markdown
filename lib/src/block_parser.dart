@@ -190,17 +190,12 @@ abstract class BlockSyntax {
 
   /// Generates a valid HTML anchor from the inner text of [element].
   static String generateAnchorHash(Element element) =>
-      element.children.first.content
+      element.children.first.textContent
           .toLowerCase()
           .trim()
           .replaceFirst(new RegExp(r'^[^a-z]+'), '')
           .replaceAll(new RegExp(r'[^a-z0-9 _-]'), '')
           .replaceAll(new RegExp(r'\s'), '-');
-
-  /// Concatenates the text found in all the children of [element].
-  static String _concatenatedText(Element element) => element.children
-      .map((child) => (child is Text) ? child.text : _concatenatedText(child))
-      .join('');
 }
 
 class EmptyBlockSyntax extends BlockSyntax {
@@ -747,7 +742,7 @@ class ParagraphSyntax extends BlockSyntax {
   List<String> _extractReflinkDefinitions(
       BlockParser parser, List<String> lines) {
     bool lineStartsReflinkDefinition(int i) =>
-        lines[i].startsWith(new RegExp(r'[ ]{0,3}\['));
+        lines[i].startsWith(_reflinkDefinitionStart);
 
     int i = 0;
     loopOverDefinitions: while (true) {

@@ -43,7 +43,7 @@ class Document {
     for (int i = 0; i < nodes.length; i++) {
       var node = nodes[i];
       if (node is UnparsedContent) {
-        List<Node> inlineNodes = parseInline(node.content);
+        List<Node> inlineNodes = parseInline(node.textContent);
         nodes.removeAt(i);
         nodes.insertAll(i, inlineNodes);
         i += inlineNodes.length - 1;
