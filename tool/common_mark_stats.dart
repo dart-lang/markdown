@@ -62,51 +62,18 @@ main(List<String> args) async {
 
   var sections = _loadCommonMarkSections();
 
-  var scores = new SplayTreeMap<String, SplayTreeMap<int, bool>>(
+  var scores = new SplayTreeMap<String, SplayTreeMap<int, CompareLevel>>(
       compareAsciiLowerCaseNatural);
-
-  String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
-
-  printVerboseFailure(
-      String message, CommonMarkTestCase test, String expected, String actual) {
-    if (!verbose) {
-      return;
-    }
-
-    print('$message: http://spec.commonmark.org/0.26/#example-${test.example}');
-    print('input:');
-    print(indent(test.markdown));
-    print('expected:');
-    print(indent(expected));
-    print('actual:');
-    print(indent(actual));
-    print('-----------------------');
-  }
 
   sections.forEach((section, examples) {
     if (specifiedSection != null && section != specifiedSection) {
       return;
     }
     for (var e in examples) {
-      var output;
-      var nestedMap =
-          scores.putIfAbsent(section, () => new SplayTreeMap<int, bool>());
-      var expected = parseFragment(e.html);
+      var nestedMap = scores.putIfAbsent(
+          section, () => new SplayTreeMap<int, CompareLevel>());
 
-      try {
-        output = markdownToHtml(e.markdown);
-      } catch (exc, stackTrace) {
-        nestedMap[e.example] = false;
-        printVerboseFailure(
-            'ERROR', e, expected.outerHtml, 'Thrown: $exc\n$stackTrace');
-        continue;
-      }
-
-      var actual = parseFragment(output);
-      nestedMap[e.example] = compareHtml(expected.children, actual.children);
-      if (!nestedMap[e.example]) {
-        printVerboseFailure('FAIL', e, expected.outerHtml, actual.outerHtml);
-      }
+      nestedMap[e.example] = _compareResult(e, verbose);
     }
   });
 
@@ -119,7 +86,67 @@ main(List<String> args) async {
   }
 }
 
+CompareLevel _compareResult(CommonMarkTestCase expected, bool verboseFail) {
+  String output;
+  try {
+    output = markdownToHtml(expected.markdown);
+  } catch (err, stackTrace) {
+    if (verboseFail) {
+      printVerboseFailure(
+          'ERROR', expected, expected.html, 'Thrown: $err\n$stackTrace');
+    }
+
+    return CompareLevel.error;
+  }
+
+  if (expected.html == output) {
+    return CompareLevel.strict;
+  }
+
+  var expectedParsed = parseFragment(expected.html);
+  var actual = parseFragment(output);
+
+  var looseMatch = _compareHtml(expectedParsed.children, actual.children);
+
+  if (!looseMatch && verboseFail) {
+    printVerboseFailure(
+        'FAIL', expected, expectedParsed.outerHtml, actual.outerHtml);
+  }
+
+  return looseMatch ? CompareLevel.loose : CompareLevel.fail;
+}
+
+String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
+
+void printVerboseFailure(
+    String message, CommonMarkTestCase test, String expected, String actual) {
+  print('$message: http://spec.commonmark.org/0.26/#example-${test.example}');
+  print('input:');
+  print(indent(test.markdown));
+  print('expected:');
+  print(indent(expected));
+  print('actual:');
+  print(indent(actual));
+  print('-----------------------');
+}
+
+enum CompareLevel { strict, loose, fail, error }
+
 _convert(obj) {
+  if (obj is CompareLevel) {
+    switch (obj) {
+      case CompareLevel.strict:
+        return 'strict';
+      case CompareLevel.error:
+        return 'error';
+      case CompareLevel.fail:
+        return 'fail';
+      case CompareLevel.loose:
+        return 'loose';
+      default:
+        throw 'huh?';
+    }
+  }
   if (obj is Map) {
     var map = {};
     obj.forEach((k, v) {
@@ -131,7 +158,7 @@ _convert(obj) {
   return obj;
 }
 
-Future _printRaw(scores, bool updateFiles) async {
+Future _printRaw(Map scores, bool updateFiles) async {
   IOSink sink;
   if (updateFiles) {
     var path = p.join(_currentDir, 'common_mark_stats.json');
@@ -155,7 +182,8 @@ Future _printRaw(scores, bool updateFiles) async {
   await sink.close();
 }
 
-Future _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores,
+Future _printFriendly(
+    SplayTreeMap<String, SplayTreeMap<int, CompareLevel>> scores,
     bool updateFiles) async {
   const countWidth = 4;
 
@@ -172,11 +200,17 @@ Future _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores,
     sink = stdout;
   }
 
-  scores.forEach((section, map) {
+  scores.forEach((section, Map<int, CompareLevel> map) {
     var total = map.values.length;
     totalExamples += total;
 
-    var sectionValidCount = map.values.where((val) => val).length;
+    var sectionStrictCount =
+        map.values.where((val) => val == CompareLevel.strict).length;
+
+    var sectionLooseCount =
+        map.values.where((val) => val == CompareLevel.loose).length;
+
+    var sectionValidCount = sectionStrictCount + sectionLooseCount;
 
     totalValid += sectionValidCount;
 
@@ -198,7 +232,8 @@ Future _printFriendly(SplayTreeMap<String, SplayTreeMap<int, bool>> scores,
 }
 
 /// Compare two DOM trees for equality.
-bool compareHtml(List<Element> expectedElements, List<Element> actualElements) {
+bool _compareHtml(
+    List<Element> expectedElements, List<Element> actualElements) {
   if (expectedElements.length != actualElements.length) {
     return false;
   }
@@ -239,7 +274,7 @@ bool compareHtml(List<Element> expectedElements, List<Element> actualElements) {
       }
     }
 
-    var childrenEqual = compareHtml(expected.children, actual.children);
+    var childrenEqual = _compareHtml(expected.children, actual.children);
 
     if (!childrenEqual) {
       return false;
