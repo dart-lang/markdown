@@ -1,4 +1,4 @@
-## 0.11.0-dev
+## 0.11.0
 
 * Parse HTML blocks more accurately, according to
   [CommonMark](http://spec.commonmark.org/0.24/#html-blocks).
