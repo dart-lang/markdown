@@ -1,3 +1,7 @@
+## 0.11.0+1
+
+* Added playground app at https://dart-lang.github.io/markdown.
+
 ## 0.11.0
 
 * Parse HTML blocks more accurately, according to
