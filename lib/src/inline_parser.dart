@@ -246,8 +246,7 @@ class InlineHtmlSyntax extends TextSyntax {
 
 /// Matches autolinks like `<http://foo.com>`.
 class AutolinkSyntax extends InlineSyntax {
-  AutolinkSyntax() : super(r'<((http|https|ftp)://[^>]*)>');
-  // TODO(rnystrom): Make case insensitive.
+  AutolinkSyntax() : super(r'<(([a-zA-Z][a-zA-Z\-\+\.]+):(?://)?[^>]*)>');
 
   bool onMatch(InlineParser parser, Match match) {
     var url = match[1];
