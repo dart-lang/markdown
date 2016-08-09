@@ -369,6 +369,7 @@ class LinkSyntax extends TagSyntax {
         int offset = pattern.pattern.length - 1;
         return parser.source.substring(state.startPos + offset, parser.pos);
       }
+
       // Reference link like [foo][bar].
       if (match[1] == null) {
         // There are no reference brackets ("shortcut reference link"), so infer
