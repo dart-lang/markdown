@@ -50,6 +50,7 @@ void _typeItOut(String msg, int pos) {
     pos++;
     new Timer(typing, addCharacter);
   }
+
   new Timer(typing, addCharacter);
 }
 
