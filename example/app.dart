@@ -4,6 +4,7 @@ import 'package:markdown/markdown.dart' as md;
 
 final markdownInput = querySelector('#markdown') as TextAreaElement;
 final htmlDiv = querySelector('#html') as DivElement;
+final versionSpan = querySelector('.version') as SpanElement;
 final nullSanitizer = new NullTreeSanitizer();
 const typing = const Duration(milliseconds: 150);
 final introText = r'''Markdown is the **best**!
@@ -13,6 +14,7 @@ final introText = r'''Markdown is the **best**!
 * It has _so much more_...''';
 
 void main() {
+  versionSpan.text = 'v${md.version}';
   markdownInput.onKeyUp.listen(_renderMarkdown);
 
   String savedMarkdown = window.localStorage['markdown'];

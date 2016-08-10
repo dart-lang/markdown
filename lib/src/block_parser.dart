@@ -745,7 +745,8 @@ class ParagraphSyntax extends BlockSyntax {
         lines[i].startsWith(_reflinkDefinitionStart);
 
     int i = 0;
-    loopOverDefinitions: while (true) {
+    loopOverDefinitions:
+    while (true) {
       // Check for reflink definitions.
       if (!lineStartsReflinkDefinition(i)) {
         // It's paragraph content from here on out.

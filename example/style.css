@@ -22,6 +22,11 @@ html, body {
   margin: 32px;
 }
 
+.version {
+  color: rgba(0, 0, 0, 0.54);
+  margin-right: 16px;
+}
+
 .card {
   /* Styled like Material Cards. */
   color: rgba(0, 0, 0, 0.87);
