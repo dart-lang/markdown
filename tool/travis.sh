@@ -5,14 +5,14 @@ set -e
 
 # Analyze sources. Add --fatal-hints, --fatal-warnings, --fatal-lints
 # as you see fit.
-dartanalyzer --strong lib/ test/
+dartanalyzer lib/ test/
 
 # Run tests.
 pub run test
 
 # Assert that code is formatted.
 pub global activate dart_style
-dirty_code=$(pub global run dart_style:format --dry-run lib/ test/)
+dirty_code=$(pub global run dart_style:format --dry-run lib/ test/ example/ benchmark/)
 if [[ -n "$dirty_code" ]]; then
   echo Unformatted files:
   echo "$dirty_code" | sed 's/^/    /'
