@@ -1,3 +1,11 @@
+## 0.11.1-dev
+
+* Added version information:
+  * `dart bin/markdown.dart --version` now shows the package version number.
+  * The playground app now shows the version number.
+* Improve autolink parsing.
+* For development: added tool/travis.sh.
+
 ## 0.11.0+1
 
 * Added playground app at https://dart-lang.github.io/markdown.
