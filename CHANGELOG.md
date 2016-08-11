@@ -4,8 +4,8 @@
   * `dart bin/markdown.dart --version` now shows the package version number.
   * The playground app now shows the version number.
 * Improve autolink parsing.
-* Added new table syntax: `TableSyntax`. This can be used by passing
-  `const TableSyntax()` to `markdownToHtml()`'s `blockSyntaxes:` argument.
+* Added new table syntax: `TableSyntax`.
+* Added new ExtensionSet that includes the table syntax: `ExtensionSet.gitHub`.
 * For development: added tool/travis.sh.
 
 ## 0.11.0+1

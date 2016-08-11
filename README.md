@@ -39,6 +39,8 @@ The currently supported block extension syntaxes are:
 * `const SetextHeaderWithIdSyntax()` - Setext-style headers have generated IDs
   for link anchors (akin to Pandoc's
   [`auto_identifiers`][pandoc-auto_identifiers]).
+* `const TableSyntax()` - Table syntax familiar to GitHub, PHP Markdown Extra,
+  and Pandoc users.
 
 For example:
 
