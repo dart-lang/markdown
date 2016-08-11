@@ -48,6 +48,9 @@ final _ulPattern = new RegExp(r'^([ ]{0,3})()([*+-])(([ \t])([ \t]*)(.*))?$');
 final _olPattern =
     new RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
 
+/// A line of hyphens separated by at least one pipe.
+final _tablePattern = new RegExp(r'^[ ]{0,3}\|?(:?\-+:?\|)+(:?\-+:?)?$');
+
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
 class BlockParser {
@@ -113,8 +116,9 @@ class BlockParser {
   ///
   /// `peek(1)` is equivalent to [next].
   String peek(int linesAhead) {
-    if (linesAhead < 0)
+    if (linesAhead < 0) {
       throw new ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.');
+    }
     // Don't read past the end.
     if (_pos >= lines.length - linesAhead) return null;
     return lines[_pos + linesAhead];
@@ -704,6 +708,75 @@ class OrderedListSyntax extends ListSyntax {
   String get listTag => 'ol';
 
   const OrderedListSyntax();
+}
+
+/// Parses tables.
+class TableSyntax extends BlockSyntax {
+  static final _pipePattern = new RegExp(r'\s*\|\s*');
+
+  bool get canEndBlock => false;
+
+  const TableSyntax();
+
+  bool canParse(BlockParser parser) {
+    // Note: matches *next* line, not the current one. We're looking for the
+    // bar separating the head row from the body rows.
+    return parser.matchesNext(_tablePattern);
+  }
+
+  /// Parses a table into its three parts:
+  ///
+  /// * a head row of head cells (`<th>` cells)
+  /// * a divider of hyphens and pipes (not rendered)
+  /// * many body rows of body cells (`<td>` cells)
+  Node parse(BlockParser parser) {
+    var alignments = parseAlignments(parser.next);
+    var head = new Element('thead', [parseRow(parser, alignments, 'th')]);
+
+    // Advance past the divider of hyphens.
+    parser.advance();
+
+    var rows = <Element>[];
+    while (!parser.isDone && !parser.matches(_emptyPattern)) {
+      rows.add(parseRow(parser, alignments, 'td'));
+    }
+    var body = new Element('tbody', rows);
+
+    return new Element('table', [head, body]);
+  }
+
+  List<String> parseAlignments(String line) {
+    line = line
+        .replaceFirst(new RegExp(r'^\|'), '')
+        .replaceFirst(new RegExp(r'\|$'), '');
+    return line.split('|').map((column) {
+      if (column.startsWith(':') && column.endsWith(':')) return 'center';
+      if (column.startsWith(':')) return 'left';
+      if (column.endsWith(':')) return 'right';
+      return null;
+    }).toList();
+  }
+
+  Node parseRow(BlockParser parser, List<String> alignments, String cellType) {
+    var line = parser.current
+        .replaceFirst(new RegExp(r'^\|\s*'), '')
+        .replaceFirst(new RegExp(r'\s*\|$'), '');
+    var cells = line.split(_pipePattern);
+    parser.advance();
+    var row = <Element>[];
+
+    for (String cell in cells) {
+      var contents = new UnparsedContent(cell);
+      row.add(new Element(cellType, [contents]));
+    }
+
+    for (var i = 0; i < row.length && i < alignments.length; i++) {
+      if (alignments[i] == null) continue;
+      row[i].attributes['style'] = 'text-align: ${alignments[i]};';
+    }
+
+    return new Element('tr', row);
+  }
 }
 
 /// Parses paragraphs of regular text.

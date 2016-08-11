@@ -148,4 +148,6 @@ nyan''',
 
   testFile('extensions/setext_headers_with_ids.unit',
       blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
+
+  testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
 }
