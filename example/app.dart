@@ -23,6 +23,7 @@ void main() {
       savedMarkdown.isNotEmpty &&
       savedMarkdown != introText) {
     markdownInput.value = savedMarkdown;
+    markdownInput.focus();
     _renderMarkdown();
   } else {
     _typeItOut(introText, 82);
@@ -40,6 +41,10 @@ void _renderMarkdown([Event event]) {
 }
 
 void _typeItOut(String msg, int pos) {
+  Timer timer;
+  markdownInput.onKeyUp.listen((_) {
+    timer?.cancel();
+  });
   addCharacter() {
     if (pos > msg.length) {
       return;
@@ -48,10 +53,10 @@ void _typeItOut(String msg, int pos) {
     markdownInput.focus();
     _renderMarkdown();
     pos++;
-    new Timer(typing, addCharacter);
+    timer = new Timer(typing, addCharacter);
   }
 
-  new Timer(typing, addCharacter);
+  timer = new Timer(typing, addCharacter);
 }
 
 class NullTreeSanitizer implements NodeTreeSanitizer {
