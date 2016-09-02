@@ -20,3 +20,11 @@ text
 
 <<<
 <ul><li></li></ul>
+>>> can be multiline
+header
+on two lines
+==
+
+<<<
+<h1>header
+on two lines</h1>
