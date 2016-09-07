@@ -12,14 +12,6 @@ para
 <<<
 <p>para</p>
 <h1>header</h1>
->>> are terminated by a setext header
-para
-header
-==
-
-<<<
-<p>para</p>
-<h1>header</h1>
 >>> are terminated by a hr
 para
 ___

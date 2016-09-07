@@ -12,7 +12,7 @@ import 'util.dart';
 final _emptyPattern = new RegExp(r'^(?:[ \t]*)$');
 
 /// A series of `=` or `-` (on the next line) define setext-style headers.
-final _setextPattern = new RegExp(r'^(=+|-+)$');
+final _setextPattern = new RegExp(r'^[ ]{0,3}(=+|-+)\s*$');
 
 /// Leading (and trailing) `#` define atx-style headers.
 ///
@@ -221,28 +221,56 @@ class SetextHeaderSyntax extends BlockSyntax {
   const SetextHeaderSyntax();
 
   bool canParse(BlockParser parser) {
-    // Note: matches *next* line, not the current one. We're looking for the
-    // underlining after this line.
-    return parser.matchesNext(_setextPattern) &&
-        // The current line must look like a paragraph.
-        !(parser.matches(_codePattern) ||
-            parser.matches(_headerPattern) ||
-            parser.matches(_blockquotePattern) ||
-            parser.matches(_hrPattern) ||
-            parser.matches(_ulPattern) ||
-            parser.matches(_olPattern));
+    if (!_interperableAsParagraph(parser.current)) return false;
+    int i = 1;
+    while (true) {
+      var nextLine = parser.peek(i);
+      if (nextLine == null) {
+        // We never reached an underline.
+        return false;
+      }
+      if (_setextPattern.hasMatch(nextLine)) {
+        return true;
+      }
+      // Ensure that we're still in something like paragraph text.
+      if (!_interperableAsParagraph(nextLine)) {
+        return false;
+      }
+      i++;
+    }
   }
 
   Node parse(BlockParser parser) {
-    var match = _setextPattern.firstMatch(parser.next);
+    var lines = <String>[];
+    var tag;
+    while (!parser.isDone) {
+      var match = _setextPattern.firstMatch(parser.current);
+      if (match == null) {
+        // More text.
+        lines.add(parser.current);
+        parser.advance();
+        continue;
+      } else {
+        // The underline.
+        tag = (match[1][0] == '=') ? 'h1' : 'h2';
+        parser.advance();
+        break;
+      }
+    }
 
-    var tag = (match[1][0] == '=') ? 'h1' : 'h2';
-    var contents = new UnparsedContent(parser.current);
-    parser.advance();
-    parser.advance();
+    var contents = new UnparsedContent(lines.join('\n'));
 
     return new Element(tag, [contents]);
   }
+
+  bool _interperableAsParagraph(line) => !(_indentPattern.hasMatch(line) ||
+      _codePattern.hasMatch(line) ||
+      _headerPattern.hasMatch(line) ||
+      _blockquotePattern.hasMatch(line) ||
+      _hrPattern.hasMatch(line) ||
+      _ulPattern.hasMatch(line) ||
+      _olPattern.hasMatch(line) ||
+      _emptyPattern.hasMatch(line));
 }
 
 /// Parses setext-style headers, and adds generated IDs to the generated
