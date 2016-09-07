@@ -575,6 +575,9 @@ abstract class ListSyntax extends BlockSyntax {
 
     var listMarker = null;
     var indent;
+    // In case the first number in an ordered list is not 1, use it as the
+    // "start".
+    var startNumber;
 
     while (!parser.isDone) {
       if (tryMatch(_emptyPattern)) {
@@ -591,11 +594,14 @@ abstract class ListSyntax extends BlockSyntax {
       } else if (tryMatch(_ulPattern) || tryMatch(_olPattern)) {
         var precedingWhitespace = match[1];
         var digits = match[2] ?? '';
+        if (startNumber == null && digits.isNotEmpty) {
+          startNumber = int.parse(digits);
+        }
         var marker = match[3];
-        var isBlank = match[4] == null;
         var firstWhitespace = match[5] ?? '';
         var restWhitespace = match[6] ?? '';
         var content = match[7] ?? '';
+        var isBlank = content.isEmpty;
         if (listMarker != null && listMarker != marker) {
           // Changing the bullet or ordered list delimiter starts a new list.
           break;
@@ -609,7 +615,7 @@ abstract class ListSyntax extends BlockSyntax {
           // If the list item starts with a blank line, the final piece of the
           // indentation is just a single space.
           indent = precedingWhitespace + markerAsSpaces + ' ';
-        } else if (match[5].length >= 4) {
+        } else if (restWhitespace.length >= 4) {
           // See http://spec.commonmark.org/0.26/#list-items under "2. Item
           // starting with indented code."
           //
@@ -631,7 +637,10 @@ abstract class ListSyntax extends BlockSyntax {
       } else {
         // If the previous item is a blank line, this means we're done with the
         // list and are starting a new top-level paragraph.
-        if ((childLines.isNotEmpty) && (childLines.last == '')) break;
+        if ((childLines.isNotEmpty) && (childLines.last == '')) {
+          parser.encounteredBlankLine = true;
+          break;
+        }
 
         // Anything else is paragraph continuation text.
         var continuedLine = childLines.last + parser.current;
@@ -645,6 +654,7 @@ abstract class ListSyntax extends BlockSyntax {
     endItem();
     var itemNodes = <Element>[];
 
+    items.forEach(removeLeadingEmptyLine);
     var anyEmptyLines = removeTrailingEmptyLines(items);
     var anyEmptyLinesBetweenBlocks = false;
 
@@ -674,7 +684,18 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
 
-    return new Element(listTag, itemNodes);
+    if (listTag == 'ol' && startNumber != 1) {
+      return new Element(listTag, itemNodes)
+        ..attributes['start'] = '$startNumber';
+    } else {
+      return new Element(listTag, itemNodes);
+    }
+  }
+
+  void removeLeadingEmptyLine(ListItem item) {
+    if (item.lines.isNotEmpty && _emptyPattern.hasMatch(item.lines.first)) {
+      item.lines.removeAt(0);
+    }
   }
 
   /// Removes any trailing empty lines and notes whether any items are separated
@@ -682,6 +703,7 @@ abstract class ListSyntax extends BlockSyntax {
   bool removeTrailingEmptyLines(List items) {
     var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
+      if (items[i].lines.length == 1) continue;
       while (items[i].lines.isNotEmpty &&
           _emptyPattern.hasMatch(items[i].lines.last)) {
         if (i < items.length - 1) {

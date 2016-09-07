@@ -14,8 +14,8 @@
    1 of    1 – 100.0%  Inlines
   20 of   23 –  87.0%  Link reference definitions
   53 of   81 –  65.4%  Links
-  30 of   48 –  62.5%  List items
-  16 of   24 –  66.7%  Lists
+  44 of   48 –  91.7%  List items
+  18 of   24 –  75.0%  Lists
    8 of    8 – 100.0%  Paragraphs
    1 of    1 – 100.0%  Precedence
   15 of   21 –  71.4%  Raw HTML
@@ -24,4 +24,4 @@
    6 of   11 –  54.5%  Tabs
    3 of    3 – 100.0%  Textual content
   17 of   19 –  89.5%  Thematic breaks
- 468 of  618 –  75.7%  TOTAL
+ 484 of  618 –  78.3%  TOTAL
