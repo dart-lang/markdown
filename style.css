@@ -96,7 +96,7 @@ textarea {
   font-family: "Roboto Mono",monospace;
   font-size: 100%;
   line-height: 26px;
-  overflow: hidden;
+  overflow: auto;
   padding: 2px 2px 1px;
   width: 100%;
 }
@@ -106,4 +106,9 @@ textarea:focus {
   border-width: 0 0 2px;
   outline: 0;
   padding-bottom: 0;
+}
+
+#html {
+  overflow: auto;
+  padding: 8px;
 }
