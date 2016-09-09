@@ -112,3 +112,41 @@ textarea:focus {
   overflow: auto;
   padding: 8px;
 }
+
+footer {
+  box-sizing: border-box;
+  display: flex;
+  font-size: 20px;
+  height: 64px;
+  padding: 0 16px;
+}
+
+footer a:link,
+footer a:visited {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.radio {
+  cursor: pointer;
+  display: inline-block;
+  margin-right: 16px;
+}
+
+i.glyph {
+  display: inline-block;
+  font-family: 'Material Icons Extended';
+  font-size: 16px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1;
+}
+
+.radio[checked] i.glyph {
+  color: #22d3c5;
+}
+
+i.glyph.big {
+  font-size: 32px;
+  height: 32px;
+  width: 32px;
+}
