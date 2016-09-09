@@ -1,4 +1,4 @@
-## 0.11.1-dev
+## 0.11.1
 
 * Added version information:
   * `dart bin/markdown.dart --version` now shows the package version number.
