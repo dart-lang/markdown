@@ -6,7 +6,10 @@
 * Improve autolink parsing.
 * Added new table syntax: `TableSyntax`.
 * Added new ExtensionSet that includes the table syntax: `ExtensionSet.gitHub`.
-* For development: added tool/travis.sh.
+* For development: added `tool/travis.sh`.
+* Support multiline Setext headers.
+* Handle loose-vs-strict list items better.
+* Support ordered lists that start with a number other than 1.
 
 ## 0.11.0+1
 
