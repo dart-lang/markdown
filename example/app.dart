@@ -83,7 +83,7 @@ void _typeItOut(String msg, int pos) {
 }
 
 void _switchFlavor(Event e) {
-  var target = e.currentTarget;
+  var target = e.currentTarget as HtmlElement;
   if (!target.attributes.containsKey('checked')) {
     if (basicRadio != target) {
       basicRadio.attributes.remove('checked');
