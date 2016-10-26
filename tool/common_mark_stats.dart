@@ -18,7 +18,7 @@ const _commonMarkTests = 'common_mark_tests.json';
 String get _currentDir => p
     .dirname((reflect(main) as ClosureMirror).function.location.sourceUri.path);
 
-main(List<String> args) async {
+Future main(List<String> args) async {
   final parser = new ArgParser()
     ..addOption('section',
         help: 'Restrict tests to one section, provided after the option.')
@@ -132,7 +132,7 @@ void printVerboseFailure(
 
 enum CompareLevel { strict, loose, fail, error }
 
-_convert(obj) {
+Object _convert(obj) {
   if (obj is CompareLevel) {
     switch (obj) {
       case CompareLevel.strict:

@@ -588,24 +588,24 @@ abstract class ListSyntax extends BlockSyntax {
     var items = <ListItem>[];
     var childLines = <String>[];
 
-    endItem() {
+    void endItem() {
       if (childLines.length > 0) {
         items.add(new ListItem(childLines));
         childLines = <String>[];
       }
     }
 
-    var match;
-    tryMatch(RegExp pattern) {
+    Match match;
+    bool tryMatch(RegExp pattern) {
       match = pattern.firstMatch(parser.current);
       return match != null;
     }
 
-    var listMarker = null;
-    var indent;
+    String listMarker;
+    String indent;
     // In case the first number in an ordered list is not 1, use it as the
     // "start".
-    var startNumber;
+    int startNumber;
 
     while (!parser.isDone) {
       if (tryMatch(_emptyPattern)) {

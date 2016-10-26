@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:markdown/markdown.dart';
 
-main(List<String> args) async {
+Future main(List<String> args) async {
   if (args.length > 1) {
     print('Usage: markdown.dart [file]');
     exit(1);
@@ -27,7 +28,7 @@ main(List<String> args) async {
   print(markdownToHtml(buffer.toString()));
 }
 
-usage() {
+void usage() {
   print('''Usage:
     markdown [markdown file]
         Convert [markdown-file] from Markdown to HTML. If no file is passed on
