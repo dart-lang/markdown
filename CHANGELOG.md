@@ -1,3 +1,7 @@
+## 0.11.2-dev
+
+* Fix reference code links inside blockquotes.
+
 ## 0.11.1
 
 * Added version information:
