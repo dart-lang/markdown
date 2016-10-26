@@ -68,7 +68,7 @@ void _typeItOut(String msg, int pos) {
   markdownInput.onKeyUp.listen((_) {
     timer?.cancel();
   });
-  addCharacter() {
+  void addCharacter() {
     if (pos > msg.length) {
       return;
     }
