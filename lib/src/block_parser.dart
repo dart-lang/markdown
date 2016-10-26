@@ -351,7 +351,7 @@ class BlockquoteSyntax extends BlockSyntax {
     var childLines = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
-    var children = parser.document.parseLines(childLines);
+    var children = new BlockParser(childLines, parser.document).parseLines();
 
     return new Element('blockquote', children);
   }
