@@ -1,3 +1,7 @@
+## 0.11.2
+
+* Add src/util.dart to exports.
+
 ## 0.11.1
 
 * Added version information:
