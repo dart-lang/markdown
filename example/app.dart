@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:html';
 import 'package:markdown/markdown.dart' as md;
 
+import 'highlight.dart';
+
 final markdownInput = querySelector('#markdown') as TextAreaElement;
 final htmlDiv = querySelector('#html') as DivElement;
 final versionSpan = querySelector('.version') as SpanElement;
@@ -55,8 +57,19 @@ void main() {
 
 void _renderMarkdown([Event event]) {
   var markdown = markdownInput.value;
+
   htmlDiv.setInnerHtml(md.markdownToHtml(markdown, extensionSet: extensionSet),
       treeSanitizer: nullSanitizer);
+
+  for (var block in htmlDiv.querySelectorAll('pre code')) {
+    try {
+      highlightBlock(block);
+    } catch (e) {
+      window.console.error('Error highlighting markdown:');
+      window.console.error(e);
+    }
+  }
+
   if (event != null) {
     // Not simulated typing. Store it.
     window.localStorage['markdown'] = markdown;
