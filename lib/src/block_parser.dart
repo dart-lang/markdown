@@ -398,7 +398,7 @@ class CodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    var escaped = escapeHtml(childLines.join('\n'));
+    var escaped = escapeHtmlImpl(childLines.join('\n'));
 
     return new Element('pre', [new Element.text('code', escaped)]);
   }
@@ -444,7 +444,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    var escaped = escapeHtml(childLines.join('\n'));
+    var escaped = escapeHtmlImpl(childLines.join('\n'));
 
     var code = new Element.text('code', escaped);
 
@@ -637,14 +637,14 @@ abstract class ListSyntax extends BlockSyntax {
         listMarker = marker;
         var markerAsSpaces = ' ' * (digits.length + marker.length);
         if (isBlank) {
-          // See http://spec.commonmark.org/0.26/#list-items under "3. Item
+          // See http://spec.commonmark.org/0.27/#list-items under "3. Item
           // starting with a blank line."
           //
           // If the list item starts with a blank line, the final piece of the
           // indentation is just a single space.
           indent = precedingWhitespace + markerAsSpaces + ' ';
         } else if (restWhitespace.length >= 4) {
-          // See http://spec.commonmark.org/0.26/#list-items under "2. Item
+          // See http://spec.commonmark.org/0.27/#list-items under "2. Item
           // starting with indented code."
           //
           // If the list item starts with indented code, we need to _not_ count
@@ -695,7 +695,7 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     // Must strip paragraph tags if the list is "tight".
-    // http://spec.commonmark.org/0.26/#lists
+    // http://spec.commonmark.org/0.27/#lists
     var listIsTight = !anyEmptyLines && !anyEmptyLinesBetweenBlocks;
 
     if (listIsTight) {

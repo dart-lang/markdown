@@ -1,9 +1,9 @@
-library markdown.src.util;
+import 'dart:convert';
 
 /// Replaces `<`, `&`, and `>`, with their HTML entity equivalents.
-String escapeHtml(String html) {
-  return html
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;');
-}
+@Deprecated('Use `const HtmlEscape(HtmlEscapeMode.ELEMENT).convert` from '
+    '`dart:convert` instead.')
+String escapeHtml(String html) => escapeHtmlImpl(html);
+
+String escapeHtmlImpl(String html) =>
+    const HtmlEscape(HtmlEscapeMode.ELEMENT).convert(html);

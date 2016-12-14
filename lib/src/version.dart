@@ -1,2 +1,2 @@
 /// The current version of markdown.
-final String version = '0.11.2';
+final String version = '0.11.3-dev';

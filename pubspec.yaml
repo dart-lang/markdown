@@ -1,5 +1,5 @@
 name: markdown
-version: 0.11.2
+version: 0.11.3-dev
 author: Dart Team <misc@dartlang.org>
 description: A library for converting markdown to HTML.
 homepage: https://github.com/dart-lang/markdown
@@ -11,6 +11,7 @@ dev_dependencies:
   browser: any
   collection: ^1.2.0
   html: '>=0.12.2 <0.14.0'
+  js: '^0.6.1'
   path: '^1.3.1'
   test: '^0.12.4+1'
   yaml: '^2.1.8'

@@ -119,12 +119,12 @@ compliance with [CommonMark].
 
  3. Update the stats files as described above. Note any changes in the results.
  4. Update any references to the existing spec by search for
-    `http://spec.commonmark.org/0.26` in the repository. (Including this one.)
+    `http://spec.commonmark.org/0.27` in the repository. (Including this one.)
     Verify the updated links are still valid.
  5. Commit changes, including a corresponding note in `CHANGELOG.md`.
 
 [Perl Markdown]: http://daringfireball.net/projects/markdown/
 [CommonMark]: http://commonmark.org/
-[commonMark-raw-html]: http://spec.commonmark.org/0.26/#raw-html
+[commonMark-raw-html]: http://spec.commonmark.org/0.27/#raw-html
 [CommonMark source]: https://github.com/jgm/CommonMark/
 [pandoc-auto_identifiers]: http://pandoc.org/README.html#extension-auto_identifiers

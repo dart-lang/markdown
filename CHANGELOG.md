@@ -1,3 +1,7 @@
+## 0.11.3
+
+* Deprecated `escapeHtml`. This code exists in `dart:convert`.
+
 ## 0.11.2
 
 * Fix reference code links inside blockquotes.
