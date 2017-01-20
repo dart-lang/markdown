@@ -49,7 +49,8 @@ final _olPattern =
     new RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
 
 /// A line of hyphens separated by at least one pipe.
-final _tablePattern = new RegExp(r'^[ ]{0,3}\|?(:?\-+:?\|)+(:?\-+:?)?$');
+final _tablePattern =
+    new RegExp(r'^[ ]{0,3}\|?( *:?\-+:? *\|)+( *:?\-+:? *)?$');
 
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
@@ -763,6 +764,8 @@ class OrderedListSyntax extends ListSyntax {
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
   static final _pipePattern = new RegExp(r'\s*\|\s*');
+  static final _openingPipe = new RegExp(r'^\|\s*');
+  static final _closingPipe = new RegExp(r'\s*\|$');
 
   bool get canEndBlock => false;
 
@@ -796,10 +799,9 @@ class TableSyntax extends BlockSyntax {
   }
 
   List<String> parseAlignments(String line) {
-    line = line
-        .replaceFirst(new RegExp(r'^\|'), '')
-        .replaceFirst(new RegExp(r'\|$'), '');
+    line = line.replaceFirst(_openingPipe, '').replaceFirst(_closingPipe, '');
     return line.split('|').map((column) {
+      column = column.trim();
       if (column.startsWith(':') && column.endsWith(':')) return 'center';
       if (column.startsWith(':')) return 'left';
       if (column.endsWith(':')) return 'right';
@@ -809,8 +811,8 @@ class TableSyntax extends BlockSyntax {
 
   Node parseRow(BlockParser parser, List<String> alignments, String cellType) {
     var line = parser.current
-        .replaceFirst(new RegExp(r'^\|\s*'), '')
-        .replaceFirst(new RegExp(r'\s*\|$'), '');
+        .replaceFirst(_openingPipe, '')
+        .replaceFirst(_closingPipe, '');
     var cells = line.split(_pipePattern);
     parser.advance();
     var row = <Element>[];

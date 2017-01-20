@@ -4,6 +4,7 @@
 
 ## 0.11.2
 
+* Fix reference code links inside blockquotes.
 * Add src/util.dart to exports.
 
 ## 0.11.1

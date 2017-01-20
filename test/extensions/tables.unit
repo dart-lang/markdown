@@ -20,6 +20,13 @@ more | cells
 
 <<<
 <table><thead><tr><th>head</th><th>cells</th></tr></thead><tbody><tr><td>body</td><td>cells</td></tr></tbody></table>
+>>> rows wrapped in pipes, whitespace alignment row
+| head | cells |
+|  --  |  ---  |
+| body | cells |
+
+<<<
+<table><thead><tr><th>head</th><th>cells</th></tr></thead><tbody><tr><td>body</td><td>cells</td></tr></tbody></table>
 >>> cells with inline syntax
 head `code` | _cells_
 ------------|--------
@@ -56,6 +63,14 @@ row with | two cells
 >>> left, center, and right alignment
 head | cells | here
 :----|:-----:|----:
+body | cells | here
+too | many | cells | here
+
+<<<
+<table><thead><tr><th style="text-align: left;">head</th><th style="text-align: center;">cells</th><th style="text-align: right;">here</th></tr></thead><tbody><tr><td style="text-align: left;">body</td><td style="text-align: center;">cells</td><td style="text-align: right;">here</td></tr><tr><td style="text-align: left;">too</td><td style="text-align: center;">many</td><td style="text-align: right;">cells</td><td>here</td></tr></tbody></table>
+>>> left, center, and right alignment, with whitespace
+head | cells | here
+ :-- | :---: | ---:
 body | cells | here
 too | many | cells | here
 
