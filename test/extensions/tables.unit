@@ -76,3 +76,11 @@ too | many | cells | here
 
 <<<
 <table><thead><tr><th style="text-align: left;">head</th><th style="text-align: center;">cells</th><th style="text-align: right;">here</th></tr></thead><tbody><tr><td style="text-align: left;">body</td><td style="text-align: center;">cells</td><td style="text-align: right;">here</td></tr><tr><td style="text-align: left;">too</td><td style="text-align: center;">many</td><td style="text-align: right;">cells</td><td>here</td></tr></tbody></table>
+>>> escape pipe
+| Name     | Character |
+| ---      | ---       |
+| Backtick | `         |
+| Pipe     | \|        |
+
+<<<
+<table><thead><tr><th>Name</th><th>Character</th></tr></thead><tbody><tr><td>Backtick</td><td>`</td></tr><tr><td>Pipe</td><td>|</td></tr></tbody></table>
