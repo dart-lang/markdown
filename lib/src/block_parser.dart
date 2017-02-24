@@ -815,9 +815,18 @@ class TableSyntax extends BlockSyntax {
         .replaceFirst(_closingPipe, '');
     var cells = line.split(_pipePattern);
     parser.advance();
-    var row = <Element>[];
+    var row = <Element>[], precell;
 
     for (String cell in cells) {
+      if (precell != null) {
+        cell = precell + cell;
+        precell = null;
+      }
+      if (cell.endsWith('\\')) {
+        precell = cell.substring(0, cell.length - 1) + '|';
+        continue;
+      }
+
       var contents = new UnparsedContent(cell);
       row.add(new Element(cellType, [contents]));
     }
