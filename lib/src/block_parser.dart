@@ -672,7 +672,7 @@ abstract class ListSyntax extends BlockSyntax {
         }
 
         // Anything else is paragraph continuation text.
-        var continuedLine = childLines.last + parser.current;
+        var continuedLine = childLines.last + '\n' + parser.current;
         childLines
           ..removeLast()
           ..add(continuedLine);
