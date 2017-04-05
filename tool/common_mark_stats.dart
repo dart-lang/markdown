@@ -13,7 +13,7 @@ import 'package:path/path.dart' as p;
 
 const _commonMarkTests = 'common_mark_tests.json';
 
-// Locate the "test" directory. Use mirrors so that this works with the test
+// Locate the "tool" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
 String get _currentDir => p
     .dirname((reflect(main) as ClosureMirror).function.location.sourceUri.path);
