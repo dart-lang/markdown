@@ -28,6 +28,7 @@ Future main(List<String> args) async {
         negatable: false)
     ..addFlag('verbose',
         defaultsTo: false, help: 'verbose output', negatable: false)
+    ..addOption('flavor', allowed: ['common_mark', 'gfm'], defaultsTo: 'common_mark')
     ..addFlag('help', defaultsTo: false, negatable: false);
 
   ArgResults options;
@@ -58,7 +59,7 @@ Future main(List<String> args) async {
     return;
   }
 
-  final testPrefix = 'common_mark';
+  final testPrefix = options['flavor'];
 
   var sections = _loadCommonMarkSections(testPrefix);
 
