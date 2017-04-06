@@ -1,22 +1,22 @@
 {
  "ATX headings": {
-  "32": "strict",
+  "32": "fail",
   "33": "strict",
   "34": "strict",
   "35": "strict",
-  "36": "strict",
-  "37": "strict",
+  "36": "fail",
+  "37": "fail",
   "38": "fail",
   "39": "strict",
   "40": "loose",
   "41": "fail",
-  "42": "strict",
-  "43": "loose",
-  "44": "strict",
-  "45": "loose",
-  "46": "loose",
-  "47": "strict",
-  "48": "strict",
+  "42": "fail",
+  "43": "fail",
+  "44": "fail",
+  "45": "fail",
+  "46": "fail",
+  "47": "fail",
+  "48": "fail",
   "49": "fail"
  },
  "Autolinks": {
@@ -69,14 +69,14 @@
   "308": "fail"
  },
  "Blank lines": {
-  "188": "strict"
+  "188": "fail"
  },
  "Block quotes": {
-  "196": "loose",
-  "197": "loose",
-  "198": "loose",
+  "196": "fail",
+  "197": "fail",
+  "198": "fail",
   "199": "strict",
-  "200": "loose",
+  "200": "fail",
   "201": "loose",
   "202": "loose",
   "203": "loose",
@@ -285,7 +285,7 @@
   "106": "fail",
   "107": "loose",
   "108": "strict",
-  "109": "strict",
+  "109": "fail",
   "110": "strict",
   "111": "strict",
   "112": "strict",
@@ -306,8 +306,8 @@
   "636": "strict",
   "637": "strict",
   "638": "loose",
-  "639": "strict",
-  "640": "strict"
+  "639": "fail",
+  "640": "fail"
  },
  "HTML blocks": {
   "115": "strict",
@@ -386,7 +386,7 @@
   "81": "strict",
   "82": "loose",
   "83": "strict",
-  "84": "strict",
+  "84": "fail",
   "85": "strict",
   "86": "loose",
   "87": "strict"
@@ -415,7 +415,7 @@
   "174": "loose",
   "175": "strict",
   "176": "strict",
-  "177": "loose",
+  "177": "fail",
   "178": "strict",
   "179": "loose"
  },
@@ -553,7 +553,7 @@
   "265": "loose",
   "266": "loose",
   "267": "loose",
-  "268": "loose"
+  "268": "fail"
  },
  "Lists": {
   "271": "loose",
@@ -618,29 +618,29 @@
   "624": "fail"
  },
  "Setext headings": {
-  "50": "strict",
-  "51": "strict",
-  "52": "strict",
-  "53": "loose",
+  "50": "fail",
+  "51": "fail",
+  "52": "fail",
+  "53": "fail",
   "54": "strict",
-  "55": "strict",
+  "55": "fail",
   "56": "loose",
   "57": "strict",
-  "58": "loose",
-  "59": "strict",
-  "60": "loose",
+  "58": "fail",
+  "59": "fail",
+  "60": "fail",
   "61": "loose",
   "62": "fail",
   "63": "loose",
-  "64": "strict",
-  "65": "strict",
+  "64": "fail",
+  "65": "fail",
   "66": "strict",
   "67": "strict",
   "68": "loose",
   "69": "strict",
   "70": "loose",
-  "71": "loose",
-  "72": "strict",
+  "71": "fail",
+  "72": "fail",
   "73": "strict",
   "74": "strict",
   "75": "strict"
@@ -655,12 +655,12 @@
   "467": "strict"
  },
  "Tables (extension)": {
-  "189": "fail",
+  "189": "loose",
   "190": "fail",
-  "191": "fail",
+  "191": "loose",
   "192": "fail",
   "193": "fail",
-  "194": "strict",
+  "194": "fail",
   "195": "fail"
  },
  "Tabs": {
@@ -673,7 +673,7 @@
   "7": "loose",
   "8": "strict",
   "9": "fail",
-  "10": "strict",
+  "10": "fail",
   "11": "fail"
  },
  "Textual content": {
@@ -698,7 +698,7 @@
   "26": "loose",
   "27": "loose",
   "28": "strict",
-  "29": "strict",
+  "29": "fail",
   "30": "fail",
   "31": "loose"
  }

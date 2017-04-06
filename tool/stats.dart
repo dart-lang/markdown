@@ -8,7 +8,7 @@ import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parseFragment;
-import 'package:markdown/markdown.dart' show markdownToHtml;
+import 'package:markdown/markdown.dart' show markdownToHtml, ExtensionSet;
 import 'package:path/path.dart' as p;
 
 // Locate the "tool" directory. Use mirrors so that this works with the test
@@ -28,7 +28,8 @@ Future main(List<String> args) async {
         negatable: false)
     ..addFlag('verbose',
         defaultsTo: false, help: 'verbose output', negatable: false)
-    ..addOption('flavor', allowed: ['common_mark', 'gfm'], defaultsTo: 'common_mark')
+    ..addOption('flavor',
+        allowed: ['common_mark', 'gfm'], defaultsTo: 'common_mark')
     ..addFlag('help', defaultsTo: false, negatable: false);
 
   ArgResults options;
@@ -61,6 +62,11 @@ Future main(List<String> args) async {
 
   final testPrefix = options['flavor'];
 
+  ExtensionSet extensionSet;
+  if (testPrefix == 'gfm') {
+    extensionSet = ExtensionSet.gitHub;
+  }
+
   var sections = _loadCommonMarkSections(testPrefix);
 
   var scores = new SplayTreeMap<String, SplayTreeMap<int, CompareLevel>>(
@@ -74,7 +80,8 @@ Future main(List<String> args) async {
       var nestedMap = scores.putIfAbsent(
           section, () => new SplayTreeMap<int, CompareLevel>());
 
-      nestedMap[e.example] = _compareResult(e, verbose);
+      nestedMap[e.example] =
+          _compareResult(e, verbose, extensionSet: extensionSet);
     }
   });
 
@@ -87,10 +94,11 @@ Future main(List<String> args) async {
   }
 }
 
-CompareLevel _compareResult(CommonMarkTestCase expected, bool verboseFail) {
+CompareLevel _compareResult(CommonMarkTestCase expected, bool verboseFail,
+    {ExtensionSet extensionSet}) {
   String output;
   try {
-    output = markdownToHtml(expected.markdown);
+    output = markdownToHtml(expected.markdown, extensionSet: extensionSet);
   } catch (err, stackTrace) {
     if (verboseFail) {
       printVerboseFailure(
