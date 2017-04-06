@@ -11,8 +11,6 @@ import 'package:html/parser.dart' show parseFragment;
 import 'package:markdown/markdown.dart' show markdownToHtml;
 import 'package:path/path.dart' as p;
 
-const _commonMarkTests = 'common_mark_tests.json';
-
 // Locate the "tool" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
 String get _currentDir => p
@@ -60,7 +58,9 @@ Future main(List<String> args) async {
     return;
   }
 
-  var sections = _loadCommonMarkSections();
+  final testPrefix = 'common_mark';
+
+  var sections = _loadCommonMarkSections(testPrefix);
 
   var scores = new SplayTreeMap<String, SplayTreeMap<int, CompareLevel>>(
       compareAsciiLowerCaseNatural);
@@ -78,11 +78,11 @@ Future main(List<String> args) async {
   });
 
   if (raw || updateFiles) {
-    await _printRaw(scores, updateFiles);
+    await _printRaw(testPrefix, scores, updateFiles);
   }
 
   if (!raw || updateFiles) {
-    await _printFriendly(scores, updateFiles);
+    await _printFriendly(testPrefix, scores, updateFiles);
   }
 }
 
@@ -158,10 +158,10 @@ Object _convert(obj) {
   return obj;
 }
 
-Future _printRaw(Map scores, bool updateFiles) async {
+Future _printRaw(String testPrefix, Map scores, bool updateFiles) async {
   IOSink sink;
   if (updateFiles) {
-    var path = p.join(_currentDir, 'common_mark_stats.json');
+    var path = p.join(_currentDir, '${testPrefix}_stats.json');
     print('Updating $path');
     var file = new File(path);
     sink = file.openWrite();
@@ -183,6 +183,7 @@ Future _printRaw(Map scores, bool updateFiles) async {
 }
 
 Future _printFriendly(
+    String testPrefix,
     SplayTreeMap<String, SplayTreeMap<int, CompareLevel>> scores,
     bool updateFiles) async {
   const countWidth = 4;
@@ -192,7 +193,7 @@ Future _printFriendly(
 
   IOSink sink;
   if (updateFiles) {
-    var path = p.join(_currentDir, 'common_mark_stats.txt');
+    var path = p.join(_currentDir, '${testPrefix}_stats.txt');
     print('Updating $path');
     var file = new File(path);
     sink = file.openWrite();
@@ -284,8 +285,9 @@ bool _compareHtml(
   return true;
 }
 
-Map<String, List<CommonMarkTestCase>> _loadCommonMarkSections() {
-  var testFile = new File(p.join(_currentDir, _commonMarkTests));
+Map<String, List<CommonMarkTestCase>> _loadCommonMarkSections(
+    String testPrefix) {
+  var testFile = new File(p.join(_currentDir, '${testPrefix}_tests.json'));
   var testsJson = testFile.readAsStringSync();
 
   var testArray = JSON.decode(testsJson) as List<Map<String, dynamic>>;

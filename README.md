@@ -101,7 +101,7 @@ compliance with [CommonMark].
 #### Updating CommonMark stats when changing the implementation
 
  1. Update the library and test code, making sure that tests still pass.
- 2. Run `dart tool/common_mark_stats.dart --update-files` to update the
+ 2. Run `dart tool/stats.dart --update-files` to update the
     per-test results `tool/common_mark_stats.json` and the test summary
     `tool/common_mark_stats.txt`.
  3. Verify that more tests now pass – or at least, no more tests fail.

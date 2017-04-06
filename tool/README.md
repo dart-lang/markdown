@@ -47,5 +47,5 @@ In an effort to make this package CommonMark-compliant, we have a script that
 runs the package through the CommonMark specs. To run it, simply run:
 
 ```bash
-$ dart tool/common_mark_stats.dart
+$ dart tool/stats.dart
 ```
