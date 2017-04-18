@@ -14,7 +14,6 @@ class InlineParser {
   static final List<InlineSyntax> _defaultSyntaxes =
       new List<InlineSyntax>.unmodifiable(<InlineSyntax>[
     new AutolinkSyntax(),
-    new LineBreakSyntax(),
     new LinkSyntax(),
     new ImageSyntax(),
     // Allow any punctuation to be escaped.
@@ -30,6 +29,10 @@ class InlineParser {
     new TextSyntax(r'&', sub: '&amp;'),
     // Encode "<". (Why not encode ">" too? Gruber is toying with us.)
     new TextSyntax(r'<', sub: '&lt;'),
+    // Escaped newlines become hard line breaks.
+    new TextSyntax(r'\\\n', sub: '<br />\n'),
+    // Two or more spaces at the end of a line become hard line breaks.
+    new TextSyntax(r'  +\n', sub: '<br />\n'),
     // Parse "**strong**" tags.
     new TagSyntax(r'\*\*', tag: 'strong'),
     // Parse "__strong__" tags.
@@ -186,17 +189,6 @@ abstract class InlineSyntax {
   ///
   /// Returns whether the caller should advance [parser] by `match[0].length`.
   bool onMatch(InlineParser parser, Match match);
-}
-
-/// Represents a hard line break.
-class LineBreakSyntax extends InlineSyntax {
-  LineBreakSyntax() : super(r'(?:\\|  +)\n');
-
-  /// Create a void <br> element.
-  bool onMatch(InlineParser parser, Match match) {
-    parser.addNode(new Element.empty('br'));
-    return true;
-  }
 }
 
 /// Matches stuff that should just be passed through as straight text.
