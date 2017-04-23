@@ -83,7 +83,8 @@ two</li><li>three</li></ul>
 ===
 
 <<<
-<ul><li>list===</li></ul>
+<ul><li>list
+===</li></ul>
 >>> list item turns what might be an h2 into nothing
 - list
 ---
@@ -91,3 +92,11 @@ two</li><li>three</li></ul>
 <<<
 <ul><li>list</li></ul>
 <hr />
+>>> list
+* line1
+line2
+line3
+<<<
+<ul><li>line1
+line2
+line3</li></ul>
