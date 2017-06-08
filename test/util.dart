@@ -4,7 +4,6 @@
 
 library markdown.test.util;
 
-import 'dart:io';
 import 'dart:mirrors';
 
 import 'package:expected_output/expected_output.dart';
