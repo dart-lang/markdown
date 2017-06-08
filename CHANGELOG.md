@@ -1,6 +1,10 @@
+## 0.11.4
+
+* Fix bug with lazy blockquote continuations (#162)
+
 ## 0.11.3
 
-* Deprecated `escapeHtml`. This code exists in `dart:convert`.
+* Deprecate `escapeHtml`. This code exists in `dart:convert`.
 
 ## 0.11.2
 
@@ -9,12 +13,12 @@
 
 ## 0.11.1
 
-* Added version information:
+* Add version information:
   * `dart bin/markdown.dart --version` now shows the package version number.
   * The playground app now shows the version number.
 * Improve autolink parsing.
-* Added new table syntax: `TableSyntax`.
-* Added new ExtensionSet that includes the table syntax: `ExtensionSet.gitHub`.
+* Add new table syntax: `TableSyntax`.
+* Add new ExtensionSet that includes the table syntax: `ExtensionSet.gitHub`.
 * For development: added `tool/travis.sh`.
 * Support multiline Setext headers.
 * Handle loose-vs-strict list items better.
@@ -22,7 +26,7 @@
 
 ## 0.11.0+1
 
-* Added playground app at https://dart-lang.github.io/markdown.
+* Add playground app at https://dart-lang.github.io/markdown.
 
 ## 0.11.0
 
