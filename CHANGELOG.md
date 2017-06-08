@@ -1,7 +1,6 @@
 ## 0.11.3
 
 * Deprecated `escapeHtml`. This code exists in `dart:convert`.
-* Migrate tests to use the expected_output package.
 
 ## 0.11.2
 
