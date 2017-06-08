@@ -78,12 +78,13 @@ two</li><li>three</li></ul>
 <ul><li>
 <p>one</p><ul><li>nested one</li><li>nested two</li></ul></li><li>
 <p>two</p></li></ul>
->>> list item turns what might be an h1 into nothing
+>>> list item allows lazy continuations
 - list
-===
+item
 
 <<<
-<ul><li>list===</li></ul>
+<ul><li>list
+item</li></ul>
 >>> list item turns what might be an h2 into nothing
 - list
 ---
