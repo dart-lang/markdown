@@ -431,7 +431,7 @@ class CodeSyntax extends InlineSyntax {
   //
   // This conforms to the delimiters of inline code, both in Markdown.pl, and
   // CommonMark.
-  static String _pattern = r'(`+(?!`))((?:.|\n)*?[^`])\1(?!`)';
+  static final String _pattern = r'(`+(?!`))((?:.|\n)*?[^`])\1(?!`)';
 
   CodeSyntax() : super(_pattern);
 
