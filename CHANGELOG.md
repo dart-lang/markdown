@@ -1,6 +1,7 @@
 ## 0.11.4
 
 * Fix bug with lazy blockquote continuations (#162)
+* Fix bug with list item continuations (#156)
 
 ## 0.11.3
 
