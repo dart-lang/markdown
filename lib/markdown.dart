@@ -11,5 +11,5 @@ export 'src/document.dart';
 export 'src/extension_set.dart';
 export 'src/html_renderer.dart';
 export 'src/inline_parser.dart';
-export 'src/version.dart';
 export 'src/util.dart' show escapeHtml;
+export 'src/version.dart';

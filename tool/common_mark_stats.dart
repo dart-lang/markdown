@@ -144,7 +144,7 @@ Object _convert(obj) {
       case CompareLevel.loose:
         return 'loose';
       default:
-        throw 'huh?';
+        throw new ArgumentError("`$obj` is unknown.");
     }
   }
   if (obj is Map) {

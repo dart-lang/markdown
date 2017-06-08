@@ -528,18 +528,17 @@ class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
   const OtherTagBlockHtmlSyntax();
 }
 
-/// A BlockHtmlSyntax that has a specific [endPattern].
+/// A BlockHtmlSyntax that has a specific `endPattern`.
 ///
 /// In practice this means that the syntax dominates; it is allowed to eat
-/// many lines, including blank lines, before matching its [endPattern].
+/// many lines, including blank lines, before matching its `endPattern`.
 class LongBlockHtmlSyntax extends BlockHtmlSyntax {
-  RegExp _pattern;
-  RegExp _endPattern;
+  final RegExp _pattern;
+  final RegExp _endPattern;
 
-  LongBlockHtmlSyntax(pattern, endPattern) {
-    _pattern = new RegExp(pattern);
-    _endPattern = new RegExp(endPattern);
-  }
+  LongBlockHtmlSyntax(pattern, endPattern)
+      : _pattern = new RegExp(pattern),
+        _endPattern = new RegExp(endPattern);
 
   RegExp get pattern => _pattern;
 
