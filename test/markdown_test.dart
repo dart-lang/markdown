@@ -2,12 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/// Unit tests for markdown.
-library markdown.test.markdown_test;
-
-import 'package:test/test.dart';
-
 import 'package:markdown/markdown.dart';
+import 'package:test/test.dart';
 
 import 'util.dart';
 
@@ -15,6 +11,16 @@ import 'util.dart';
 /// http://softwaremaniacs.org/playground/showdown-highlight/
 void main() {
   testDirectory('original');
+
+  testFile('extensions/fenced_code_blocks.unit',
+      blockSyntaxes: [const FencedCodeBlockSyntax()]);
+  testFile('extensions/inline_html.unit',
+      inlineSyntaxes: [new InlineHtmlSyntax()]);
+  testFile('extensions/headers_with_ids.unit',
+      blockSyntaxes: [const HeaderWithIdSyntax()]);
+  testFile('extensions/setext_headers_with_ids.unit',
+      blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
+  testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
 
   group('Resolver', () {
     Node nyanResolver(String text) => new Text('~=[,,_${text}_,,]:3');
@@ -136,18 +142,4 @@ nyan''',
         ''',
         inlineOnly: true);
   });
-
-  testFile('extensions/fenced_code_blocks.unit',
-      blockSyntaxes: [const FencedCodeBlockSyntax()]);
-
-  testFile('extensions/inline_html.unit',
-      inlineSyntaxes: [new InlineHtmlSyntax()]);
-
-  testFile('extensions/headers_with_ids.unit',
-      blockSyntaxes: [const HeaderWithIdSyntax()]);
-
-  testFile('extensions/setext_headers_with_ids.unit',
-      blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
-
-  testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
 }
