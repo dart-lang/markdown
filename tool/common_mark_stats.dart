@@ -13,7 +13,7 @@ import 'package:path/path.dart' as p;
 
 const _commonMarkTests = 'common_mark_tests.json';
 
-// Locate the "test" directory. Use mirrors so that this works with the test
+// Locate the "tool" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
 String get _currentDir => p
     .dirname((reflect(main) as ClosureMirror).function.location.sourceUri.path);
@@ -120,7 +120,7 @@ String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
 
 void printVerboseFailure(
     String message, CommonMarkTestCase test, String expected, String actual) {
-  print('$message: http://spec.commonmark.org/0.26/#example-${test.example}');
+  print('$message: http://spec.commonmark.org/0.27/#example-${test.example}');
   print('input:');
   print(indent(test.markdown));
   print('expected:');

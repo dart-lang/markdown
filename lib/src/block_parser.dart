@@ -49,7 +49,8 @@ final _olPattern =
     new RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
 
 /// A line of hyphens separated by at least one pipe.
-final _tablePattern = new RegExp(r'^[ ]{0,3}\|?(:?\-+:?\|)+(:?\-+:?)?$');
+final _tablePattern =
+    new RegExp(r'^[ ]{0,3}\|?( *:?\-+:? *\|)+( *:?\-+:? *)?$');
 
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
@@ -398,7 +399,7 @@ class CodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    var escaped = escapeHtml(childLines.join('\n'));
+    var escaped = escapeHtmlImpl(childLines.join('\n'));
 
     return new Element('pre', [new Element.text('code', escaped)]);
   }
@@ -444,7 +445,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    var escaped = escapeHtml(childLines.join('\n'));
+    var escaped = escapeHtmlImpl(childLines.join('\n'));
 
     var code = new Element.text('code', escaped);
 
@@ -637,14 +638,14 @@ abstract class ListSyntax extends BlockSyntax {
         listMarker = marker;
         var markerAsSpaces = ' ' * (digits.length + marker.length);
         if (isBlank) {
-          // See http://spec.commonmark.org/0.26/#list-items under "3. Item
+          // See http://spec.commonmark.org/0.27/#list-items under "3. Item
           // starting with a blank line."
           //
           // If the list item starts with a blank line, the final piece of the
           // indentation is just a single space.
           indent = precedingWhitespace + markerAsSpaces + ' ';
         } else if (restWhitespace.length >= 4) {
-          // See http://spec.commonmark.org/0.26/#list-items under "2. Item
+          // See http://spec.commonmark.org/0.27/#list-items under "2. Item
           // starting with indented code."
           //
           // If the list item starts with indented code, we need to _not_ count
@@ -695,7 +696,7 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     // Must strip paragraph tags if the list is "tight".
-    // http://spec.commonmark.org/0.26/#lists
+    // http://spec.commonmark.org/0.27/#lists
     var listIsTight = !anyEmptyLines && !anyEmptyLinesBetweenBlocks;
 
     if (listIsTight) {
@@ -763,6 +764,8 @@ class OrderedListSyntax extends ListSyntax {
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
   static final _pipePattern = new RegExp(r'\s*\|\s*');
+  static final _openingPipe = new RegExp(r'^\|\s*');
+  static final _closingPipe = new RegExp(r'\s*\|$');
 
   bool get canEndBlock => false;
 
@@ -796,10 +799,9 @@ class TableSyntax extends BlockSyntax {
   }
 
   List<String> parseAlignments(String line) {
-    line = line
-        .replaceFirst(new RegExp(r'^\|'), '')
-        .replaceFirst(new RegExp(r'\|$'), '');
+    line = line.replaceFirst(_openingPipe, '').replaceFirst(_closingPipe, '');
     return line.split('|').map((column) {
+      column = column.trim();
       if (column.startsWith(':') && column.endsWith(':')) return 'center';
       if (column.startsWith(':')) return 'left';
       if (column.endsWith(':')) return 'right';
@@ -809,13 +811,22 @@ class TableSyntax extends BlockSyntax {
 
   Node parseRow(BlockParser parser, List<String> alignments, String cellType) {
     var line = parser.current
-        .replaceFirst(new RegExp(r'^\|\s*'), '')
-        .replaceFirst(new RegExp(r'\s*\|$'), '');
+        .replaceFirst(_openingPipe, '')
+        .replaceFirst(_closingPipe, '');
     var cells = line.split(_pipePattern);
     parser.advance();
-    var row = <Element>[];
+    var row = <Element>[], precell;
 
     for (String cell in cells) {
+      if (precell != null) {
+        cell = precell + cell;
+        precell = null;
+      }
+      if (cell.endsWith('\\')) {
+        precell = cell.substring(0, cell.length - 1) + '|';
+        continue;
+      }
+
       var contents = new UnparsedContent(cell);
       row.add(new Element(cellType, [contents]));
     }
