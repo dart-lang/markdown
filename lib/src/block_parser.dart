@@ -335,10 +335,7 @@ class BlockquoteSyntax extends BlockSyntax {
       // a Setext header.
       if (parser.blockSyntaxes.firstWhere((s) => s.canParse(parser))
           is ParagraphSyntax) {
-        var continuedLine = childLines.last + parser.current;
-        childLines
-          ..removeLast()
-          ..add(continuedLine);
+        childLines.add(parser.current);
         parser.advance();
       } else {
         break;
