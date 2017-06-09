@@ -91,6 +91,15 @@ void main() {
   print(markdownToHtml('nyan', inlineSyntaxes: syntaxes));
   //=> <p>~=[,,_,,]:3</p>
 }
+
+### HTML Sanitization
+
+This package offers no features in the way of HTML sanitization. Read Estevão
+Soares dos Santos's great article, ["Markdown's XSS Vulnerability (and how to
+mitigate it)"], to learn more.
+
+The authors recommend that you perform any necessary sanitization on the
+resulting HTML, for example via `dart:html`'s [NodeValidator].
 ```
 
 ### CommonMark compliance
@@ -128,3 +137,5 @@ compliance with [CommonMark].
 [commonMark-raw-html]: http://spec.commonmark.org/0.27/#raw-html
 [CommonMark source]: https://github.com/jgm/CommonMark/
 [pandoc-auto_identifiers]: http://pandoc.org/README.html#extension-auto_identifiers
+["Markdown's XSS Vulnerability (and how to mitigate it)"]: https://github.com/showdownjs/showdown/wiki/Markdown%27s-XSS-Vulnerability-(and-how-to-mitigate-it)
+[NodeValidator]: https://api.dartlang.org/stable/latest/dart-html/NodeValidator-class.html
