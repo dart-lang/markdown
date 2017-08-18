@@ -244,12 +244,12 @@ class InlineHtmlSyntax extends TextSyntax {
 
 /// Matches autolinks like `<http://foo.com>`.
 class AutolinkSyntax extends InlineSyntax {
-  AutolinkSyntax() : super(r'<(([a-zA-Z][a-zA-Z\-\+\.]+):(?://)?[^>]*)>');
+  AutolinkSyntax() : super(r'<(([a-zA-Z][a-zA-Z\-\+\.]+):(?://)?[^\s>]*)>');
 
   bool onMatch(InlineParser parser, Match match) {
     var url = match[1];
     var anchor = new Element.text('a', escapeHtml(url));
-    anchor.attributes['href'] = url;
+    anchor.attributes['href'] = Uri.encodeFull(url);
     parser.addNode(anchor);
 
     return true;
