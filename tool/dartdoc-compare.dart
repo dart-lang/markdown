@@ -80,8 +80,7 @@ class DartdocCompare {
       var sdk_options =
           sdk ? ["--sdk-docs", "--dart-sdk=$package"] : <String>[];
       var cmd = "dart";
-      var args = ["$dartdoc_bin", "--output=${out.path}"]
-        ..addAll(sdk_options);
+      var args = ["$dartdoc_bin", "--output=${out.path}"]..addAll(sdk_options);
       print("Command: $cmd ${args.join(" ")}");
       system(cmd, args);
       print("");
