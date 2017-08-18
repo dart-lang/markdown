@@ -27,7 +27,13 @@ Future main(List<String> args) async {
         help: 'Update stats files in $_currentDir',
         negatable: false)
     ..addFlag('verbose',
-        defaultsTo: false, help: 'verbose output', negatable: false)
+        defaultsTo: false,
+        help: 'Print details for failures and errors.',
+        negatable: false)
+    ..addFlag('verbose-loose',
+        defaultsTo: false,
+        help: 'Print details for "loose" matches.',
+        negatable: false)
     ..addOption('flavor',
         allowed: ['common_mark', 'gfm'], defaultsTo: 'common_mark')
     ..addFlag('help', defaultsTo: false, negatable: false);
@@ -51,6 +57,7 @@ Future main(List<String> args) async {
   var specifiedSection = options['section'] as String;
   var raw = options['raw'] as bool;
   var verbose = options['verbose'] as bool;
+  var verboseLooseMatch = options['verbose-loose'] as bool;
   var updateFiles = options['update-files'] as bool;
 
   if (updateFiles && (raw || verbose || (specifiedSection != null))) {
@@ -80,8 +87,8 @@ Future main(List<String> args) async {
       var nestedMap = scores.putIfAbsent(
           section, () => new SplayTreeMap<int, CompareLevel>());
 
-      nestedMap[e.example] =
-          _compareResult(e, verbose, extensionSet: extensionSet);
+      nestedMap[e.example] = _compareResult(e, verbose, verboseLooseMatch,
+          extensionSet: extensionSet);
     }
   });
 
@@ -94,7 +101,8 @@ Future main(List<String> args) async {
   }
 }
 
-CompareLevel _compareResult(CommonMarkTestCase expected, bool verboseFail,
+CompareLevel _compareResult(
+    CommonMarkTestCase expected, bool verboseFail, bool verboseLooseMatch,
     {ExtensionSet extensionSet}) {
   String output;
   try {
@@ -120,6 +128,10 @@ CompareLevel _compareResult(CommonMarkTestCase expected, bool verboseFail,
   if (!looseMatch && verboseFail) {
     printVerboseFailure(
         'FAIL', expected, expectedParsed.outerHtml, actual.outerHtml);
+  }
+
+  if (looseMatch && verboseLooseMatch) {
+    printVerboseFailure('LOOSE', expected, output, actual.outerHtml);
   }
 
   return looseMatch ? CompareLevel.loose : CompareLevel.fail;
