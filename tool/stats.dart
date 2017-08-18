@@ -129,7 +129,7 @@ String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
 
 void printVerboseFailure(
     String message, CommonMarkTestCase test, String expected, String actual) {
-  print('$message: http://spec.commonmark.org/0.27/#example-${test.example}');
+  print('$message: http://spec.commonmark.org/0.28/#example-${test.example}');
   print('input:');
   print(indent(test.markdown));
   print('expected:');
