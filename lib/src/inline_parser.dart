@@ -11,6 +11,7 @@ import 'util.dart';
 class InlineParser {
   static final List<InlineSyntax> _defaultSyntaxes =
       new List<InlineSyntax>.unmodifiable(<InlineSyntax>[
+    new EmailAutolinkSyntax(),
     new AutolinkSyntax(),
     new LineBreakSyntax(),
     new LinkSyntax(),
@@ -240,6 +241,26 @@ class EscapeSyntax extends InlineSyntax {
 /// Markdown benchmarking is more mature.
 class InlineHtmlSyntax extends TextSyntax {
   InlineHtmlSyntax() : super(r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?: [^>]*)?>');
+}
+
+/// Matches autolinks like `<foo@bar.example.com>`.
+///
+/// See <http://spec.commonmark.org/0.28/#email-address>.
+class EmailAutolinkSyntax extends InlineSyntax {
+  static final _email =
+      r'''[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}'''
+      r'''[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*''';
+
+  EmailAutolinkSyntax() : super('<($_email)>');
+
+  bool onMatch(InlineParser parser, Match match) {
+    var url = match[1];
+    var anchor = new Element.text('a', escapeHtml(url));
+    anchor.attributes['href'] = Uri.encodeFull('mailto:$url');
+    parser.addNode(anchor);
+
+    return true;
+  }
 }
 
 /// Matches autolinks like `<http://foo.com>`.

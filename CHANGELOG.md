@@ -1,6 +1,7 @@
 ## 1.0.0
 
 * Remove deprecated `escapeHtml` function.
+* Fix compliance with auto-links, including support for email addresses.
 
 ## 0.11.4
 
