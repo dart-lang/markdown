@@ -485,7 +485,7 @@ abstract class BlockHtmlSyntax extends BlockSyntax {
 }
 
 class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
-  RegExp get pattern => new RegExp(
+  static final _pattern = new RegExp(
       r'^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
       r'caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|'
       r'figcaption|figure|footer|form|frame|frameset|h1|head|header|hr|html|'
@@ -493,6 +493,8 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
       r'option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|'
       'title|tr|track|ul)'
       r'(?:\s|>|/>|$)');
+
+  RegExp get pattern => _pattern;
 
   const BlockTagBlockHtmlSyntax();
 
