@@ -2,6 +2,9 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// Used by `dataCasesUnder` below to find the current directory.
+library markdown.test.util;
+
 import 'dart:mirrors';
 
 import 'package:expected_output/expected_output.dart';
