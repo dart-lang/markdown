@@ -7,7 +7,7 @@
 sample of real-world markdown:</p>
 <p>Tests are specified using the top-level <a href="http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_test"><code>test()</code></a> function, and test
 assertions are made using <a href="http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_expect"><code>expect()</code></a>:</p>
-<pre class="dart"><code>import "package:test/test.dart";
+<pre><code class="language-dart">import "package:test/test.dart";
 
 void main() {
   test("String.split() splits the string on the delimiter", () {
@@ -21,9 +21,9 @@ void main() {
   });
 }
 </code></pre>
-<p>Tests can be grouped together using the [`group()`] function. Each group's
+<p>Tests can be grouped together using the [<code>group()</code>] function. Each group's
 description is added to the beginning of its test's descriptions.</p>
-<pre class="dart"><code>import "package:test/test.dart";
+<pre><code class="language-dart">import "package:test/test.dart";
 
 void main() {
   group("String", () {
@@ -51,7 +51,7 @@ void main() {
 </code></pre>
 <p>Any matchers from the <a href="http://www.dartdocs.org/documentation/matcher/latest/index.html#matcher/matcher"><code>matcher</code></a> package can be used with <code>expect()</code>
 to do complex validations:</p>
-<pre class="dart"><code>import "package:test/test.dart";
+<pre><code class="language-dart">import "package:test/test.dart";
 
 void main() {
   test(".split() splits the string on the delimiter", () {
@@ -66,9 +66,9 @@ void main() {
 <h2>Running Tests</h2>
 <p>A single test file can be run just using <code>pub run test:test path/to/test.dart</code>
 (on Dart 1.10, this can be shortened to <code>pub run test path/to/test.dart</code>).</p>
-<p><a href="https://raw.githubusercontent.com/dart-lang/test/master/image/test1.gif"><img alt="Single file being run via pub run"" src="https://raw.githubusercontent.com/dart-lang/test/master/image/test1.gif"></img></a></p>
+<p><img alt="Single file being run via pub run"" src="https://raw.githubusercontent.com/dart-lang/test/master/image/test1.gif" /></p>
 <p>Many tests can be run at a time using <code>pub run test:test path/to/dir</code>.</p>
-<p><a href="https://raw.githubusercontent.com/dart-lang/test/master/image/test2.gif"><img alt="Directory being run via "pub run"." src="https://raw.githubusercontent.com/dart-lang/test/master/image/test2.gif"></img></a></p>
+<p><img alt="Directory being run via "pub run"." src="https://raw.githubusercontent.com/dart-lang/test/master/image/test2.gif" /></p>
 <p>It's also possible to run a test on the Dart VM only by invoking it using <code>dart
 path/to/test.dart</code>, but this doesn't load the full test runner and will be
 missing some features.</p>
@@ -85,10 +85,10 @@ test:test -p "chrome,vm" path/to/test.dart</code>.</p>
 <p>Some test files only make sense to run on particular platforms. They may use
 <code>dart:html</code> or <code>dart:io</code>, they might test Windows' particular filesystem
 behavior, or they might use a feature that's only available in Chrome. The
-<a href="#restricting-tests-to-certain-platforms"><code>@TestOn</code></a> annotation makes it easy to declare exactly which platforms
+<a href="http://www.dartdocs.org/documentation/test/latest/index.html#test/test.TestOn"><code>@TestOn</code></a> annotation makes it easy to declare exactly which platforms
 a test file should run on. Just put it at the top of your file, before any
 <code>library</code> or <code>import</code> declarations:</p>
-<pre class="dart"><code>@TestOn("vm")
+<pre><code class="language-dart">@TestOn("vm")
 
 import "dart:io";
 
@@ -111,31 +111,31 @@ valid identifiers are:</p><ul><li>
 <p><code>vm</code>: Whether the test is running on the command-line Dart VM.</p></li><li>
 <p><code>dartium</code>: Whether the test is running on Dartium.</p></li><li>
 <p><code>content-shell</code>: Whether the test is running on the headless Dartium content
-  shell.</p></li><li>
+shell.</p></li><li>
 <p><code>chrome</code>: Whether the test is running on Google Chrome.</p></li><li>
 <p><code>phantomjs</code>: Whether the test is running on
-  <a href="http://phantomjs.org/">PhantomJS</a>.</p></li><li>
+<a href="http://phantomjs.org/">PhantomJS</a>.</p></li><li>
 <p><code>firefox</code>: Whether the test is running on Mozilla Firefox.</p></li><li>
 <p><code>safari</code>: Whether the test is running on Apple Safari.</p></li><li>
 <p><code>ie</code>: Whether the test is running on Microsoft Internet Explorer.</p></li><li>
 <p><code>dart-vm</code>: Whether the test is running on the Dart VM in any context,
-  including Dartium. It's identical to <code>!js</code>.</p></li><li>
+including Dartium. It's identical to <code>!js</code>.</p></li><li>
 <p><code>browser</code>: Whether the test is running in any browser.</p></li><li>
 <p><code>js</code>: Whether the test has been compiled to JS. This is identical to
-  <code>!dart-vm</code>.</p></li><li>
+<code>!dart-vm</code>.</p></li><li>
 <p><code>blink</code>: Whether the test is running in a browser that uses the Blink
-  rendering engine.</p></li><li>
+rendering engine.</p></li><li>
 <p><code>windows</code>: Whether the test is running on Windows. If <code>vm</code> is false, this will
-  be <code>false</code> as well.</p></li><li>
+be <code>false</code> as well.</p></li><li>
 <p><code>mac-os</code>: Whether the test is running on Mac OS. If <code>vm</code> is false, this will
-  be <code>false</code> as well.</p></li><li>
+be <code>false</code> as well.</p></li><li>
 <p><code>linux</code>: Whether the test is running on Linux. If <code>vm</code> is false, this will be
-  <code>false</code> as well.</p></li><li>
+<code>false</code> as well.</p></li><li>
 <p><code>android</code>: Whether the test is running on Android. If <code>vm</code> is false, this will
-  be <code>false</code> as well, which means that this <em>won't</em> be true if the test is
-  running on an Android browser.</p></li><li>
+be <code>false</code> as well, which means that this <em>won't</em> be true if the test is
+running on an Android browser.</p></li><li>
 <p><code>posix</code>: Whether the test is running on a POSIX operating system. This is
-  equivalent to <code>!windows</code>.</p></li></ul>
+equivalent to <code>!windows</code>.</p></li></ul>
 <p>For example, if you wanted to run a test on every browser but Chrome, you would
 write <code>@TestOn("browser &amp;&amp; !chrome")</code>.</p>
 <h3>Running Tests on Dartium</h3>
@@ -154,7 +154,7 @@ location of both the Dartium and content shell executables.</p>
 <h2>Asynchronous Tests</h2>
 <p>Tests written with <code>async</code>/<code>await</code> will work automatically. The test runner
 won't consider the test finished until the returned <code>Future</code> completes.</p>
-<pre class="dart"><code>import "dart:async";
+<pre><code class="language-dart">import "dart:async";
 
 import "package:test/test.dart";
 
@@ -169,7 +169,7 @@ void main() {
 asynchrony. The <a href="http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_completion"><code>completion()</code></a> matcher can be used to test
 <code>Futures</code>; it ensures that the test doesn't finish until the <code>Future</code> completes,
 and runs a matcher against that <code>Future</code>'s value.</p>
-<pre class="dart"><code>import "dart:async";
+<pre><code class="language-dart">import "dart:async";
 
 import "package:test/test.dart";
 
@@ -182,7 +182,7 @@ void main() {
 <p>The <a href="http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_throwsA"><code>throwsA()</code></a> matcher and the various <code>throwsExceptionType</code>
 matchers work with both synchronous callbacks and asynchronous <code>Future</code>s. They
 ensure that a particular type of exception is thrown:</p>
-<pre class="dart"><code>import "dart:async";
+<pre><code class="language-dart">import "dart:async";
 
 import "package:test/test.dart";
 
@@ -198,7 +198,7 @@ jobs. First, it asserts that the wrapped function is called a certain number of
 times, and will cause the test to fail if it's called too often; second, it
 keeps the test from finishing until the function is called the requisite number
 of times.</p>
-<pre class="dart"><code>import "dart:async";
+<pre><code class="language-dart">import "dart:async";
 
 import "package:test/test.dart";
 
@@ -218,11 +218,11 @@ tests. However, tests that need custom HTML can create their own files. These
 files have three requirements:</p><ul><li>
 <p>They must have the same name as the test, with <code>.dart</code> replaced by <code>.html</code>.</p></li><li>
 <p>They must contain a <code>link</code> tag with <code>rel="x-dart-test"</code> and an <code>href</code>
-  attribute pointing to the test script.</p></li><li>
+attribute pointing to the test script.</p></li><li>
 <p>They must contain <code>&lt;script src="packages/test/dart.js"&gt;&lt;/script&gt;</code>.</p></li></ul>
 <p>For example, if you had a test called <code>custom_html_test.dart</code>, you might write
 the following HTML file:</p>
-<pre class="html"><code>&lt;!doctype html&gt;
+<pre><code class="language-html">&lt;!doctype html&gt;
 &lt;!-- custom_html_test.html --&gt;
 &lt;html&gt;
   &lt;head&gt;
@@ -241,10 +241,10 @@ the following HTML file:</p>
 complaining, you can mark it as "skipped". The test or tests won't be run, and,
 if you supply a reason why, that reason will be printed. In general, skipping
 tests indicates that they should run but is temporarily not working. If they're
-is fundamentally incompatible with a platform, <a href="#restricting-tests-to-certain-platforms"><code>@TestOn</code>/<code>testOn</code></a>
+is fundamentally incompatible with a platform, <a href="http://www.dartdocs.org/documentation/test/latest/index.html#test/test.TestOn"><code>@TestOn</code>/<code>testOn</code></a>
 should be used instead.</p>
 <p>To skip a test suite, put a <code>@Skip</code> annotation at the top of the file:</p>
-<pre class="dart"><code>@Skip("currently failing (see issue 1234)")
+<pre><code class="language-dart">@Skip("currently failing (see issue 1234)")
 
 import "package:test/test.dart";
 
@@ -256,7 +256,7 @@ void main() {
 include it, but it's a good idea to document why the test isn't running.</p>
 <p>Groups and individual tests can be skipped by passing the <code>skip</code> parameter. This
 can be either <code>true</code> or a String describing why the test is skipped. For example:</p>
-<pre class="dart"><code>import "package:test/test.dart";
+<pre><code class="language-dart">import "package:test/test.dart";
 
 void main() {
   group("complicated algorithm tests", () {
@@ -272,7 +272,7 @@ void main() {
 <p>By default, tests will time out after 30 seconds of inactivity. However, this
 can be configured on a per-test, -group, or -suite basis. To change the timeout
 for a test suite, put a <code>@Timeout</code> annotation at the top of the file:</p>
-<pre class="dart"><code>@Timeout(const Duration(seconds: 45))
+<pre><code class="language-dart">@Timeout(const Duration(seconds: 45))
 
 import "package:test/test.dart";
 
@@ -285,7 +285,7 @@ the default using <code>@Timeout.factor</code>. For example, <code>@Timeout.fact
 set the timeout to one and a half times as long as the default—45 seconds.</p>
 <p>Timeouts can be set for tests and groups using the <code>timeout</code> parameter. This
 parameter takes a <code>Timeout</code> object just like the annotation. For example:</p>
-<pre class="dart"><code>import "package:test/test.dart";
+<pre><code class="language-dart">import "package:test/test.dart";
 
 void main() {
   group("slow tests", () {
@@ -306,7 +306,7 @@ Windows might run your code slower than other platforms, or your DOM
 manipulation might not work right on Safari yet. For these cases, you can use
 the <code>@OnPlatform</code> annotation and the <code>onPlatform</code> named parameter to <code>test()</code>
 and <code>group()</code>. For example:</p>
-<pre class="dart"><code>@OnPlatform(const {
+<pre><code class="language-dart">@OnPlatform(const {
   // Give Windows some extra wiggle-room before timing out.
   "windows": const Timeout.factor(2)
 })
@@ -337,21 +337,21 @@ instance rather than from the filesystem.</p>
 <p>Before using the <code>--pub-serve</code> option, add the <code>test/pub_serve</code> transformer to
 your <code>pubspec.yaml</code>. This transformer adds the necessary bootstrapping code that
 allows the test runner to load your tests properly:</p>
-<pre class="yaml"><code>transformers:
+<pre><code class="language-yaml">transformers:
 - test/pub_serve:
     $include: test/**_test{.*,}.dart
 </code></pre>
 <p>Note that if you're using the test runner along with <a href="https://www.dartlang.org/polymer/"><code>polymer</code></a>, you
 have to make sure that the <code>test/pub_serve</code> transformer comes <em>after</em> the
 <code>polymer</code> transformer:</p>
-<pre class="yaml"><code>transformers:
+<pre><code class="language-yaml">transformers:
 - polymer
 - test/pub_serve:
     $include: test/**_test{.*,}.dart
 </code></pre>
 <p>Then, start up <code>pub serve</code>. Make sure to pay attention to which port it's using
 to serve your <code>test/</code> directory:</p>
-<pre class="shell"><code>$ pub serve
+<pre><code class="language-shell">$ pub serve
 Loading source assets...
 Loading test/pub_serve transformers...
 Serving my_app web on http://localhost:8080
@@ -360,7 +360,7 @@ Build completed successfully
 </code></pre>
 <p>In this case, the port is <code>8081</code>. In another terminal, pass this port to
 <code>--pub-serve</code> and otherwise invoke <code>pub run test:test</code> as normal:</p>
-<pre class="shell"><code>$ pub run test:test --pub-serve=8081 -p chrome
+<pre><code class="language-shell">$ pub run test:test --pub-serve=8081 -p chrome
 "pub serve" is compiling test/my_app_test.dart...
 "pub serve" is compiling test/utils_test.dart...
 00:00 +42: All tests passed!
