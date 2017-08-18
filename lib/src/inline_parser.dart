@@ -250,7 +250,7 @@ class AutolinkSyntax extends InlineSyntax {
 
   bool onMatch(InlineParser parser, Match match) {
     var url = match[1];
-    var anchor = new Element.text('a', escapeHtmlImpl(url));
+    var anchor = new Element.text('a', escapeHtml(url));
     anchor.attributes['href'] = url;
     parser.addNode(anchor);
 
@@ -339,9 +339,9 @@ class LinkSyntax extends TagSyntax {
 
     var element = new Element('a', state.children);
 
-    element.attributes["href"] = escapeHtmlImpl(link.url);
+    element.attributes["href"] = escapeHtml(link.url);
     if (link.title != null) {
-      element.attributes['title'] = escapeHtmlImpl(link.title);
+      element.attributes['title'] = escapeHtml(link.title);
     }
 
     return element;
@@ -408,11 +408,11 @@ class ImageSyntax extends LinkSyntax {
     var link = getLink(parser, match, state);
     if (link == null) return null;
     var image = new Element.empty("img");
-    image.attributes["src"] = escapeHtmlImpl(link.url);
+    image.attributes["src"] = escapeHtml(link.url);
     image.attributes["alt"] = state?.textContent ?? '';
 
     if (link.title != null) {
-      image.attributes["title"] = escapeHtmlImpl(link.title);
+      image.attributes["title"] = escapeHtml(link.title);
     }
 
     return image;
@@ -455,7 +455,7 @@ class CodeSyntax extends InlineSyntax {
   }
 
   bool onMatch(InlineParser parser, Match match) {
-    parser.addNode(new Element.text('code', escapeHtmlImpl(match[2].trim())));
+    parser.addNode(new Element.text('code', escapeHtml(match[2].trim())));
     return true;
   }
 }

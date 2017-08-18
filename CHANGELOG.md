@@ -1,3 +1,7 @@
+## 1.0.0
+
+* Remove deprecated `escapeHtml` function.
+
 ## 0.11.4
 
 * Fix bug with lazy blockquote continuations (#162)

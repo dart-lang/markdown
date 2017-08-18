@@ -396,7 +396,7 @@ class CodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    var escaped = escapeHtmlImpl(childLines.join('\n'));
+    var escaped = escapeHtml(childLines.join('\n'));
 
     return new Element('pre', [new Element.text('code', escaped)]);
   }
@@ -442,7 +442,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     // Escape the code.
-    var escaped = escapeHtmlImpl(childLines.join('\n'));
+    var escaped = escapeHtml(childLines.join('\n'));
 
     var code = new Element.text('code', escaped);
 
