@@ -63,14 +63,14 @@ class DartdocCompare {
     var diffOptions = ["-r", "-B", out_before, out_after];
     var result = Process.runSync("diff", diffOptions, runInShell: true);
     var nlines = "\n".allMatches(result.stdout).length;
-    print("Diff lines: ${ nlines }");
+    print("Diff lines: $nlines");
     print("diff ${diffOptions.join(" ")}");
     return result.exitCode == 0;
   }
 
   String run_dartdoc(markdown_ref, package) {
     print("==========================================================");
-    print("Running dartdoc for ${markdown_ref}...");
+    print("Running dartdoc for $markdown_ref...");
     print("==========================================================");
     doInPath(dartdoc_dir, () => update_dartdoc_pubspec(markdown_ref));
     return doInPath(package, () {
@@ -80,7 +80,7 @@ class DartdocCompare {
       var sdk_options =
           sdk ? ["--sdk-docs", "--dart-sdk=$package"] : <String>[];
       var cmd = "dart";
-      var args = ["${dartdoc_bin}", "--output=${out.path}"]
+      var args = ["$dartdoc_bin", "--output=${out.path}"]
         ..addAll(sdk_options);
       print("Command: $cmd ${args.join(" ")}");
       system(cmd, args);

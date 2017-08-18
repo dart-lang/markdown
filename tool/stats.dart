@@ -228,14 +228,14 @@ Future _printFriendly(
 
     sink.writeln('${sectionValidCount.toString().padLeft(countWidth)} '
         'of ${total.toString().padLeft(countWidth)} '
-        '– ${pct}%  $section');
+        '– $pct%  $section');
   });
 
   var pct = (100 * totalValid / totalExamples).toStringAsFixed(1).padLeft(5);
 
   sink.writeln('${totalValid.toString().padLeft(countWidth)} '
       'of ${totalExamples.toString().padLeft(countWidth)} '
-      '– ${pct}%  TOTAL');
+      '– $pct%  TOTAL');
 
   await sink.flush();
   await sink.close();
