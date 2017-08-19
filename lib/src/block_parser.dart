@@ -808,15 +808,16 @@ class TableSyntax extends BlockSyntax {
         .replaceFirst(_closingPipe, '');
     var cells = line.split(_pipePattern);
     parser.advance();
-    var row = <Element>[], precell;
+    var row = <Element>[];
+    String preCell;
 
     for (String cell in cells) {
-      if (precell != null) {
-        cell = precell + cell;
-        precell = null;
+      if (preCell != null) {
+        cell = preCell + cell;
+        preCell = null;
       }
       if (cell.endsWith('\\')) {
-        precell = cell.substring(0, cell.length - 1) + '|';
+        preCell = cell.substring(0, cell.length - 1) + '|';
         continue;
       }
 
