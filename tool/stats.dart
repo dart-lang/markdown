@@ -69,9 +69,11 @@ Future main(List<String> args) async {
 
   final testPrefix = options['flavor'];
 
+  var baseUrl = 'http://spec.commonmark.org/0.28/';
   ExtensionSet extensionSet;
   if (testPrefix == 'gfm') {
     extensionSet = ExtensionSet.gitHub;
+    baseUrl = 'https://github.github.com/gfm/';
   }
 
   var sections = _loadCommonMarkSections(testPrefix);
@@ -87,7 +89,8 @@ Future main(List<String> args) async {
       var nestedMap = scores.putIfAbsent(
           section, () => new SplayTreeMap<int, CompareLevel>());
 
-      nestedMap[e.example] = _compareResult(e, verbose, verboseLooseMatch,
+      nestedMap[e.example] = _compareResult(
+          baseUrl, e, verbose, verboseLooseMatch,
           extensionSet: extensionSet);
     }
   });
@@ -101,16 +104,16 @@ Future main(List<String> args) async {
   }
 }
 
-CompareLevel _compareResult(
-    CommonMarkTestCase expected, bool verboseFail, bool verboseLooseMatch,
+CompareLevel _compareResult(String baseUrl, CommonMarkTestCase expected,
+    bool verboseFail, bool verboseLooseMatch,
     {ExtensionSet extensionSet}) {
   String output;
   try {
     output = markdownToHtml(expected.markdown, extensionSet: extensionSet);
   } catch (err, stackTrace) {
     if (verboseFail) {
-      printVerboseFailure(
-          'ERROR', expected, expected.html, 'Thrown: $err\n$stackTrace');
+      printVerboseFailure(baseUrl, 'ERROR', expected, expected.html,
+          'Thrown: $err\n$stackTrace');
     }
 
     return CompareLevel.error;
@@ -127,11 +130,11 @@ CompareLevel _compareResult(
 
   if (!looseMatch && verboseFail) {
     printVerboseFailure(
-        'FAIL', expected, expectedParsed.outerHtml, actual.outerHtml);
+        baseUrl, 'FAIL', expected, expectedParsed.outerHtml, actual.outerHtml);
   }
 
   if (looseMatch && verboseLooseMatch) {
-    printVerboseFailure('LOOSE', expected, output, actual.outerHtml);
+    printVerboseFailure(baseUrl, 'LOOSE', expected, output, actual.outerHtml);
   }
 
   return looseMatch ? CompareLevel.loose : CompareLevel.fail;
@@ -139,9 +142,9 @@ CompareLevel _compareResult(
 
 String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
 
-void printVerboseFailure(
-    String message, CommonMarkTestCase test, String expected, String actual) {
-  print('$message: http://spec.commonmark.org/0.28/#example-${test.example} '
+void printVerboseFailure(String baseUrl, String message,
+    CommonMarkTestCase test, String expected, String actual) {
+  print('$message: $baseUrl#example-${test.example} '
       '@ ${test.section}');
   print('input:');
   print(indent(test.markdown));
