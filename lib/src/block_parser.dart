@@ -262,14 +262,15 @@ class SetextHeaderSyntax extends BlockSyntax {
     return new Element(tag, [contents]);
   }
 
-  bool _interperableAsParagraph(line) => !(_indentPattern.hasMatch(line) ||
-      _codePattern.hasMatch(line) ||
-      _headerPattern.hasMatch(line) ||
-      _blockquotePattern.hasMatch(line) ||
-      _hrPattern.hasMatch(line) ||
-      _ulPattern.hasMatch(line) ||
-      _olPattern.hasMatch(line) ||
-      _emptyPattern.hasMatch(line));
+  bool _interperableAsParagraph(String line) =>
+      !(_indentPattern.hasMatch(line) ||
+          _codePattern.hasMatch(line) ||
+          _headerPattern.hasMatch(line) ||
+          _blockquotePattern.hasMatch(line) ||
+          _hrPattern.hasMatch(line) ||
+          _ulPattern.hasMatch(line) ||
+          _olPattern.hasMatch(line) ||
+          _emptyPattern.hasMatch(line));
 }
 
 /// Parses setext-style headers, and adds generated IDs to the generated
