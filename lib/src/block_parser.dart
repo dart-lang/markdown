@@ -522,7 +522,7 @@ class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
   // * some word characters
   // * either:
   //   * a close bracket, or
-  //   * whitespace followed by not-brackets follwed by a close bracket
+  //   * whitespace followed by not-brackets followed by a close bracket
   // * possible whitespace and the end of the line.
   RegExp get pattern => new RegExp(r'^ {0,3}</?\w+(?:>|\s+[^>]*>)\s*$');
 

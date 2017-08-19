@@ -443,7 +443,7 @@ class CodeSyntax extends InlineSyntax {
   // This pattern matches:
   //
   // * a string of backticks (not followed by any more), followed by
-  // * a non-greedy string of anying, including newlines, ending with anything
+  // * a non-greedy string of anything, including newlines, ending with anything
   //   except a backtick, followed by
   // * a string of backticks the same length as the first, not followed by any
   //   more.
