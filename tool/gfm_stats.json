@@ -1,22 +1,22 @@
 {
  "ATX headings": {
-  "32": "fail",
+  "32": "strict",
   "33": "strict",
   "34": "strict",
   "35": "strict",
-  "36": "fail",
-  "37": "fail",
-  "38": "fail",
+  "36": "strict",
+  "37": "strict",
+  "38": "strict",
   "39": "strict",
   "40": "loose",
-  "41": "fail",
-  "42": "fail",
-  "43": "fail",
-  "44": "fail",
-  "45": "fail",
-  "46": "fail",
-  "47": "fail",
-  "48": "fail",
+  "41": "strict",
+  "42": "strict",
+  "43": "loose",
+  "44": "strict",
+  "45": "loose",
+  "46": "loose",
+  "47": "strict",
+  "48": "strict",
   "49": "fail"
  },
  "Autolinks": {
@@ -69,14 +69,14 @@
   "310": "fail"
  },
  "Blank lines": {
-  "190": "fail"
+  "190": "strict"
  },
  "Block quotes": {
-  "198": "fail",
-  "199": "fail",
-  "200": "fail",
+  "198": "loose",
+  "199": "loose",
+  "200": "loose",
   "201": "strict",
-  "202": "fail",
+  "202": "loose",
   "203": "loose",
   "204": "loose",
   "205": "loose",
@@ -287,7 +287,7 @@
   "107": "fail",
   "108": "loose",
   "109": "strict",
-  "110": "fail",
+  "110": "strict",
   "111": "strict",
   "112": "strict",
   "113": "strict",
@@ -308,8 +308,8 @@
   "639": "strict",
   "640": "strict",
   "641": "loose",
-  "642": "fail",
-  "643": "fail"
+  "642": "strict",
+  "643": "strict"
  },
  "HTML blocks": {
   "116": "loose",
@@ -389,7 +389,7 @@
   "81": "strict",
   "82": "loose",
   "83": "strict",
-  "84": "fail",
+  "84": "strict",
   "85": "strict",
   "86": "loose",
   "87": "strict"
@@ -418,7 +418,7 @@
   "176": "loose",
   "177": "strict",
   "178": "strict",
-  "179": "fail",
+  "179": "loose",
   "180": "strict",
   "181": "loose"
  },
@@ -556,7 +556,7 @@
   "267": "loose",
   "268": "loose",
   "269": "loose",
-  "270": "fail"
+  "270": "loose"
  },
  "Lists": {
   "273": "loose",
@@ -621,29 +621,29 @@
   "627": "fail"
  },
  "Setext headings": {
-  "50": "fail",
-  "51": "fail",
-  "52": "fail",
-  "53": "fail",
+  "50": "strict",
+  "51": "strict",
+  "52": "strict",
+  "53": "loose",
   "54": "strict",
-  "55": "fail",
+  "55": "strict",
   "56": "loose",
   "57": "strict",
-  "58": "fail",
-  "59": "fail",
-  "60": "fail",
+  "58": "loose",
+  "59": "strict",
+  "60": "loose",
   "61": "loose",
   "62": "fail",
   "63": "loose",
-  "64": "fail",
-  "65": "fail",
+  "64": "strict",
+  "65": "strict",
   "66": "strict",
   "67": "strict",
   "68": "loose",
   "69": "strict",
   "70": "loose",
-  "71": "fail",
-  "72": "fail",
+  "71": "loose",
+  "72": "strict",
   "73": "strict",
   "74": "strict",
   "75": "strict"
@@ -676,7 +676,7 @@
   "7": "loose",
   "8": "strict",
   "9": "fail",
-  "10": "fail",
+  "10": "strict",
   "11": "fail"
  },
  "Textual content": {
@@ -701,7 +701,7 @@
   "26": "loose",
   "27": "loose",
   "28": "strict",
-  "29": "fail",
+  "29": "strict",
   "30": "fail",
   "31": "loose"
  }

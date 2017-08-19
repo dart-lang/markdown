@@ -2,6 +2,7 @@
 
 * Remove deprecated `escapeHtml` function.
 * Fix compliance with auto-links, including support for email addresses.
+* Updated `ExtensionSet.gitHub` to more closely align with GitHub markdown.
 
 ## 0.11.4
 

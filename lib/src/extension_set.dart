@@ -7,14 +7,9 @@ class ExtensionSet {
   static ExtensionSet commonMark = new ExtensionSet._(
       [const FencedCodeBlockSyntax()], [new InlineHtmlSyntax()]);
 
-  static ExtensionSet gitHub = new ExtensionSet._([
-    const FencedCodeBlockSyntax(),
-    const HeaderWithIdSyntax(),
-    const SetextHeaderWithIdSyntax(),
-    const TableSyntax()
-  ], [
-    new InlineHtmlSyntax()
-  ]);
+  static ExtensionSet gitHub = new ExtensionSet._(
+      [const FencedCodeBlockSyntax(), const TableSyntax()],
+      [new InlineHtmlSyntax()]);
 
   final List<BlockSyntax> blockSyntaxes;
   final List<InlineSyntax> inlineSyntaxes;
