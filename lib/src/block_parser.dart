@@ -16,7 +16,7 @@ final _setextPattern = new RegExp(r'^[ ]{0,3}(=+|-+)\s*$');
 ///
 /// Starts with 1-6 unescaped `#` characters which must not be followed by a
 /// non-space character. Line may end with any number of `#` characters,.
-final _headerPattern = new RegExp(r'^(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
+final _headerPattern = new RegExp(r'^ {0,3}(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
 
 /// The line starts with `>` with one optional space after.
 final _blockquotePattern = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
