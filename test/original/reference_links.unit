@@ -82,3 +82,10 @@ Title">awesome</a></p>
 <<<
 <blockquote>
 <p>links <a href="http://foo.com">are</a> awesome</p></blockquote>
+>>> reference link regression for github.com/dart-lang/markdown/issues/176
+[![Coverage Status][coverage_status]][coverage_page]
+
+[coverage_page]:https://coveralls.io/github/yeradis/stay_points.dart?branch=master
+[coverage_status]: https://coveralls.io/repos/github/yeradis/stay_points.dart/badge.svg?branch=master
+<<<
+<p><a href="https://coveralls.io/github/yeradis/stay_points.dart?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/yeradis/stay_points.dart/badge.svg?branch=master" /></a></p>

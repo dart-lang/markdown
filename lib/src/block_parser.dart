@@ -957,7 +957,7 @@ class ParagraphSyntax extends BlockSyntax {
         // Leading indentation.
         r'''^[ ]{0,3}'''
         // Reference id in brackets, and URL.
-        r'''\[([^\]]+)\]:\s+(?:<(\S+)>|(\S+))\s*'''
+        r'''\[([^\]]+)\]:\s*(?:<(\S+)>|(\S+))\s*'''
         // Title in double or single quotes, or parens.
         r'''("[^"]+"|'[^']+'|\([^)]+\)|)\s*$''',
         multiLine: true);
