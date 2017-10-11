@@ -308,7 +308,7 @@ class LinkSyntax extends TagSyntax {
   /// This handles both reference-style and inline-style links as well as
   /// optional titles for inline links. To make that a bit more palatable, this
   /// breaks it into pieces.
-  static String get linkPattern {
+  static String get _linkPattern {
     var refLink = r'\[([^\]]*)\]'; // `[id]` reflink id.
     var title = r'(?:\s*"([^"]+?)"\s*|)'; // Optional title in quotes.
     var inlineLink = '\\((\\S*?)$title\\)'; // `(url "title")` link.
@@ -323,7 +323,7 @@ class LinkSyntax extends TagSyntax {
   }
 
   LinkSyntax({this.linkResolver, String pattern: r'\['})
-      : super(pattern, end: linkPattern);
+      : super(pattern, end: _linkPattern);
 
   Node createNode(InlineParser parser, Match match, TagState state) {
     if (match[1] == null) {
