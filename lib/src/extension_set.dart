@@ -2,12 +2,12 @@ import 'block_parser.dart';
 import 'inline_parser.dart';
 
 class ExtensionSet {
-  static ExtensionSet none = new ExtensionSet._([], []);
+  static final ExtensionSet none = new ExtensionSet._([], []);
 
-  static ExtensionSet commonMark = new ExtensionSet._(
+  static final ExtensionSet commonMark = new ExtensionSet._(
       [const FencedCodeBlockSyntax()], [new InlineHtmlSyntax()]);
 
-  static ExtensionSet gitHub = new ExtensionSet._(
+  static final ExtensionSet gitHub = new ExtensionSet._(
       [const FencedCodeBlockSyntax(), const TableSyntax()],
       [new InlineHtmlSyntax()]);
 
