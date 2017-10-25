@@ -1,10 +1,8 @@
-Developer Tools
-===============
+# Developer Tools
 
 This directory contains tools for developers of the Dart markdown package.
 
-dartdoc-compare.dart
---------------------
+## dartdoc-compare.dart
 
 When you make a change to the package that might have subtle consequences on
 how Markdown is parsed, it would be really great to see how your output compares
@@ -40,12 +38,11 @@ dartdoc's output. Here's how it works:
 [dartdoc]: https://pub.dartlang.org/packages/dartdoc
 [dartdoc git repository]: https://github.com/dart-lang/dartdoc
 
-common_mark_stats.dart
-----------------------
+## stats.dart
 
 In an effort to make this package CommonMark-compliant, we have a script that
-runs the package through the CommonMark specs. To run it, simply run:
+runs the package through the CommonMark specs. To see help:
 
 ```bash
-$ dart tool/stats.dart
+$ dart tool/stats.dart --help
 ```
