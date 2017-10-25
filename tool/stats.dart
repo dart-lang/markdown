@@ -2,19 +2,12 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:mirrors';
 
 import 'package:args/args.dart';
 import 'package:collection/collection.dart';
-import 'package:html/dom.dart';
-import 'package:html/parser.dart' show parseFragment;
-import 'package:markdown/markdown.dart' show markdownToHtml, ExtensionSet;
 import 'package:path/path.dart' as p;
 
-// Locate the "tool" directory. Use mirrors so that this works with the test
-// package, which loads this suite into an isolate.
-String get _currentDir => p
-    .dirname((reflect(main) as ClosureMirror).function.location.sourceUri.path);
+import 'stats_lib.dart';
 
 Future main(List<String> args) async {
   final parser = new ArgParser()
@@ -24,7 +17,7 @@ Future main(List<String> args) async {
         defaultsTo: false, help: 'raw JSON format', negatable: false)
     ..addFlag('update-files',
         defaultsTo: false,
-        help: 'Update stats files in $_currentDir',
+        help: 'Update stats files in $toolDir',
         negatable: false)
     ..addFlag('verbose',
         defaultsTo: false,
@@ -35,7 +28,8 @@ Future main(List<String> args) async {
         help: 'Print details for "loose" matches.',
         negatable: false)
     ..addOption('flavor',
-        allowed: ['common_mark', 'gfm'], defaultsTo: 'common_mark')
+        allowed: [Config.commonMarkConfig.prefix, Config.gfmConfig.prefix],
+        defaultsTo: Config.commonMarkConfig.prefix)
     ..addFlag('help', defaultsTo: false, negatable: false);
 
   ArgResults options;
@@ -69,14 +63,19 @@ Future main(List<String> args) async {
 
   final testPrefix = options['flavor'] as String;
 
-  var baseUrl = 'http://spec.commonmark.org/0.28/';
-  ExtensionSet extensionSet;
-  if (testPrefix == 'gfm') {
-    extensionSet = ExtensionSet.gitHub;
-    baseUrl = 'https://github.github.com/gfm/';
+  Config config;
+  switch (testPrefix) {
+    case 'gfm':
+      config = Config.gfmConfig;
+      break;
+    case 'common_mark':
+      config = Config.commonMarkConfig;
+      break;
+    default:
+      throw new ArgumentError('Does not support `$testPrefix`.');
   }
 
-  var sections = _loadCommonMarkSections(testPrefix);
+  var sections = loadCommonMarkSections(testPrefix);
 
   var scores = new SplayTreeMap<String, SplayTreeMap<int, CompareLevel>>(
       compareAsciiLowerCaseNatural);
@@ -89,9 +88,8 @@ Future main(List<String> args) async {
       var nestedMap = scores.putIfAbsent(
           section, () => new SplayTreeMap<int, CompareLevel>());
 
-      nestedMap[e.example] = _compareResult(
-          baseUrl, e, verbose, verboseLooseMatch,
-          extensionSet: extensionSet);
+      nestedMap[e.example] = compareResult(config, e,
+          verboseFail: verbose, verboseLooseMatch: verboseLooseMatch);
     }
   });
 
@@ -103,59 +101,6 @@ Future main(List<String> args) async {
     await _printFriendly(testPrefix, scores, updateFiles);
   }
 }
-
-CompareLevel _compareResult(String baseUrl, CommonMarkTestCase expected,
-    bool verboseFail, bool verboseLooseMatch,
-    {ExtensionSet extensionSet}) {
-  String output;
-  try {
-    output = markdownToHtml(expected.markdown, extensionSet: extensionSet);
-  } catch (err, stackTrace) {
-    if (verboseFail) {
-      printVerboseFailure(baseUrl, 'ERROR', expected, expected.html,
-          'Thrown: $err\n$stackTrace');
-    }
-
-    return CompareLevel.error;
-  }
-
-  if (expected.html == output) {
-    return CompareLevel.strict;
-  }
-
-  var expectedParsed = parseFragment(expected.html);
-  var actual = parseFragment(output);
-
-  var looseMatch = _compareHtml(expectedParsed.children, actual.children);
-
-  if (!looseMatch && verboseFail) {
-    printVerboseFailure(
-        baseUrl, 'FAIL', expected, expectedParsed.outerHtml, actual.outerHtml);
-  }
-
-  if (looseMatch && verboseLooseMatch) {
-    printVerboseFailure(baseUrl, 'LOOSE', expected, output, actual.outerHtml);
-  }
-
-  return looseMatch ? CompareLevel.loose : CompareLevel.fail;
-}
-
-String indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
-
-void printVerboseFailure(String baseUrl, String message,
-    CommonMarkTestCase test, String expected, String actual) {
-  print('$message: $baseUrl#example-${test.example} '
-      '@ ${test.section}');
-  print('input:');
-  print(indent(test.markdown));
-  print('expected:');
-  print(indent(expected));
-  print('actual:');
-  print(indent(actual));
-  print('-----------------------');
-}
-
-enum CompareLevel { strict, loose, fail, error }
 
 Object _convert(obj) {
   if (obj is CompareLevel) {
@@ -186,9 +131,8 @@ Object _convert(obj) {
 Future _printRaw(String testPrefix, Map scores, bool updateFiles) async {
   IOSink sink;
   if (updateFiles) {
-    var path = p.join(_currentDir, '${testPrefix}_stats.json');
-    print('Updating $path');
-    var file = new File(path);
+    var file = getStatsFile(testPrefix);
+    print('Updating ${file.path}');
     sink = file.openWrite();
   } else {
     sink = stdout;
@@ -218,7 +162,7 @@ Future _printFriendly(
 
   IOSink sink;
   if (updateFiles) {
-    var path = p.join(_currentDir, '${testPrefix}_stats.txt');
+    var path = p.join(toolDir, '${testPrefix}_stats.txt');
     print('Updating $path');
     var file = new File(path);
     sink = file.openWrite();
@@ -255,100 +199,4 @@ Future _printFriendly(
 
   await sink.flush();
   await sink.close();
-}
-
-/// Compare two DOM trees for equality.
-bool _compareHtml(
-    List<Element> expectedElements, List<Element> actualElements) {
-  if (expectedElements.length != actualElements.length) {
-    return false;
-  }
-
-  for (var childNum = 0; childNum < expectedElements.length; childNum++) {
-    var expected = expectedElements[childNum];
-    var actual = actualElements[childNum];
-
-    if (expected.runtimeType != actual.runtimeType) {
-      return false;
-    }
-
-    if (expected.localName != actual.localName) {
-      return false;
-    }
-
-    if (expected.attributes.length != actual.attributes.length) {
-      return false;
-    }
-
-    var expectedAttrKeys = expected.attributes.keys.toList();
-    expectedAttrKeys.sort();
-
-    var actualAttrKeys = actual.attributes.keys.toList();
-    actualAttrKeys.sort();
-
-    for (var attrNum = 0; attrNum < actualAttrKeys.length; attrNum++) {
-      var expectedAttrKey = expectedAttrKeys[attrNum];
-      var actualAttrKey = actualAttrKeys[attrNum];
-
-      if (expectedAttrKey != actualAttrKey) {
-        return false;
-      }
-
-      if (expected.attributes[expectedAttrKey] !=
-          actual.attributes[actualAttrKey]) {
-        return false;
-      }
-    }
-
-    var childrenEqual = _compareHtml(expected.children, actual.children);
-
-    if (!childrenEqual) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-Map<String, List<CommonMarkTestCase>> _loadCommonMarkSections(
-    String testPrefix) {
-  var testFile = new File(p.join(_currentDir, '${testPrefix}_tests.json'));
-  var testsJson = testFile.readAsStringSync();
-
-  var testArray = JSON.decode(testsJson) as List<Map<String, dynamic>>;
-
-  var sections = new Map<String, List<CommonMarkTestCase>>();
-
-  for (var exampleMap in testArray) {
-    var exampleTest = new CommonMarkTestCase.fromJson(exampleMap);
-
-    var sectionList =
-        sections.putIfAbsent(exampleTest.section, () => <CommonMarkTestCase>[]);
-
-    sectionList.add(exampleTest);
-  }
-
-  return sections;
-}
-
-class CommonMarkTestCase {
-  final String markdown;
-  final String section;
-  final int example;
-  final String html;
-  final int startLine;
-  final int endLine;
-
-  CommonMarkTestCase(this.example, this.section, this.startLine, this.endLine,
-      this.markdown, this.html);
-
-  factory CommonMarkTestCase.fromJson(Map<String, dynamic> json) {
-    return new CommonMarkTestCase(
-        json['example'] as int,
-        json['section'] as String,
-        json['start_line'] as int,
-        json['end_line'] as int,
-        json['markdown'] as String,
-        json['html'] as String);
-  }
 }
