@@ -12,8 +12,6 @@ import 'package:markdown/markdown.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
-final _indentPattern = new RegExp(r"^\(indent (\d+)\)\s*");
-
 /// Run tests defined in "*.unit" files inside directory [name].
 void testDirectory(String name) {
   for (var dataCase
