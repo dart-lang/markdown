@@ -21,6 +21,7 @@ void main(List<String> arguments) {
     ..addFlag(_sdk,
         defaultsTo: false, negatable: false, help: "Is the package the SDK?")
     ..addFlag(_help, abbr: "h", hide: true);
+
   var options = parser.parse(arguments);
   if (options[_help]) {
     print(parser.usage);
@@ -42,9 +43,16 @@ void main(List<String> arguments) {
       absolute(options[_dartdocDir], "pubspec.yaml"),
       options[_sdk]);
 
-  var package = options.rest.first;
+  String path;
+  if (comparer.sdk) {
+    if (options.rest.isNotEmpty) {
+      path = options.rest.single;
+    }
+  } else {
+    path = options.rest.single;
+  }
 
-  if (comparer.compare(package)) {
+  if (comparer.compare(path)) {
     exitCode = 0;
   } else {
     exitCode = 1;
@@ -78,19 +86,28 @@ class DartdocCompare {
     return result.exitCode == 0;
   }
 
-  String _runDartdoc(String markdownRef, String package) {
+  String _runDartdoc(String markdownRef, String path) {
     print("==========================================================");
     print("Running dartdoc for $markdownRef...");
     print("==========================================================");
     _doInPath(dartdocDir, () => _updateDartdocPubspec(markdownRef));
-    return _doInPath(package, () {
-      if (!sdk) _system('pub', ['get']);
+    return _doInPath(path, () {
+      if (!sdk) {
+        _system('pub', ['get']);
+      }
       var out = Directory.systemTemp
           .createTempSync("dartdoc-compare-${markdownRef}__");
-      var sdk_options =
-          sdk ? ["--sdk-docs", "--dart-sdk=$package"] : <String>[];
       var cmd = "dart";
-      var args = ["$dartdocBin", "--output=${out.path}"]..addAll(sdk_options);
+      var args = ["$dartdocBin", "--output=${out.path}"];
+
+      if (sdk) {
+        args.add('--sdk-docs');
+
+        if (path != null) {
+          args.add("--dart-sdk=$path");
+        }
+      }
+
       print("Command: $cmd ${args.join(" ")}");
       _system(cmd, args);
       print("");
@@ -125,9 +142,15 @@ int _system(String cmd, List<String> args) {
 }
 
 T _doInPath<T>(String path, T f()) {
+  if (path == null) {
+    return f();
+  }
+
   var former = Directory.current.path;
   Directory.current = path;
-  var result = f();
-  Directory.current = former;
-  return result;
+  try {
+    return f();
+  } finally {
+    Directory.current = former;
+  }
 }
