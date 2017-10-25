@@ -49,7 +49,7 @@ Future main(List<String> args) async {
     return;
   }
 
-  if (options['help']) {
+  if (options['help'] as bool) {
     print(parser.usage);
     return;
   }
@@ -67,7 +67,7 @@ Future main(List<String> args) async {
     return;
   }
 
-  final testPrefix = options['flavor'];
+  final testPrefix = options['flavor'] as String;
 
   var baseUrl = 'http://spec.commonmark.org/0.28/';
   ExtensionSet extensionSet;
@@ -343,7 +343,12 @@ class CommonMarkTestCase {
       this.markdown, this.html);
 
   factory CommonMarkTestCase.fromJson(Map<String, dynamic> json) {
-    return new CommonMarkTestCase(json['example'], json['section'],
-        json['start_line'], json['end_line'], json['markdown'], json['html']);
+    return new CommonMarkTestCase(
+        json['example'] as int,
+        json['section'] as String,
+        json['start_line'] as int,
+        json['end_line'] as int,
+        json['markdown'] as String,
+        json['html'] as String);
   }
 }

@@ -23,7 +23,7 @@ void main(List<String> arguments) {
     ..addFlag(_help, abbr: "h", hide: true);
 
   var options = parser.parse(arguments);
-  if (options[_help]) {
+  if (options[_help] as bool) {
     print(parser.usage);
     exitCode = 0;
     return;
@@ -36,12 +36,12 @@ void main(List<String> arguments) {
     return;
   }
   var comparer = new DartdocCompare(
-      options[_dartdocDir],
-      options[_markdownBefore],
-      options[_markdownAfter],
-      absolute(options[_dartdocDir], "bin/dartdoc.dart"),
-      absolute(options[_dartdocDir], "pubspec.yaml"),
-      options[_sdk]);
+      options[_dartdocDir] as String,
+      options[_markdownBefore] as String,
+      options[_markdownAfter] as String,
+      absolute(options[_dartdocDir] as String, "bin/dartdoc.dart"),
+      absolute(options[_dartdocDir] as String, "pubspec.yaml"),
+      options[_sdk] as bool);
 
   String path;
   if (comparer.sdk) {
@@ -72,15 +72,15 @@ class DartdocCompare {
 
   bool compare(String package) {
     // Generate docs with Markdown "A".
-    var out_before = _runDartdoc(markdownBefore, package);
+    var outBefore = _runDartdoc(markdownBefore, package);
 
     // Generate docs with Markdown "B".
-    var out_after = _runDartdoc(markdownAfter, package);
+    var outAfter = _runDartdoc(markdownAfter, package);
 
     // Compare outputs
-    var diffOptions = ["-r", "-B", out_before, out_after];
+    var diffOptions = ["-r", "-B", outBefore, outAfter];
     var result = Process.runSync("diff", diffOptions, runInShell: true);
-    var nlines = "\n".allMatches(result.stdout).length;
+    var nlines = "\n".allMatches(result.stdout as String).length;
     print("Diff lines: $nlines");
     print("diff ${diffOptions.join(" ")}");
     return result.exitCode == 0;
@@ -120,7 +120,7 @@ class DartdocCompare {
     var dartdocPubspec =
         loadYaml(new File(dartdocPubspecPath).readAsStringSync()) as Map;
     // make modifiable copy
-    dartdocPubspec = JSON.decode(JSON.encode(dartdocPubspec));
+    dartdocPubspec = JSON.decode(JSON.encode(dartdocPubspec)) as Map;
 
     dartdocPubspec['dependencies']['markdown'] = {
       'git': {

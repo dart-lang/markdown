@@ -32,7 +32,7 @@ void main() {
   versionSpan.text = 'v${md.version}';
   markdownInput.onKeyUp.listen(_renderMarkdown);
 
-  String savedMarkdown = window.localStorage['markdown'];
+  var savedMarkdown = window.localStorage['markdown'];
 
   if (savedMarkdown != null &&
       savedMarkdown.isNotEmpty &&

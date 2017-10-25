@@ -383,9 +383,9 @@ class LinkSyntax extends TagSyntax {
 
       return new Link(null, url, title);
     } else {
-      var id;
+      String id;
       String _contents() {
-        int offset = pattern.pattern.length - 1;
+        var offset = pattern.pattern.length - 1;
         return parser.source.substring(state.startPos + offset, parser.pos);
       }
 

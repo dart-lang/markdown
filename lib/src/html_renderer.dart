@@ -105,8 +105,8 @@ class HtmlRenderer implements NodeVisitor {
       return id;
     }
 
-    int suffix = 2;
-    String suffixedId = '$id-$suffix';
+    var suffix = 2;
+    var suffixedId = '$id-$suffix';
     while (uniqueIds.contains(suffixedId)) {
       suffixedId = '$id-${suffix++}';
     }

@@ -221,7 +221,7 @@ class SetextHeaderSyntax extends BlockSyntax {
 
   bool canParse(BlockParser parser) {
     if (!_interperableAsParagraph(parser.current)) return false;
-    int i = 1;
+    var i = 1;
     while (true) {
       var nextLine = parser.peek(i);
       if (nextLine == null) {
@@ -241,7 +241,7 @@ class SetextHeaderSyntax extends BlockSyntax {
 
   Node parse(BlockParser parser) {
     var lines = <String>[];
-    var tag;
+    String tag;
     while (!parser.isDone) {
       var match = _setextPattern.firstMatch(parser.current);
       if (match == null) {
@@ -534,14 +534,12 @@ class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
 /// In practice this means that the syntax dominates; it is allowed to eat
 /// many lines, including blank lines, before matching its `endPattern`.
 class LongBlockHtmlSyntax extends BlockHtmlSyntax {
-  final RegExp _pattern;
+  final RegExp pattern;
   final RegExp _endPattern;
 
-  LongBlockHtmlSyntax(pattern, endPattern)
-      : _pattern = new RegExp(pattern),
+  LongBlockHtmlSyntax(String pattern, String endPattern)
+      : pattern = new RegExp(pattern),
         _endPattern = new RegExp(endPattern);
-
-  RegExp get pattern => _pattern;
 
   Node parse(BlockParser parser) {
     var childLines = <String>[];
@@ -723,7 +721,7 @@ abstract class ListSyntax extends BlockSyntax {
 
   /// Removes any trailing empty lines and notes whether any items are separated
   /// by such lines.
-  bool removeTrailingEmptyLines(List items) {
+  bool removeTrailingEmptyLines(List<ListItem> items) {
     var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
       if (items[i].lines.length == 1) continue;
@@ -803,7 +801,8 @@ class TableSyntax extends BlockSyntax {
     }).toList();
   }
 
-  Node parseRow(BlockParser parser, List<String> alignments, String cellType) {
+  Element parseRow(
+      BlockParser parser, List<String> alignments, String cellType) {
     var line = parser.current
         .replaceFirst(_openingPipe, '')
         .replaceFirst(_closingPipe, '');
@@ -812,7 +811,7 @@ class TableSyntax extends BlockSyntax {
     var row = <Element>[];
     String preCell;
 
-    for (String cell in cells) {
+    for (var cell in cells) {
       if (preCell != null) {
         cell = preCell + cell;
         preCell = null;
@@ -873,7 +872,7 @@ class ParagraphSyntax extends BlockSyntax {
     bool lineStartsReflinkDefinition(int i) =>
         lines[i].startsWith(_reflinkDefinitionStart);
 
-    int i = 0;
+    var i = 0;
     loopOverDefinitions:
     while (true) {
       // Check for reflink definitions.
