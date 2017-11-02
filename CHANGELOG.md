@@ -1,5 +1,6 @@
 ## 1.0.0
 
+* Fix issue where `accept` could cause an exception.
 * Remove deprecated `escapeHtml` function.
 * Fix compliance with auto-links, including support for email addresses.
 * Updated `ExtensionSet.gitHub` to more closely align with GitHub markdown.
