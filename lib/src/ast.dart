@@ -43,7 +43,9 @@ class Element implements Node {
 
   void accept(NodeVisitor visitor) {
     if (visitor.visitElementBefore(this)) {
-      for (var child in children) child.accept(visitor);
+      if (children != null) {
+        for (var child in children) child.accept(visitor);
+      }
       visitor.visitElementAfter(this);
     }
   }
