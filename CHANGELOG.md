@@ -1,3 +1,7 @@
+## 1.0.1
+
+* Fix issue where `accept` could cause an exception.
+
 ## 1.0.0
 
 * Remove deprecated `escapeHtml` function.
