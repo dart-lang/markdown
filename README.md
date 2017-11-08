@@ -54,7 +54,7 @@ void main() {
 }
 ```
 
-### Extension Sets
+### Extension sets
 
 To make extension management easy, you can also just specify an extension set.
 Both `markdownToHtml()` and `new Document()` accept an `extensionSet` named
@@ -91,8 +91,9 @@ void main() {
   print(markdownToHtml('nyan', inlineSyntaxes: syntaxes));
   //=> <p>~=[,,_,,]:3</p>
 }
+```
 
-### HTML Sanitization
+### HTML sanitization
 
 This package offers no features in the way of HTML sanitization. Read Estevão
 Soares dos Santos's great article, ["Markdown's XSS Vulnerability (and how to
@@ -100,7 +101,6 @@ mitigate it)"], to learn more.
 
 The authors recommend that you perform any necessary sanitization on the
 resulting HTML, for example via `dart:html`'s [NodeValidator].
-```
 
 ### CommonMark compliance
 
