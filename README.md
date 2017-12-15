@@ -121,9 +121,10 @@ compliance with [CommonMark].
  1. Check out the [CommonMark source]. Make sure you checkout a *major* release.
  2. Dump the test output overwriting the existing tests file.
 
-    ``` terminal
-    /path/to/common_mark_dir> python3 test/spec_tests.py --dump-tests \
-      > /path/to/markdown.dart/tool/common_mark_tests.json
+    ```console
+    > cd /path/to/common_mark_dir
+    > python3 test/spec_tests.py --dump-tests \
+      /path/to/markdown.dart/tool/common_mark_tests.json
     ```
 
  3. Update the stats files as described above. Note any changes in the results.
