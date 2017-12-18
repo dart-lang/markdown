@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Make the constructor for ExtensionSet public, for tools like dartdoc.
+
 ## 1.0.0
 
 * Fix issue where `accept` could cause an exception.

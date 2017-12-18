@@ -73,10 +73,6 @@ parameter. Right now there are two extension sets:
 
   * `new InlineHtmlSyntax()`
   * `const FencedCodeBlockSyntax()`
-  * `const HeaderWithIdSyntax()`, which adds `id` attributes to ATX-style
-    headers, for easy intra-document linking.
-  * `const SetextHeaderWithIdSyntax()`, which adds `id` attributes to
-    Setext-style headers, for easy intra-document linking.
   * `const TableSyntax()`
 
 ### Custom syntax extensions
