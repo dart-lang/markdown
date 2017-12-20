@@ -45,7 +45,7 @@ class Config {
   static final Config commonMarkConfig =
       new Config._('common_mark', 'http://spec.commonmark.org/0.28/', null);
   static final Config gfmConfig = new Config._(
-      'gfm', 'https://github.github.com/gfm/', ExtensionSet.gitHub);
+      'gfm', 'https://github.github.com/gfm/', ExtensionSet.gitHubFlavored);
 
   final String prefix;
   final String baseUrl;

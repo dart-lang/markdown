@@ -25,7 +25,7 @@ md.ExtensionSet extensionSet;
 final extensionSets = {
   'basic-radio': md.ExtensionSet.none,
   'commonmark-radio': md.ExtensionSet.commonMark,
-  'gfm-radio': md.ExtensionSet.gitHub,
+  'gfm-radio': md.ExtensionSet.gitHubWeb,
 };
 
 void main() {

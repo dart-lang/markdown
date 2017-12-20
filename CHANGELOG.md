@@ -1,6 +1,9 @@
 ## 1.1.0
 
 * Make the constructor for ExtensionSet public, for tools like dartdoc.
+* Split the `gitHub` ExtensionSet into two sets: `gitHubFlavored`, which
+  represents the GitHub Flavored Markdown spec, and `gitHubWeb`, which
+  represents what GitHub actually renders Markdown.
 
 ## 1.0.0
 
