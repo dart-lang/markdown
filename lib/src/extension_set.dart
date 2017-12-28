@@ -37,7 +37,8 @@ class ExtensionSet {
     const SetextHeaderWithIdSyntax(),
     const TableSyntax()
   ], [
-    new InlineHtmlSyntax()
+    new InlineHtmlSyntax(),
+    new EmojiSyntax(),
   ]);
 
   /// The [gitHubFlavored] extension set is close to compliance with the [GitHub

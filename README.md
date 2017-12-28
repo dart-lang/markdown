@@ -69,8 +69,9 @@ parameter. Right now there are two extension sets:
   * `new InlineHtmlSyntax()`
   * `const FencedCodeBlockSyntax()`
 
-* `ExtensionSet.gitHubWeb` includes five extensions:
+* `ExtensionSet.gitHubWeb` includes six extensions:
 
+  * `new EmojiSyntax()`
   * `new InlineHtmlSyntax()`
   * `const HeaderWithIdSyntax()`, which adds `id` attributes to ATX-style
     headers, for easy intra-document linking.

@@ -28,10 +28,13 @@ String get _testDir =>
 void testFile(String file,
     {Iterable<BlockSyntax> blockSyntaxes,
     Iterable<InlineSyntax> inlineSyntaxes}) {
-  for (var dataCase in dataCasesInFile(path: p.join(_testDir, file))) {
-    validateCore(dataCase.description, dataCase.input, dataCase.expectedOutput,
-        blockSyntaxes: blockSyntaxes, inlineSyntaxes: inlineSyntaxes);
-  }
+  group(file, () {
+    for (var dataCase in dataCasesInFile(path: p.join(_testDir, file))) {
+      validateCore(
+          dataCase.description, dataCase.input, dataCase.expectedOutput,
+          blockSyntaxes: blockSyntaxes, inlineSyntaxes: inlineSyntaxes);
+    }
+  });
 }
 
 void validateCore(String description, String markdown, String html,
