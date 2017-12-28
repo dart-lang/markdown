@@ -8,9 +8,7 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() {
-  group('original', () {
-    testDirectory('original');
-  });
+  testDirectory('original');
 
   // Block syntax extensions
   testFile('extensions/fenced_code_blocks.unit',
