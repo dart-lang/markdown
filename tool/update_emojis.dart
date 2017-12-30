@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -5,13 +6,12 @@ final _emojisJsonRawUrl =
     'https://github.com/muan/emojilib/raw/master/emojis.json';
 final _emojisFilePath = 'lib/src/emojis.dart';
 
-void main() async {
-  HttpClient client = new HttpClient();
+Future<Null> main() async {
+  var client = new HttpClient();
   var request = await client.getUrl(Uri.parse(_emojisJsonRawUrl));
   var response = await request.close();
-  Map<String, Map<String, dynamic>> json =
-      JSON.decode(await response.transform(UTF8.decoder).join(''))
-          as Map<String, Map<String, dynamic>>;
+  var json = JSON.decode(await response.transform(UTF8.decoder).join(''))
+      as Map<String, Map<String, dynamic>>;
   var emojisContent = new StringBuffer('''
 // GENERATED FILE. DO NOT EDIT.
 //
