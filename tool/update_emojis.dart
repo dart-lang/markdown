@@ -32,8 +32,7 @@ void main() async {
     }
   });
   emojisContent.writeln('};');
-  new File(_emojisFilePath)
-    ..writeAsStringSync(emojisContent.toString());
+  new File(_emojisFilePath)..writeAsStringSync(emojisContent.toString());
   print('Wrote data to $_emojisFilePath for $emojiCount emojis, '
       'ignoring ${ignored.length}: ${ignored.join(', ')}.');
   exit(0);
