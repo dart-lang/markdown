@@ -1,3 +1,8 @@
+## 1.1.1
+
+* Add support for GitHub's colon-based Emoji syntax. :tada:! This is available
+  in the `gitHubWeb` extension set.
+
 ## 1.1.0
 
 * Make the constructor for ExtensionSet public, for tools like dartdoc.

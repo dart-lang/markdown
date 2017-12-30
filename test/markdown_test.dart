@@ -7,20 +7,22 @@ import 'package:test/test.dart';
 
 import 'util.dart';
 
-/// Most of these tests are based on observing how showdown behaves:
-/// http://softwaremaniacs.org/playground/showdown-highlight/
 void main() {
   testDirectory('original');
 
+  // Block syntax extensions
   testFile('extensions/fenced_code_blocks.unit',
       blockSyntaxes: [const FencedCodeBlockSyntax()]);
-  testFile('extensions/inline_html.unit',
-      inlineSyntaxes: [new InlineHtmlSyntax()]);
   testFile('extensions/headers_with_ids.unit',
       blockSyntaxes: [const HeaderWithIdSyntax()]);
   testFile('extensions/setext_headers_with_ids.unit',
       blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
   testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
+
+  // Inline syntax extensions
+  testFile('extensions/emojis.unit', inlineSyntaxes: [new EmojiSyntax()]);
+  testFile('extensions/inline_html.unit',
+      inlineSyntaxes: [new InlineHtmlSyntax()]);
 
   group('Resolver', () {
     Node nyanResolver(String text) => new Text('~=[,,_${text}_,,]:3');

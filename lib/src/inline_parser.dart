@@ -4,6 +4,7 @@
 
 import 'ast.dart';
 import 'document.dart';
+import 'emojis.dart';
 import 'util.dart';
 
 /// Maintains the internal state needed to parse inline span elements in
@@ -475,6 +476,29 @@ class CodeSyntax extends InlineSyntax {
 
   bool onMatch(InlineParser parser, Match match) {
     parser.addNode(new Element.text('code', escapeHtml(match[2].trim())));
+    return true;
+  }
+}
+
+/// Matches GitHub Markdown emoji syntax like `:smile:`.
+///
+/// There is no formal specification of GitHub's support for this colon-based
+/// emoji support, so this syntax is based on the results of Markdown-enabled
+/// text fields at github.com.
+class EmojiSyntax extends InlineSyntax {
+  // Emoji "aliases" are mostly limited to lower-case letters, numbers, and
+  // underscores, but GitHub also supports `:+1:` and `:-1:`.
+  EmojiSyntax() : super(':([a-z0-9_+-]+):');
+
+  bool onMatch(InlineParser parser, Match match) {
+    var alias = match[1];
+    var emoji = emojis[alias];
+    if (emoji == null) {
+      parser.advanceBy(1);
+      return false;
+    }
+    parser.addNode(new Text(emoji));
+
     return true;
   }
 }
