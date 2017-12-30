@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-String _emojisJsonRawUrl =
+final _emojisJsonRawUrl =
     'https://github.com/muan/emojilib/raw/master/emojis.json';
-String _emojisFilePath = 'lib/src/emojis.dart';
+final _emojisFilePath = 'lib/src/emojis.dart';
 
 void main() async {
   HttpClient client = new HttpClient();
@@ -20,7 +20,7 @@ void main() async {
 // at ${new DateTime.now()} by the script, tool/update_emojis.dart.
 
 ''');
-  emojisContent.writeln('var emojis = <String, String>{');
+  emojisContent.writeln('const emojis = const <String, String>{');
   var emojiCount = 0;
   var ignored = <String>[];
   json.forEach((String alias, Map<String, dynamic> info) {
