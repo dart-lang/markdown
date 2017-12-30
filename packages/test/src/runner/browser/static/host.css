@@ -6,6 +6,8 @@ iframe {
   /* We would use display: none here, but then Firefox fails to properly compute
    * styles. See #274 */
   visibility: hidden;
+  width: 1024px;
+  height: 768px;
 }
 
 #play {
@@ -19,6 +21,7 @@ iframe {
 
 .paused #play {
   display: block;
+  z-index: 1;
 }
 
 .paused #dark {
@@ -35,6 +38,21 @@ iframe {
 .paused #left-flank,  .paused #left-ear,  .paused #left-paw {
   -webkit-animation-play-state: paused;
           animation-play-state: paused;
+}
+
+.debug body {
+  margin: 0;
+  padding: 0;
+}
+
+.debug iframe {
+  visibility: visible;
+  border: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* Compiled output from
