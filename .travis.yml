@@ -7,9 +7,16 @@ dart:
   - 1.22.1
   - 1.21.1
 dart_task:
-  - test: -p vm
-  - dartfmt
-  - dartanalyzer
+  - test: -p vm  --total-shards 10 --shard-index 0
+  - test: -p vm  --total-shards 10 --shard-index 1
+  - test: -p vm  --total-shards 10 --shard-index 2
+  - test: -p vm  --total-shards 10 --shard-index 3
+  - test: -p vm  --total-shards 10 --shard-index 4
+  - test: -p vm  --total-shards 10 --shard-index 5
+  - test: -p vm  --total-shards 10 --shard-index 6
+  - test: -p vm  --total-shards 10 --shard-index 7
+  - test: -p vm  --total-shards 10 --shard-index 8
+  - test: -p vm  --total-shards 10 --shard-index 9
 
 # Only building master means that we don't run two builds for each pull request.
 branches:
