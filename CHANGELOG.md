@@ -1,3 +1,9 @@
+## 1.1.2-dev
+
+* Overhaul support for emphasis (`*foo*` and `_foo_`) and strong emphasis
+  (`**foo**` and `__foo__`). This raises the compliance with the CommonMark
+  specs to 89%, and the compliance with the GFM specs to 86%.
+
 ## 1.1.1
 
 * Add support for GitHub's colon-based Emoji syntax. :tada:! This is available

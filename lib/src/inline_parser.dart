@@ -30,14 +30,10 @@ class InlineParser {
     new TextSyntax(r'&', sub: '&amp;'),
     // Encode "<". (Why not encode ">" too? Gruber is toying with us.)
     new TextSyntax(r'<', sub: '&lt;'),
-    // Parse "**strong**" tags.
-    new TagSyntax(r'\*\*', tag: 'strong'),
-    // Parse "__strong__" tags.
-    new TagSyntax(r'\b__', tag: 'strong', end: r'__\b'),
-    // Parse "*emphasis*" tags.
-    new TagSyntax(r'\*', tag: 'em'),
-    // Parse "_emphasis_" tags.
-    new TagSyntax(r'\b_', tag: 'em', end: r'_\b'),
+    // Parse "**strong**" and "*emphasis*" tags.
+    new TagSyntax(r'\*+', requiresDelimiterRun: true),
+    // Parse "__strong__" and "_emphasis_" tags.
+    new TagSyntax(r'_+', requiresDelimiterRun: true),
     new CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
@@ -88,7 +84,7 @@ class InlineParser {
 
   List<Node> parse() {
     // Make a fake top tag to hold the results.
-    _stack.add(new TagState(0, 0, null));
+    _stack.add(new TagState(0, 0, null, null));
 
     while (!isDone) {
       var matched = false;
@@ -278,24 +274,158 @@ class AutolinkSyntax extends InlineSyntax {
   }
 }
 
+class _DelimiterRun {
+  static final String punctuation = r'''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~''';
+  // TODO(srawlins): Unicode whitespace
+  static final String whitespace = ' \t\r\n';
+
+  final String char;
+  final int length;
+  final bool isLeftFlanking;
+  final bool isRightFlanking;
+  final bool isPrecededByPunctuation;
+  final bool isFollowedByPunctuation;
+
+  _DelimiterRun._(
+      {this.char,
+      this.length,
+      this.isLeftFlanking,
+      this.isRightFlanking,
+      this.isPrecededByPunctuation,
+      this.isFollowedByPunctuation});
+
+  static _DelimiterRun tryParse(InlineParser parser, int runStart, int runEnd) {
+    bool leftFlanking,
+        rightFlanking,
+        precededByPunctuation,
+        followedByPunctuation;
+    String preceding, following;
+    if (runStart == 0) {
+      rightFlanking = false;
+      preceding = '\n';
+    } else {
+      preceding = parser.source.substring(runStart - 1, runStart);
+    }
+    precededByPunctuation = punctuation.contains(preceding);
+
+    if (runEnd == parser.source.length - 1) {
+      leftFlanking = false;
+      following = '\n';
+    } else {
+      following = parser.source.substring(runEnd + 1, runEnd + 2);
+    }
+    followedByPunctuation = punctuation.contains(following);
+
+    // http://spec.commonmark.org/0.28/#left-flanking-delimiter-run
+    if (whitespace.contains(following)) {
+      leftFlanking = false;
+    } else {
+      leftFlanking = !followedByPunctuation ||
+          whitespace.contains(preceding) ||
+          precededByPunctuation;
+    }
+
+    // http://spec.commonmark.org/0.28/#right-flanking-delimiter-run
+    if (whitespace.contains(preceding)) {
+      rightFlanking = false;
+    } else {
+      rightFlanking = !precededByPunctuation ||
+          whitespace.contains(following) ||
+          followedByPunctuation;
+    }
+
+    if (!leftFlanking && !rightFlanking) {
+      // Could not parse a delimiter run.
+      return null;
+    }
+
+    return new _DelimiterRun._(
+        char: parser.source.substring(runStart, runStart + 1),
+        length: runEnd - runStart + 1,
+        isLeftFlanking: leftFlanking,
+        isRightFlanking: rightFlanking,
+        isPrecededByPunctuation: precededByPunctuation,
+        isFollowedByPunctuation: followedByPunctuation);
+  }
+
+  String toString() =>
+      '<char: $char, length: $length, isLeftFlanking: $isLeftFlanking, '
+      'isRightFlanking: $isRightFlanking>';
+
+  // Whether a delimiter in this run can open emphasis or strong emphasis.
+  bool get canOpen =>
+      isLeftFlanking &&
+      (char == '*' || !isRightFlanking || isPrecededByPunctuation);
+
+  // Whether a delimiter in this run can close emphasis or strong emphasis.
+  bool get canClose =>
+      isRightFlanking &&
+      (char == '*' || !isLeftFlanking || isFollowedByPunctuation);
+}
+
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
 /// `<em>`. Allows nested tags.
 class TagSyntax extends InlineSyntax {
   final RegExp endPattern;
-  final String tag;
+  final bool requiresDelimiterRun;
 
-  TagSyntax(String pattern, {this.tag, String end})
+  TagSyntax(String pattern, {String end, this.requiresDelimiterRun: false})
       : endPattern = new RegExp((end != null) ? end : pattern, multiLine: true),
         super(pattern);
 
   bool onMatch(InlineParser parser, Match match) {
-    parser._stack
-        .add(new TagState(parser.pos, parser.pos + match[0].length, this));
-    return true;
+    var runLength = match.group(0).length;
+    var matchStart = parser.pos;
+    var matchEnd = parser.pos + runLength - 1;
+    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
+    if (delimiterRun != null && delimiterRun.canOpen) {
+      parser._stack
+          .add(new TagState(parser.pos, matchEnd + 1, this, delimiterRun));
+      return true;
+    } else {
+      parser.advanceBy(runLength);
+      return false;
+    }
   }
 
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-    parser.addNode(new Element(tag, state.children));
+    var runLength = match.group(0).length;
+    var matchStart = parser.pos;
+    var matchEnd = parser.pos + runLength - 1;
+    var openingRunLength = state.endPos - state.startPos;
+    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
+    if (!delimiterRun.isRightFlanking) {
+      return false;
+    }
+
+    if (openingRunLength == 1 && runLength == 1) {
+      parser.addNode(new Element('em', state.children));
+    } else if (openingRunLength == 1 && runLength > 1) {
+      parser.addNode(new Element('em', state.children));
+      parser.pos = parser.pos - (runLength - 1);
+      parser.start = parser.pos;
+    } else if (openingRunLength > 1 && runLength == 1) {
+      parser._stack.add(
+          new TagState(state.startPos, state.endPos - 1, this, delimiterRun));
+      parser.addNode(new Element('em', state.children));
+    } else if (openingRunLength == 2 && runLength == 2) {
+      parser.addNode(new Element('strong', state.children));
+    } else if (openingRunLength == 2 && runLength > 2) {
+      parser.addNode(new Element('strong', state.children));
+      parser.pos = parser.pos - (runLength - 2);
+      parser.start = parser.pos;
+    } else if (openingRunLength > 2 && runLength == 2) {
+      parser._stack.add(
+          new TagState(state.startPos, state.endPos - 2, this, delimiterRun));
+      parser.addNode(new Element('strong', state.children));
+    } else if (openingRunLength > 2 && runLength > 2) {
+      parser._stack.add(
+          new TagState(state.startPos, state.endPos - 2, this, delimiterRun));
+      parser.addNode(new Element('strong', state.children));
+      parser.pos = parser.pos - (runLength - 2);
+      parser.start = parser.pos;
+    }
+
     return true;
   }
 }
@@ -519,19 +649,46 @@ class TagState {
   /// The children of this node. Will be `null` for text nodes.
   final List<Node> children;
 
-  TagState(this.startPos, this.endPos, this.syntax) : children = <Node>[];
+  final _DelimiterRun openingDelimiterRun;
+
+  TagState(this.startPos, this.endPos, this.syntax, this.openingDelimiterRun)
+      : children = <Node>[];
 
   /// Attempts to close this tag by matching the current text against its end
   /// pattern.
   bool tryMatch(InlineParser parser) {
     var endMatch = syntax.endPattern.matchAsPrefix(parser.source, parser.pos);
-    if (endMatch != null) {
+    if (endMatch == null) {
+      return false;
+    }
+
+    if (!syntax.requiresDelimiterRun) {
       // Close the tag.
       close(parser, endMatch);
       return true;
     }
 
-    return false;
+    var runLength = endMatch.group(0).length;
+    var openingRunLength = endPos - startPos;
+    var closingMatchStart = parser.pos;
+    var closingMatchEnd = parser.pos + runLength - 1;
+    var closingDelimiterRun =
+        _DelimiterRun.tryParse(parser, closingMatchStart, closingMatchEnd);
+    if (closingDelimiterRun != null && closingDelimiterRun.canClose) {
+      // Emphasis rules #9 and #10:
+      var oneRunOpensAndCloses =
+          (openingDelimiterRun.canOpen && openingDelimiterRun.canClose) ||
+              (closingDelimiterRun.canOpen && closingDelimiterRun.canClose);
+      if (oneRunOpensAndCloses &&
+          (openingRunLength + closingDelimiterRun.length) % 3 == 0) {
+        return false;
+      }
+      // Close the tag.
+      close(parser, endMatch);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /// Pops this tag off the stack, completes it, and adds it to the output.
