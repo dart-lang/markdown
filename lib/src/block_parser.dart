@@ -599,14 +599,6 @@ abstract class ListSyntax extends BlockSyntax {
       return match != null;
     }
 
-    int expandedTabLength(String input) {
-      var length = 0;
-      for (var char in input.codeUnits) {
-        length += char == 0x9 ? 4 - (length % 4) : 1;
-      }
-      return length;
-    }
-
     String listMarker;
     String indent;
     // In case the first number in an ordered list is not 1, use it as the
@@ -615,7 +607,7 @@ abstract class ListSyntax extends BlockSyntax {
 
     while (!parser.isDone) {
       var leadingSpace = _whitespaceRe.matchAsPrefix(parser.current).group(0);
-      var leadingExpandedTabLength = expandedTabLength(leadingSpace);
+      var leadingExpandedTabLength = _expandedTabLength(leadingSpace);
       if (tryMatch(_emptyPattern)) {
         if (_emptyPattern.firstMatch(parser.next ?? '') != null) {
           // Two blank lines ends a list.
@@ -751,6 +743,14 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
     return anyEmpty;
+  }
+
+  static int _expandedTabLength(String input) {
+    var length = 0;
+    for (var char in input.codeUnits) {
+      length += char == 0x9 ? 4 - (length % 4) : 1;
+    }
+    return length;
   }
 }
 
