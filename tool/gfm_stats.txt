@@ -25,7 +25,7 @@
    2 of    2 – 100.0%  Soft line breaks
    1 of    3 –  33.3%  Strikethrough (extension)
    2 of    7 –  28.6%  Tables (extension)
-   6 of   11 –  54.5%  Tabs
+  11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
-  18 of   19 –  94.7%  Thematic breaks
- 558 of  646 –  86.4%  TOTAL
+  19 of   19 – 100.0%  Thematic breaks
+ 564 of  646 –  87.3%  TOTAL
