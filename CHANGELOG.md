@@ -1,8 +1,10 @@
 ## 1.1.2-dev
 
 * Overhaul support for emphasis (`*foo*` and `_foo_`) and strong emphasis
-  (`**foo**` and `__foo__`). This raises the compliance with the CommonMark
-  specs to 89%, and the compliance with the GFM specs to 86%.
+  (`**foo**` and `__foo__`), dramatically improving CommonMark compliance.
+* Improve support for tab characters, and horizontal rules.
+* The above fixes raise compliance with the CommonMark specs to 90%, and
+  compliance with the GFM specs to 87%.
 
 ## 1.1.1
 

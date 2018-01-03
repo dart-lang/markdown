@@ -22,7 +22,7 @@ final _headerPattern = new RegExp(r'^ {0,3}(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
 final _blockquotePattern = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 
 /// A line indented four spaces. Used for code blocks and lists.
-final _indentPattern = new RegExp(r'^(?:    |\t)(.*)$');
+final _indentPattern = new RegExp(r'^(?:    | {0,3}\t)(.*)$');
 
 /// Fenced code block.
 final _codePattern = new RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
@@ -30,7 +30,7 @@ final _codePattern = new RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
 /// SETEXT should win.
-final _hrPattern = new RegExp(r'^ {0,3}([-*_]) *\1 *\1(?:\1| )*$');
+final _hrPattern = new RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
 
 /// A line starting with one of these markers: `-`, `*`, `+`. May have up to
 /// three leading spaces before the marker and any number of spaces or tabs
@@ -580,6 +580,8 @@ abstract class ListSyntax extends BlockSyntax {
     _olPattern
   ];
 
+  static final _whitespaceRe = new RegExp('[ \t]*');
+
   Node parse(BlockParser parser) {
     var items = <ListItem>[];
     var childLines = <String>[];
@@ -604,6 +606,8 @@ abstract class ListSyntax extends BlockSyntax {
     int startNumber;
 
     while (!parser.isDone) {
+      var leadingSpace = _whitespaceRe.matchAsPrefix(parser.current).group(0);
+      var leadingExpandedTabLength = _expandedTabLength(leadingSpace);
       if (tryMatch(_emptyPattern)) {
         if (_emptyPattern.firstMatch(parser.next ?? '') != null) {
           // Two blank lines ends a list.
@@ -611,10 +615,15 @@ abstract class ListSyntax extends BlockSyntax {
         }
         // Add a blank line to the current list item.
         childLines.add('');
-      } else if (indent != null && parser.current.startsWith(indent)) {
+      } else if (indent != null && indent.length <= leadingExpandedTabLength) {
         // Strip off indent and add to current item.
-        var line = parser.current.replaceFirst(indent, '');
+        var line = parser.current
+            .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
+            .replaceFirst(indent, '');
         childLines.add(line);
+      } else if (tryMatch(_hrPattern)) {
+        // Horizontal rule takes precedence to a new list item.
+        break;
       } else if (tryMatch(_ulPattern) || tryMatch(_olPattern)) {
         var precedingWhitespace = match[1];
         var digits = match[2] ?? '';
@@ -734,6 +743,14 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
     return anyEmpty;
+  }
+
+  static int _expandedTabLength(String input) {
+    var length = 0;
+    for (var char in input.codeUnits) {
+      length += char == 0x9 ? 4 - (length % 4) : 1;
+    }
+    return length;
   }
 }
 

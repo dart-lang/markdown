@@ -668,16 +668,16 @@
  },
  "Tabs": {
   "1": "strict",
-  "2": "fail",
+  "2": "strict",
   "3": "strict",
-  "4": "fail",
-  "5": "fail",
+  "4": "loose",
+  "5": "loose",
   "6": "loose",
   "7": "loose",
   "8": "strict",
-  "9": "fail",
+  "9": "loose",
   "10": "strict",
-  "11": "fail"
+  "11": "strict"
  },
  "Textual content": {
   "646": "strict",
@@ -702,7 +702,7 @@
   "27": "loose",
   "28": "strict",
   "29": "strict",
-  "30": "fail",
+  "30": "loose",
   "31": "loose"
  }
 }
