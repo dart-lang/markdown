@@ -24,8 +24,8 @@
   25 of   26 –  96.2%  Setext headings
    2 of    2 – 100.0%  Soft line breaks
    1 of    3 –  33.3%  Strikethrough (extension)
-   2 of    7 –  28.6%  Tables (extension)
+   2 of    8 –  25.0%  Tables (extension)
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 564 of  646 –  87.3%  TOTAL
+ 564 of  647 –  87.2%  TOTAL
