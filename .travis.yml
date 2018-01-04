@@ -7,7 +7,9 @@ dart:
   - 1.22.1
   - 1.21.1
 dart_task:
-  - test: --platform vm
+  # Using the expanded reporter to work-around
+  # https://github.com/dart-lang/markdown/issues/191
+  - test: --reporter expanded
     xvfb: false
   - dartfmt
   - dartanalyzer
