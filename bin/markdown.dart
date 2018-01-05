@@ -40,7 +40,6 @@ Future main(List<String> args) async {
   var extensionSet = extensionSets[results['extension-set']];
 
   if (results.rest.length > 1) {
-    print('gt 1');
     printUsage(parser);
     exitCode = 1;
     return;

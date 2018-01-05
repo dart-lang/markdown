@@ -5,6 +5,7 @@
 * Improve support for tab characters, and horizontal rules.
 * The above fixes raise compliance with the CommonMark specs to 90%, and
   compliance with the GFM specs to 87%.
+* Allow the binary script to take a `--extension-set` option.
 
 ## 1.1.1
 
