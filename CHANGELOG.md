@@ -7,12 +7,14 @@
   compliance with the GFM specs to 87%.
 * Allow the binary script to take a `--extension-set` option.
 
-  A reminder: You can run `bin/markdown.dart` from anywhere via:
+  A reminder: You can [run `bin/markdown.dart` from anywhere][pub-global] via:
 
   ```shell
   $ pub global activate markdown
-  $ pub global run markdown
+  $ markdown
   ```
+
+[pub-global]: https://www.dartlang.org/tools/pub/cmd/pub-global#running-a-script-from-your-path
 
 ## 1.1.1
 
