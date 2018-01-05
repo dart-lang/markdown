@@ -7,6 +7,13 @@
   compliance with the GFM specs to 87%.
 * Allow the binary script to take a `--extension-set` option.
 
+  A reminder: You can run `bin/markdown.dart` from anywhere via:
+
+  ```shell
+  $ pub global activate markdown
+  $ pub global run markdown
+  ```
+
 ## 1.1.1
 
 * Add support for GitHub's colon-based Emoji syntax. :tada:! This is available
