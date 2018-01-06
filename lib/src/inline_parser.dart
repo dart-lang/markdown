@@ -430,8 +430,7 @@ class TagSyntax extends InlineSyntax {
   }
 }
 
-/// Matches syntax that has a pair of tags and becomes an element, like `*` for
-/// `<em>`. Allows nested tags.
+/// Matches strikethrough syntax according to the GFM spec.
 class StrikethroughSyntax extends TagSyntax {
   StrikethroughSyntax() : super('~+', requiresDelimiterRun: true);
 
