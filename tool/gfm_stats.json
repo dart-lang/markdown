@@ -653,8 +653,8 @@
   "646": "loose"
  },
  "Strikethrough (extension)": {
-  "469": "fail",
-  "470": "fail",
+  "469": "strict",
+  "470": "strict",
   "471": "strict"
  },
  "Tables (extension)": {

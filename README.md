@@ -69,7 +69,7 @@ parameter. Right now there are two extension sets:
   * `new InlineHtmlSyntax()`
   * `const FencedCodeBlockSyntax()`
 
-* `ExtensionSet.gitHubWeb` includes six extensions:
+* `ExtensionSet.gitHubWeb` includes seven extensions:
 
   * `new EmojiSyntax()`
   * `new InlineHtmlSyntax()`
@@ -78,6 +78,7 @@ parameter. Right now there are two extension sets:
   * `const SetextHeaderWithIdSyntax()`, which adds `id` attributes to
     Setext-style headers, for easy intra-document linking.
   * `const FencedCodeBlockSyntax()`
+  * `new StrikethroughSyntax()`
   * `const TableSyntax()`
 
 ### Custom syntax extensions
