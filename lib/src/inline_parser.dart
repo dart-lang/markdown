@@ -430,6 +430,25 @@ class TagSyntax extends InlineSyntax {
   }
 }
 
+/// Matches strikethrough syntax according to the GFM spec.
+class StrikethroughSyntax extends TagSyntax {
+  StrikethroughSyntax() : super('~+', requiresDelimiterRun: true);
+
+  @override
+  bool onMatchEnd(InlineParser parser, Match match, TagState state) {
+    var runLength = match.group(0).length;
+    var matchStart = parser.pos;
+    var matchEnd = parser.pos + runLength - 1;
+    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
+    if (!delimiterRun.isRightFlanking) {
+      return false;
+    }
+
+    parser.addNode(new Element('del', state.children));
+    return true;
+  }
+}
+
 /// Matches inline links like `[blah][id]` and `[blah](url)`.
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;

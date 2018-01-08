@@ -3,6 +3,8 @@
 * Overhaul support for emphasis (`*foo*` and `_foo_`) and strong emphasis
   (`**foo**` and `__foo__`), dramatically improving CommonMark compliance.
 * Improve support for tab characters, and horizontal rules.
+* Add support for GitHub Flavored Markdown's Strikethrough extension. See the
+  [GFM spec][strikethrough].
 * The above fixes raise compliance with the CommonMark specs to 90%, and
   compliance with the GFM specs to 87%.
 * Allow the binary script to take a `--extension-set` option.
@@ -14,6 +16,7 @@
   $ markdown
   ```
 
+[strikethrough]: https://github.github.com/gfm/#strikethrough-extension-
 [pub-global]: https://www.dartlang.org/tools/pub/cmd/pub-global#running-a-script-from-your-path
 
 ## 1.1.1

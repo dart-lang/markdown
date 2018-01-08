@@ -9,11 +9,11 @@ executables:
 
 environment:
   sdk: '>=1.12.0 <2.0.0'
+
 dependencies:
   args: '^1.0.0'
 
 dev_dependencies:
-  args: '^1.0.0'
   # Only for example/app.dart.
   browser: any
   collection: '^1.2.0'
