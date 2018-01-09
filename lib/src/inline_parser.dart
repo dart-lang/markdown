@@ -123,12 +123,12 @@ class InlineParser {
   }
 
   void deactivatePendingLinks() {
-      for (var i = _stack.length - 1; i > 0; i--) {
-        var ch = charAt(_stack[i].startPos);
-        if (ch == $lbracket) {
-          _stack[i].isActive = false;
-        }
+    for (var i = _stack.length - 1; i > 0; i--) {
+      var ch = charAt(_stack[i].startPos);
+      if (ch == $lbracket) {
+        _stack[i].isActive = false;
       }
+    }
   }
 
   int charAt(int idx) => source.codeUnitAt(idx);
@@ -464,15 +464,16 @@ class _LinkWalker {
   // Parse a link title at [parser] position [i]. [i] must be the position at
   // the first space after the link destination (which triggered the idea
   // that we might have a title).
-  bool parseTitle(int i) {
+  int parseTitle(int i) {
     var ch;
     var delimiter;
 
+    // Walk over leading space, looking for a delimiter.
     while (true) {
       i++;
       if (i == parser.source.length) {
         // EOF. Not a link.
-        return false;
+        return null;
       }
       ch = parser.charAt(i);
       switch (ch) {
@@ -486,12 +487,12 @@ class _LinkWalker {
         case $quote:
         case $lparen:
           delimiter = ch;
-          break ;
+          break;
         default:
           // Not a title!
-          return false;
-     }
-     break;
+          return null;
+      }
+      break;
     }
     var titleIdx = i + 1;
 
@@ -507,7 +508,7 @@ class _LinkWalker {
       i++;
       if (i >= parser.source.length) {
         // EOF. Not a link.
-        return false;
+        return null;
       }
       ch = parser.charAt(i);
       // TODO: no switch.
@@ -515,7 +516,7 @@ class _LinkWalker {
         case $backslash:
           // Ignore the next character.
           i++;
-          continue;
+          break;
         default:
           if (ch == closeDelimiter) {
             title = parser.source.substring(titleIdx, i);
@@ -527,11 +528,12 @@ class _LinkWalker {
     }
 
     // Parse optional whitespace before the required $rparen.
+    trailingWhitespaceLoop:
     while (true) {
       i++;
       if (i == parser.source.length) {
         // EOF. Not a link.
-        return false;
+        return null;
       }
       ch = parser.charAt(i);
       switch (ch) {
@@ -540,14 +542,15 @@ class _LinkWalker {
         case $cr:
         case $ff:
           // Just padding. Move along.
-          continue;
+          print('PADDING');
+          break;
         case $rparen:
           // Back up to before the $rparen.
           i--;
-          return true;
+          return i;
         default:
           // Not a title!
-          return false;
+          return null;
       }
     }
   }
@@ -572,9 +575,9 @@ class _LinkWalker {
           // Just padding. Move along.
           continue;
         default:
-          break ;
-     }
-     break;
+          break;
+      }
+      break;
     }
 
     if (ch == $lt) {
@@ -586,12 +589,14 @@ class _LinkWalker {
         if (ch == $backslash) {
           // We do not care about the next character.
           i++;
+          break;
         } else if (ch == $gt) {
           destination = parser.source.substring(destinationIdx, i);
           break;
         } else if (ch == $space) {
           destination = parser.source.substring(destinationIdx - 1, i);
-          if (!parseTitle(i)) {
+          i = parseTitle(i);
+          if (i == null) {
             // This looked like an inline link, until we found this $space
             // followed by mystery characters; no longer a link.
             return false;
@@ -607,6 +612,7 @@ class _LinkWalker {
       // The first character was not `<`, so let's back up one and start
       // walking.
       i--;
+      destinationLoop:
       while (true) {
         i++;
         if (i == parser.source.length) {
@@ -614,21 +620,28 @@ class _LinkWalker {
           return false;
         }
         ch = parser.charAt(i);
-        if (ch == $backslash) {
-          // We do not care about the next character.
-          i++;
-        } else if (ch == $space) {
-          destination = parser.source.substring(destinationIdx, i);
-          if (!parseTitle(i)) {
-            // This looked like an inline link, until we found this $space
-            // followed by mystery characters; no longer a link.
-            return false;
-          }
-          //break;
-        } else if (ch == $rparen) {
-          destination ??= parser.source.substring(destinationIdx, i);
-          // End of link.
-          break;
+        switch (ch) {
+          case $backslash:
+            // We do not care about the next character.
+            i++;
+            break;
+          case $space:
+          case $lf:
+          case $cr:
+          case $ff:
+            destination = parser.source.substring(destinationIdx, i);
+            i = parseTitle(i);
+            if (i == null) {
+              // This looked like an inline link, until we found this $space
+              // followed by mystery characters; no longer a link.
+              return false;
+            } else {
+              break;
+            }
+          case $rparen:
+            destination ??= parser.source.substring(destinationIdx, i);
+            // End of link.
+            break destinationLoop;
         }
       }
     }
@@ -684,7 +697,7 @@ class LinkSyntax extends TagSyntax {
     }
     var i = parser.pos;
     var linkWalker = new _LinkWalker(parser, state, this);
-    print('MAYBE LINK? >${parser.source.substring(state.endPos, parser.pos)}<');
+    //print('MAYBE LINK? >${parser.source.substring(state.endPos, parser.pos)}<');
     // The current character is the `]` that closed the link text.
     i++;
     if (i == parser.source.length) {
@@ -738,9 +751,9 @@ class LinkSyntax extends TagSyntax {
     }
 
     var element = new Element('a', state.children);
-    element.attributes['href'] = escapeHtml(destination);
+    element.attributes['href'] = escapeAttribute(destination);
     if (title != null && title.isNotEmpty) {
-      element.attributes['title'] = escapeHtml(title);
+      element.attributes['title'] = escapeAttribute(title);
     }
     parser.addNode(element);
     parser.start = parser.pos = endPos;
@@ -780,7 +793,7 @@ class ImageSyntax extends LinkSyntax {
     element.attributes['src'] = escapeHtml(destination);
     element.attributes['alt'] = state?.textContent ?? '';
     if (title != null && title.isNotEmpty) {
-      element.attributes['title'] = escapeHtml(title);
+      element.attributes['title'] = escapeAttribute(title);
     }
     parser.addNode(element);
     parser.start = parser.pos = endPos;
