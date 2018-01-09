@@ -242,7 +242,7 @@ class EscapeSyntax extends InlineSyntax {
 }
 
 /// Leave inline HTML tags alone, from
-/// [CommonMark 0.22](http://spec.commonmark.org/0.22/#raw-html).
+/// [CommonMark 0.28](http://spec.commonmark.org/0.28/#raw-html).
 ///
 /// This is not actually a good definition (nor CommonMark's) of an HTML tag,
 /// but it is fast. It will leave text like `<a href='hi">` alone, which is
@@ -251,7 +251,7 @@ class EscapeSyntax extends InlineSyntax {
 /// TODO(srawlins): improve accuracy while ensuring performance, once
 /// Markdown benchmarking is more mature.
 class InlineHtmlSyntax extends TextSyntax {
-  InlineHtmlSyntax() : super(r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?: [^>]*)?>');
+  InlineHtmlSyntax() : super(r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?:\s[^>]*)?>');
 }
 
 /// Matches autolinks like `<foo@bar.example.com>`.
@@ -580,31 +580,55 @@ class _LinkWalker {
       break;
     }
 
+    // According to
+    // [CommonMark](http://spec.commonmark.org/0.28/#link-destination):
+    //
+    // > A link destination consists of [...] a nonempty sequence of
+    // > characters [...], and includes parentheses only if (a) they are
+    // > backslash-escaped or (b) they are part of a balanced pair of
+    // > unescaped parentheses.
+    //
+    // Start with 1 for the paren that opened this destination.
+    var parenCount = 1;
+
     if (ch == $lt) {
       // Maybe a `<...>`-enclosed link destination.
       destinationIdx = i + 1;
+      enclosedDestinationLoop:
       while (true) {
         i++;
         ch = parser.charAt(i);
-        if (ch == $backslash) {
-          // We do not care about the next character.
-          i++;
-          break;
-        } else if (ch == $gt) {
-          destination = parser.source.substring(destinationIdx, i);
-          break;
-        } else if (ch == $space) {
-          destination = parser.source.substring(destinationIdx - 1, i);
-          i = parseTitle(i);
-          if (i == null) {
-            // This looked like an inline link, until we found this $space
-            // followed by mystery characters; no longer a link.
-            return false;
-          }
-        } else if (ch == $rparen) {
-          destination = parser.source.substring(destinationIdx - 1, i);
-          // End of link.
-          break;
+        switch (ch) {
+          case $backslash:
+            i++;
+            break;
+          case $gt:
+            destination = parser.source.substring(destinationIdx, i);
+            break enclosedDestinationLoop;
+          case $space:
+          case $lf:
+          case $cr:
+          case $ff:
+            destination = parser.source.substring(destinationIdx - 1, i);
+            i = parseTitle(i);
+            if (i == null) {
+              // This looked like an inline link, until we found this $space
+              // followed by mystery characters; no longer a link.
+              return false;
+            }
+            break;
+          case $lparen:
+            parenCount++;
+            break;
+          case $rparen:
+            parenCount--;
+            if (parenCount == 0) {
+              // End of link.
+              destination ??= parser.source.substring(destinationIdx - 1, i);
+              break enclosedDestinationLoop;
+            } else {
+              // Keep going. The parens must be balanced.
+            }
         }
       }
     } else {
@@ -638,10 +662,18 @@ class _LinkWalker {
             } else {
               break;
             }
+          case $lparen:
+            parenCount++;
+            break;
           case $rparen:
-            destination ??= parser.source.substring(destinationIdx, i);
-            // End of link.
-            break destinationLoop;
+            parenCount--;
+            if (parenCount == 0) {
+              // End of link.
+              destination ??= parser.source.substring(destinationIdx, i);
+              break destinationLoop;
+            } else {
+              // Keep going. The parens must be balanced.
+            }
         }
       }
     }
@@ -751,7 +783,8 @@ class LinkSyntax extends TagSyntax {
     }
 
     var element = new Element('a', state.children);
-    element.attributes['href'] = escapeAttribute(destination);
+    element.attributes['href'] = escapeAttribute(
+        destination.replaceAll(r'\(', '(').replaceAll(r'\)', ')'));
     if (title != null && title.isNotEmpty) {
       element.attributes['title'] = escapeAttribute(title);
     }
