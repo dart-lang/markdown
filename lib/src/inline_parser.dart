@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:charcode/charcode.dart';
+
 import 'ast.dart';
 import 'document.dart';
 import 'emojis.dart';
@@ -118,6 +120,8 @@ class InlineParser {
     // Unwind any unmatched tags and get the results.
     return _stack[0].close(this, null);
   }
+
+  int charAt(int idx) => source.codeUnitAt(idx);
 
   void writeText() {
     writeTextRange(start, pos);
@@ -430,6 +434,38 @@ class TagSyntax extends InlineSyntax {
   }
 }
 
+// Link destinations and labels are tricky to parse; the parsing can benefit
+// from keeping some state in an object. This class helps to "parse" a link
+// (after the link text's closing `]` has been parsed). It is called a 'walker'
+// because it contains a reference to the InlineParser which is known
+// throughout this file as the `parser`. Synonymous.
+class _LinkWalker {
+  final InlineParser parser;
+  final TagState state;
+
+  String text;
+  String destination;
+  String title;
+
+  _LinkWalker(this.parser, this.state);
+
+  // Add a reference link to [parser]'s AST.
+  //
+  // Returns whether or not the reference label could be found.
+  bool addReferenceLink(String label, int endPos) {
+    var link = parser.document.refLinks[label];
+    if (link == null) {
+      return false;
+    }
+    var element = new Element('a', state.children);
+    element.attributes["href"] = escapeHtml(link.url);
+    parser.addNode(element);
+    parser.start = parser.pos = endPos;
+    parser.consume(0);
+    return true;
+  }
+}
+
 /// Matches inline links like `[blah][id]` and `[blah](url)`.
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;
@@ -454,7 +490,239 @@ class LinkSyntax extends TagSyntax {
   }
 
   LinkSyntax({this.linkResolver, String pattern: r'\['})
-      : super(pattern, end: _linkPattern);
+      : super(pattern, end: r'\]');
+
+  bool onMatchEnd(InlineParser parser, Match match, TagState state) {
+    var i = parser.pos;
+    // The current character is the `]` that closed the link text.
+    i++;
+    if (i == parser.source.length) {
+      var text =
+          parser.source.substring(state.endPos, parser.pos).toLowerCase();
+      return new _LinkWalker(parser, state).addReferenceLink(text, i - 1);
+    }
+    var ch = parser.charAt(i);
+
+    // Maybe an inline link.
+    if (ch == $lparen) {
+      if (_parseInlineLink(parser, state)) {
+        // Huzzah, an inline link.
+        return true;
+      }
+
+      // At this point, we've matched `[...](`, but that `(` did not pan out to
+      // be an inline link. We must now check if `[...]` is simply a shortcut
+      // reference link.
+      var text =
+          parser.source.substring(state.endPos, parser.pos).toLowerCase();
+      return new _LinkWalker(parser, state).addReferenceLink(text, i - 1);
+    }
+
+    // A reference link.
+    if (ch == $lbracket) {
+      return _parseReferenceLink(parser, state);
+    }
+
+    // Oops, perhaps just a simple shortcut reference link (`[...]`).
+    print('boo');
+    var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
+    return new _LinkWalker(parser, state).addReferenceLink(text, i - 1);
+  }
+
+  bool _parseInlineLink(InlineParser parser, TagState state) {
+    var i = parser.pos + 1;
+    var ch = parser.charAt(i);
+    var destinationIdx, destination, title;
+
+    // Parse a link title at the current position. This function must be
+    // called such that [i] is pointing at the first space after the link
+    // destination (which triggered the idea that we might have a title).
+    bool parseTitle() {
+      var delimiter;
+      openingLoop:
+      while (true) {
+        i++;
+        if (i == parser.source.length) {
+          // EOF. Not a link.
+          return false;
+        }
+        ch = parser.charAt(i);
+        switch (ch) {
+          case $space:
+          case $lf:
+          case $cr:
+          case $ff:
+            // Just padding. Move along.
+            continue;
+          case $apostrophe:
+          case $quote:
+          case $lparen:
+            delimiter = ch;
+            break openingLoop;
+          default:
+            // Not a title!
+            return false;
+        }
+      }
+      var titleIdx = i + 1;
+
+      int closeDelimiter = <int, int>{
+        $apostrophe: $apostrophe,
+        $quote: $quote,
+        $lparen: $rparen,
+      }[delimiter];
+
+      // Now we look for an un-escaped close delimiter.
+      closingLoop:
+      while (true) {
+        i++;
+        if (i >= parser.source.length) {
+          // EOF. Not a link.
+          return false;
+        }
+        ch = parser.charAt(i);
+        switch (ch) {
+          case $backslash:
+            // Ignore the next character.
+            i++;
+            continue;
+          default:
+            if (ch == closeDelimiter) {
+              title = parser.source.substring(titleIdx, i);
+              break closingLoop;
+            } else {
+              // Character in the title. Move along.
+            }
+        }
+      }
+
+      // Parse optional whitespace before the required $rparen.
+      while (true) {
+        i++;
+        if (i == parser.source.length) {
+          // EOF. Not a link.
+          return false;
+        }
+        ch = parser.charAt(i);
+        switch (ch) {
+          case $space:
+          case $lf:
+          case $cr:
+          case $ff:
+            // Just padding. Move along.
+            continue;
+          case $rparen:
+            // Back up to before the $rparen.
+            i--;
+            return true;
+          default:
+            // Not a title!
+            return false;
+        }
+      }
+    } // End parseTitle().
+
+    i++;
+    ch = parser.charAt(i);
+    if (ch == $lt) {
+      // Maybe a `<...>`-enclosed link destination.
+      destinationIdx = i + 1;
+      while (true) {
+        i++;
+        ch = parser.charAt(i);
+        if (ch == $backslash) {
+          // We do not care about the next character.
+          i++;
+        } else if (ch == $gt) {
+          destination = parser.source.substring(destinationIdx, i);
+          break;
+        } else if (ch == $space) {
+          destination = parser.source.substring(destinationIdx - 1, i);
+          if (!parseTitle()) {
+            // This looked like an inline link, until we found this $space
+            // followed by mystery characters; no longer a link.
+            return false;
+          }
+        } else if (ch == $rparen) {
+          destination = parser.source.substring(destinationIdx - 1, i);
+          // End of link.
+          break;
+        }
+      }
+    } else {
+      destinationIdx = i;
+      // The first character was not `<`, so let's back up one and start
+      // walking.
+      i--;
+      while (true) {
+        i++;
+        if (i == parser.source.length) {
+          // EOF. Not a link.
+          return false;
+        }
+        ch = parser.charAt(i);
+        if (ch == $backslash) {
+          // We do not care about the next character.
+          i++;
+        } else if (ch == $space) {
+          destination = parser.source.substring(destinationIdx, i);
+          if (!parseTitle()) {
+            // This looked like an inline link, until we found this $space
+            // followed by mystery characters; no longer a link.
+            return false;
+          }
+          //break;
+        } else if (ch == $rparen) {
+          destination ??= parser.source.substring(destinationIdx, i);
+          // End of link.
+          break;
+        }
+      }
+    }
+    var element = new Element('a', state.children);
+
+    element.attributes['href'] = escapeHtml(destination);
+    if (title != null && title.isNotEmpty) {
+      element.attributes['title'] = escapeHtml(title);
+    }
+    parser.addNode(element);
+    parser.start = parser.pos = i;
+    parser.consume(0);
+    return true;
+  }
+
+  bool _parseReferenceLink(InlineParser parser, TagState state) {
+    var i = parser.pos + 2;
+    if (i >= parser.source.length) {
+      return false;
+    }
+    var text = parser.source.substring(state.endPos, parser.pos);
+    var ch = parser.charAt(i);
+    if (ch == $rbracket) {
+      // Collapsed reference link.
+      var label = text.toLowerCase();
+      return new _LinkWalker(parser, state).addReferenceLink(label, i);
+    }
+
+    var labelIdx = i;
+    while (true) {
+      i++;
+      if (i >= parser.source.length) {
+        return false;
+      }
+      ch = parser.charAt(i);
+      if (ch == $backslash) {
+        // We don't care about the next character.
+        i++;
+      } else if (ch == $rbracket) {
+        break;
+      }
+      // TODO: only check 999 characters, for performance reasons?
+    }
+
+    var label = parser.source.substring(labelIdx, i).toLowerCase();
+    return new _LinkWalker(parser, state).addReferenceLink(label, i);
+  }
 
   Node createNode(InlineParser parser, Match match, TagState state) {
     if (match[1] == null) {
@@ -538,13 +806,13 @@ class LinkSyntax extends TagSyntax {
     }
   }
 
-  bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-    var node = createNode(parser, match, state);
-    if (node == null) return false;
+  //bool onMatchEnd(InlineParser parser, Match match, TagState state) {
+  //  var node = createNode(parser, match, state);
+  //  if (node == null) return false;
 
-    parser.addNode(node);
-    return true;
-  }
+  //  parser.addNode(node);
+  //  return true;
+  //}
 }
 
 /// Matches images like `![alternate text](url "optional title")` and
