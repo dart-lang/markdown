@@ -51,8 +51,8 @@
   "296": "strict",
   "297": "strict",
   "298": "strict",
-  "299": "fail",
-  "300": "fail",
+  "299": "strict",
+  "300": "strict",
   "301": "fail"
  },
  "Blank lines": {
@@ -419,7 +419,7 @@
   "468": "strict",
   "469": "strict",
   "470": "loose",
-  "471": "fail",
+  "471": "strict",
   "472": "strict",
   "473": "strict",
   "474": "fail",

@@ -542,7 +542,6 @@ class _LinkWalker {
         case $cr:
         case $ff:
           // Just padding. Move along.
-          print('PADDING');
           break;
         case $rparen:
           // Back up to before the $rparen.
