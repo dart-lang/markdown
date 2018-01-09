@@ -1005,7 +1005,8 @@ class ParagraphSyntax extends BlockSyntax {
     }
 
     // References are case-insensitive.
-    label = label.toLowerCase().trim();
+    label =
+        label.toLowerCase().trim().replaceAll(new RegExp('[ \n\r\t]+'), ' ');
 
     parser.document.refLinks
         .putIfAbsent(label, () => new Link(label, destination, title));

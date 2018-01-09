@@ -114,11 +114,21 @@ class InlineParser {
       if (matched) continue;
 
       // If we got here, it's just text.
+      //print('Found JUST TEXT >${source.codeUnitAt(pos)}< >${new String.fromCharCode(source.codeUnitAt(pos))}<');
       advanceBy(1);
     }
 
     // Unwind any unmatched tags and get the results.
     return _stack[0].close(this, null);
+  }
+
+  void deactivatePendingLinks() {
+      for (var i = _stack.length - 1; i > 0; i--) {
+        var ch = charAt(_stack[i].startPos);
+        if (ch == $lbracket) {
+          _stack[i].isActive = false;
+        }
+      }
   }
 
   int charAt(int idx) => source.codeUnitAt(idx);
@@ -382,7 +392,8 @@ class TagSyntax extends InlineSyntax {
     var matchStart = parser.pos;
     var matchEnd = parser.pos + runLength - 1;
     var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
-    if (delimiterRun != null && delimiterRun.canOpen) {
+    if (!requiresDelimiterRun ||
+        (delimiterRun != null && delimiterRun.canOpen)) {
       parser._stack
           .add(new TagState(parser.pos, matchEnd + 1, this, delimiterRun));
       return true;
@@ -442,188 +453,130 @@ class TagSyntax extends InlineSyntax {
 class _LinkWalker {
   final InlineParser parser;
   final TagState state;
+  final TagSyntax syntax;
 
   String text;
   String destination;
   String title;
 
-  _LinkWalker(this.parser, this.state);
+  _LinkWalker(this.parser, this.state, this.syntax);
 
-  // Add a reference link to [parser]'s AST.
-  //
-  // Returns whether or not the reference label could be found.
-  bool addReferenceLink(String label, int endPos) {
-    var link = parser.document.refLinks[label];
-    if (link == null) {
-      return false;
-    }
-    var element = new Element('a', state.children);
-    element.attributes["href"] = escapeHtml(link.url);
-    parser.addNode(element);
-    parser.start = parser.pos = endPos;
-    parser.consume(0);
-    return true;
-  }
-}
+  // Parse a link title at [parser] position [i]. [i] must be the position at
+  // the first space after the link destination (which triggered the idea
+  // that we might have a title).
+  bool parseTitle(int i) {
+    var ch;
+    var delimiter;
 
-/// Matches inline links like `[blah][id]` and `[blah](url)`.
-class LinkSyntax extends TagSyntax {
-  final Resolver linkResolver;
-
-  /// The regex for the end of a link.
-  ///
-  /// This handles both reference-style and inline-style links as well as
-  /// optional titles for inline links. To make that a bit more palatable, this
-  /// breaks it into pieces.
-  static String get _linkPattern {
-    var refLink = r'\[([^\]]*)\]'; // `[id]` reflink id.
-    var title = r'(?:\s*"([^"]+?)"\s*|)'; // Optional title in quotes.
-    var inlineLink = '\\((\\S*?)$title\\)'; // `(url "title")` link.
-    return '\](?:($refLink|$inlineLink)|)';
-
-    // The groups matched by this are:
-    // 1: Will be non-empty if it's either a ref or inline link. Will be empty
-    //    if it's just a bare pair of square brackets with nothing after them.
-    // 2: Contains the id inside [] for a reference-style link.
-    // 3: Contains the URL for an inline link.
-    // 4: Contains the title, if present, for an inline link.
-  }
-
-  LinkSyntax({this.linkResolver, String pattern: r'\['})
-      : super(pattern, end: r'\]');
-
-  bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-    var i = parser.pos;
-    // The current character is the `]` that closed the link text.
-    i++;
-    if (i == parser.source.length) {
-      var text =
-          parser.source.substring(state.endPos, parser.pos).toLowerCase();
-      return new _LinkWalker(parser, state).addReferenceLink(text, i - 1);
-    }
-    var ch = parser.charAt(i);
-
-    // Maybe an inline link.
-    if (ch == $lparen) {
-      if (_parseInlineLink(parser, state)) {
-        // Huzzah, an inline link.
-        return true;
+    while (true) {
+      i++;
+      if (i == parser.source.length) {
+        // EOF. Not a link.
+        return false;
       }
+      ch = parser.charAt(i);
+      switch (ch) {
+        case $space:
+        case $lf:
+        case $cr:
+        case $ff:
+          // Just padding. Move along.
+          continue;
+        case $apostrophe:
+        case $quote:
+        case $lparen:
+          delimiter = ch;
+          break ;
+        default:
+          // Not a title!
+          return false;
+     }
+     break;
+    }
+    var titleIdx = i + 1;
 
-      // At this point, we've matched `[...](`, but that `(` did not pan out to
-      // be an inline link. We must now check if `[...]` is simply a shortcut
-      // reference link.
-      var text =
-          parser.source.substring(state.endPos, parser.pos).toLowerCase();
-      return new _LinkWalker(parser, state).addReferenceLink(text, i - 1);
+    int closeDelimiter = <int, int>{
+      $apostrophe: $apostrophe,
+      $quote: $quote,
+      $lparen: $rparen,
+    }[delimiter];
+
+    // Now we look for an un-escaped close delimiter.
+    closingLoop:
+    while (true) {
+      i++;
+      if (i >= parser.source.length) {
+        // EOF. Not a link.
+        return false;
+      }
+      ch = parser.charAt(i);
+      // TODO: no switch.
+      switch (ch) {
+        case $backslash:
+          // Ignore the next character.
+          i++;
+          continue;
+        default:
+          if (ch == closeDelimiter) {
+            title = parser.source.substring(titleIdx, i);
+            break closingLoop;
+          } else {
+            // Character in the title. Move along.
+          }
+      }
     }
 
-    // A reference link.
-    if (ch == $lbracket) {
-      return _parseReferenceLink(parser, state);
+    // Parse optional whitespace before the required $rparen.
+    while (true) {
+      i++;
+      if (i == parser.source.length) {
+        // EOF. Not a link.
+        return false;
+      }
+      ch = parser.charAt(i);
+      switch (ch) {
+        case $space:
+        case $lf:
+        case $cr:
+        case $ff:
+          // Just padding. Move along.
+          continue;
+        case $rparen:
+          // Back up to before the $rparen.
+          i--;
+          return true;
+        default:
+          // Not a title!
+          return false;
+      }
     }
-
-    // Oops, perhaps just a simple shortcut reference link (`[...]`).
-    print('boo');
-    var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
-    return new _LinkWalker(parser, state).addReferenceLink(text, i - 1);
   }
 
-  bool _parseInlineLink(InlineParser parser, TagState state) {
+  bool parseInlineLink() {
     var i = parser.pos + 1;
     var ch = parser.charAt(i);
-    var destinationIdx, destination, title;
+    var destinationIdx, destination;
 
-    // Parse a link title at the current position. This function must be
-    // called such that [i] is pointing at the first space after the link
-    // destination (which triggered the idea that we might have a title).
-    bool parseTitle() {
-      var delimiter;
-      openingLoop:
-      while (true) {
-        i++;
-        if (i == parser.source.length) {
-          // EOF. Not a link.
-          return false;
-        }
-        ch = parser.charAt(i);
-        switch (ch) {
-          case $space:
-          case $lf:
-          case $cr:
-          case $ff:
-            // Just padding. Move along.
-            continue;
-          case $apostrophe:
-          case $quote:
-          case $lparen:
-            delimiter = ch;
-            break openingLoop;
-          default:
-            // Not a title!
-            return false;
-        }
+    while (true) {
+      i++;
+      if (i == parser.source.length) {
+        // EOF. Not a link.
+        return false;
       }
-      var titleIdx = i + 1;
+      ch = parser.charAt(i);
+      switch (ch) {
+        case $space:
+        case $lf:
+        case $cr:
+        case $ff:
+          // Just padding. Move along.
+          continue;
+        default:
+          break ;
+     }
+     break;
+    }
 
-      int closeDelimiter = <int, int>{
-        $apostrophe: $apostrophe,
-        $quote: $quote,
-        $lparen: $rparen,
-      }[delimiter];
-
-      // Now we look for an un-escaped close delimiter.
-      closingLoop:
-      while (true) {
-        i++;
-        if (i >= parser.source.length) {
-          // EOF. Not a link.
-          return false;
-        }
-        ch = parser.charAt(i);
-        switch (ch) {
-          case $backslash:
-            // Ignore the next character.
-            i++;
-            continue;
-          default:
-            if (ch == closeDelimiter) {
-              title = parser.source.substring(titleIdx, i);
-              break closingLoop;
-            } else {
-              // Character in the title. Move along.
-            }
-        }
-      }
-
-      // Parse optional whitespace before the required $rparen.
-      while (true) {
-        i++;
-        if (i == parser.source.length) {
-          // EOF. Not a link.
-          return false;
-        }
-        ch = parser.charAt(i);
-        switch (ch) {
-          case $space:
-          case $lf:
-          case $cr:
-          case $ff:
-            // Just padding. Move along.
-            continue;
-          case $rparen:
-            // Back up to before the $rparen.
-            i--;
-            return true;
-          default:
-            // Not a title!
-            return false;
-        }
-      }
-    } // End parseTitle().
-
-    i++;
-    ch = parser.charAt(i);
     if (ch == $lt) {
       // Maybe a `<...>`-enclosed link destination.
       destinationIdx = i + 1;
@@ -638,7 +591,7 @@ class LinkSyntax extends TagSyntax {
           break;
         } else if (ch == $space) {
           destination = parser.source.substring(destinationIdx - 1, i);
-          if (!parseTitle()) {
+          if (!parseTitle(i)) {
             // This looked like an inline link, until we found this $space
             // followed by mystery characters; no longer a link.
             return false;
@@ -666,7 +619,7 @@ class LinkSyntax extends TagSyntax {
           i++;
         } else if (ch == $space) {
           destination = parser.source.substring(destinationIdx, i);
-          if (!parseTitle()) {
+          if (!parseTitle(i)) {
             // This looked like an inline link, until we found this $space
             // followed by mystery characters; no longer a link.
             return false;
@@ -679,19 +632,12 @@ class LinkSyntax extends TagSyntax {
         }
       }
     }
-    var element = new Element('a', state.children);
-
-    element.attributes['href'] = escapeHtml(destination);
-    if (title != null && title.isNotEmpty) {
-      element.attributes['title'] = escapeHtml(title);
-    }
-    parser.addNode(element);
-    parser.start = parser.pos = i;
-    parser.consume(0);
+    syntax._addNode(parser, state,
+        destination: destination, title: title, endPos: i);
     return true;
   }
 
-  bool _parseReferenceLink(InlineParser parser, TagState state) {
+  bool parseReferenceLink() {
     var i = parser.pos + 2;
     if (i >= parser.source.length) {
       return false;
@@ -701,7 +647,7 @@ class LinkSyntax extends TagSyntax {
     if (ch == $rbracket) {
       // Collapsed reference link.
       var label = text.toLowerCase();
-      return new _LinkWalker(parser, state).addReferenceLink(label, i);
+      return syntax._addNode(parser, state, label: label, endPos: i);
     }
 
     var labelIdx = i;
@@ -721,98 +667,89 @@ class LinkSyntax extends TagSyntax {
     }
 
     var label = parser.source.substring(labelIdx, i).toLowerCase();
-    return new _LinkWalker(parser, state).addReferenceLink(label, i);
+    return syntax._addNode(parser, state, label: label, endPos: i);
   }
+}
 
-  Node createNode(InlineParser parser, Match match, TagState state) {
-    if (match[1] == null) {
-      // Try for a shortcut reference link, like `[foo]`.
-      var element = _createElement(parser, match, state);
-      if (element != null) return element;
+/// Matches inline links like `[blah][id]` and `[blah](url)`.
+class LinkSyntax extends TagSyntax {
+  final Resolver linkResolver;
 
-      // If we didn't match refLink or inlineLink, and it's not a _shortcut_
-      // reflink, then it means it isn't a normal Markdown link at all. Instead,
-      // we allow users of the library to specify a special resolver function
-      // ([linkResolver]) that may choose to handle this. Otherwise, it's just
-      // treated as plain text.
-      if (linkResolver == null) return null;
+  LinkSyntax({this.linkResolver, String pattern: r'\['})
+      : super(pattern, end: r'\]');
 
-      // Treat the contents as unparsed text even if they happen to match. This
-      // way, we can handle things like [LINK_WITH_UNDERSCORES] as a link and
-      // not get confused by the emphasis.
-      var textToResolve = parser.source.substring(state.endPos, parser.pos);
-
-      // See if we have a resolver that will generate a link for us.
-      return linkResolver(textToResolve);
-    } else {
-      return _createElement(parser, match, state);
+  bool onMatchEnd(InlineParser parser, Match match, TagState state) {
+    if (!state.isActive) {
+      return false;
     }
+    var i = parser.pos;
+    var linkWalker = new _LinkWalker(parser, state, this);
+    print('MAYBE LINK? >${parser.source.substring(state.endPos, parser.pos)}<');
+    // The current character is the `]` that closed the link text.
+    i++;
+    if (i == parser.source.length) {
+      var text =
+          parser.source.substring(state.endPos, parser.pos).toLowerCase();
+      return _addNode(parser, state, label: text, endPos: i - 1);
+    }
+    var ch = parser.charAt(i);
+
+    // Maybe an inline link.
+    if (ch == $lparen) {
+      if (linkWalker.parseInlineLink()) {
+        // Huzzah, an inline link.
+        return true;
+      }
+
+      // At this point, we've matched `[...](`, but that `(` did not pan out to
+      // be an inline link. We must now check if `[...]` is simply a shortcut
+      // reference link.
+      var text =
+          parser.source.substring(state.endPos, parser.pos).toLowerCase();
+      return _addNode(parser, state, label: text, endPos: i - 1);
+    }
+
+    // A reference link.
+    if (ch == $lbracket) {
+      return linkWalker.parseReferenceLink();
+    }
+
+    // Oops, perhaps just a simple shortcut reference link (`[...]`).
+    var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
+    return _addNode(parser, state, label: text, endPos: i - 1);
   }
 
-  /// Given that [match] has matched both a title and URL, creates an `<a>`
-  /// [Element] for it.
-  Element _createElement(InlineParser parser, Match match, TagState state) {
-    var link = getLink(parser, match, state);
-    if (link == null) return null;
+  // Add a link node to [parser]'s AST.
+  //
+  // If [label] is present, the potential link is treated as a reference link.
+  // Otherwise, it is treated as an inline link.
+  //
+  // Returns whether the image was added successfully.
+  bool _addNode(InlineParser parser, TagState state,
+      {String destination, String title, String label, int endPos}) {
+    if (label != null) {
+      // Reference link
+      var link = parser.document.refLinks[label];
+      if (link == null) {
+        return false;
+      }
+      destination = link.url;
+      title = link.title;
+    }
 
     var element = new Element('a', state.children);
-
-    element.attributes["href"] = escapeHtml(link.url);
-    if (link.title != null) {
-      element.attributes['title'] = escapeHtml(link.title);
+    element.attributes['href'] = escapeHtml(destination);
+    if (title != null && title.isNotEmpty) {
+      element.attributes['title'] = escapeHtml(title);
     }
+    parser.addNode(element);
+    parser.start = parser.pos = endPos;
 
-    return element;
+    // Mark all of the `[` tag states as inactive.
+    parser.deactivatePendingLinks();
+
+    return true;
   }
-
-  /// Get the Link represented by [match].
-  ///
-  /// This method can return null, if the link is a reference link, and has no
-  /// accompanying link reference definition.
-  Link getLink(InlineParser parser, Match match, TagState state) {
-    if (match[3] != null) {
-      // Inline link like [foo](url).
-      var url = match[3];
-      var title = match[4];
-
-      // For whatever reason, Markdown allows angle-bracketed URLs here.
-      if (url.startsWith('<') && url.endsWith('>')) {
-        url = url.substring(1, url.length - 1);
-      }
-
-      return new Link(null, url, title);
-    } else {
-      String id;
-      String _contents() {
-        var offset = pattern.pattern.length - 1;
-        return parser.source.substring(state.startPos + offset, parser.pos);
-      }
-
-      // Reference link like [foo][bar].
-      if (match[1] == null) {
-        // There are no reference brackets ("shortcut reference link"), so infer
-        // the id from the contents.
-        id = _contents();
-      } else if (match[2] == '') {
-        // The id is empty ("[]") so infer it from the contents.
-        id = _contents();
-      } else {
-        id = match[2];
-      }
-
-      // References are case-insensitive.
-      id = id.toLowerCase();
-      return parser.document.refLinks[id];
-    }
-  }
-
-  //bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-  //  var node = createNode(parser, match, state);
-  //  if (node == null) return false;
-
-  //  parser.addNode(node);
-  //  return true;
-  //}
 }
 
 /// Matches images like `![alternate text](url "optional title")` and
@@ -821,19 +758,33 @@ class ImageSyntax extends LinkSyntax {
   ImageSyntax({Resolver linkResolver})
       : super(linkResolver: linkResolver, pattern: r'!\[');
 
-  /// Creates an <img> element from the given complete [match].
-  Element _createElement(InlineParser parser, Match match, TagState state) {
-    var link = getLink(parser, match, state);
-    if (link == null) return null;
-    var image = new Element.empty("img");
-    image.attributes["src"] = escapeHtml(link.url);
-    image.attributes["alt"] = state?.textContent ?? '';
-
-    if (link.title != null) {
-      image.attributes["title"] = escapeHtml(link.title);
+  // Add an image node to [parser]'s AST.
+  //
+  // If [label] is present, the potential image is treated as a reference image.
+  // Otherwise, it is treated as an inline image.
+  //
+  // Returns whether the image was added successfully.
+  bool _addNode(InlineParser parser, TagState state,
+      {String destination, String title, String label, int endPos}) {
+    if (label != null) {
+      // Reference link
+      var link = parser.document.refLinks[label];
+      if (link == null) {
+        return false;
+      }
+      destination = link.url;
+      title = link.title;
     }
 
-    return image;
+    var element = new Element.empty('img');
+    element.attributes['src'] = escapeHtml(destination);
+    element.attributes['alt'] = state?.textContent ?? '';
+    if (title != null && title.isNotEmpty) {
+      element.attributes['title'] = escapeHtml(title);
+    }
+    parser.addNode(element);
+    parser.start = parser.pos = endPos;
+    return true;
   }
 }
 
@@ -918,6 +869,8 @@ class TagState {
   final List<Node> children;
 
   final _DelimiterRun openingDelimiterRun;
+
+  bool isActive = true;
 
   TagState(this.startPos, this.endPos, this.syntax, this.openingDelimiterRun)
       : children = <Node>[];
