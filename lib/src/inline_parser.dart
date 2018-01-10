@@ -91,17 +91,40 @@ class InlineParser {
     while (!isDone) {
       var matched = false;
 
-      // See if any of the current tags on the stack match. We don't allow tags
-      // of the same kind to nest, so this takes priority over other possible
-      // matches.
-      for (var i = _stack.length - 1; i > 0; i--) {
-        if (_stack[i].tryMatch(this)) {
-          matched = true;
-          break;
-        }
-      }
+      var ch = charAt(pos);
+      if (ch == $rbracket ||
+          ch == $asterisk ||
+          ch == $underscore ||
+          ch == $tilde) {
+        // TODO(srawlins): This is imperfect as it doesn't take into account
+        // other possible syntax extensions. We can provide an API in the
+        // future where each syntax's endPattern can be used here.
 
-      if (matched) continue;
+        // See if any of the current tags on the stack match.  This takes
+        // priority over other possible matches.
+        for (var i = _stack.length - 1; i > 0; i--) {
+          print('i: $i / pos: $pos /  char: >${new String.fromCharCode(charAt(pos))}<');
+          if (_stack[i].tryMatch(this)) {
+            matched = true;
+            break;
+          ///} else {
+          ///  print("BUT BUT ${_stack[i].startPos}");
+          ///  if (charAt(_stack[i].startPos) == $lbracket ||
+          ///      charAt(_stack[i].startPos) == $exclamation && ch == $rbracket) {
+          ///    // TODO: Again, hard-coding Link and Image logic here is not ideal.
+
+          ///    // We are looking at a `]` which could not be be parsed as a
+          ///    // `_stack[i].syntax`. Stop looking! This `]` will not be able to
+          ///    // be parsed as any other syntax either. It's text.
+          ///    break;
+          ///  }
+          }
+        }
+
+        print("exit loop; matched: $matched");
+
+        if (matched) continue;
+      }
 
       // See if the current text matches any defined markdown syntax.
       for (var syntax in syntaxes) {
@@ -409,9 +432,6 @@ class TagSyntax extends InlineSyntax {
     var matchEnd = parser.pos + runLength - 1;
     var openingRunLength = state.endPos - state.startPos;
     var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
-    if (!delimiterRun.isRightFlanking) {
-      return false;
-    }
 
     if (openingRunLength == 1 && runLength == 1) {
       parser.addNode(new Element('em', state.children));
@@ -728,7 +748,7 @@ class LinkSyntax extends TagSyntax {
     }
     var i = parser.pos;
     var linkWalker = new _LinkWalker(parser, state, this);
-    //print('MAYBE LINK? >${parser.source.substring(state.endPos, parser.pos)}<');
+    print('MAYBE LINK? >${parser.source.substring(state.endPos, parser.pos)}<');
     // The current character is the `]` that closed the link text.
     i++;
     if (i == parser.source.length) {
@@ -934,6 +954,7 @@ class TagState {
       return true;
     }
 
+    // TODO: Move this logic into TagSyntax.
     var runLength = endMatch.group(0).length;
     var openingRunLength = endPos - startPos;
     var closingMatchStart = parser.pos;
@@ -961,7 +982,7 @@ class TagState {
   ///
   /// Will discard any unmatched tags that happen to be above it on the stack.
   /// If this is the last node in the stack, returns its children.
-  List<Node> close(InlineParser parser, Match endMatch) {
+  void close(InlineParser parser, Match endMatch) {
     // If there are unclosed tags on top of this one when it's closed, that
     // means they are mismatched. Mismatched tags are treated as plain text in
     // markdown. So for each tag above this one, we write its start tag as text
@@ -995,10 +1016,9 @@ class TagState {
       // Didn't close correctly so revert to text.
       parser.start = startPos;
       parser.pos = parser.start;
+      print('startPos: $startPos; advancing by ${endMatch[0].length}');
       parser.advanceBy(endMatch[0].length);
     }
-
-    return null;
   }
 
   String get textContent =>
