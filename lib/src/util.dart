@@ -12,7 +12,7 @@ String escapeAttribute(String value) {
   var result = new StringBuffer();
   var codeUnits = value.codeUnits;
   var ch;
-  for (int i=0; i<codeUnits.length; i++) {
+  for (int i = 0; i < codeUnits.length; i++) {
     ch = codeUnits[i];
     if (ch == $backslash) {
       i++;
@@ -62,7 +62,7 @@ String escapeAttribute(String value) {
           result.write('%5C');
           result.writeCharCode(ch);
       }
-    } else  if (ch == $quote) {
+    } else if (ch == $quote) {
       result.write('%22');
     } else {
       result.writeCharCode(ch);

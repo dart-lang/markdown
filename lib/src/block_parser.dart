@@ -1004,7 +1004,7 @@ class ParagraphSyntax extends BlockSyntax {
       title = title.substring(1, title.length - 1);
     }
 
-    // References are case-insensitive.
+    // References are case-insensitive, and internal whitespace is compressed.
     label =
         label.toLowerCase().trim().replaceAll(new RegExp('[ \n\r\t]+'), ' ');
 
