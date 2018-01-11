@@ -460,7 +460,7 @@ class TagSyntax extends InlineSyntax {
 class _LinkWalker {
   final InlineParser parser;
   final TagState state;
-  final TagSyntax syntax;
+  final LinkSyntax syntax;
 
   String text;
   String destination;
@@ -468,11 +468,15 @@ class _LinkWalker {
 
   _LinkWalker(this.parser, this.state, this.syntax);
 
+  // Parse an inline link at the current position. Specifically, [parser.pos]
+  // is expected to be pointing at the opening `(`.
   bool parseInlineLink() {
     var i = parser.pos + 1;
     var ch = parser.charAt(i);
-    var destinationIdx, destination;
+    int destinationIdx;
+    String destination;
 
+    // Loop past the opening whitespace.
     while (true) {
       i++;
       if (i == parser.source.length) {
@@ -573,9 +577,8 @@ class _LinkWalker {
               // This looked like an inline link, until we found this $space
               // followed by mystery characters; no longer a link.
               return false;
-            } else {
-              break;
             }
+              break;
           case $lparen:
             parenCount++;
             break;
@@ -596,6 +599,8 @@ class _LinkWalker {
     return true;
   }
 
+  // Parse a reference link at the current position. Specifically, [parser.pos]
+  // is expected to be pointing at the opening `(`.
   bool parseReferenceLink() {
     // Walk past the `[` to the next character.
     var i = parser.pos + 2;
@@ -634,8 +639,8 @@ class _LinkWalker {
   // the first space after the link destination (which triggered the idea
   // that we might have a title).
   int _parseTitle(int i) {
-    var ch;
-    var delimiter;
+    int ch;
+    int delimiter;
 
     // Walk over leading space, looking for a delimiter.
     while (true) {
@@ -665,7 +670,7 @@ class _LinkWalker {
     }
     var titleIdx = i + 1;
 
-    int closeDelimiter = <int, int>{
+    var closeDelimiter = <int, int>{
       $apostrophe: $apostrophe,
       $quote: $quote,
       $lparen: $rparen,
@@ -680,23 +685,18 @@ class _LinkWalker {
         return null;
       }
       ch = parser.charAt(i);
-      // TODO: no switch.
-      switch (ch) {
-        case $backslash:
-          // Ignore the next character.
-          i++;
-          break;
-        default:
-          if (ch == closeDelimiter) {
-            title = parser.source.substring(titleIdx, i);
-            break closingLoop;
-          } else {
-            // Character in the title. Move along.
-          }
+      if (ch == $backslash) {
+        // Ignore the next character.
+        i++;
+        continue;
+      }
+      if (ch == closeDelimiter) {
+        title = parser.source.substring(titleIdx, i);
+        break;
       }
     }
 
-    // Parse optional whitespace before the required $rparen.
+    // Parse optional whitespace before the required `)`.
     trailingWhitespaceLoop:
     while (true) {
       i++;
@@ -713,7 +713,7 @@ class _LinkWalker {
           // Just padding. Move along.
           break;
         case $rparen:
-          // Back up to before the $rparen.
+          // Back up to before the `)`.
           i--;
           return i;
         default:
@@ -724,7 +724,7 @@ class _LinkWalker {
   }
 }
 
-/// Matches inline links like `[blah][id]` and `[blah](url)`.
+/// Matches links like `[blah][label]` and `[blah](url)`.
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;
 
@@ -779,7 +779,7 @@ class LinkSyntax extends TagSyntax {
   // Returns whether the image was added successfully.
   bool _addNode(InlineParser parser, TagState state,
       {String destination, String title, String label, int endPos}) {
-    Node element;
+    Element element;
     if (label != null) {
       // Reference link
       var link = parser.document.refLinks[label];
@@ -794,25 +794,24 @@ class LinkSyntax extends TagSyntax {
         var textToResolve = parser.source.substring(state.endPos, parser.pos);
 
         // See if we have a resolver that will generate a link for us.
-        element = linkResolver(textToResolve);
-        if (element == null) {
+        var node = linkResolver(textToResolve);
+        if (node == null) {
           return false;
+        } else {
+          parser.addNode(node);
+          parser.start = parser.pos = endPos;
+          return true;
         }
       }
-      if (element == null) {
-        destination = link.url;
-        title = link.title;
-      }
+      destination = link.url;
+      title = link.title;
     }
 
-    // [element] may have been populated by a custom linkResolver.
-    if (element == null) {
-      element = new Element('a', state.children);
-      element.attributes['href'] = escapeAttribute(
-          destination.replaceAll(r'\(', '(').replaceAll(r'\)', ')'));
-      if (title != null && title.isNotEmpty) {
-        element.attributes['title'] = escapeAttribute(title);
-      }
+    element = new Element('a', state.children);
+    element.attributes['href'] = escapeAttribute(
+        destination.replaceAll(r'\(', '(').replaceAll(r'\)', ')'));
+    if (title != null && title.isNotEmpty) {
+      element.attributes['title'] = escapeAttribute(title);
     }
     parser.addNode(element);
     parser.start = parser.pos = endPos;
@@ -825,7 +824,7 @@ class LinkSyntax extends TagSyntax {
 }
 
 /// Matches images like `![alternate text](url "optional title")` and
-/// `![alternate text][url reference]`.
+/// `![alternate text][label]`.
 class ImageSyntax extends LinkSyntax {
   ImageSyntax({Resolver linkResolver})
       : super(linkResolver: linkResolver, pattern: r'!\[');
@@ -838,7 +837,7 @@ class ImageSyntax extends LinkSyntax {
   // Returns whether the image was added successfully.
   bool _addNode(InlineParser parser, TagState state,
       {String destination, String title, String label, int endPos}) {
-    Node element;
+    Element element;
     if (label != null) {
       // Reference link
       var link = parser.document.refLinks[label];
@@ -853,24 +852,24 @@ class ImageSyntax extends LinkSyntax {
         var textToResolve = parser.source.substring(state.endPos, parser.pos);
 
         // See if we have a resolver that will generate a link for us.
-        element = linkResolver(textToResolve);
-        if (element == null) {
+        var node = linkResolver(textToResolve);
+        if (node == null) {
           return false;
+        } else {
+          parser.addNode(node);
+          parser.start = parser.pos = endPos;
+          return true;
         }
       }
-      if (element == null) {
-        destination = link.url;
-        title = link.title;
-      }
+      destination = link.url;
+      title = link.title;
     }
 
-    if (element == null) {
-      element = new Element.empty('img');
-      element.attributes['src'] = escapeHtml(destination);
-      element.attributes['alt'] = state?.textContent ?? '';
-      if (title != null && title.isNotEmpty) {
-        element.attributes['title'] = escapeAttribute(title);
-      }
+    element = new Element.empty('img');
+    element.attributes['src'] = escapeHtml(destination);
+    element.attributes['alt'] = state?.textContent ?? '';
+    if (title != null && title.isNotEmpty) {
+      element.attributes['title'] = escapeAttribute(title);
     }
     parser.addNode(element);
     parser.start = parser.pos = endPos;

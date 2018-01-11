@@ -7,7 +7,8 @@ import 'inline_parser.dart';
 /// For example, the [gitHub] set of syntax extensions allows users to output
 /// HTML from their Markdown in a similar fashion to GitHub's parsing.
 class ExtensionSet {
-  /// The [none] extension set renders Markdown similar to [Markdown.pl].
+  /// The [ExtensionSet.none] extension set renders Markdown similar to
+  /// [Markdown.pl].
   ///
   /// However, this set does not render _exactly_ the same as Markdown.pl;
   /// rather it is more-or-less the CommonMark standard of Markdown, without
