@@ -3,9 +3,6 @@ sudo: false
 dart:
   - stable
   - dev
-  - 1.23.0
-  - 1.22.1
-  - 1.21.1
 dart_task:
   # Using the expanded reporter to work-around
   # https://github.com/dart-lang/markdown/issues/191

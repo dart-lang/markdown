@@ -39,6 +39,7 @@ class ExtensionSet {
     const TableSyntax()
   ], [
     new InlineHtmlSyntax(),
+    new StrikethroughSyntax(),
     new EmojiSyntax(),
   ]);
 
@@ -46,9 +47,13 @@ class ExtensionSet {
   /// flavored Markdown spec].
   ///
   /// [GitHub flavored Markdown]: https://github.github.com/gfm/
-  static final ExtensionSet gitHubFlavored = new ExtensionSet(
-      [const FencedCodeBlockSyntax(), const TableSyntax()],
-      [new InlineHtmlSyntax()]);
+  static final ExtensionSet gitHubFlavored = new ExtensionSet([
+    const FencedCodeBlockSyntax(),
+    const TableSyntax()
+  ], [
+    new InlineHtmlSyntax(),
+    new StrikethroughSyntax(),
+  ]);
 
   /// The deprecated name for the [gitHubFlavored] extension set.
   @deprecated
