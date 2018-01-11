@@ -578,7 +578,7 @@ class _LinkWalker {
               // followed by mystery characters; no longer a link.
               return false;
             }
-              break;
+            break;
           case $lparen:
             parenCount++;
             break;
