@@ -285,10 +285,11 @@ class AutolinkExtensionSyntax extends InlineSyntax {
 
   static const TRUNCATING_PUNCTUATION_POS = r'[\?\!\.\,\:\*\_\~]';
 
-  AutolinkExtensionSyntax() : super('$START(($SCHEME)($DOMAIN)($PATH))$TRUNCATING_PUNCTUATION_NEG');
+  AutolinkExtensionSyntax()
+      : super('$START(($SCHEME)($DOMAIN)($PATH))$TRUNCATING_PUNCTUATION_NEG');
 
   @override
-  bool tryMatch (InlineParser parser) {
+  bool tryMatch(InlineParser parser) {
     var startMatch = pattern.matchAsPrefix(parser.source, parser.pos);
     if (startMatch != null) {
       // Write any existing plain text up to this point.
@@ -343,7 +344,8 @@ class AutolinkExtensionSyntax extends InlineSyntax {
      * in the interior of the link:
      * https://github.github.com/gfm/#example-599
      */
-    final trailingPunc = new RegExp('$TRUNCATING_PUNCTUATION_POS*' + r'$').firstMatch(url);
+    final trailingPunc =
+        new RegExp('$TRUNCATING_PUNCTUATION_POS*' + r'$').firstMatch(url);
     if (trailingPunc != null) {
       url = url.substring(0, url.length - trailingPunc[0].length);
       href = href.substring(0, href.length - trailingPunc[0].length);
