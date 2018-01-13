@@ -35,11 +35,12 @@ class ExtensionSet {
     const FencedCodeBlockSyntax(),
     const HeaderWithIdSyntax(),
     const SetextHeaderWithIdSyntax(),
-    const TableSyntax()
+    const TableSyntax(),
   ], [
     new InlineHtmlSyntax(),
     new StrikethroughSyntax(),
     new EmojiSyntax(),
+    new AutolinkExtensionSyntax(),
   ]);
 
   /// The [gitHubFlavored] extension set is close to compliance with the [GitHub
@@ -48,10 +49,11 @@ class ExtensionSet {
   /// [GitHub flavored Markdown]: https://github.github.com/gfm/
   static final ExtensionSet gitHubFlavored = new ExtensionSet([
     const FencedCodeBlockSyntax(),
-    const TableSyntax()
+    const TableSyntax(),
   ], [
     new InlineHtmlSyntax(),
     new StrikethroughSyntax(),
+    new AutolinkExtensionSyntax(),
   ]);
 
   /// The deprecated name for the [gitHubFlavored] extension set.

@@ -274,6 +274,116 @@ class AutolinkSyntax extends InlineSyntax {
   }
 }
 
+/// Matches autolinks like `http://foo.com`.
+class AutolinkExtensionSyntax extends InlineSyntax {
+  static const START = r'(?:^|[\s\*\_\~\(\>])';
+  static const SCHEME = r'(?:(?:https?|ftp)\:\/\/|www\.)';
+  static const DOMAIN = r'[a-zA-Z\_\-\.]+';
+  static const PATH = r'[^\s\<]*';
+  // static const TRUNCATING_PUNCTUATION_NEG = r'[^\s<\?\!\.\,\:\*\_\~]';
+  static const TRUNCATING_PUNCTUATION_NEG = r'';
+
+  static const TRUNCATING_PUNCTUATION_POS = r'[\?\!\.\,\:\*\_\~]';
+
+  AutolinkExtensionSyntax() : super('$START(($SCHEME)($DOMAIN)($PATH))$TRUNCATING_PUNCTUATION_NEG');
+
+  @override
+  bool tryMatch (InlineParser parser) {
+    var startMatch = pattern.matchAsPrefix(parser.source, parser.pos);
+    if (startMatch != null) {
+      // Write any existing plain text up to this point.
+      parser.writeText();
+
+      if (onMatch(parser, startMatch)) parser.consume(startMatch[0].length);
+      return true;
+    }
+
+    return false;
+  }
+
+  @override
+  bool onMatch(InlineParser parser, Match match) {
+    print('HELP! I am trapped in a dart factory');
+    var url = match[1];
+    var href = url;
+    var matchLength = url.length;
+    print('url: $url');
+
+    if (url.startsWith(new RegExp(r'(\s|\>)'))) {
+      url = url.substring(1, url.length - 1);
+      href = href.substring(1, href.length - 1);
+      parser.pos++;
+      matchLength--;
+    }
+
+    /** Prevent accidental standard autolink matches */
+    if (url.endsWith('>') && parser.source[parser.pos - 1] == '<') {
+      return false;
+    }
+
+    /**
+     * When an autolink ends in ), we scan the entire autolink for the total
+     * number of parentheses. If there is a greater number of closing
+     * parentheses than opening ones, we don’t consider the last character
+     * part of the autolink, in order to facilitate including an autolink
+     * inside a parenthesis:
+     * https://github.github.com/gfm/#example-600
+     */
+    if (url.endsWith(')')) {
+      final opening = new RegExp(r'\(').allMatches(url).length;
+      final closing = new RegExp(r'\)').allMatches(url).length;
+      if (closing > opening) {
+        url = url.substring(0, url.length - 1);
+        href = href.substring(0, href.length - 1);
+        matchLength--;
+      }
+    }
+
+    /**
+     * Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will
+     * not be considered part of the autolink, though they may be included
+     * in the interior of the link:
+     * https://github.github.com/gfm/#example-599
+     */
+    final trailingPunc = new RegExp('$TRUNCATING_PUNCTUATION_POS*' + r'$').firstMatch(url);
+    if (trailingPunc != null) {
+      url = url.substring(0, url.length - trailingPunc[0].length);
+      href = href.substring(0, href.length - trailingPunc[0].length);
+      matchLength -= trailingPunc[0].length;
+    }
+
+    /**
+     * If an autolink ends in a semicolon (;), we check to see if it appears
+     * to resemble an
+     * [entity reference](https://github.github.com/gfm/#entity-references);
+     * if the preceding text is & followed by one or more alphanumeric
+     * characters. If so, it is excluded from the autolink:
+     * https://github.github.com/gfm/#example-602
+     */
+    if (url.endsWith(';')) {
+      final entityRef = new RegExp(r'\&[a-zA-Z0-9]+;$').firstMatch(url);
+      if (entityRef != null) {
+        // Strip out HTML entity reference
+        url = url.substring(0, url.length - entityRef[0].length);
+        href = href.substring(0, href.length - entityRef[0].length);
+        matchLength -= entityRef[0].length;
+      }
+    }
+
+    /** The scheme http will be inserted automatically */
+    if (!href.startsWith(new RegExp(r'(?:https?|ftp)\:\/\/'))) {
+      href = 'http://$href';
+    }
+
+    final anchor = new Element.text('a', escapeHtml(url));
+    anchor.attributes['href'] = Uri.encodeFull(href);
+    parser.addNode(anchor);
+
+    parser.consume(matchLength);
+    return false;
+  }
+}
+
 class _DelimiterRun {
   static final String punctuation = r'''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~''';
   // TODO(srawlins): Unicode whitespace
