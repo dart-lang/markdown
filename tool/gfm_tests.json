@@ -5461,7 +5461,7 @@
     "example": 605,
     "start_line": 9025,
     "end_line": 9029,
-    "section": "Autolinks (extension)",
+    "section": "Autolinks Email (extension)",
     "extensions": [
       "autolink"
     ]
@@ -5472,7 +5472,7 @@
     "example": 606,
     "start_line": 9033,
     "end_line": 9037,
-    "section": "Autolinks (extension)",
+    "section": "Autolinks Email (extension)",
     "extensions": [
       "autolink"
     ]
@@ -5483,7 +5483,7 @@
     "example": 607,
     "start_line": 9043,
     "end_line": 9056,
-    "section": "Autolinks (extension)",
+    "section": "Autolinks Email (extension)",
     "extensions": [
       "autolink"
     ]
