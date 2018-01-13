@@ -303,11 +303,9 @@ class AutolinkExtensionSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    print('HELP! I am trapped in a dart factory');
     var url = match[1];
     var href = url;
     var matchLength = url.length;
-    print('url: $url');
 
     if (url.startsWith(new RegExp(r'(\s|\>)'))) {
       url = url.substring(1, url.length - 1);
