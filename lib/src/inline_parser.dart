@@ -88,39 +88,22 @@ class InlineParser {
     // Make a fake top tag to hold the results.
     _stack.add(new TagState(0, 0, null, null));
 
+    loopOverSource:
     while (!isDone) {
-      var matched = false;
-
-      var ch = charAt(pos);
-      if (ch == $rbracket ||
-          ch == $asterisk ||
-          ch == $underscore ||
-          ch == $tilde) {
-        // TODO(srawlins): This is imperfect as it doesn't take into account
-        // other possible syntax extensions. We can provide an API in the
-        // future where each syntax's endPattern can be used here.
-
-        // See if any of the current tags on the stack match.  This takes
-        // priority over other possible matches.
-        for (var i = _stack.length - 1; i > 0; i--) {
-          if (_stack[i].tryMatch(this)) {
-            matched = true;
-            break;
-          }
+      // See if any of the current tags on the stack match.  This takes
+      // priority over other possible matches.
+      for (var i = _stack.length - 1; i > 0; i--) {
+        if (_stack[i].tryMatch(this)) {
+          continue loopOverSource;
         }
-
-        if (matched) continue;
       }
 
       // See if the current text matches any defined markdown syntax.
       for (var syntax in syntaxes) {
         if (syntax.tryMatch(this)) {
-          matched = true;
-          break;
+          continue loopOverSource;
         }
       }
-
-      if (matched) continue;
 
       // If we got here, it's just text.
       advanceBy(1);
@@ -134,8 +117,8 @@ class InlineParser {
   // parsed, and cannot be nested within any outer links.
   void deactivatePendingLinks() {
     for (var i = _stack.length - 1; i > 0; i--) {
-      var ch = charAt(_stack[i].startPos);
-      if (ch == $lbracket) {
+      var char = charAt(_stack[i].startPos);
+      if (char == $lbracket) {
         _stack[i].isActive = false;
       }
     }
@@ -472,7 +455,7 @@ class _LinkWalker {
   // is expected to be pointing at the opening `(`.
   bool parseInlineLink() {
     var i = parser.pos + 1;
-    var ch = parser.charAt(i);
+    var char = parser.charAt(i);
     int destinationIdx;
     String destination;
 
@@ -483,8 +466,8 @@ class _LinkWalker {
         // EOF. Not a link.
         return false;
       }
-      ch = parser.charAt(i);
-      switch (ch) {
+      char = parser.charAt(i);
+      switch (char) {
         case $space:
         case $lf:
         case $cr:
@@ -508,14 +491,14 @@ class _LinkWalker {
     // Start with 1 for the paren that opened this destination.
     var parenCount = 1;
 
-    if (ch == $lt) {
+    if (char == $lt) {
       // Maybe a `<...>`-enclosed link destination.
       destinationIdx = i + 1;
       enclosedDestinationLoop:
       while (true) {
         i++;
-        ch = parser.charAt(i);
-        switch (ch) {
+        char = parser.charAt(i);
+        switch (char) {
           case $backslash:
             i++;
             break;
@@ -561,8 +544,8 @@ class _LinkWalker {
           // EOF. Not a link.
           return false;
         }
-        ch = parser.charAt(i);
-        switch (ch) {
+        char = parser.charAt(i);
+        switch (char) {
           case $backslash:
             // We do not care about the next character.
             i++;
@@ -608,8 +591,8 @@ class _LinkWalker {
       return false;
     }
     var text = parser.source.substring(state.endPos, parser.pos);
-    var ch = parser.charAt(i);
-    if (ch == $rbracket) {
+    var char = parser.charAt(i);
+    if (char == $rbracket) {
       // Collapsed reference link.
       var label = text.toLowerCase();
       return syntax._addNode(parser, state, label: label, endPos: i);
@@ -621,11 +604,11 @@ class _LinkWalker {
       if (i >= parser.source.length) {
         return false;
       }
-      ch = parser.charAt(i);
-      if (ch == $backslash) {
+      char = parser.charAt(i);
+      if (char == $backslash) {
         // We don't care about the next character.
         i++;
-      } else if (ch == $rbracket) {
+      } else if (char == $rbracket) {
         break;
       }
       // TODO: only check 999 characters, for performance reasons?
@@ -639,7 +622,7 @@ class _LinkWalker {
   // the first space after the link destination (which triggered the idea
   // that we might have a title).
   int _parseTitle(int i) {
-    int ch;
+    int char;
     int delimiter;
 
     // Walk over leading space, looking for a delimiter.
@@ -649,8 +632,8 @@ class _LinkWalker {
         // EOF. Not a link.
         return null;
       }
-      ch = parser.charAt(i);
-      switch (ch) {
+      char = parser.charAt(i);
+      switch (char) {
         case $space:
         case $lf:
         case $cr:
@@ -660,7 +643,7 @@ class _LinkWalker {
         case $apostrophe:
         case $quote:
         case $lparen:
-          delimiter = ch;
+          delimiter = char;
           break;
         default:
           // Not a title!
@@ -684,13 +667,13 @@ class _LinkWalker {
         // EOF. Not a link.
         return null;
       }
-      ch = parser.charAt(i);
-      if (ch == $backslash) {
+      char = parser.charAt(i);
+      if (char == $backslash) {
         // Ignore the next character.
         i++;
         continue;
       }
-      if (ch == closeDelimiter) {
+      if (char == closeDelimiter) {
         title = parser.source.substring(titleIdx, i);
         break;
       }
@@ -704,8 +687,8 @@ class _LinkWalker {
         // EOF. Not a link.
         return null;
       }
-      ch = parser.charAt(i);
-      switch (ch) {
+      char = parser.charAt(i);
+      switch (char) {
         case $space:
         case $lf:
         case $cr:
@@ -763,10 +746,10 @@ class LinkSyntax extends TagSyntax {
           parser.source.substring(state.endPos, parser.pos).toLowerCase();
       return _addNode(parser, state, label: text, endPos: i - 1);
     }
-    var ch = parser.charAt(i);
+    var char = parser.charAt(i);
 
     // Maybe an inline link.
-    if (ch == $lparen) {
+    if (char == $lparen) {
       if (linkWalker.parseInlineLink()) {
         // Huzzah, an inline link.
         return true;
@@ -781,7 +764,7 @@ class LinkSyntax extends TagSyntax {
     }
 
     // A reference link.
-    if (ch == $lbracket) {
+    if (char == $lbracket) {
       return linkWalker.parseReferenceLink();
     }
 
