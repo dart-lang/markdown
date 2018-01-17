@@ -124,7 +124,7 @@ class InlineParser {
     }
   }
 
-  int charAt(int idx) => source.codeUnitAt(idx);
+  int charAt(int index) => source.codeUnitAt(index);
 
   void writeText() {
     writeTextRange(start, pos);
@@ -451,33 +451,34 @@ class _LinkWalker {
 
   _LinkWalker(this.parser, this.state, this.syntax);
 
-  // Parse an inline link at the current position. Specifically, [parser.pos]
-  // is expected to be pointing at the opening `(`.
+  /// Parse an inline link at the current position.
+  ///
+  /// At this point, we have parsed a link's (or image's) opening `[`, and then
+  /// a matching closing `]`, and [parser.pos] is pointing at an opening `(`.
+  /// This method will then attempt to parse a link destination wrapped in `<>`,
+  /// such as `(<http://url>)`, or a bare link destination, such as
+  /// `(http://url)`, or a link destination with a title, such as
+  /// `(http://url "title")`.
+  ///
+  /// Returns whether a link was successfully parsed.
   bool parseInlineLink() {
-    var i = parser.pos + 1;
-    var char = parser.charAt(i);
-    int destinationIdx;
+    // Start walking at the character just after the opening `(`.
+    var sourceIndex = parser.pos + 1;
+    var char = parser.charAt(sourceIndex);
+    int destinationStart;
     String destination;
 
     // Loop past the opening whitespace.
     while (true) {
-      i++;
-      if (i == parser.source.length) {
+      sourceIndex++;
+      if (sourceIndex == parser.source.length) {
         // EOF. Not a link.
         return false;
       }
-      char = parser.charAt(i);
-      switch (char) {
-        case $space:
-        case $lf:
-        case $cr:
-        case $ff:
-          // Just padding. Move along.
-          continue;
-        default:
-          break;
+      char = parser.charAt(sourceIndex);
+      if (char != $space && char != $lf && char != $cr && char != $ff) {
+        break;
       }
-      break;
     }
 
     // According to
@@ -488,31 +489,34 @@ class _LinkWalker {
     // > backslash-escaped or (b) they are part of a balanced pair of
     // > unescaped parentheses.
     //
-    // Start with 1 for the paren that opened this destination.
+    // We need to count the open parens. We start with 1 for the paren that
+    // opened the destination.
     var parenCount = 1;
 
     if (char == $lt) {
       // Maybe a `<...>`-enclosed link destination.
-      destinationIdx = i + 1;
+      destinationStart = sourceIndex + 1;
       enclosedDestinationLoop:
       while (true) {
-        i++;
-        char = parser.charAt(i);
+        sourceIndex++;
+        char = parser.charAt(sourceIndex);
         switch (char) {
           case $backslash:
-            i++;
+            sourceIndex++;
             break;
           case $gt:
-            destination = parser.source.substring(destinationIdx, i);
-            i++;
+            destination =
+                parser.source.substring(destinationStart, sourceIndex);
+            sourceIndex++;
             break enclosedDestinationLoop;
           case $space:
           case $lf:
           case $cr:
           case $ff:
-            destination = parser.source.substring(destinationIdx - 1, i);
-            i = _parseTitle(i);
-            if (i == null) {
+            destination =
+                parser.source.substring(destinationStart - 1, sourceIndex);
+            sourceIndex = _parseTitle(sourceIndex);
+            if (sourceIndex == null) {
               // This looked like an inline link, until we found this $space
               // followed by mystery characters; no longer a link.
               return false;
@@ -525,7 +529,8 @@ class _LinkWalker {
             parenCount--;
             if (parenCount == 0) {
               // End of link.
-              destination ??= parser.source.substring(destinationIdx - 1, i);
+              destination ??=
+                  parser.source.substring(destinationStart - 1, sourceIndex);
               break enclosedDestinationLoop;
             } else {
               // Keep going. The parens must be balanced.
@@ -533,30 +538,31 @@ class _LinkWalker {
         }
       }
     } else {
-      destinationIdx = i;
+      destinationStart = sourceIndex;
       // The first character was not `<`, so let's back up one and start
       // walking.
-      i--;
+      sourceIndex--;
       destinationLoop:
       while (true) {
-        i++;
-        if (i == parser.source.length) {
+        sourceIndex++;
+        if (sourceIndex == parser.source.length) {
           // EOF. Not a link.
           return false;
         }
-        char = parser.charAt(i);
+        char = parser.charAt(sourceIndex);
         switch (char) {
           case $backslash:
             // We do not care about the next character.
-            i++;
+            sourceIndex++;
             break;
           case $space:
           case $lf:
           case $cr:
           case $ff:
-            destination = parser.source.substring(destinationIdx, i);
-            i = _parseTitle(i);
-            if (i == null) {
+            destination =
+                parser.source.substring(destinationStart, sourceIndex);
+            sourceIndex = _parseTitle(sourceIndex);
+            if (sourceIndex == null) {
               // This looked like an inline link, until we found this $space
               // followed by mystery characters; no longer a link.
               return false;
@@ -569,7 +575,8 @@ class _LinkWalker {
             parenCount--;
             if (parenCount == 0) {
               // End of link.
-              destination ??= parser.source.substring(destinationIdx, i);
+              destination ??=
+                  parser.source.substring(destinationStart, sourceIndex);
               break destinationLoop;
             } else {
               // Keep going. The parens must be balanced.
@@ -578,7 +585,7 @@ class _LinkWalker {
       }
     }
     syntax._addNode(parser, state,
-        destination: destination, title: title, endPos: i);
+        destination: destination, title: title, endPos: sourceIndex);
     return true;
   }
 
