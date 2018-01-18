@@ -471,10 +471,7 @@ class _LinkWalker {
     // Loop past the opening whitespace.
     while (true) {
       sourceIndex++;
-      if (sourceIndex == parser.source.length) {
-        // EOF. Not a link.
-        return false;
-      }
+      if (sourceIndex == parser.source.length) return false; // EOF. Not a link.
       char = parser.charAt(sourceIndex);
       if (char != $space && char != $lf && char != $cr && char != $ff) {
         break;
@@ -496,9 +493,11 @@ class _LinkWalker {
     if (char == $lt) {
       // Maybe a `<...>`-enclosed link destination.
       destinationStart = sourceIndex + 1;
-      enclosedDestinationLoop:
+      loop:
       while (true) {
         sourceIndex++;
+        if (sourceIndex == parser.source.length)
+          return false; // EOF. Not a link.
         char = parser.charAt(sourceIndex);
         switch (char) {
           case $backslash:
@@ -508,7 +507,7 @@ class _LinkWalker {
             destination =
                 parser.source.substring(destinationStart, sourceIndex);
             sourceIndex++;
-            break enclosedDestinationLoop;
+            break loop;
           case $space:
           case $lf:
           case $cr:
@@ -531,7 +530,7 @@ class _LinkWalker {
               // End of link.
               destination ??=
                   parser.source.substring(destinationStart - 1, sourceIndex);
-              break enclosedDestinationLoop;
+              break loop;
             } else {
               // Keep going. The parens must be balanced.
             }
@@ -542,13 +541,11 @@ class _LinkWalker {
       // The first character was not `<`, so let's back up one and start
       // walking.
       sourceIndex--;
-      destinationLoop:
+      loop:
       while (true) {
         sourceIndex++;
-        if (sourceIndex == parser.source.length) {
-          // EOF. Not a link.
-          return false;
-        }
+        if (sourceIndex == parser.source.length)
+          return false; // EOF. Not a link.
         char = parser.charAt(sourceIndex);
         switch (char) {
           case $backslash:
@@ -577,7 +574,7 @@ class _LinkWalker {
               // End of link.
               destination ??=
                   parser.source.substring(destinationStart, sourceIndex);
-              break destinationLoop;
+              break loop;
             } else {
               // Keep going. The parens must be balanced.
             }
@@ -590,7 +587,7 @@ class _LinkWalker {
   }
 
   // Parse a reference link at the current position. Specifically, [parser.pos]
-  // is expected to be pointing at the opening `(`.
+  // is expected to be pointing at the opening `[`.
   bool parseReferenceLink() {
     // Walk past the `[` to the next character.
     var i = parser.pos + 2;
@@ -618,7 +615,7 @@ class _LinkWalker {
       } else if (char == $rbracket) {
         break;
       }
-      // TODO: only check 999 characters, for performance reasons?
+      // TODO(srawlins): only check 999 characters, for performance reasons?
     }
 
     var label = parser.source.substring(labelIdx, i).toLowerCase();
@@ -660,14 +657,9 @@ class _LinkWalker {
     }
     var titleIdx = i + 1;
 
-    var closeDelimiter = <int, int>{
-      $apostrophe: $apostrophe,
-      $quote: $quote,
-      $lparen: $rparen,
-    }[delimiter];
+    var closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
 
     // Now we look for an un-escaped close delimiter.
-    closingLoop:
     while (true) {
       i++;
       if (i >= parser.source.length) {
@@ -687,7 +679,6 @@ class _LinkWalker {
     }
 
     // Parse optional whitespace before the required `)`.
-    trailingWhitespaceLoop:
     while (true) {
       i++;
       if (i == parser.source.length) {
@@ -775,7 +766,8 @@ class LinkSyntax extends TagSyntax {
       return linkWalker.parseReferenceLink();
     }
 
-    // Oops, perhaps just a simple shortcut reference link (`[...]`).
+    // The link text (inside `[...]`) was not followed with a opening `(` nor
+    // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
     var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
     return _addNode(parser, state, label: text, endPos: i - 1);
   }
@@ -808,7 +800,8 @@ class LinkSyntax extends TagSyntax {
           return false;
         } else {
           parser.addNode(node);
-          parser.start = parser.pos = endPos;
+          parser.pos = endPos;
+          parser.start = parser.pos;
           return true;
         }
       }
@@ -825,7 +818,9 @@ class LinkSyntax extends TagSyntax {
     parser.addNode(element);
     parser.start = parser.pos = endPos;
 
-    // Mark all of the `[` tag states as inactive.
+    // Mark all of the `[` tag states as inactive. Since we have just parsed a
+    // link, all open link delimiters must be treated as text. For example:
+    // `[foo [bar](url)` should render as `[foo <a href="url">bar</a>`.
     parser.deactivatePendingLinks();
 
     return true;
