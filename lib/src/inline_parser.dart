@@ -508,7 +508,7 @@ class LinkSyntax extends TagSyntax {
 
     var element = new Element('a', state.children);
 
-    element.attributes["href"] = escapeHtml(link.url);
+    element.attributes["href"] = escapeHtml(link.destination);
     if (link.title != null) {
       element.attributes['title'] = escapeHtml(link.title);
     }
@@ -520,7 +520,11 @@ class LinkSyntax extends TagSyntax {
   ///
   /// This method can return null, if the link is a reference link, and has no
   /// accompanying link reference definition.
-  Link getLink(InlineParser parser, Match match, TagState state) {
+  ///
+  /// Temporarily, this is returning [LinkReference]s, for convenience, which
+  /// is an improper use of [LinkReference]s. This should change before this
+  /// package is released.
+  LinkReference getLink(InlineParser parser, Match match, TagState state) {
     if (match[3] != null) {
       // Inline link like [foo](url).
       var url = match[3];
@@ -531,9 +535,9 @@ class LinkSyntax extends TagSyntax {
         url = url.substring(1, url.length - 1);
       }
 
-      return new Link(null, url, title);
+      return new LinkReference(null, url, title);
     } else {
-      String id;
+      String label;
       String _contents() {
         var offset = pattern.pattern.length - 1;
         return parser.source.substring(state.startPos + offset, parser.pos);
@@ -542,18 +546,18 @@ class LinkSyntax extends TagSyntax {
       // Reference link like [foo][bar].
       if (match[1] == null) {
         // There are no reference brackets ("shortcut reference link"), so infer
-        // the id from the contents.
-        id = _contents();
+        // the label from the contents.
+        label = _contents();
       } else if (match[2] == '') {
-        // The id is empty ("[]") so infer it from the contents.
-        id = _contents();
+        // The label is empty ("[]") so infer it from the contents.
+        label = _contents();
       } else {
-        id = match[2];
+        label = match[2];
       }
 
       // References are case-insensitive.
-      id = id.toLowerCase();
-      return parser.document.refLinks[id];
+      label = label.toLowerCase();
+      return parser.document.linkReferences[label];
     }
   }
 
@@ -577,7 +581,7 @@ class ImageSyntax extends LinkSyntax {
     var link = getLink(parser, match, state);
     if (link == null) return null;
     var image = new Element.empty("img");
-    image.attributes["src"] = escapeHtml(link.url);
+    image.attributes["src"] = escapeHtml(link.destination);
     image.attributes["alt"] = state?.textContent ?? '';
 
     if (link.title != null) {
