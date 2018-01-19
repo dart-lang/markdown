@@ -1,5 +1,7 @@
-## 1.1.2-dev
+## 2.0.0-dev
 
+* **Breaking change:** The `Link` class has been renamed `LinkReference`, and
+  the `Document` field, `refLinks`, has been renamed `linkReferences`.
 * Overhaul support for emphasis (`*foo*` and `_foo_`) and strong emphasis
   (`**foo**` and `__foo__`), dramatically improving CommonMark compliance.
 * Improve support for tab characters, and horizontal rules.

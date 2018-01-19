@@ -783,7 +783,7 @@ class LinkSyntax extends TagSyntax {
     Element element;
     if (label != null) {
       // Reference link
-      var link = parser.document.refLinks[label];
+      var link = parser.document.linkReferences[label];
       if (link == null) {
         // This link has no reference definition. But we allow users of the
         // library to specify a special resolver function ([linkResolver]) that
@@ -805,7 +805,7 @@ class LinkSyntax extends TagSyntax {
           return true;
         }
       }
-      destination = link.url;
+      destination = link.destination;
       title = link.title;
     }
 
@@ -844,7 +844,7 @@ class ImageSyntax extends LinkSyntax {
     Element element;
     if (label != null) {
       // Reference link
-      var link = parser.document.refLinks[label];
+      var link = parser.document.linkReferences[label];
       if (link == null) {
         // This link has no reference definition. But we allow users of the
         // library to specify a special resolver function ([linkResolver]) that
@@ -865,7 +865,7 @@ class ImageSyntax extends LinkSyntax {
           return true;
         }
       }
-      destination = link.url;
+      destination = link.destination;
       title = link.title;
     }
 

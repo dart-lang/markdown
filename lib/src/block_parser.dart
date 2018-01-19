@@ -1008,8 +1008,8 @@ class ParagraphSyntax extends BlockSyntax {
     label =
         label.toLowerCase().trim().replaceAll(new RegExp('[ \n\r\t]+'), ' ');
 
-    parser.document.refLinks
-        .putIfAbsent(label, () => new Link(label, destination, title));
+    parser.document.linkReferences
+        .putIfAbsent(label, () => new LinkReference(label, destination, title));
     return true;
   }
 }
