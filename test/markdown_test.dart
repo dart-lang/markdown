@@ -25,7 +25,7 @@ void main() {
       inlineSyntaxes: [new InlineHtmlSyntax()]);
 
   group('Resolver', () {
-    Node nyanResolver(String text) => new Text('~=[,,_${text}_,,]:3');
+    Node nyanResolver(String text, [_]) => new Text('~=[,,_${text}_,,]:3');
     validateCore(
         'simple link resolver',
         '''
@@ -69,7 +69,7 @@ nyan''',
 
     validateCore('dart custom links', 'links [are<foo>] awesome',
         '<p>links <a>are&lt;foo></a> awesome</p>\n',
-        linkResolver: (text) =>
+        linkResolver: (String text, [_]) =>
             new Element.text('a', text.replaceAll('<', '&lt;')));
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some
