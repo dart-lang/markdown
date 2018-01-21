@@ -374,9 +374,14 @@ class TagSyntax extends InlineSyntax {
     var runLength = match.group(0).length;
     var matchStart = parser.pos;
     var matchEnd = parser.pos + runLength - 1;
+    if (!requiresDelimiterRun) {
+      parser._stack
+          .add(new TagState(parser.pos, matchEnd + 1, this, null));
+      return true;
+    }
+
     var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
-    if (!requiresDelimiterRun ||
-        (delimiterRun != null && delimiterRun.canOpen)) {
+    if (delimiterRun != null && delimiterRun.canOpen) {
       parser._stack
           .add(new TagState(parser.pos, matchEnd + 1, this, delimiterRun));
       return true;
@@ -433,8 +438,7 @@ class TagSyntax extends InlineSyntax {
 class _LinkWalker {
   final InlineParser parser;
 
-  String text;
-  String destination;
+  String _destination;
   String title;
 
   _LinkWalker(this.parser);
@@ -454,7 +458,6 @@ class _LinkWalker {
     var sourceIndex = parser.pos + 1;
     var char = parser.charAt(sourceIndex);
     int destinationStart;
-    String destination;
 
     // Loop past the opening whitespace.
     while (true) {
@@ -492,7 +495,7 @@ class _LinkWalker {
             sourceIndex++;
             break;
           case $gt:
-            destination =
+            _destination =
                 parser.source.substring(destinationStart, sourceIndex);
             sourceIndex++;
             break loop;
@@ -500,7 +503,7 @@ class _LinkWalker {
           case $lf:
           case $cr:
           case $ff:
-            destination =
+            _destination =
                 parser.source.substring(destinationStart - 1, sourceIndex);
             sourceIndex = _parseTitle(sourceIndex);
             if (sourceIndex == null) {
@@ -516,7 +519,7 @@ class _LinkWalker {
             parenCount--;
             if (parenCount == 0) {
               // End of link.
-              destination ??=
+              _destination ??=
                   parser.source.substring(destinationStart - 1, sourceIndex);
               break loop;
             } else {
@@ -544,7 +547,7 @@ class _LinkWalker {
           case $lf:
           case $cr:
           case $ff:
-            destination =
+            _destination =
                 parser.source.substring(destinationStart, sourceIndex);
             sourceIndex = _parseTitle(sourceIndex);
             if (sourceIndex == null) {
@@ -560,7 +563,7 @@ class _LinkWalker {
             parenCount--;
             if (parenCount == 0) {
               // End of link.
-              destination ??=
+              _destination ??=
                   parser.source.substring(destinationStart, sourceIndex);
               break loop;
             } else {
@@ -570,7 +573,7 @@ class _LinkWalker {
       }
     }
     return new LinkLike(
-        destination: destination, title: title, endPos: sourceIndex);
+        destination: _destination, title: title, endPos: sourceIndex);
   }
 
   /// Parse a reference link at the current position.
@@ -711,32 +714,26 @@ class StrikethroughSyntax extends TagSyntax {
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;
 
-  // Pending [TagState]s that are "active."
-  //
-  // These are states that might resolve to links. Once a link has been
-  // resolved, all other link [TagState]s must be removed from this list, so
-  // that we don't nest links.
-  static final _activeStates = new List<TagState>();
-
-  List<TagState> get _as => _activeStates;
-
   LinkSyntax({this.linkResolver, String pattern: r'\['})
       : super(pattern, end: r'\]');
+
+  // Pending [TagState]s are "active" or "inactive" based on whether a
+  // link-like element has just been parsed. Links cannot be nested, so we must
+  // "deactivate" any pending ones.
+  bool _pendingStatesAreActive = true;
 
   @override
   bool onMatch(InlineParser parser, Match match) {
     var matched = super.onMatch(parser, match);
     if (!matched) return false;
 
-    // We just added a new TagState to the stack, so we must add it to our list
-    // of active states.
-    _as.add(parser._stack.last);
+    _pendingStatesAreActive = true;
 
     return true;
   }
 
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
-    if (!_as.contains(state)) return false;
+    if (!_pendingStatesAreActive) return false;
 
     var i = parser.pos;
     var linkWalker = new _LinkWalker(parser);
@@ -858,7 +855,7 @@ class LinkSyntax extends TagSyntax {
     parser.addNode(element);
     parser.pos = linkLike.endPos;
     parser.start = parser.pos;
-    _as.clear();
+    _pendingStatesAreActive = false;
     return true;
   }
 }
@@ -866,15 +863,6 @@ class LinkSyntax extends TagSyntax {
 /// Matches images like `![alternate text](url "optional title")` and
 /// `![alternate text][label]`.
 class ImageSyntax extends LinkSyntax {
-  // Pending [TagState]s that are "active."
-  //
-  // These are states that might resolve to links. Once a link has been
-  // resolved, all other link [TagState]s must be removed from this list, so
-  // that we don't nest links.
-  static final _activeStates = new List<TagState>();
-
-  List<TagState> get _as => _activeStates;
-
   ImageSyntax({Resolver linkResolver})
       : super(linkResolver: linkResolver, pattern: r'!\[');
 
