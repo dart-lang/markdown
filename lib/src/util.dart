@@ -10,17 +10,16 @@ String escapeHtml(String html) =>
 // Based on http://spec.commonmark.org/0.28/#backslash-escapes.
 String escapeAttribute(String value) {
   var result = new StringBuffer();
-  var codeUnits = value.codeUnits;
   int ch;
-  for (var i = 0; i < codeUnits.length; i++) {
-    ch = codeUnits[i];
+  for (var i = 0; i < value.codeUnits.length; i++) {
+    ch = value.codeUnitAt(i);
     if (ch == $backslash) {
       i++;
-      if (i == codeUnits.length) {
+      if (i == value.codeUnits.length) {
         result.writeCharCode(ch);
         break;
       }
-      ch = codeUnits[i];
+      ch = value.codeUnitAt(i);
       switch (ch) {
         case $quote:
           result.write('&quot;');
