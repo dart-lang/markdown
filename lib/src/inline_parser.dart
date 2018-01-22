@@ -475,15 +475,15 @@ class LinkSyntax extends TagSyntax {
     if (!_pendingStatesAreActive) return false;
 
     var i = parser.pos;
+      var text =
+          parser.source.substring(state.endPos, parser.pos).toLowerCase();
     var linkWalker = new LinkWalker(parser);
     // The current character is the `]` that closed the link text.
     i++;
     if (i == parser.source.length) {
       // In this case, the Markdown document may have ended with a shortcut
       // reference link.
-      var text =
-          parser.source.substring(state.endPos, parser.pos).toLowerCase();
-      var linkLike = new LinkLike(label: text, endPos: i - 1);
+      var linkLike = new LinkLike.reference(text, i - 1);
       if (linkLike != null) {
         return _addNode(parser, state, linkLike);
       } else {
@@ -502,9 +502,7 @@ class LinkSyntax extends TagSyntax {
       // At this point, we've matched `[...](`, but that `(` did not pan out to
       // be an inline link. We must now check if `[...]` is simply a shortcut
       // reference link.
-      var text =
-          parser.source.substring(state.endPos, parser.pos).toLowerCase();
-      linkLike = new LinkLike(label: text, endPos: i - 1);
+      linkLike = new LinkLike.reference(text, i - 1);
       if (linkLike != null) {
         return _addNode(parser, state, linkLike);
       } else {
@@ -516,9 +514,7 @@ class LinkSyntax extends TagSyntax {
     if (char == $lbracket) {
       if (i + 1 < parser.source.length && parser.charAt(i + 1) == $rbracket) {
         // Maybe a shortcut reference link.
-        var text =
-            parser.source.substring(state.endPos, parser.pos).toLowerCase();
-        var linkLike = new LinkLike(label: text, endPos: i + 1);
+        var linkLike = new LinkLike.reference(text, i + 1);
         if (linkLike != null) {
           return _addNode(parser, state, linkLike);
         } else {
@@ -535,8 +531,7 @@ class LinkSyntax extends TagSyntax {
 
     // The link text (inside `[...]`) was not followed with a opening `(` nor
     // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
-    var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
-    var linkLike = new LinkLike(label: text, endPos: i - 1);
+    var linkLike = new LinkLike.reference(text, i - 1);
     if (linkLike != null) {
       return _addNode(parser, state, linkLike);
     } else {

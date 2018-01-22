@@ -37,6 +37,7 @@ class LinkWalker {
     // Start walking at the character just after the opening `(`.
     var sourceIndex = parser.pos + 1;
     var char = parser.charAt(sourceIndex);
+    //print('parseInline at $char (pos+1)');
     int destinationStart;
 
     // Loop past the opening whitespace.
@@ -152,41 +153,42 @@ class LinkWalker {
         }
       }
     }
-    return new LinkLike(
-        destination: _destination, title: _title, endPos: sourceIndex);
+    return new LinkLike.inline(
+        _destination, _title, sourceIndex);
   }
 
   /// Parse a reference link at the current position.
   ///
-  /// Specifically, [parser.pos] is expected to be pointing at the opening `[`.
+  /// Specifically, [parser.pos] is expected to be pointing at the `]` which
+  /// closed the link text.
   ///
   /// Returns the [LinkLike] if it could be parsed, or `null` if not.
   LinkLike parseReferenceLink() {
-    // Walk past the `[` to the next character.
+    // As the current character points to the `]` of the link text, the next
+    // character points to the `[` which opens the link label. Walk past both.
     var sourceIndex = parser.pos + 2;
     if (sourceIndex >= parser.source.length) {
       return null;
     }
-    var char = parser.charAt(sourceIndex);
 
     var labelIndex = sourceIndex;
     while (true) {
-      sourceIndex++;
-      if (sourceIndex >= parser.source.length) {
-        return null;
-      }
-      char = parser.charAt(sourceIndex);
+      var char = parser.charAt(sourceIndex);
       if (char == $backslash) {
         // We don't care about the next character.
         sourceIndex++;
       } else if (char == $rbracket) {
         break;
       }
+      sourceIndex++;
+      if (sourceIndex >= parser.source.length) {
+        return null;
+      }
       // TODO(srawlins): only check 999 characters, for performance reasons?
     }
 
     var label = parser.source.substring(labelIndex, sourceIndex).toLowerCase();
-    return new LinkLike(label: label, endPos: sourceIndex);
+    return new LinkLike.reference(label, sourceIndex);
   }
 
   // Parse a link title at [parser] position [i]. [i] must be the position at
