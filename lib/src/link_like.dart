@@ -14,13 +14,10 @@ class LinkLike {
 
   final String label;
 
-  /// THIS IS HACK; PARSER SHOULD KNOW HOW TO WALK.
-  final int endPos;
-
-  LinkLike.inline(this.destination, this.title, this.endPos)
+  LinkLike.inline(this.destination, this.title)
       : this.label = null;
 
-  LinkLike.reference(this.label, this.endPos)
+  LinkLike.reference(this.label)
       : this.destination = null,
         this.title = null;
 

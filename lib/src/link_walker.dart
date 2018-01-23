@@ -18,8 +18,6 @@ import 'link_like.dart';
 class LinkWalker {
   final InlineParser parser;
 
-  String _destination;
-
   LinkWalker(this.parser);
 
   /// Parse an inline [LinkLike] at the current position.
@@ -38,6 +36,7 @@ class LinkWalker {
     parser.advanceBy(1);
     int char;
     int destinationStart;
+    String destination;
     String title;
 
     // Loop past the opening whitespace.
@@ -75,7 +74,7 @@ class LinkWalker {
             parser.advanceBy(1);
             break;
           case $gt:
-            _destination =
+            destination =
                 parser.source.substring(destinationStart, parser.pos);
             parser.advanceBy(1);
             break loop;
@@ -83,7 +82,7 @@ class LinkWalker {
           case $lf:
           case $cr:
           case $ff:
-            _destination =
+            destination =
                 parser.source.substring(destinationStart - 1, parser.pos);
             title = _parseTitle(parser);
             if (title == null) {
@@ -100,7 +99,7 @@ class LinkWalker {
             parenCount--;
             if (parenCount == 0) {
               // End of link.
-              _destination ??=
+              destination ??=
                   parser.source.substring(destinationStart - 1, parser.pos);
               break loop;
             } else {
@@ -127,7 +126,7 @@ class LinkWalker {
           case $lf:
           case $cr:
           case $ff:
-            _destination =
+            destination =
                 parser.source.substring(destinationStart, parser.pos);
             title = _parseTitle(parser);
             if (title == null) {
@@ -144,7 +143,7 @@ class LinkWalker {
             parenCount--;
             if (parenCount == 0) {
               // End of link.
-              _destination ??=
+              destination ??=
                   parser.source.substring(destinationStart, parser.pos);
               break loop;
             } else {
@@ -153,7 +152,7 @@ class LinkWalker {
         }
       }
     }
-    return new LinkLike.inline(_destination, title, parser.pos);
+    return new LinkLike.inline(destination, title);
   }
 
   /// Parse a reference link at the current position.
@@ -183,7 +182,7 @@ class LinkWalker {
     }
 
     var label = parser.source.substring(labelStart, parser.pos).toLowerCase();
-    return new LinkLike.reference(label, parser.pos);
+    return new LinkLike.reference(label);
   }
 
   // Parse a link title at [parser] position [i]. [i] must be the position at
