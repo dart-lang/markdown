@@ -17,9 +17,12 @@ class LinkLike {
   /// THIS IS HACK; PARSER SHOULD KNOW HOW TO WALK.
   final int endPos;
 
-  LinkLike.inline(this.destination, this.title, this.endPos);
+  LinkLike.inline(this.destination, this.title, this.endPos)
+      : this.label = null;
 
-  LinkLike.reference(this.label, this.endPos);
+  LinkLike.reference(this.label, this.endPos)
+      : this.destination = null,
+        this.title = null;
 
   bool get isReference => label != null;
 }

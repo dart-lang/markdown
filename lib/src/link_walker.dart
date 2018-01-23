@@ -19,7 +19,6 @@ class LinkWalker {
   final InlineParser parser;
 
   String _destination;
-  String _title;
 
   LinkWalker(this.parser);
 
@@ -35,19 +34,20 @@ class LinkWalker {
   /// Returns the [LinkLike] if one was parsed, or `null` if not.
   LinkLike parseInlineLink() {
     // Start walking at the character just after the opening `(`.
-    var sourceIndex = parser.pos + 1;
-    var char = parser.charAt(sourceIndex);
-    //print('parseInline at $char (pos+1)');
+    var leftParenIndex = parser.pos;
+    parser.advanceBy(1);
+    int char;
     int destinationStart;
+    String title;
 
     // Loop past the opening whitespace.
     while (true) {
-      sourceIndex++;
-      if (sourceIndex == parser.source.length) return null; // EOF. Not a link.
-      char = parser.charAt(sourceIndex);
+      char = parser.charAt(parser.pos);
       if (char != $space && char != $lf && char != $cr && char != $ff) {
         break;
       }
+      parser.advanceBy(1);
+      if (parser.isDone) return null; // EOF. Not a link.
     }
 
     // According to
@@ -64,32 +64,32 @@ class LinkWalker {
 
     if (char == $lt) {
       // Maybe a `<...>`-enclosed link destination.
-      destinationStart = sourceIndex + 1;
+      destinationStart = parser.pos + 1;
       loop:
       while (true) {
-        sourceIndex++;
-        if (sourceIndex == parser.source.length)
-          return null; // EOF. Not a link.
-        char = parser.charAt(sourceIndex);
+        parser.advanceBy(1);
+        if (parser.isDone) return null; // EOF. Not a link.
+        char = parser.charAt(parser.pos);
         switch (char) {
           case $backslash:
-            sourceIndex++;
+            parser.advanceBy(1);
             break;
           case $gt:
             _destination =
-                parser.source.substring(destinationStart, sourceIndex);
-            sourceIndex++;
+                parser.source.substring(destinationStart, parser.pos);
+            parser.advanceBy(1);
             break loop;
           case $space:
           case $lf:
           case $cr:
           case $ff:
             _destination =
-                parser.source.substring(destinationStart - 1, sourceIndex);
-            sourceIndex = _parseTitle(sourceIndex);
-            if (sourceIndex == null) {
+                parser.source.substring(destinationStart - 1, parser.pos);
+            title = _parseTitle(parser);
+            if (title == null) {
               // This looked like an inline link, until we found this $space
               // followed by mystery characters; no longer a link.
+              parser.pos = leftParenIndex;
               return null;
             }
             break;
@@ -101,7 +101,7 @@ class LinkWalker {
             if (parenCount == 0) {
               // End of link.
               _destination ??=
-                  parser.source.substring(destinationStart - 1, sourceIndex);
+                  parser.source.substring(destinationStart - 1, parser.pos);
               break loop;
             } else {
               // Keep going. The parens must be balanced.
@@ -109,31 +109,31 @@ class LinkWalker {
         }
       }
     } else {
-      destinationStart = sourceIndex;
+      destinationStart = parser.pos;
       // The first character was not `<`, so let's back up one and start
       // walking.
-      sourceIndex--;
+      parser.advanceBy(-1);
       loop:
       while (true) {
-        sourceIndex++;
-        if (sourceIndex == parser.source.length)
-          return null; // EOF. Not a link.
-        char = parser.charAt(sourceIndex);
+        parser.advanceBy(1);
+        if (parser.isDone) return null; // EOF. Not a link.
+        char = parser.charAt(parser.pos);
         switch (char) {
           case $backslash:
             // We do not care about the next character.
-            sourceIndex++;
+            parser.advanceBy(1);
             break;
           case $space:
           case $lf:
           case $cr:
           case $ff:
             _destination =
-                parser.source.substring(destinationStart, sourceIndex);
-            sourceIndex = _parseTitle(sourceIndex);
-            if (sourceIndex == null) {
+                parser.source.substring(destinationStart, parser.pos);
+            title = _parseTitle(parser);
+            if (title == null) {
               // This looked like an inline link, until we found this $space
               // followed by mystery characters; no longer a link.
+              parser.pos = leftParenIndex;
               return null;
             }
             break;
@@ -145,7 +145,7 @@ class LinkWalker {
             if (parenCount == 0) {
               // End of link.
               _destination ??=
-                  parser.source.substring(destinationStart, sourceIndex);
+                  parser.source.substring(destinationStart, parser.pos);
               break loop;
             } else {
               // Keep going. The parens must be balanced.
@@ -153,8 +153,7 @@ class LinkWalker {
         }
       }
     }
-    return new LinkLike.inline(
-        _destination, _title, sourceIndex);
+    return new LinkLike.inline(_destination, title, parser.pos);
   }
 
   /// Parse a reference link at the current position.
@@ -164,48 +163,42 @@ class LinkWalker {
   ///
   /// Returns the [LinkLike] if it could be parsed, or `null` if not.
   LinkLike parseReferenceLink() {
-    // As the current character points to the `]` of the link text, the next
-    // character points to the `[` which opens the link label. Walk past both.
-    var sourceIndex = parser.pos + 2;
-    if (sourceIndex >= parser.source.length) {
-      return null;
-    }
+    // The current character points to the character points to the `[` which
+    // opens the link label. Walk past it.
+    parser.advanceBy(1);
+    if (parser.isDone) return null;
 
-    var labelIndex = sourceIndex;
+    var labelStart = parser.pos;
     while (true) {
-      var char = parser.charAt(sourceIndex);
+      var char = parser.charAt(parser.pos);
       if (char == $backslash) {
         // We don't care about the next character.
-        sourceIndex++;
+        parser.advanceBy(1);
       } else if (char == $rbracket) {
         break;
       }
-      sourceIndex++;
-      if (sourceIndex >= parser.source.length) {
-        return null;
-      }
+      parser.advanceBy(1);
+      if (parser.isDone) return null;
       // TODO(srawlins): only check 999 characters, for performance reasons?
     }
 
-    var label = parser.source.substring(labelIndex, sourceIndex).toLowerCase();
-    return new LinkLike.reference(label, sourceIndex);
+    var label = parser.source.substring(labelStart, parser.pos).toLowerCase();
+    return new LinkLike.reference(label, parser.pos);
   }
 
   // Parse a link title at [parser] position [i]. [i] must be the position at
   // the first space after the link destination (which triggered the idea
   // that we might have a title).
-  int _parseTitle(int i) {
+  String _parseTitle(InlineParser parser) {
     int char;
     int delimiter;
+    String title;
 
     // Walk over leading space, looking for a delimiter.
     while (true) {
-      i++;
-      if (i == parser.source.length) {
-        // EOF. Not a link.
-        return null;
-      }
-      char = parser.charAt(i);
+      parser.advanceBy(1);
+      if (parser.isDone) return null; // EOF. Not a link.
+      char = parser.charAt(parser.pos);
       switch (char) {
         case $space:
         case $lf:
@@ -224,36 +217,30 @@ class LinkWalker {
       }
       break;
     }
-    var titleStart = i + 1;
+    var titleStart = parser.pos + 1;
     var closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
 
     // Now we look for an un-escaped close delimiter.
     while (true) {
-      i++;
-      if (i >= parser.source.length) {
-        // EOF. Not a link.
-        return null;
-      }
-      char = parser.charAt(i);
+      parser.advanceBy(1);
+      if (parser.isDone) return null; // EOF. Not a link.
+      char = parser.charAt(parser.pos);
       if (char == $backslash) {
-        // Ignore the next character.
-        i++;
+        // Escape the next character.
+        parser.advanceBy(1);
         continue;
       }
       if (char == closeDelimiter) {
-        _title = parser.source.substring(titleStart, i);
+        title = parser.source.substring(titleStart, parser.pos);
         break;
       }
     }
 
     // Parse optional whitespace before the required `)`.
     while (true) {
-      i++;
-      if (i == parser.source.length) {
-        // EOF. Not a link.
-        return null;
-      }
-      char = parser.charAt(i);
+      parser.advanceBy(1);
+      if (parser.isDone) return null; // EOF. Not a link.
+      char = parser.charAt(parser.pos);
       switch (char) {
         case $space:
         case $lf:
@@ -262,9 +249,9 @@ class LinkWalker {
           // Just padding. Move along.
           break;
         case $rparen:
-          // Back up to before the `)`.
-          i--;
-          return i;
+          // Back up to before the `)`; let [parseInlineLink] catch it.
+          parser.advanceBy(-1);
+          return title;
         default:
           // Not a title!
           return null;

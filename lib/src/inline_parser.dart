@@ -474,26 +474,25 @@ class LinkSyntax extends TagSyntax {
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
     if (!_pendingStatesAreActive) return false;
 
-    var i = parser.pos;
-      var text =
-          parser.source.substring(state.endPos, parser.pos).toLowerCase();
+    var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
     var linkWalker = new LinkWalker(parser);
-    // The current character is the `]` that closed the link text.
-    i++;
-    if (i == parser.source.length) {
+    // The current character is the `]` that closed the link text. Walk one
+    // character forward, to determine what type of link we might have.
+    parser.advanceBy(1);
+    if (parser.isDone) {
       // In this case, the Markdown document may have ended with a shortcut
       // reference link.
-      var linkLike = new LinkLike.reference(text, i - 1);
+      var linkLike = new LinkLike.reference(text, parser.pos - 1);
       if (linkLike != null) {
         return _addNode(parser, state, linkLike);
       } else {
         return false;
       }
     }
-    var char = parser.charAt(i);
+    var char = parser.charAt(parser.pos);
 
-    // Maybe an inline link.
     if (char == $lparen) {
+      // Maybe an inline link.
       var linkLike = linkWalker.parseInlineLink();
       if (linkLike != null) {
         return _addNode(parser, state, linkLike);
@@ -502,7 +501,7 @@ class LinkSyntax extends TagSyntax {
       // At this point, we've matched `[...](`, but that `(` did not pan out to
       // be an inline link. We must now check if `[...]` is simply a shortcut
       // reference link.
-      linkLike = new LinkLike.reference(text, i - 1);
+      linkLike = new LinkLike.reference(text, parser.pos - 1);
       if (linkLike != null) {
         return _addNode(parser, state, linkLike);
       } else {
@@ -510,11 +509,12 @@ class LinkSyntax extends TagSyntax {
       }
     }
 
-    // Maybe a reference link.
     if (char == $lbracket) {
-      if (i + 1 < parser.source.length && parser.charAt(i + 1) == $rbracket) {
+      // Maybe a reference link.
+      if (parser.pos + 1 < parser.source.length &&
+          parser.charAt(parser.pos + 1) == $rbracket) {
         // Maybe a shortcut reference link.
-        var linkLike = new LinkLike.reference(text, i + 1);
+        var linkLike = new LinkLike.reference(text, parser.pos + 1);
         if (linkLike != null) {
           return _addNode(parser, state, linkLike);
         } else {
@@ -531,7 +531,7 @@ class LinkSyntax extends TagSyntax {
 
     // The link text (inside `[...]`) was not followed with a opening `(` nor
     // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
-    var linkLike = new LinkLike.reference(text, i - 1);
+    var linkLike = new LinkLike.reference(text, parser.pos - 1);
     if (linkLike != null) {
       return _addNode(parser, state, linkLike);
     } else {
@@ -571,7 +571,7 @@ class LinkSyntax extends TagSyntax {
   //
   // Returns whether the link-like was added successfully.
   bool _addNode(InlineParser parser, TagState state, LinkLike linkLike) {
-    var text = parser.source.substring(state.endPos, parser.pos);
+    var text = parser.source.substring(state.endPos, parser.pos - 1);
     var element = _resolve(linkLike,
         text: text, linkReferences: parser.document.linkReferences,
         resolver: (String destination, [String title]) {
@@ -607,7 +607,7 @@ class ImageSyntax extends LinkSyntax {
   //
   // Returns whether the image was added successfully.
   bool _addNode(InlineParser parser, TagState state, LinkLike linkLike) {
-    var text = parser.source.substring(state.endPos, parser.pos);
+    var text = parser.source.substring(state.endPos, parser.pos - 1);
     var element = _resolve(linkLike,
         text: text, linkReferences: parser.document.linkReferences,
         resolver: (String destination, [String title]) {
