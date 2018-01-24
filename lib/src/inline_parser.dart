@@ -475,19 +475,20 @@ class LinkSyntax extends TagSyntax {
     var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
     // The current character is the `]` that closed the link text. Walk one
     // character forward, to determine what type of link we might have.
-    parser.advanceBy(1);
-    if (parser.isDone) {
+    if (parser.pos + 1 >= parser.source.length) {
       // In this case, the Markdown document may have ended with a shortcut
       // reference link.
 
       // Back up back to the `]`.
-      parser.advanceBy(-1);
       return _addReferenceLink(parser, state, text);
     }
-    var char = parser.charAt(parser.pos);
+    // Peek at the next character; don't advance, so as to avoid later stepping
+    // backward.
+    var char = parser.charAt(parser.pos + 1);
 
     if (char == $lparen) {
       // Maybe an inline link.
+      parser.advanceBy(1);
       var inlineLink = _parseInlineLink(parser);
       if (inlineLink != null) {
         return _addInlineLink(parser, state, inlineLink);
@@ -501,6 +502,7 @@ class LinkSyntax extends TagSyntax {
     }
 
     if (char == $lbracket) {
+      parser.advanceBy(1);
       // Maybe a reference link.
       if (parser.pos + 1 < parser.source.length &&
           parser.charAt(parser.pos + 1) == $rbracket) {
@@ -520,7 +522,6 @@ class LinkSyntax extends TagSyntax {
     // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
 
     // Back up back to the `]`.
-    parser.advanceBy(-1);
     return _addReferenceLink(parser, state, text);
   }
 
@@ -642,35 +643,46 @@ class LinkSyntax extends TagSyntax {
 
     if (char == $lt) {
       // Maybe a `<...>`-enclosed link destination.
-      destinationStart = parser.pos + 1;
+      parser.advanceBy(1);
+      destinationStart = parser.pos;
+
       loop:
       while (true) {
-        parser.advanceBy(1);
-        if (parser.isDone) return null; // EOF. Not a link.
         char = parser.charAt(parser.pos);
         switch (char) {
           case $backslash:
             parser.advanceBy(1);
+            if (parser.isDone) return null; // EOF. Not a link.
             break;
-          case $gt:
-            destination = parser.source.substring(destinationStart, parser.pos);
-            parser.advanceBy(1);
-            break loop;
           case $space:
           case $lf:
           case $cr:
           case $ff:
-            destination =
-                parser.source.substring(destinationStart - 1, parser.pos);
-            title = _parseTitle(parser);
-            if (title == null) {
-              // This looked like an inline link, until we found this $space
-              // followed by mystery characters; no longer a link.
-              parser.pos = leftParenIndex;
-              return null;
-            }
-            break;
+            return null; // EOF. Not a link. (We need the closing `)`.)
+          case $gt:
+            destination = parser.source.substring(destinationStart, parser.pos);
+            break loop;
         }
+        parser.advanceBy(1);
+        if (parser.isDone) return null; // EOF. Not a link.
+      }
+
+      parser.advanceBy(1);
+      char = parser.charAt(parser.pos);
+      if (char == $space || char == $lf || char == $cr || char == $ff) {
+        title = _parseTitle(parser);
+        if (title == null) {
+          // This looked like an inline link, until we found this $space
+          // followed by mystery characters; no longer a link.
+          parser.pos = leftParenIndex;
+          return null;
+        }
+        return new InlineLink(destination, title);
+      } else if (char == $rparen) {
+        return new InlineLink(destination, title);
+      } else {
+        // We parsed something like `[foo](<url>X`. Not a link.
+        return null;
       }
     } else {
       // According to
@@ -688,16 +700,14 @@ class LinkSyntax extends TagSyntax {
       destinationStart = parser.pos;
       // The first character was not `<`, so let's back up one and start
       // walking again.
-      parser.advanceBy(-1);
       loop:
       while (true) {
-        parser.advanceBy(1);
-        if (parser.isDone) return null; // EOF. Not a link.
         char = parser.charAt(parser.pos);
         switch (char) {
           case $backslash:
             // We do not care about the next character.
             parser.advanceBy(1);
+            if (parser.isDone) return null; // EOF. Not a link.
             break;
           case $space:
           case $lf:
@@ -711,6 +721,13 @@ class LinkSyntax extends TagSyntax {
               parser.pos = leftParenIndex;
               return null;
             }
+            // [_parseTitle] made sure the title was follwed by a closing `)`
+            // (but it's up to the code here to examine the balance of
+            // parentheses).
+            parenCount--;
+            if (parenCount == 0) {
+              return new InlineLink(destination, title);
+            }
             break;
           case $lparen:
             parenCount++;
@@ -718,17 +735,14 @@ class LinkSyntax extends TagSyntax {
           case $rparen:
             parenCount--;
             if (parenCount == 0) {
-              // End of link.
-              destination ??=
-                  parser.source.substring(destinationStart, parser.pos);
-              break loop;
-            } else {
-              // Keep going. The parens must be balanced.
+              destination = parser.source.substring(destinationStart, parser.pos);
+              return new InlineLink(destination, title);
             }
         }
+        parser.advanceBy(1);
+        if (parser.isDone) return null; // EOF. Not a link.
       }
     }
-    return new InlineLink(destination, title);
   }
 
   // Parse a link title at [parser] position [i]. [i] must be the position at
@@ -794,8 +808,6 @@ class LinkSyntax extends TagSyntax {
           // Just padding. Move along.
           break;
         case $rparen:
-          // Back up to before the `)`; let [_parseInlineLink] catch it.
-          parser.advanceBy(-1);
           return title;
         default:
           // Not a title!

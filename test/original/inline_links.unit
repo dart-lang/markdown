@@ -38,6 +38,11 @@ links [are](<http://example.com>) awesome
 
 <<<
 <p>links <a href="http://example.com">are</a> awesome</p>
+>>> URL wrapped in angle brackets with a title; https://github.com/commonmark/CommonMark/issues/521
+links [are](<http://example.com> "title") awesome
+
+<<<
+<p>links <a href="http://example.com" title="title">are</a> awesome</p>
 >>> multi-line link
 links [are
 awesome](<http://example.com>).
