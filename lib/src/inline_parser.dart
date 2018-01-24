@@ -290,7 +290,8 @@ class AutolinkExtensionSyntax extends InlineSyntax {
 
   @override
   bool tryMatch(InlineParser parser) {
-    var startMatch = pattern.matchAsPrefix(parser.source, (parser.pos > 0 ? parser.pos - 1 : 0));
+    var startMatch = pattern.matchAsPrefix(
+        parser.source, (parser.pos > 0 ? parser.pos - 1 : 0));
     if (startMatch != null) {
       // Write any existing plain text up to this point.
       parser.writeText();
