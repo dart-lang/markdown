@@ -276,14 +276,14 @@ class AutolinkSyntax extends InlineSyntax {
 
 /// Matches autolinks like `http://foo.com`.
 class AutolinkExtensionSyntax extends InlineSyntax {
-  static const START = r'(?:^|[\s\*\_\~\(\>])';
-  static const SCHEME = r'(?:(?:https?|ftp)\:\/\/|www\.)';
-  static const DOMAIN = r'[a-zA-Z\_\-\.]+';
-  static const PATH = r'[^\s\<]*';
+  static const START = r'(?:^|[\s*_~(>])';
+  static const SCHEME = r'(?:(?:https?|ftp):\/\/|www\.)';
+  static const DOMAIN = r'[a-zA-Z_\-.]+';
+  static const PATH = r'[^\s<]*';
   // static const TRUNCATING_PUNCTUATION_NEG = r'[^\s<\?\!\.\,\:\*\_\~]';
   static const TRUNCATING_PUNCTUATION_NEG = r'';
 
-  static const TRUNCATING_PUNCTUATION_POS = r'[\?\!\.\,\:\*\_\~]';
+  static const TRUNCATING_PUNCTUATION_POS = r'[?!.,:*_~]';
 
   AutolinkExtensionSyntax()
       : super('$START(($SCHEME)($DOMAIN)($PATH))$TRUNCATING_PUNCTUATION_NEG');
