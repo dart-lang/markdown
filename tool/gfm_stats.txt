@@ -1,6 +1,6 @@
   17 of   18 –  94.4%  ATX headings
   17 of   19 –  89.5%  Autolinks
-   5 of    8 –  62.5%  Autolinks (extension)
+   8 of    8 – 100.0%  Autolinks (extension)
    0 of    3 –   0.0%  Autolinks Email (extension)
    9 of   13 –  69.2%  Backslash escapes
    1 of    1 – 100.0%  Blank lines
@@ -10,7 +10,7 @@
  124 of  128 –  96.9%  Emphasis and strong emphasis
   10 of   12 –  83.3%  Entity and numeric character references
   25 of   28 –  89.3%  Fenced code blocks
-  15 of   15 – 100.0%  Hard line breaks
+  12 of   15 –  80.0%  Hard line breaks
   43 of   43 – 100.0%  HTML blocks
   21 of   22 –  95.5%  Images
   11 of   12 –  91.7%  Indented code blocks

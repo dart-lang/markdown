@@ -42,13 +42,13 @@
  },
  "Autolinks (extension)": {
   "597": "strict",
-  "598": "fail",
-  "599": "fail",
+  "598": "strict",
+  "599": "strict",
   "600": "loose",
   "601": "strict",
   "602": "loose",
   "603": "strict",
-  "604": "fail"
+  "604": "strict"
  },
  "Autolinks Email (extension)": {
   "605": "fail",
@@ -297,12 +297,12 @@
   "115": "fail"
  },
  "Hard line breaks": {
-  "630": "strict",
+  "630": "fail",
   "631": "strict",
-  "632": "strict",
-  "633": "loose",
+  "632": "loose",
+  "633": "fail",
   "634": "loose",
-  "635": "strict",
+  "635": "fail",
   "636": "strict",
   "637": "loose",
   "638": "loose",
