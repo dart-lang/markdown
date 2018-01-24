@@ -489,8 +489,12 @@ class LinkSyntax extends TagSyntax {
     if (char == $lparen) {
       // Maybe an inline link.
       parser.advanceBy(1);
+      var leftParenIndex = parser.pos;
       var inlineLink = _parseInlineLink(parser);
-      if (inlineLink != null) {
+      if (inlineLink == null) {
+        // Reset the parser position.
+        parser.pos = leftParenIndex;
+      } else {
         return _addInlineLink(parser, state, inlineLink);
       }
 
@@ -624,16 +628,11 @@ class LinkSyntax extends TagSyntax {
   /// Returns the [InlineLink] if one was parsed, or `null` if not.
   InlineLink _parseInlineLink(InlineParser parser) {
     // Start walking at the character just after the opening `(`.
-    var leftParenIndex = parser.pos;
     parser.advanceBy(1);
-    int char;
-    int destinationStart;
-    String destination;
-    String title;
 
     // Loop past the opening whitespace.
     while (true) {
-      char = parser.charAt(parser.pos);
+      var char = parser.charAt(parser.pos);
       if (char != $space && char != $lf && char != $cr && char != $ff) {
         break;
       }
@@ -641,107 +640,115 @@ class LinkSyntax extends TagSyntax {
       if (parser.isDone) return null; // EOF. Not a link.
     }
 
-    if (char == $lt) {
+    if (parser.charAt(parser.pos) == $lt) {
       // Maybe a `<...>`-enclosed link destination.
-      parser.advanceBy(1);
-      destinationStart = parser.pos;
+      return _parseInlineBracketedLink(parser);
+    } else {
+      return _parseInlineBareDestinationLink(parser);
+    }
+  }
 
-      loop:
-      while (true) {
-        char = parser.charAt(parser.pos);
-        switch (char) {
-          case $backslash:
-            parser.advanceBy(1);
-            if (parser.isDone) return null; // EOF. Not a link.
-            break;
-          case $space:
-          case $lf:
-          case $cr:
-          case $ff:
-            return null; // EOF. Not a link. (We need the closing `)`.)
-          case $gt:
-            destination = parser.source.substring(destinationStart, parser.pos);
-            break loop;
-        }
+  InlineLink _parseInlineBracketedLink(InlineParser parser) {
+    int destinationStart;
+    String destination;
+
+    parser.advanceBy(1);
+    destinationStart = parser.pos;
+
+    while (true) {
+      var char = parser.charAt(parser.pos);
+      if (char == $backslash) {
         parser.advanceBy(1);
         if (parser.isDone) return null; // EOF. Not a link.
+        break;
+      } else if (char == $space || char == $lf || char == $cr || char == $ff) {
+        // EOF. Not a link. (No whitespace allowed within `<...>`.)
+        return null;
+      } else if (char == $gt) {
+        destination = parser.source.substring(destinationStart, parser.pos);
+        break;
       }
-
       parser.advanceBy(1);
-      char = parser.charAt(parser.pos);
-      if (char == $space || char == $lf || char == $cr || char == $ff) {
-        title = _parseTitle(parser);
-        if (title == null) {
-          // This looked like an inline link, until we found this $space
-          // followed by mystery characters; no longer a link.
-          parser.pos = leftParenIndex;
-          return null;
-        }
-        return new InlineLink(destination, title);
-      } else if (char == $rparen) {
-        return new InlineLink(destination, title);
-      } else {
-        // We parsed something like `[foo](<url>X`. Not a link.
+      if (parser.isDone) return null; // EOF. Not a link.
+    }
+
+    parser.advanceBy(1);
+    var char = parser.charAt(parser.pos);
+    if (char == $space || char == $lf || char == $cr || char == $ff) {
+      var title = _parseTitle(parser);
+      if (title == null) {
+        // This looked like an inline link, until we found this $space
+        // followed by mystery characters; no longer a link.
+        //parser.pos = leftParenIndex;
         return null;
       }
+      return new InlineLink(destination, title: title);
+    } else if (char == $rparen) {
+      return new InlineLink(destination);
     } else {
-      // According to
-      // [CommonMark](http://spec.commonmark.org/0.28/#link-destination):
-      //
-      // > A link destination consists of [...] a nonempty sequence of
-      // > characters [...], and includes parentheses only if (a) they are
-      // > backslash-escaped or (b) they are part of a balanced pair of
-      // > unescaped parentheses.
-      //
-      // We need to count the open parens. We start with 1 for the paren that
-      // opened the destination.
-      var parenCount = 1;
+      // We parsed something like `[foo](<url>X`. Not a link.
+      return null;
+    }
+  }
 
-      destinationStart = parser.pos;
-      // The first character was not `<`, so let's back up one and start
-      // walking again.
-      loop:
-      while (true) {
-        char = parser.charAt(parser.pos);
-        switch (char) {
-          case $backslash:
-            // We do not care about the next character.
-            parser.advanceBy(1);
-            if (parser.isDone) return null; // EOF. Not a link.
-            break;
-          case $space:
-          case $lf:
-          case $cr:
-          case $ff:
-            destination = parser.source.substring(destinationStart, parser.pos);
-            title = _parseTitle(parser);
-            if (title == null) {
-              // This looked like an inline link, until we found this $space
-              // followed by mystery characters; no longer a link.
-              parser.pos = leftParenIndex;
-              return null;
-            }
-            // [_parseTitle] made sure the title was follwed by a closing `)`
-            // (but it's up to the code here to examine the balance of
-            // parentheses).
-            parenCount--;
-            if (parenCount == 0) {
-              return new InlineLink(destination, title);
-            }
-            break;
-          case $lparen:
-            parenCount++;
-            break;
-          case $rparen:
-            parenCount--;
-            if (parenCount == 0) {
-              destination = parser.source.substring(destinationStart, parser.pos);
-              return new InlineLink(destination, title);
-            }
-        }
-        parser.advanceBy(1);
-        if (parser.isDone) return null; // EOF. Not a link.
+  InlineLink _parseInlineBareDestinationLink(InlineParser parser) {
+    var destinationStart = parser.pos;
+
+    // According to
+    // [CommonMark](http://spec.commonmark.org/0.28/#link-destination):
+    //
+    // > A link destination consists of [...] a nonempty sequence of
+    // > characters [...], and includes parentheses only if (a) they are
+    // > backslash-escaped or (b) they are part of a balanced pair of
+    // > unescaped parentheses.
+    //
+    // We need to count the open parens. We start with 1 for the paren that
+    // opened the destination.
+    var parenCount = 1;
+
+    loop:
+    while (true) {
+      var char = parser.charAt(parser.pos);
+      switch (char) {
+        case $backslash:
+          // We do not care about the next character.
+          parser.advanceBy(1);
+          if (parser.isDone) return null; // EOF. Not a link.
+          break;
+        case $space:
+        case $lf:
+        case $cr:
+        case $ff:
+          var destination =
+              parser.source.substring(destinationStart, parser.pos);
+          var title = _parseTitle(parser);
+          if (title == null) {
+            // This looked like an inline link, until we found this $space
+            // followed by mystery characters; no longer a link.
+            //parser.pos = leftParenIndex;
+            return null;
+          }
+          // [_parseTitle] made sure the title was follwed by a closing `)`
+          // (but it's up to the code here to examine the balance of
+          // parentheses).
+          parenCount--;
+          if (parenCount == 0) {
+            return new InlineLink(destination, title: title);
+          }
+          break;
+        case $lparen:
+          parenCount++;
+          break;
+        case $rparen:
+          parenCount--;
+          if (parenCount == 0) {
+            var destination =
+                parser.source.substring(destinationStart, parser.pos);
+            return new InlineLink(destination);
+          }
       }
+      parser.advanceBy(1);
+      if (parser.isDone) return null; // EOF. Not a link.
     }
   }
 
@@ -1026,5 +1033,5 @@ class InlineLink {
   final String destination;
   final String title;
 
-  InlineLink(this.destination, this.title);
+  InlineLink(this.destination, {this.title});
 }
