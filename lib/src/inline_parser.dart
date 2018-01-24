@@ -68,9 +68,9 @@ class InlineParser {
     // character position.
     if (documentHasCustomInlineSyntaxes) {
       // We should be less aggressive in blowing past "words".
-      syntaxes.add(new TextSyntax(r'[A-Za-z0-9]+\b'));
+      syntaxes.add(new TextSyntax(r'[A-Za-z0-9]+\s'));
     } else {
-      syntaxes.add(new TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9]'));
+      syntaxes.add(new TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9]\s'));
     }
 
     syntaxes.addAll(_defaultSyntaxes);
