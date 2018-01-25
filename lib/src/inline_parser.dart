@@ -278,7 +278,8 @@ class AutolinkSyntax extends InlineSyntax {
 class AutolinkExtensionSyntax extends InlineSyntax {
   static const START = r'(?:^|[\s*_~(>])';
   static const SCHEME = r'(?:(?:https?|ftp):\/\/|www\.)';
-  static const DOMAIN = r'[a-zA-Z_\-.]+';
+  static const DOMAIN_PART = r'\w\-';
+  static const DOMAIN = '[$DOMAIN_PART][$DOMAIN_PART.]+';
   static const PATH = r'[^\s<]*';
   // static const TRUNCATING_PUNCTUATION_NEG = r'[^\s<\?\!\.\,\:\*\_\~]';
   static const TRUNCATING_PUNCTUATION_NEG = r'';
