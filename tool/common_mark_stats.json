@@ -279,12 +279,12 @@
   "115": "fail"
  },
  "Hard line breaks": {
-  "605": "fail",
+  "605": "strict",
   "606": "strict",
-  "607": "loose",
-  "608": "fail",
+  "607": "strict",
+  "608": "loose",
   "609": "loose",
-  "610": "fail",
+  "610": "strict",
   "611": "strict",
   "612": "loose",
   "613": "loose",

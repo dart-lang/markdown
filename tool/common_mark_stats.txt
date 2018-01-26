@@ -7,7 +7,7 @@
  124 of  128 –  96.9%  Emphasis and strong emphasis
   10 of   12 –  83.3%  Entity and numeric character references
   25 of   28 –  89.3%  Fenced code blocks
-  12 of   15 –  80.0%  Hard line breaks
+  15 of   15 – 100.0%  Hard line breaks
   43 of   43 – 100.0%  HTML blocks
   21 of   22 –  95.5%  Images
   11 of   12 –  91.7%  Indented code blocks
@@ -24,4 +24,4 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 558 of  624 –  89.4%  TOTAL
+ 561 of  624 –  89.9%  TOTAL
