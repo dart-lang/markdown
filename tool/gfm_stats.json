@@ -48,9 +48,7 @@
   "601": "strict",
   "602": "loose",
   "603": "strict",
-  "604": "strict"
- },
- "Autolinks Email (extension)": {
+  "604": "strict",
   "605": "fail",
   "606": "fail",
   "607": "fail"
