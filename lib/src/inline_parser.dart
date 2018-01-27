@@ -299,7 +299,6 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   static final regExpTrailingPunc =
       new RegExp('$truncatingPunctuationPositive*' + r'$');
   static final regExpEndsWithColon = new RegExp(r'\&[a-zA-Z0-9]+;$');
-  static final regExpHasScheme = new RegExp(r'(?:https?|ftp)\:\/\/');
   static final regExpWhiteSpace = new RegExp(r'\s');
 
   AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
@@ -382,7 +381,9 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     }
 
     // The scheme http will be inserted automatically
-    if (!href.startsWith(regExpHasScheme)) {
+    if (!href.startsWith('http://') &&
+        !href.startsWith('https://') &&
+        !href.startsWith('ftp://')) {
       href = 'http://$href';
     }
 
