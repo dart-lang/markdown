@@ -276,18 +276,15 @@ class AutolinkSyntax extends InlineSyntax {
 
 /// Matches autolinks like `http://foo.com`.
 class AutolinkExtensionSyntax extends InlineSyntax {
-  static const START = r'(?:^|[\s*_~(>])';
-  static const SCHEME = r'(?:(?:https?|ftp):\/\/|www\.)';
-  static const DOMAIN_PART = r'\w\-';
-  static const DOMAIN = '[$DOMAIN_PART][$DOMAIN_PART.]+';
-  static const PATH = r'[^\s<]*';
-  // static const TRUNCATING_PUNCTUATION_NEG = r'[^\s<\?\!\.\,\:\*\_\~]';
-  static const TRUNCATING_PUNCTUATION_NEG = r'';
+  static const start = r'(?:^|[\s*_~(>])';
+  static const scheme = r'(?:(?:https?|ftp):\/\/|www\.)';
+  static const domainPart = r'\w\-';
+  static const domain = '[$domainPart][$domainPart.]+';
+  static const path = r'[^\s<]*';
 
-  static const TRUNCATING_PUNCTUATION_POS = r'[?!.,:*_~]';
+  static const truncatingPunctuationPos = r'[?!.,:*_~]';
 
-  AutolinkExtensionSyntax()
-      : super('$START(($SCHEME)($DOMAIN)($PATH))$TRUNCATING_PUNCTUATION_NEG');
+  AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
 
   @override
   bool tryMatch(InlineParser parser) {
@@ -347,7 +344,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
      * https://github.github.com/gfm/#example-599
      */
     final trailingPunc =
-        new RegExp('$TRUNCATING_PUNCTUATION_POS*' + r'$').firstMatch(url);
+        new RegExp('$truncatingPunctuationPos*' + r'$').firstMatch(url);
     if (trailingPunc != null) {
       url = url.substring(0, url.length - trailingPunc[0].length);
       href = href.substring(0, href.length - trailingPunc[0].length);
