@@ -277,13 +277,24 @@ class AutolinkSyntax extends InlineSyntax {
 /// Matches autolinks like `http://foo.com`.
 class AutolinkExtensionSyntax extends InlineSyntax {
   /// Broken up parts of the autolink regex for reusability and readability
+
+  // Autolinks can only come at the beginning of a line, after whitespace, or
+  // any of the delimiting characters *, _, ~, and (.
   static const start = r'(?:^|[\s*_~(>])';
+  // An extended url autolink will be recognized when one of the schemes
+  // http://, https://, or ftp://, followed by a valid domain
   static const scheme = r'(?:(?:https?|ftp):\/\/|www\.)';
+  // A valid domain consists of alphanumeric characters, underscores (_),
+  // hyphens (-) and periods (.). There must be at least one period, and no
+  // underscores may be present in the last two segments of the domain.
   static const domainPart = r'\w\-';
   static const domain = '[$domainPart][$domainPart.]+';
+  // A valid domain consists of alphanumeric characters, underscores (_),
+  // hyphens (-) and periods (.).
   static const path = r'[^\s<]*';
-
-  static const truncatingPunctuationPos = r'[?!.,:*_~]';
+  // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not
+  // be considered part of the autolink
+  static const truncatingPunctuationPositive = r'[?!.,:*_~]';
 
   AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
 
@@ -341,7 +352,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     // in the interior of the link:
     // https://github.github.com/gfm/#example-599
     final trailingPunc =
-        new RegExp('$truncatingPunctuationPos*' + r'$').firstMatch(url);
+        new RegExp('$truncatingPunctuationPositive*' + r'$').firstMatch(url);
     if (trailingPunc != null) {
       url = url.substring(0, url.length - trailingPunc[0].length);
       href = href.substring(0, href.length - trailingPunc[0].length);
