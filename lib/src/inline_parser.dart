@@ -296,6 +296,13 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   // be considered part of the autolink
   static const truncatingPunctuationPositive = r'[?!.,:*_~]';
 
+  static final regExpTrailingPunc =
+      new RegExp('$truncatingPunctuationPositive*' + r'$');
+  static final regExpEndsWithColon =
+      new RegExp(r'\&[a-zA-Z0-9]+;$');
+  static final regExpHasScheme =
+      new RegExp(r'(?:https?|ftp)\:\/\/');
+
   AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
 
   @override
@@ -319,7 +326,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     var href = url;
     var matchLength = url.length;
 
-    if (url.startsWith(new RegExp(r'(\s|\>)'))) {
+    if (url[0] == '>' || url.startsWith(new RegExp(r'\s'))) {
       url = url.substring(1, url.length - 1);
       href = href.substring(1, href.length - 1);
       parser.pos++;
@@ -338,8 +345,8 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     // inside a parenthesis:
     // https://github.github.com/gfm/#example-600
     if (url.endsWith(')')) {
-      final opening = new RegExp(r'\(').allMatches(url).length;
-      final closing = new RegExp(r'\)').allMatches(url).length;
+      final opening = url.allMatches('(').length;
+      final closing = url.allMatches(')').length;
       if (closing > opening) {
         url = url.substring(0, url.length - 1);
         href = href.substring(0, href.length - 1);
@@ -351,8 +358,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     // not be considered part of the autolink, though they may be included
     // in the interior of the link:
     // https://github.github.com/gfm/#example-599
-    final trailingPunc =
-        new RegExp('$truncatingPunctuationPositive*' + r'$').firstMatch(url);
+    final trailingPunc = regExpTrailingPunc.firstMatch(url);
     if (trailingPunc != null) {
       url = url.substring(0, url.length - trailingPunc[0].length);
       href = href.substring(0, href.length - trailingPunc[0].length);
@@ -366,7 +372,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     // characters. If so, it is excluded from the autolink:
     // https://github.github.com/gfm/#example-602
     if (url.endsWith(';')) {
-      final entityRef = new RegExp(r'\&[a-zA-Z0-9]+;$').firstMatch(url);
+      final entityRef = regExpEndsWithColon.firstMatch(url);
       if (entityRef != null) {
         // Strip out HTML entity reference
         url = url.substring(0, url.length - entityRef[0].length);
@@ -376,7 +382,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     }
 
     // The scheme http will be inserted automatically
-    if (!href.startsWith(new RegExp(r'(?:https?|ftp)\:\/\/'))) {
+    if (!href.startsWith(regExpHasScheme)) {
       href = 'http://$href';
     }
 
