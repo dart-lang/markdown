@@ -276,6 +276,7 @@ class AutolinkSyntax extends InlineSyntax {
 
 /// Matches autolinks like `http://foo.com`.
 class AutolinkExtensionSyntax extends InlineSyntax {
+  /// Broken up parts of the autolink regex for reusability and readability
   static const start = r'(?:^|[\s*_~(>])';
   static const scheme = r'(?:(?:https?|ftp):\/\/|www\.)';
   static const domainPart = r'\w\-';
