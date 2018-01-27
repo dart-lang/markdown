@@ -300,6 +300,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       new RegExp('$truncatingPunctuationPositive*' + r'$');
   static final regExpEndsWithColon = new RegExp(r'\&[a-zA-Z0-9]+;$');
   static final regExpHasScheme = new RegExp(r'(?:https?|ftp)\:\/\/');
+  static final regExpWhiteSpace = new RegExp(r'\s');
 
   AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
 
@@ -324,7 +325,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     var href = url;
     var matchLength = url.length;
 
-    if (url[0] == '>' || url.startsWith(new RegExp(r'\s'))) {
+    if (url[0] == '>' || url.startsWith(regExpWhiteSpace)) {
       url = url.substring(1, url.length - 1);
       href = href.substring(1, href.length - 1);
       parser.pos++;
