@@ -315,19 +315,17 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       matchLength--;
     }
 
-    /** Prevent accidental standard autolink matches */
+    // Prevent accidental standard autolink matches
     if (url.endsWith('>') && parser.source[parser.pos - 1] == '<') {
       return false;
     }
 
-    /**
-     * When an autolink ends in ), we scan the entire autolink for the total
-     * number of parentheses. If there is a greater number of closing
-     * parentheses than opening ones, we don’t consider the last character
-     * part of the autolink, in order to facilitate including an autolink
-     * inside a parenthesis:
-     * https://github.github.com/gfm/#example-600
-     */
+    // When an autolink ends in ), we scan the entire autolink for the total
+    // number of parentheses. If there is a greater number of closing
+    // parentheses than opening ones, we don’t consider the last character
+    // part of the autolink, in order to facilitate including an autolink
+    // inside a parenthesis:
+    // https://github.github.com/gfm/#example-600
     if (url.endsWith(')')) {
       final opening = new RegExp(r'\(').allMatches(url).length;
       final closing = new RegExp(r'\)').allMatches(url).length;
@@ -338,12 +336,10 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       }
     }
 
-    /**
-     * Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will
-     * not be considered part of the autolink, though they may be included
-     * in the interior of the link:
-     * https://github.github.com/gfm/#example-599
-     */
+    // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will
+    // not be considered part of the autolink, though they may be included
+    // in the interior of the link:
+    // https://github.github.com/gfm/#example-599
     final trailingPunc =
         new RegExp('$truncatingPunctuationPos*' + r'$').firstMatch(url);
     if (trailingPunc != null) {
@@ -352,14 +348,12 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       matchLength -= trailingPunc[0].length;
     }
 
-    /**
-     * If an autolink ends in a semicolon (;), we check to see if it appears
-     * to resemble an
-     * [entity reference](https://github.github.com/gfm/#entity-references);
-     * if the preceding text is & followed by one or more alphanumeric
-     * characters. If so, it is excluded from the autolink:
-     * https://github.github.com/gfm/#example-602
-     */
+    // If an autolink ends in a semicolon (;), we check to see if it appears
+    // to resemble an
+    // [entity reference](https://github.github.com/gfm/#entity-references);
+    // if the preceding text is & followed by one or more alphanumeric
+    // characters. If so, it is excluded from the autolink:
+    // https://github.github.com/gfm/#example-602
     if (url.endsWith(';')) {
       final entityRef = new RegExp(r'\&[a-zA-Z0-9]+;$').firstMatch(url);
       if (entityRef != null) {
@@ -370,7 +364,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       }
     }
 
-    /** The scheme http will be inserted automatically */
+    // The scheme http will be inserted automatically
     if (!href.startsWith(new RegExp(r'(?:https?|ftp)\:\/\/'))) {
       href = 'http://$href';
     }
