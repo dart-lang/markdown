@@ -343,8 +343,9 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     // inside a parenthesis:
     // https://github.github.com/gfm/#example-600
     if (url.endsWith(')')) {
-      final opening = new RegExp(r'\(').allMatches(url).length;
-      final closing = new RegExp(r'\)').allMatches(url).length;
+      final opening = _countChars(url, '(');
+      final closing = _countChars(url, ')');
+
       if (closing > opening) {
         url = url.substring(0, url.length - 1);
         href = href.substring(0, href.length - 1);
@@ -390,6 +391,16 @@ class AutolinkExtensionSyntax extends InlineSyntax {
 
     parser.consume(matchLength);
     return false;
+  }
+
+  int _countChars(String input, String char) {
+    var count = 0;
+
+    for (var i = 0; i < input.length; i++) {
+      if (input[i] == char) count++;
+    }
+
+    return count;
   }
 }
 
