@@ -661,11 +661,11 @@
   "191": "loose",
   "192": "fail",
   "193": "loose",
-  "194": "fail",
-  "195": "fail",
-  "196": "fail",
-  "197": "fail",
-  "198": "fail"
+  "194": "loose",
+  "195": "loose",
+  "196": "loose",
+  "197": "loose",
+  "198": "loose"
  },
  "Tabs": {
   "1": "strict",
