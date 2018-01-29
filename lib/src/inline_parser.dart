@@ -163,6 +163,7 @@ abstract class InlineSyntax {
 
   /// Tries to match at the parser's current position.
   ///
+  /// The parser's position can be overriden with [startMatchPos].
   /// Returns whether or not the pattern successfully matched.
   bool tryMatch(InlineParser parser, [int startMatchPos]) {
     if (startMatchPos == null) startMatchPos = parser.pos;
