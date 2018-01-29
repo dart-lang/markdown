@@ -1,6 +1,6 @@
   17 of   18 –  94.4%  ATX headings
-  19 of   19 – 100.0%  Autolinks
-   0 of   11 –   0.0%  Autolinks (extension)
+  17 of   19 –  89.5%  Autolinks
+   8 of   11 –  72.7%  Autolinks (extension)
    9 of   13 –  69.2%  Backslash escapes
    1 of    1 – 100.0%  Blank lines
   22 of   25 –  88.0%  Block quotes
@@ -28,4 +28,4 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 571 of  647 –  88.3%  TOTAL
+ 577 of  647 –  89.2%  TOTAL

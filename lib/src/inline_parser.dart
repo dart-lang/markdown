@@ -68,9 +68,9 @@ class InlineParser {
     // character position.
     if (documentHasCustomInlineSyntaxes) {
       // We should be less aggressive in blowing past "words".
-      syntaxes.add(new TextSyntax(r'[A-Za-z0-9]+\b'));
+      syntaxes.add(new TextSyntax(r'[A-Za-z0-9]+(?=\s)'));
     } else {
-      syntaxes.add(new TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9]'));
+      syntaxes.add(new TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9](?=\s)'));
     }
 
     syntaxes.addAll(_defaultSyntaxes);
@@ -163,18 +163,19 @@ abstract class InlineSyntax {
 
   /// Tries to match at the parser's current position.
   ///
+  /// The parser's position can be overriden with [startMatchPos].
   /// Returns whether or not the pattern successfully matched.
-  bool tryMatch(InlineParser parser) {
-    var startMatch = pattern.matchAsPrefix(parser.source, parser.pos);
-    if (startMatch != null) {
-      // Write any existing plain text up to this point.
-      parser.writeText();
+  bool tryMatch(InlineParser parser, [int startMatchPos]) {
+    if (startMatchPos == null) startMatchPos = parser.pos;
 
-      if (onMatch(parser, startMatch)) parser.consume(startMatch[0].length);
-      return true;
-    }
+    final startMatch = pattern.matchAsPrefix(parser.source, startMatchPos);
+    if (startMatch == null) return false;
 
-    return false;
+    // Write any existing plain text up to this point.
+    parser.writeText();
+
+    if (onMatch(parser, startMatch)) parser.consume(startMatch[0].length);
+    return true;
   }
 
   /// Processes [match], adding nodes to [parser] and possibly advancing
@@ -271,6 +272,128 @@ class AutolinkSyntax extends InlineSyntax {
     parser.addNode(anchor);
 
     return true;
+  }
+}
+
+/// Matches autolinks like `http://foo.com`.
+class AutolinkExtensionSyntax extends InlineSyntax {
+  /// Broken up parts of the autolink regex for reusability and readability
+
+  // Autolinks can only come at the beginning of a line, after whitespace, or
+  // any of the delimiting characters *, _, ~, and (.
+  static const start = r'(?:^|[\s*_~(>])';
+  // An extended url autolink will be recognized when one of the schemes
+  // http://, https://, or ftp://, followed by a valid domain
+  static const scheme = r'(?:(?:https?|ftp):\/\/|www\.)';
+  // A valid domain consists of alphanumeric characters, underscores (_),
+  // hyphens (-) and periods (.). There must be at least one period, and no
+  // underscores may be present in the last two segments of the domain.
+  static const domainPart = r'\w\-';
+  static const domain = '[$domainPart][$domainPart.]+';
+  // A valid domain consists of alphanumeric characters, underscores (_),
+  // hyphens (-) and periods (.).
+  static const path = r'[^\s<]*';
+  // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not
+  // be considered part of the autolink
+  static const truncatingPunctuationPositive = r'[?!.,:*_~]';
+
+  static final regExpTrailingPunc =
+      new RegExp('$truncatingPunctuationPositive*' + r'$');
+  static final regExpEndsWithColon = new RegExp(r'\&[a-zA-Z0-9]+;$');
+  static final regExpWhiteSpace = new RegExp(r'\s');
+
+  AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
+
+  @override
+  bool tryMatch(InlineParser parser, [int startMatchPos]) {
+    return super.tryMatch(parser, parser.pos > 0 ? parser.pos - 1 : 0);
+  }
+
+  @override
+  bool onMatch(InlineParser parser, Match match) {
+    var url = match[1];
+    var href = url;
+    var matchLength = url.length;
+
+    if (url[0] == '>' || url.startsWith(regExpWhiteSpace)) {
+      url = url.substring(1, url.length - 1);
+      href = href.substring(1, href.length - 1);
+      parser.pos++;
+      matchLength--;
+    }
+
+    // Prevent accidental standard autolink matches
+    if (url.endsWith('>') && parser.source[parser.pos - 1] == '<') {
+      return false;
+    }
+
+    // When an autolink ends in ), we scan the entire autolink for the total
+    // number of parentheses. If there is a greater number of closing
+    // parentheses than opening ones, we don’t consider the last character
+    // part of the autolink, in order to facilitate including an autolink
+    // inside a parenthesis:
+    // https://github.github.com/gfm/#example-600
+    if (url.endsWith(')')) {
+      final opening = _countChars(url, '(');
+      final closing = _countChars(url, ')');
+
+      if (closing > opening) {
+        url = url.substring(0, url.length - 1);
+        href = href.substring(0, href.length - 1);
+        matchLength--;
+      }
+    }
+
+    // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will
+    // not be considered part of the autolink, though they may be included
+    // in the interior of the link:
+    // https://github.github.com/gfm/#example-599
+    final trailingPunc = regExpTrailingPunc.firstMatch(url);
+    if (trailingPunc != null) {
+      url = url.substring(0, url.length - trailingPunc[0].length);
+      href = href.substring(0, href.length - trailingPunc[0].length);
+      matchLength -= trailingPunc[0].length;
+    }
+
+    // If an autolink ends in a semicolon (;), we check to see if it appears
+    // to resemble an
+    // [entity reference](https://github.github.com/gfm/#entity-references);
+    // if the preceding text is & followed by one or more alphanumeric
+    // characters. If so, it is excluded from the autolink:
+    // https://github.github.com/gfm/#example-602
+    if (url.endsWith(';')) {
+      final entityRef = regExpEndsWithColon.firstMatch(url);
+      if (entityRef != null) {
+        // Strip out HTML entity reference
+        url = url.substring(0, url.length - entityRef[0].length);
+        href = href.substring(0, href.length - entityRef[0].length);
+        matchLength -= entityRef[0].length;
+      }
+    }
+
+    // The scheme http will be inserted automatically
+    if (!href.startsWith('http://') &&
+        !href.startsWith('https://') &&
+        !href.startsWith('ftp://')) {
+      href = 'http://$href';
+    }
+
+    final anchor = new Element.text('a', escapeHtml(url));
+    anchor.attributes['href'] = Uri.encodeFull(href);
+    parser.addNode(anchor);
+
+    parser.consume(matchLength);
+    return false;
+  }
+
+  int _countChars(String input, String char) {
+    var count = 0;
+
+    for (var i = 0; i < input.length; i++) {
+      if (input[i] == char) count++;
+    }
+
+    return count;
   }
 }
 
@@ -608,7 +731,7 @@ class CodeSyntax extends InlineSyntax {
 
   CodeSyntax() : super(_pattern);
 
-  bool tryMatch(InlineParser parser) {
+  bool tryMatch(InlineParser parser, [int startMatchPos]) {
     if (parser.pos > 0 && parser.source[parser.pos - 1] == '`') {
       // Not really a match! We can't just sneak past one backtick to try the
       // next character. An example of this situation would be:

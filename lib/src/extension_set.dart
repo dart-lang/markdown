@@ -40,6 +40,7 @@ class ExtensionSet {
     new InlineHtmlSyntax(),
     new StrikethroughSyntax(),
     new EmojiSyntax(),
+    new AutolinkExtensionSyntax(),
   ]);
 
   /// The [gitHubFlavored] extension set is close to compliance with the [GitHub
@@ -52,6 +53,7 @@ class ExtensionSet {
   ], [
     new InlineHtmlSyntax(),
     new StrikethroughSyntax(),
+    new AutolinkExtensionSyntax(),
   ]);
 
   /// The deprecated name for the [gitHubFlavored] extension set.
