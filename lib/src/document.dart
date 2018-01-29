@@ -9,7 +9,7 @@ import 'inline_parser.dart';
 
 /// Maintains the context needed to parse a Markdown document.
 class Document {
-  final Map<String, Link> refLinks = {};
+  final Map<String, LinkReference> linkReferences = {};
   Iterable<BlockSyntax> blockSyntaxes;
   Iterable<InlineSyntax> inlineSyntaxes;
   ExtensionSet extensionSet;
@@ -56,9 +56,25 @@ class Document {
   }
 }
 
-class Link {
-  final String id;
-  final String url;
+/// A [link reference
+/// definition](http://spec.commonmark.org/0.28/#link-reference-definitions).
+class LinkReference {
+  /// The [link label](http://spec.commonmark.org/0.28/#link-label).
+  ///
+  /// Temporarily, this class is also being used to represent the link data for
+  /// an inline link (the destination and title), but this should change before
+  /// the package is released.
+  final String label;
+
+  /// The [link destination](http://spec.commonmark.org/0.28/#link-destination).
+  final String destination;
+
+  /// The [link title](http://spec.commonmark.org/0.28/#link-title).
   final String title;
-  Link(this.id, this.url, this.title);
+
+  /// Construct a new [LinkReference], with all necessary fields.
+  ///
+  /// If the parsed link reference definition does not include a title, use
+  /// `null` for the [title] parameter.
+  LinkReference(this.label, this.destination, this.title);
 }
