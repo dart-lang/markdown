@@ -727,7 +727,7 @@ class CodeSyntax extends InlineSyntax {
 
   CodeSyntax() : super(_pattern);
 
-  bool tryMatch(InlineParser parser) {
+  bool tryMatch(InlineParser parser, [int startMatchPos]) {
     if (parser.pos > 0 && parser.source[parser.pos - 1] == '`') {
       // Not really a match! We can't just sneak past one backtick to try the
       // next character. An example of this situation would be:
