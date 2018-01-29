@@ -164,8 +164,10 @@ abstract class InlineSyntax {
   /// Tries to match at the parser's current position.
   ///
   /// Returns whether or not the pattern successfully matched.
-  bool tryMatch(InlineParser parser) {
-    final startMatch = pattern.matchAsPrefix(parser.source, parser.pos);
+  bool tryMatch(InlineParser parser, [int startMatchPos]) {
+    if (startMatchPos == null) startMatchPos = parser.pos;
+
+    final startMatch = pattern.matchAsPrefix(parser.source, startMatchPos);
     if (startMatch == null) return false;
 
     // Write any existing plain text up to this point.
@@ -302,18 +304,8 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
 
   @override
-  bool tryMatch(InlineParser parser) {
-    var startMatch = pattern.matchAsPrefix(
-        parser.source, (parser.pos > 0 ? parser.pos - 1 : 0));
-    if (startMatch != null) {
-      // Write any existing plain text up to this point.
-      parser.writeText();
-
-      if (onMatch(parser, startMatch)) parser.consume(startMatch[0].length);
-      return true;
-    }
-
-    return false;
+  bool tryMatch(InlineParser parser, [int startMatchPos]) {
+    return super.tryMatch(parser, parser.pos > 0 ? parser.pos - 1 : 0);
   }
 
   @override
