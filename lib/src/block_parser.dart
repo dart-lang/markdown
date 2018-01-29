@@ -793,18 +793,35 @@ class TableSyntax extends BlockSyntax {
   /// * many body rows of body cells (`<td>` cells)
   Node parse(BlockParser parser) {
     var alignments = parseAlignments(parser.next);
-    var head = new Element('thead', [parseRow(parser, alignments, 'th')]);
+    var columnCount = alignments.length;
+    var headRow = parseRow(parser, alignments, 'th');
+    if (headRow.children.length != columnCount) {
+      return null;
+    }
+    var head = new Element('thead', [headRow]);
 
     // Advance past the divider of hyphens.
     parser.advance();
 
     var rows = <Element>[];
-    while (!parser.isDone && !parser.matches(_emptyPattern)) {
-      rows.add(parseRow(parser, alignments, 'td'));
+    while (!parser.isDone && !BlockSyntax.isAtBlockEnd(parser)) {
+      var row = parseRow(parser, alignments, 'td');
+      while (row.children.length < columnCount) {
+        // Insert synthetic empty cells.
+        row.children.add(new Element.empty('td'));
+      }
+      while (row.children.length > columnCount) {
+        row.children.removeLast();
+      }
+      rows.add(row);
     }
-    var body = new Element('tbody', rows);
+    if (rows.isEmpty) {
+      return new Element('table', [head]);
+    } else {
+      var body = new Element('tbody', rows);
 
-    return new Element('table', [head, body]);
+      return new Element('table', [head, body]);
+    }
   }
 
   List<String> parseAlignments(String line) {
