@@ -165,16 +165,14 @@ abstract class InlineSyntax {
   ///
   /// Returns whether or not the pattern successfully matched.
   bool tryMatch(InlineParser parser) {
-    var startMatch = pattern.matchAsPrefix(parser.source, parser.pos);
-    if (startMatch != null) {
-      // Write any existing plain text up to this point.
-      parser.writeText();
+    final startMatch = pattern.matchAsPrefix(parser.source, parser.pos);
+    if (startMatch == null) return false;
 
-      if (onMatch(parser, startMatch)) parser.consume(startMatch[0].length);
-      return true;
-    }
+    // Write any existing plain text up to this point.
+    parser.writeText();
 
-    return false;
+    if (onMatch(parser, startMatch)) parser.consume(startMatch[0].length);
+    return true;
   }
 
   /// Processes [match], adding nodes to [parser] and possibly advancing
