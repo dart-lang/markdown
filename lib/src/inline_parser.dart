@@ -565,6 +565,8 @@ class StrikethroughSyntax extends TagSyntax {
 
 /// Matches links like `[blah][label]` and `[blah](url)`.
 class LinkSyntax extends TagSyntax {
+  static final _entirelyWhitespacePattern = new RegExp(r'^\s*$');
+
   final Resolver linkResolver;
 
   LinkSyntax({Resolver linkResolver, String pattern: r'\['})
@@ -598,13 +600,13 @@ class LinkSyntax extends TagSyntax {
     if (!_pendingStatesAreActive) return false;
 
     var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
-    // The current character is the `]` that closed the link text. Walk one
-    // character forward, to determine what type of link we might have.
+    // The current character is the `]` that closed the link text. Examine the
+    // next character, to determine what type of link we might have (a '('
+    // means a possible inline link; otherwise a possible reference link).
     if (parser.pos + 1 >= parser.source.length) {
       // In this case, the Markdown document may have ended with a shortcut
       // reference link.
 
-      // Back up back to the `]`.
       return _tryAddReferenceLink(parser, state, text);
     }
     // Peek at the next character; don't advance, so as to avoid later stepping
@@ -612,7 +614,7 @@ class LinkSyntax extends TagSyntax {
     var char = parser.charAt(parser.pos + 1);
 
     if (char == $lparen) {
-      // Maybe an inline link.
+      // Maybe an inline link, like `[text](destination)`.
       parser.advanceBy(1);
       var leftParenIndex = parser.pos;
       var inlineLink = _parseInlineLink(parser);
@@ -646,7 +648,6 @@ class LinkSyntax extends TagSyntax {
     // The link text (inside `[...]`) was not followed with a opening `(` nor
     // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
 
-    // Back up back to the `]`.
     return _tryAddReferenceLink(parser, state, text);
   }
 
@@ -731,7 +732,12 @@ class LinkSyntax extends TagSyntax {
       // TODO(srawlins): only check 999 characters, for performance reasons?
     }
 
-    return parser.source.substring(labelStart, parser.pos).toLowerCase();
+    var label = parser.source.substring(labelStart, parser.pos);
+
+    // A link label must contain at least one non-whitespace character.
+    if (_entirelyWhitespacePattern.hasMatch(label)) return null;
+
+    return label.toLowerCase();
   }
 
   /// Parse an inline [InlineLink] at the current position.
@@ -748,15 +754,8 @@ class LinkSyntax extends TagSyntax {
     // Start walking to the character just after the opening `(`.
     parser.advanceBy(1);
 
-    // Loop past the opening whitespace.
-    while (true) {
-      var char = parser.charAt(parser.pos);
-      if (char != $space && char != $lf && char != $cr && char != $ff) {
-        break;
-      }
-      parser.advanceBy(1);
-      if (parser.isDone) return null; // EOF. Not a link.
-    }
+    _moveThroughWhitespace(parser);
+    if (parser.isDone) return null; // EOF. Not a link.
 
     if (parser.charAt(parser.pos) == $lt) {
       // Maybe a `<...>`-enclosed link destination.
@@ -874,23 +873,26 @@ class LinkSyntax extends TagSyntax {
     }
   }
 
+  // Walk the parser forward through any whitespace.
   void _moveThroughWhitespace(InlineParser parser) {
     while (true) {
-      parser.advanceBy(1);
-      if (parser.isDone) return;
       var char = parser.charAt(parser.pos);
       if (char != $space && char != $lf && char != $cr && char != $ff) {
         return;
       }
+      parser.advanceBy(1);
+      if (parser.isDone) return;
     }
   }
 
-  // Parse a link title in [parser] at it's current position.
+  // Parse a link title in [parser] at it's current position. The parser's
+  // current position should be a whitespace character that followed a link
+  // destination.
   String _parseTitle(InlineParser parser) {
-    // Walk over leading space, looking for a delimiter.
     _moveThroughWhitespace(parser);
     if (parser.isDone) return null;
 
+    // The whitespace should be followed by a title delimiter.
     var delimiter = parser.charAt(parser.pos);
     if (delimiter != $apostrophe &&
         delimiter != $quote &&
@@ -902,7 +904,7 @@ class LinkSyntax extends TagSyntax {
     var closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
     String title;
 
-    // Now we look for an un-escaped close delimiter.
+    // Now we look for an un-escaped closing delimiter.
     while (true) {
       parser.advanceBy(1);
       if (parser.isDone) return null; // EOF. Not a link.
@@ -917,7 +919,9 @@ class LinkSyntax extends TagSyntax {
       }
     }
 
-    // Parse optional whitespace before the required `)`.
+    // Advance past the closing delimiter.
+    parser.advanceBy(1);
+    if (parser.isDone) return null;
     _moveThroughWhitespace(parser);
     if (parser.isDone) return null;
     if (parser.charAt(parser.pos) != $rparen) return null;
