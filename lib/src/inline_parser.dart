@@ -88,22 +88,15 @@ class InlineParser {
     // Make a fake top tag to hold the results.
     _stack.add(new TagState(0, 0, null, null));
 
-    loopOverSource:
     while (!isDone) {
       // See if any of the current tags on the stack match.  This takes
       // priority over other possible matches.
-      for (var i = _stack.length - 1; i > 0; i--) {
-        if (_stack[i].tryMatch(this)) {
-          continue loopOverSource;
-        }
-      }
+      if (_stack.reversed
+          .any((state) => state.syntax != null && state.tryMatch(this)))
+        continue;
 
       // See if the current text matches any defined markdown syntax.
-      for (var syntax in syntaxes) {
-        if (syntax.tryMatch(this)) {
-          continue loopOverSource;
-        }
-      }
+      if (syntaxes.any((syntax) => syntax.tryMatch(this))) continue;
 
       // If we got here, it's just text.
       advanceBy(1);
@@ -574,15 +567,24 @@ class StrikethroughSyntax extends TagSyntax {
 class LinkSyntax extends TagSyntax {
   final Resolver linkResolver;
 
-  LinkSyntax({this.linkResolver, String pattern: r'\['})
-      : super(pattern, end: r'\]');
+  LinkSyntax({Resolver linkResolver, String pattern: r'\['})
+      : this.linkResolver = (linkResolver ?? (String _, [String __]) => null),
+        super(pattern, end: r'\]');
 
-  // Pending [TagState]s are "active" or "inactive" based on whether a
-  // link-like element has just been parsed. Links cannot be nested, so we must
-  // "deactivate" any pending ones.
-  bool _pendingStatesAreActive = true;
+  // The pending [TagState]s, all together, are "active" or "inactive" based on
+  // whether a link element has just been parsed.
+  //
+  // Links cannot be nested, so we must "deactivate" any pending ones. For
+  // example, take the following text:
+  //
+  //     Text [link and [more](links)](links).
+  //
+  // Once we have parsed `Text [`, there is one (pending) link in the state
+  // stack.  It is, by default, active. Once we parse the next possible link,
+  // `[more](links)`, as a real link, we must deactive the pending links (just
+  // the one, in this case).
+  var _pendingStatesAreActive = true;
 
-  @override
   bool onMatch(InlineParser parser, Match match) {
     var matched = super.onMatch(parser, match);
     if (!matched) return false;
@@ -603,7 +605,7 @@ class LinkSyntax extends TagSyntax {
       // reference link.
 
       // Back up back to the `]`.
-      return _addReferenceLink(parser, state, text);
+      return _tryAddReferenceLink(parser, state, text);
     }
     // Peek at the next character; don't advance, so as to avoid later stepping
     // backward.
@@ -614,18 +616,17 @@ class LinkSyntax extends TagSyntax {
       parser.advanceBy(1);
       var leftParenIndex = parser.pos;
       var inlineLink = _parseInlineLink(parser);
-      if (inlineLink == null) {
-        // Reset the parser position.
-        parser.pos = leftParenIndex;
-      } else {
-        return _addInlineLink(parser, state, inlineLink);
-      }
+      if (inlineLink != null)
+        return _tryAddInlineLink(parser, state, inlineLink);
+
+      // Reset the parser position.
+      parser.pos = leftParenIndex;
 
       // At this point, we've matched `[...](`, but that `(` did not pan out to
       // be an inline link. We must now check if `[...]` is simply a shortcut
       // reference link.
       parser.advanceBy(-1);
-      return _addReferenceLink(parser, state, text);
+      return _tryAddReferenceLink(parser, state, text);
     }
 
     if (char == $lbracket) {
@@ -635,21 +636,18 @@ class LinkSyntax extends TagSyntax {
           parser.charAt(parser.pos + 1) == $rbracket) {
         // Maybe a shortcut reference link.
         parser.advanceBy(1);
-        return _addReferenceLink(parser, state, text);
+        return _tryAddReferenceLink(parser, state, text);
       }
       var label = _parseReferenceLinkLabel(parser);
-      if (label != null) {
-        return _addReferenceLink(parser, state, label);
-      } else {
-        return false;
-      }
+      if (label != null) return _tryAddReferenceLink(parser, state, label);
+      return false;
     }
 
     // The link text (inside `[...]`) was not followed with a opening `(` nor
     // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
 
     // Back up back to the `]`.
-    return _addReferenceLink(parser, state, text);
+    return _tryAddReferenceLink(parser, state, text);
   }
 
   /// Resolve a possible reference link.
@@ -666,7 +664,7 @@ class LinkSyntax extends TagSyntax {
       // library to specify a custom resolver function ([linkResolver]) that
       // may choose to handle this. Otherwise, it's just treated as plain
       // text.
-      return linkResolver == null ? null : linkResolver(label);
+      return linkResolver(label);
     }
   }
 
@@ -684,7 +682,7 @@ class LinkSyntax extends TagSyntax {
   // Add a reference link node to [parser]'s AST.
   //
   // Returns whether the link was added successfully.
-  bool _addReferenceLink(InlineParser parser, TagState state, String label) {
+  bool _tryAddReferenceLink(InlineParser parser, TagState state, String label) {
     var element =
         _resolveReferenceLink(label, state, parser.document.linkReferences);
     if (element == null) {
@@ -699,11 +697,9 @@ class LinkSyntax extends TagSyntax {
   // Add an inline link node to [parser]'s AST.
   //
   // Returns whether the link was added successfully.
-  bool _addInlineLink(InlineParser parser, TagState state, InlineLink link) {
+  bool _tryAddInlineLink(InlineParser parser, TagState state, InlineLink link) {
     var element = _createNode(state, link.destination, link.title);
-    if (element == null) {
-      return false;
-    }
+    if (element == null) return false;
     parser.addNode(element);
     parser.start = parser.pos;
     _pendingStatesAreActive = false;
@@ -712,13 +708,12 @@ class LinkSyntax extends TagSyntax {
 
   /// Parse a reference link label at the current position.
   ///
-  /// Specifically, [parser.pos] is expected to be pointing at the `]` which
-  /// closed the link text.
+  /// Specifically, [parser.pos] is expected to be pointing at the `[` which
+  /// opens the link label.
   ///
   /// Returns the label if it could be parsed, or `null` if not.
   String _parseReferenceLinkLabel(InlineParser parser) {
-    // The current character points to the character points to the `[` which
-    // opens the link label. Walk past it.
+    // Walk past the opening `[`.
     parser.advanceBy(1);
     if (parser.isDone) return null;
 
@@ -750,7 +745,7 @@ class LinkSyntax extends TagSyntax {
   ///
   /// Returns the [InlineLink] if one was parsed, or `null` if not.
   InlineLink _parseInlineLink(InlineParser parser) {
-    // Start walking at the character just after the opening `(`.
+    // Start walking to the character just after the opening `(`.
     parser.advanceBy(1);
 
     // Loop past the opening whitespace.
@@ -771,6 +766,9 @@ class LinkSyntax extends TagSyntax {
     }
   }
 
+  /// Parse an inline link with a bracketed destination (a destination wrapped
+  /// in `<...>`). The current position of the parser must be the first
+  /// character of the destination.
   InlineLink _parseInlineBracketedLink(InlineParser parser) {
     int destinationStart;
     String destination;
@@ -783,7 +781,6 @@ class LinkSyntax extends TagSyntax {
       if (char == $backslash) {
         parser.advanceBy(1);
         if (parser.isDone) return null; // EOF. Not a link.
-        break;
       } else if (char == $space || char == $lf || char == $cr || char == $ff) {
         // EOF. Not a link. (No whitespace allowed within `<...>`.)
         return null;
@@ -802,7 +799,6 @@ class LinkSyntax extends TagSyntax {
       if (title == null) {
         // This looked like an inline link, until we found this $space
         // followed by mystery characters; no longer a link.
-        //parser.pos = leftParenIndex;
         return null;
       }
       return new InlineLink(destination, title: title);
@@ -814,6 +810,9 @@ class LinkSyntax extends TagSyntax {
     }
   }
 
+  /// Parse an inline link with a "bare" destination (a destination _not_
+  /// wrapped in `<...>`). The current position of the parser must be the first
+  /// character of the destination.
   InlineLink _parseInlineBareDestinationLink(InlineParser parser) {
     var destinationStart = parser.pos;
 
@@ -829,15 +828,14 @@ class LinkSyntax extends TagSyntax {
     // opened the destination.
     var parenCount = 1;
 
-    loop:
     while (true) {
-      var char = parser.charAt(parser.pos);
-      switch (char) {
+      switch (parser.charAt(parser.pos)) {
         case $backslash:
           // We do not care about the next character.
           parser.advanceBy(1);
           if (parser.isDone) return null; // EOF. Not a link.
           break;
+
         case $space:
         case $lf:
         case $cr:
@@ -848,7 +846,6 @@ class LinkSyntax extends TagSyntax {
           if (title == null) {
             // This looked like an inline link, until we found this $space
             // followed by mystery characters; no longer a link.
-            //parser.pos = leftParenIndex;
             return null;
           }
           // [_parseTitle] made sure the title was follwed by a closing `)`
@@ -859,9 +856,11 @@ class LinkSyntax extends TagSyntax {
             return new InlineLink(destination, title: title);
           }
           break;
+
         case $lparen:
           parenCount++;
           break;
+
         case $rparen:
           parenCount--;
           if (parenCount == 0) {
@@ -875,75 +874,54 @@ class LinkSyntax extends TagSyntax {
     }
   }
 
-  // Parse a link title at [parser] position [i]. [i] must be the position at
-  // the first space after the link destination (which triggered the idea
-  // that we might have a title).
-  String _parseTitle(InlineParser parser) {
-    int char;
-    int delimiter;
-    String title;
-
-    // Walk over leading space, looking for a delimiter.
+  void _moveThroughWhitespace(InlineParser parser) {
     while (true) {
       parser.advanceBy(1);
-      if (parser.isDone) return null; // EOF. Not a link.
-      char = parser.charAt(parser.pos);
-      switch (char) {
-        case $space:
-        case $lf:
-        case $cr:
-        case $ff:
-          // Just padding. Move along.
-          continue;
-        case $apostrophe:
-        case $quote:
-        case $lparen:
-          delimiter = char;
-          break;
-        default:
-          // Not a title!
-          return null;
+      if (parser.isDone) return;
+      var char = parser.charAt(parser.pos);
+      if (char != $space && char != $lf && char != $cr && char != $ff) {
+        return;
       }
-      break;
     }
+  }
+
+  // Parse a link title in [parser] at it's current position.
+  String _parseTitle(InlineParser parser) {
+    // Walk over leading space, looking for a delimiter.
+    _moveThroughWhitespace(parser);
+    if (parser.isDone) return null;
+
+    var delimiter = parser.charAt(parser.pos);
+    if (delimiter != $apostrophe &&
+        delimiter != $quote &&
+        delimiter != $lparen) {
+      return null;
+    }
+
     var titleStart = parser.pos + 1;
     var closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
+    String title;
 
     // Now we look for an un-escaped close delimiter.
     while (true) {
       parser.advanceBy(1);
       if (parser.isDone) return null; // EOF. Not a link.
-      char = parser.charAt(parser.pos);
-      if (char == $backslash) {
-        // Escape the next character.
-        parser.advanceBy(1);
-        continue;
-      }
+      var char = parser.charAt(parser.pos);
       if (char == closeDelimiter) {
         title = parser.source.substring(titleStart, parser.pos);
         break;
       }
+      if (char == $backslash) {
+        // Escape the next character.
+        parser.advanceBy(1);
+      }
     }
 
     // Parse optional whitespace before the required `)`.
-    while (true) {
-      parser.advanceBy(1);
-      if (parser.isDone) return null; // EOF. Not a link.
-      char = parser.charAt(parser.pos);
-      switch (char) {
-        case $space:
-        case $lf:
-        case $cr:
-        case $ff:
-          // Just padding. Move along.
-          break;
-        case $rparen:
-          return title;
-        default:
-          // Not a title!
-          return null;
-      }
-    }
+    _moveThroughWhitespace(parser);
+    if (parser.isDone) return null;
+    if (parser.charAt(parser.pos) != $rparen) return null;
+    return title;
   }
 }
 
@@ -969,7 +947,7 @@ class ImageSyntax extends LinkSyntax {
   // Otherwise, it is treated as an inline image.
   //
   // Returns whether the image was added successfully.
-  bool _addReferenceLink(InlineParser parser, TagState state, String label) {
+  bool _tryAddReferenceLink(InlineParser parser, TagState state, String label) {
     var element =
         _resolveReferenceLink(label, state, parser.document.linkReferences);
     if (element == null) {
