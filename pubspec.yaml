@@ -14,8 +14,6 @@ dependencies:
   args: '^1.0.0'
 
 dev_dependencies:
-  # Only for example/app.dart.
-  browser: any
   collection: '^1.2.0'
   expected_output: '^1.1.0'
   html: '>=0.12.2 <0.14.0'
