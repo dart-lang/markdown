@@ -128,9 +128,13 @@ class InlineParser {
     }
   }
 
+  /// Add [node] to the last [TagState] on the stack.
   void addNode(Node node) {
     _stack.last.children.add(node);
   }
+
+  /// Push [state] onto the stack of [TagState]s.
+  void pushTagState(TagState state) => _stack.add(state);
 
   bool get isDone => pos == source.length;
 
@@ -479,6 +483,11 @@ class _DelimiterRun {
 /// `<em>`. Allows nested tags.
 class TagSyntax extends InlineSyntax {
   final RegExp endPattern;
+
+  /// Whether this syntax requires the concept of delimiter runs for proper
+  /// parsing.
+  ///
+  /// See http://spec.commonmark.org/0.28/#delimiter-run for definitions.
   final bool requiresDelimiterRun;
 
   TagSyntax(String pattern, {String end, this.requiresDelimiterRun: false})
@@ -490,14 +499,14 @@ class TagSyntax extends InlineSyntax {
     var matchStart = parser.pos;
     var matchEnd = parser.pos + runLength - 1;
     if (!requiresDelimiterRun) {
-      parser._stack.add(new TagState(parser.pos, matchEnd + 1, this, null));
+      parser.pushTagState(new TagState(parser.pos, matchEnd + 1, this, null));
       return true;
     }
 
     var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
     if (delimiterRun != null && delimiterRun.canOpen) {
-      parser._stack
-          .add(new TagState(parser.pos, matchEnd + 1, this, delimiterRun));
+      parser.pushTagState(
+          new TagState(parser.pos, matchEnd + 1, this, delimiterRun));
       return true;
     } else {
       parser.advanceBy(runLength);
@@ -519,7 +528,7 @@ class TagSyntax extends InlineSyntax {
       parser.pos = parser.pos - (runLength - 1);
       parser.start = parser.pos;
     } else if (openingRunLength > 1 && runLength == 1) {
-      parser._stack.add(
+      parser.pushTagState(
           new TagState(state.startPos, state.endPos - 1, this, delimiterRun));
       parser.addNode(new Element('em', state.children));
     } else if (openingRunLength == 2 && runLength == 2) {
@@ -529,11 +538,11 @@ class TagSyntax extends InlineSyntax {
       parser.pos = parser.pos - (runLength - 2);
       parser.start = parser.pos;
     } else if (openingRunLength > 2 && runLength == 2) {
-      parser._stack.add(
+      parser.pushTagState(
           new TagState(state.startPos, state.endPos - 2, this, delimiterRun));
       parser.addNode(new Element('strong', state.children));
     } else if (openingRunLength > 2 && runLength > 2) {
-      parser._stack.add(
+      parser.pushTagState(
           new TagState(state.startPos, state.endPos - 2, this, delimiterRun));
       parser.addNode(new Element('strong', state.children));
       parser.pos = parser.pos - (runLength - 2);
@@ -599,7 +608,7 @@ class LinkSyntax extends TagSyntax {
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
     if (!_pendingStatesAreActive) return false;
 
-    var text = parser.source.substring(state.endPos, parser.pos).toLowerCase();
+    var text = parser.source.substring(state.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('
     // means a possible inline link; otherwise a possible reference link).
@@ -633,10 +642,12 @@ class LinkSyntax extends TagSyntax {
 
     if (char == $lbracket) {
       parser.advanceBy(1);
-      // Maybe a reference link.
+      // At this point, we've matched `[...][`. Maybe a *full* reference link,
+      // like `[foo][bar]` or a *collapsed* reference link, like `[foo][]`.
       if (parser.pos + 1 < parser.source.length &&
           parser.charAt(parser.pos + 1) == $rbracket) {
-        // Maybe a shortcut reference link.
+        // That opening `[` is not actually part of the link. Maybe a
+        // *shortcut* reference link (followed by a `[`).
         parser.advanceBy(1);
         return _tryAddReferenceLink(parser, state, text);
       }
@@ -655,8 +666,11 @@ class LinkSyntax extends TagSyntax {
   ///
   /// Uses [linkReferences], [linkResolver], and [_createNode] to try to
   /// resolve [label] and [state] into a [Node].
+  ///
+  /// [label] does not need to be normalized.
   Node _resolveReferenceLink(
       String label, TagState state, Map<String, LinkReference> linkReferences) {
+    label = label.toLowerCase();
     var linkReference = linkReferences[label];
     if (linkReference != null) {
       return _createNode(state, linkReference.destination, linkReference.title);
@@ -718,26 +732,32 @@ class LinkSyntax extends TagSyntax {
     parser.advanceBy(1);
     if (parser.isDone) return null;
 
-    var labelStart = parser.pos;
+    var buffer = new StringBuffer();
     while (true) {
       var char = parser.charAt(parser.pos);
       if (char == $backslash) {
-        // We don't care about the next character.
         parser.advanceBy(1);
+        var next = parser.charAt(parser.pos);
+        if (next != $backslash && next != $rbracket) {
+          buffer.writeCharCode(char);
+        }
+        buffer.writeCharCode(next);
       } else if (char == $rbracket) {
         break;
+      } else {
+        buffer.writeCharCode(char);
       }
       parser.advanceBy(1);
       if (parser.isDone) return null;
       // TODO(srawlins): only check 999 characters, for performance reasons?
     }
 
-    var label = parser.source.substring(labelStart, parser.pos);
+    var label = buffer.toString();
 
     // A link label must contain at least one non-whitespace character.
     if (_entirelyWhitespacePattern.hasMatch(label)) return null;
 
-    return label.toLowerCase();
+    return label;
   }
 
   /// Parse an inline [InlineLink] at the current position.
@@ -769,33 +789,42 @@ class LinkSyntax extends TagSyntax {
   /// in `<...>`). The current position of the parser must be the first
   /// character of the destination.
   InlineLink _parseInlineBracketedLink(InlineParser parser) {
-    int destinationStart;
-    String destination;
-
     parser.advanceBy(1);
-    destinationStart = parser.pos;
 
+    var buffer = new StringBuffer();
     while (true) {
       var char = parser.charAt(parser.pos);
       if (char == $backslash) {
         parser.advanceBy(1);
-        if (parser.isDone) return null; // EOF. Not a link.
+        var next = parser.charAt(parser.pos);
+        if (char == $space || char == $lf || char == $cr || char == $ff) {
+          // Not a link (no whitespace allowed within `<...>`).
+          return null;
+        }
+        // TODO: Follow the backslash spec better here.
+        // http://spec.commonmark.org/0.28/#backslash-escapes
+        if (next != $backslash && next != $gt) {
+          buffer.writeCharCode(char);
+        }
+        buffer.writeCharCode(next);
       } else if (char == $space || char == $lf || char == $cr || char == $ff) {
-        // EOF. Not a link. (No whitespace allowed within `<...>`.)
+        // Not a link (no whitespace allowed within `<...>`).
         return null;
       } else if (char == $gt) {
-        destination = parser.source.substring(destinationStart, parser.pos);
         break;
+      } else {
+        buffer.writeCharCode(char);
       }
       parser.advanceBy(1);
-      if (parser.isDone) return null; // EOF. Not a link.
+      if (parser.isDone) return null;
     }
+    var destination = buffer.toString();
 
     parser.advanceBy(1);
     var char = parser.charAt(parser.pos);
     if (char == $space || char == $lf || char == $cr || char == $ff) {
       var title = _parseTitle(parser);
-      if (title == null) {
+      if (title == null && parser.charAt(parser.pos) != $rparen) {
         // This looked like an inline link, until we found this $space
         // followed by mystery characters; no longer a link.
         return null;
@@ -842,7 +871,7 @@ class LinkSyntax extends TagSyntax {
           var destination =
               parser.source.substring(destinationStart, parser.pos);
           var title = _parseTitle(parser);
-          if (title == null) {
+          if (title == null && parser.charAt(parser.pos) != $rparen) {
             // This looked like an inline link, until we found this $space
             // followed by mystery characters; no longer a link.
             return null;
@@ -900,24 +929,29 @@ class LinkSyntax extends TagSyntax {
       return null;
     }
 
-    var titleStart = parser.pos + 1;
     var closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
-    String title;
+    parser.advanceBy(1);
 
     // Now we look for an un-escaped closing delimiter.
+    var buffer = new StringBuffer();
     while (true) {
-      parser.advanceBy(1);
-      if (parser.isDone) return null; // EOF. Not a link.
       var char = parser.charAt(parser.pos);
-      if (char == closeDelimiter) {
-        title = parser.source.substring(titleStart, parser.pos);
-        break;
-      }
       if (char == $backslash) {
-        // Escape the next character.
         parser.advanceBy(1);
+        var next = parser.charAt(parser.pos);
+        if (next != $backslash && next != closeDelimiter) {
+          buffer.writeCharCode(char);
+        }
+        buffer.writeCharCode(next);
+      } else if (char == closeDelimiter) {
+        break;
+      } else {
+        buffer.writeCharCode(char);
       }
+      parser.advanceBy(1);
+      if (parser.isDone) return null;
     }
+    var title = buffer.toString();
 
     // Advance past the closing delimiter.
     parser.advanceBy(1);
