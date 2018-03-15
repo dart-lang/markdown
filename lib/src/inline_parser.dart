@@ -134,7 +134,7 @@ class InlineParser {
   }
 
   /// Push [state] onto the stack of [TagState]s.
-  void pushTagState(TagState state) => _stack.add(state);
+  void openTag(TagState state) => _stack.add(state);
 
   bool get isDone => pos == source.length;
 
@@ -484,10 +484,10 @@ class _DelimiterRun {
 class TagSyntax extends InlineSyntax {
   final RegExp endPattern;
 
-  /// Whether this syntax requires the concept of delimiter runs for proper
-  /// parsing.
+  /// Whether this is parsed according to the same nesting rules as [emphasis
+  /// delimiters][].
   ///
-  /// See http://spec.commonmark.org/0.28/#delimiter-run for definitions.
+  /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
   final bool requiresDelimiterRun;
 
   TagSyntax(String pattern, {String end, this.requiresDelimiterRun: false})
@@ -499,14 +499,14 @@ class TagSyntax extends InlineSyntax {
     var matchStart = parser.pos;
     var matchEnd = parser.pos + runLength - 1;
     if (!requiresDelimiterRun) {
-      parser.pushTagState(new TagState(parser.pos, matchEnd + 1, this, null));
+      parser.openTag(new TagState(parser.pos, matchEnd + 1, this, null));
       return true;
     }
 
     var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
     if (delimiterRun != null && delimiterRun.canOpen) {
-      parser.pushTagState(
-          new TagState(parser.pos, matchEnd + 1, this, delimiterRun));
+      parser
+          .openTag(new TagState(parser.pos, matchEnd + 1, this, delimiterRun));
       return true;
     } else {
       parser.advanceBy(runLength);
@@ -528,7 +528,7 @@ class TagSyntax extends InlineSyntax {
       parser.pos = parser.pos - (runLength - 1);
       parser.start = parser.pos;
     } else if (openingRunLength > 1 && runLength == 1) {
-      parser.pushTagState(
+      parser.openTag(
           new TagState(state.startPos, state.endPos - 1, this, delimiterRun));
       parser.addNode(new Element('em', state.children));
     } else if (openingRunLength == 2 && runLength == 2) {
@@ -538,11 +538,11 @@ class TagSyntax extends InlineSyntax {
       parser.pos = parser.pos - (runLength - 2);
       parser.start = parser.pos;
     } else if (openingRunLength > 2 && runLength == 2) {
-      parser.pushTagState(
+      parser.openTag(
           new TagState(state.startPos, state.endPos - 2, this, delimiterRun));
       parser.addNode(new Element('strong', state.children));
     } else if (openingRunLength > 2 && runLength > 2) {
-      parser.pushTagState(
+      parser.openTag(
           new TagState(state.startPos, state.endPos - 2, this, delimiterRun));
       parser.addNode(new Element('strong', state.children));
       parser.pos = parser.pos - (runLength - 2);
@@ -686,8 +686,7 @@ class LinkSyntax extends TagSyntax {
   /// Create the node represented by a Markdown link.
   Node _createNode(TagState state, String destination, String title) {
     var element = new Element('a', state.children);
-    element.attributes['href'] = escapeAttribute(
-        destination.replaceAll(r'\(', '(').replaceAll(r'\)', ')'));
+    element.attributes['href'] = escapeAttribute(destination);
     if (title != null && title.isNotEmpty) {
       element.attributes['title'] = escapeAttribute(title);
     }
@@ -842,8 +841,6 @@ class LinkSyntax extends TagSyntax {
   /// wrapped in `<...>`). The current position of the parser must be the first
   /// character of the destination.
   InlineLink _parseInlineBareDestinationLink(InlineParser parser) {
-    var destinationStart = parser.pos;
-
     // According to
     // [CommonMark](http://spec.commonmark.org/0.28/#link-destination):
     //
@@ -855,21 +852,29 @@ class LinkSyntax extends TagSyntax {
     // We need to count the open parens. We start with 1 for the paren that
     // opened the destination.
     var parenCount = 1;
+    var buffer = new StringBuffer();
 
     while (true) {
-      switch (parser.charAt(parser.pos)) {
+      var char = parser.charAt(parser.pos);
+      switch (char) {
         case $backslash:
-          // We do not care about the next character.
           parser.advanceBy(1);
           if (parser.isDone) return null; // EOF. Not a link.
+          var next = parser.charAt(parser.pos);
+          // Parentheses may be escaped.
+          //
+          // http://spec.commonmark.org/0.28/#example-467
+          if (next != $backslash && next != $lparen && next != $rparen) {
+            buffer.writeCharCode(char);
+          }
+          buffer.writeCharCode(next);
           break;
 
         case $space:
         case $lf:
         case $cr:
         case $ff:
-          var destination =
-              parser.source.substring(destinationStart, parser.pos);
+          var destination = buffer.toString();
           var title = _parseTitle(parser);
           if (title == null && parser.charAt(parser.pos) != $rparen) {
             // This looked like an inline link, until we found this $space
@@ -887,15 +892,20 @@ class LinkSyntax extends TagSyntax {
 
         case $lparen:
           parenCount++;
+          buffer.writeCharCode(char);
           break;
 
         case $rparen:
           parenCount--;
           if (parenCount == 0) {
-            var destination =
-                parser.source.substring(destinationStart, parser.pos);
+            var destination = buffer.toString();
             return new InlineLink(destination);
           }
+          buffer.writeCharCode(char);
+          break;
+
+        default:
+          buffer.writeCharCode(char);
       }
       parser.advanceBy(1);
       if (parser.isDone) return null; // EOF. Not a link.

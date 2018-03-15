@@ -66,3 +66,13 @@ links [are *awesome*]
 
 <<<
 <p>links [are <em>awesome</em>]</p>
+>>> links with escaped parens
+[a](\(yes-a-link)
+[a](\(yes-a-link\))
+[a](\\(not-a-link\))
+[a](\\(yes-a-link\)))
+<<<
+<p><a href="(yes-a-link">a</a>
+<a href="(yes-a-link)">a</a>
+[a](\(not-a-link))
+<a href="(yes-a-link))">a</a></p>
