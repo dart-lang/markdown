@@ -665,7 +665,11 @@ class LinkSyntax extends TagSyntax {
   /// Resolve a possible reference link.
   ///
   /// Uses [linkReferences], [linkResolver], and [_createNode] to try to
-  /// resolve [label] and [state] into a [Node].
+  /// resolve [label] and [state] into a [Node]. If [label] is defined in
+  /// [linkReferences] or can be resolved by [linkResolver], returns a [Node]
+  /// that links to the resolved URL.
+  ///
+  /// Otherwise, returns `null`.
   ///
   /// [label] does not need to be normalized.
   Node _resolveReferenceLink(
@@ -916,7 +920,12 @@ class LinkSyntax extends TagSyntax {
   void _moveThroughWhitespace(InlineParser parser) {
     while (true) {
       var char = parser.charAt(parser.pos);
-      if (char != $space && char != $lf && char != $cr && char != $ff) {
+      if (char != $space &&
+          char != $tab &&
+          char != $lf &&
+          char != $vt &&
+          char != $cr &&
+          char != $ff) {
         return;
       }
       parser.advanceBy(1);
