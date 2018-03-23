@@ -4,6 +4,7 @@
   the `Document` field, `refLinks`, has been renamed `linkReferences`.
 * **Breaking change:** Remove the deprecated `ExtensionSet.gitHub` field.
   Use `ExtensionSet.gitHubFlavored` instead.
+* **Breaking change:** Make all of the fields on `Document` read-only.
 * Overhaul support for emphasis (`*foo*` and `_foo_`) and strong emphasis
   (`**foo**` and `__foo__`), dramatically improving CommonMark compliance.
 * Improve support for tab characters, and horizontal rules.
