@@ -25,7 +25,7 @@ void main() {
       inlineSyntaxes: [new InlineHtmlSyntax()]);
 
   group('Resolver', () {
-    Node nyanResolver(String text) => new Text('~=[,,_${text}_,,]:3');
+    Node nyanResolver(String text, [_]) => new Text('~=[,,_${text}_,,]:3');
     validateCore(
         'simple link resolver',
         '''
@@ -55,6 +55,26 @@ resolve [*star* _underline_] thing
 <p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>
 ''',
         linkResolver: nyanResolver);
+
+    validateCore(
+        'link resolver uses un-normalized link label',
+        '''
+resolve [TH  IS] thing
+''',
+        '''
+<p>resolve ~=[,,_TH  IS_,,]:3 thing</p>
+''',
+        linkResolver: nyanResolver);
+
+    validateCore(
+        'can resolve brackets',
+        r'''
+resolve [\[\]] thing
+''',
+        '''
+<p>resolve ~=[,,_[]_,,]:3 thing</p>
+''',
+        linkResolver: nyanResolver);
   });
 
   group('Custom inline syntax', () {
@@ -69,7 +89,7 @@ nyan''',
 
     validateCore('dart custom links', 'links [are<foo>] awesome',
         '<p>links <a>are&lt;foo></a> awesome</p>\n',
-        linkResolver: (text) =>
+        linkResolver: (String text, [_]) =>
             new Element.text('a', text.replaceAll('<', '&lt;')));
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some

@@ -12,6 +12,7 @@ environment:
 
 dependencies:
   args: '^1.0.0'
+  charcode: '^1.1.0'
 
 dev_dependencies:
   collection: '^1.2.0'

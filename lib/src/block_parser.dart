@@ -32,6 +32,9 @@ final _codePattern = new RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 /// SETEXT should win.
 final _hrPattern = new RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
 
+/// One or more whitespace, for compressing.
+final _oneOrMoreWhitespacePattern = new RegExp('[ \n\r\t]+');
+
 /// A line starting with one of these markers: `-`, `*`, `+`. May have up to
 /// three leading spaces before the marker and any number of spaces or tabs
 /// after.
@@ -1021,8 +1024,9 @@ class ParagraphSyntax extends BlockSyntax {
       title = title.substring(1, title.length - 1);
     }
 
-    // References are case-insensitive.
-    label = label.toLowerCase().trim();
+    // References are case-insensitive, and internal whitespace is compressed.
+    label =
+        label.toLowerCase().trim().replaceAll(_oneOrMoreWhitespacePattern, ' ');
 
     parser.document.linkReferences
         .putIfAbsent(label, () => new LinkReference(label, destination, title));
