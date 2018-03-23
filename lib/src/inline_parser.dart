@@ -674,8 +674,8 @@ class LinkSyntax extends TagSyntax {
   /// [label] does not need to be normalized.
   Node _resolveReferenceLink(
       String label, TagState state, Map<String, LinkReference> linkReferences) {
-    label = label.toLowerCase();
-    var linkReference = linkReferences[label];
+    var normalizedLabel = label.toLowerCase();
+    var linkReference = linkReferences[normalizedLabel];
     if (linkReference != null) {
       return _createNode(state, linkReference.destination, linkReference.title);
     } else {
@@ -683,7 +683,14 @@ class LinkSyntax extends TagSyntax {
       // library to specify a custom resolver function ([linkResolver]) that
       // may choose to handle this. Otherwise, it's just treated as plain
       // text.
-      return linkResolver(label);
+
+      // Normally, label text does not get parsed as inline Markdown. However,
+      // for the benefit of the link resolver, we need to at least escape
+      // brackets, so that, e.g. a link resolver can receive `[\[\]]` as `[]`.
+      return linkResolver(label
+          .replaceAll(r'\\', r'\')
+          .replaceAll(r'\[', '[')
+          .replaceAll(r'\]', ']'));
     }
   }
 

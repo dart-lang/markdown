@@ -55,6 +55,26 @@ resolve [*star* _underline_] thing
 <p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>
 ''',
         linkResolver: nyanResolver);
+
+    validateCore(
+        'link resolver uses un-normalized link label',
+        '''
+resolve [TH  IS] thing
+''',
+        '''
+<p>resolve ~=[,,_TH  IS_,,]:3 thing</p>
+''',
+        linkResolver: nyanResolver);
+
+    validateCore(
+        'can resolve brackets',
+        r'''
+resolve [\[\]] thing
+''',
+        '''
+<p>resolve ~=[,,_[]_,,]:3 thing</p>
+''',
+        linkResolver: nyanResolver);
   });
 
   group('Custom inline syntax', () {
