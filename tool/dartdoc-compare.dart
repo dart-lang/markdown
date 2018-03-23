@@ -1,5 +1,5 @@
 import 'dart:convert' show JSON;
-import 'dart:io' show Directory, File, Process, exitCode;
+import 'dart:io' show Directory, File, Platform, Process, exitCode;
 
 import 'package:args/args.dart' show ArgParser;
 import 'package:path/path.dart' show absolute;
@@ -17,7 +17,7 @@ void main(List<String> arguments) {
     ..addOption(_dartdocDir, help: "Directory of the dartdoc package")
     ..addOption(_markdownBefore, help: "Markdown package 'before' ref")
     ..addOption(_markdownAfter,
-        defaultsTo: "HEAD", help: "Markdown package 'after' ref")
+        defaultsTo: "HEAD", help: "Markdown package 'after' ref (or 'local')")
     ..addFlag(_sdk,
         defaultsTo: false, negatable: false, help: "Is the package the SDK?")
     ..addFlag(_help, abbr: "h", hide: true);
@@ -66,15 +66,16 @@ class DartdocCompare {
   final String dartdocBin;
   final String dartdocPubspecPath;
   final bool sdk;
+  final String markdownPath = new File(Platform.script.path).parent.parent.path;
 
   DartdocCompare(this.dartdocDir, this.markdownBefore, this.markdownAfter,
       this.dartdocBin, this.dartdocPubspecPath, this.sdk);
 
   bool compare(String package) {
-    // Generate docs with Markdown "A".
+    // Generate docs with Markdown "Before".
     var outBefore = _runDartdoc(markdownBefore, package);
 
-    // Generate docs with Markdown "B".
+    // Generate docs with Markdown "After".
     var outAfter = _runDartdoc(markdownAfter, package);
 
     // Compare outputs
@@ -90,10 +91,15 @@ class DartdocCompare {
     print("==========================================================");
     print("Running dartdoc for $markdownRef...");
     print("==========================================================");
-    _doInPath(dartdocDir, () => _updateDartdocPubspec(markdownRef));
+    _doInPath(dartdocDir, () {
+      var returnCode = _updateDartdocPubspec(markdownRef);
+      if (returnCode != 0) {
+        throw "Could not update dartdoc's pubspec!";
+      }
+    });
     return _doInPath(path, () {
       if (!sdk) {
-        _system('pub', ['get']);
+        _system('pub', ['upgrade']);
       }
       var out = Directory.systemTemp
           .createTempSync("dartdoc-compare-${markdownRef}__");
@@ -102,15 +108,15 @@ class DartdocCompare {
 
       if (sdk) {
         args.add('--sdk-docs');
-
-        if (path != null) {
-          args.add("--dart-sdk=$path");
-        }
       }
 
-      print("Command: $cmd ${args.join(" ")}");
+      print('Command: $cmd ${args.join(' ')}');
+      var startTime = new DateTime.now();
       _system(cmd, args);
-      print("");
+      var endTime = new DateTime.now();
+      var duration = endTime.difference(startTime).inSeconds;
+      print('dartdoc generation for $markdownRef took $duration seconds.');
+      print('');
 
       return out.path;
     });
@@ -122,15 +128,21 @@ class DartdocCompare {
     // make modifiable copy
     dartdocPubspec = JSON.decode(JSON.encode(dartdocPubspec)) as Map;
 
-    dartdocPubspec['dependencies']['markdown'] = {
-      'git': {
-        'url': 'git://github.com/dart-lang/markdown.git',
-        'ref': markdownRef
-      }
-    };
+    if (markdownRef == 'local') {
+      dartdocPubspec['dependencies']['markdown'] = {
+        'path': markdownPath,
+      };
+    } else {
+      dartdocPubspec['dependencies']['markdown'] = {
+        'git': {
+          'url': 'git://github.com/dart-lang/markdown.git',
+          'ref': markdownRef
+        }
+      };
+    }
 
     new File(dartdocPubspecPath).writeAsStringSync(JSON.encode(dartdocPubspec));
-    return _system('pub', ['get']);
+    return _system('pub', ['upgrade']);
   }
 }
 
