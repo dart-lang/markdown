@@ -2,6 +2,8 @@
 
 * **Breaking change:** The `Link` class has been renamed `LinkReference`, and
   the `Document` field, `refLinks`, has been renamed `linkReferences`.
+* **Breaking change:** Remove the deprecated `ExtensionSet.gitHub` field.
+  Use `ExtensionSet.gitHubFlavored` instead.
 * Overhaul support for emphasis (`*foo*` and `_foo_`) and strong emphasis
   (`**foo**` and `__foo__`), dramatically improving CommonMark compliance.
 * Improve support for tab characters, and horizontal rules.
