@@ -57,10 +57,6 @@ class ExtensionSet {
     new AutolinkExtensionSyntax(),
   ]);
 
-  /// The deprecated name for the [gitHubFlavored] extension set.
-  @deprecated
-  static final ExtensionSet gitHub = gitHubFlavored;
-
   final List<BlockSyntax> blockSyntaxes;
   final List<InlineSyntax> inlineSyntaxes;
 
