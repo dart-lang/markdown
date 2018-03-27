@@ -4,8 +4,8 @@ import 'inline_parser.dart';
 /// ExtensionSets provide a simple grouping mechanism for common Markdown
 /// flavors.
 ///
-/// For example, the [gitHub] set of syntax extensions allows users to output
-/// HTML from their Markdown in a similar fashion to GitHub's parsing.
+/// For example, the [gitHubFlavored] set of syntax extensions allows users to
+/// output HTML from their Markdown in a similar fashion to GitHub's parsing.
 class ExtensionSet {
   /// The [ExtensionSet.none] extension set renders Markdown similar to
   /// [Markdown.pl].

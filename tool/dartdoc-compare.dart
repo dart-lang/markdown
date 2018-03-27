@@ -94,7 +94,7 @@ class DartdocCompare {
     _doInPath(dartdocDir, () {
       var returnCode = _updateDartdocPubspec(markdownRef);
       if (returnCode != 0) {
-        throw "Could not update dartdoc's pubspec!";
+        throw new Exception("Could not update dartdoc's pubspec!");
       }
     });
     return _doInPath(path, () {
