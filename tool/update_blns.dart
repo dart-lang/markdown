@@ -20,7 +20,6 @@ void main() async {
 
 ''');
   blnsContent.writeln('var blns = <String>[');
-  var ignored = <String>[];
   for (var str in json) {
     var escaped = str
         .replaceAll(r'\', r'\\')
