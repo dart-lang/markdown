@@ -1176,14 +1176,16 @@ class TagState {
 
     // If the stack is empty now, this is the special "results" node.
     if (parser._stack.length == 0) return children;
+    var endMatchIndex = parser.pos;
 
     // We are still parsing, so add this to its parent's children.
     if (syntax.onMatchEnd(parser, endMatch, this)) {
       parser.consume(endMatch[0].length);
     } else {
       // Didn't close correctly so revert to text.
-      parser.start = startPos;
-      parser.pos = parser.start;
+      parser.writeTextRange(startPos, endPos);
+      parser._stack.last.children.addAll(children);
+      parser.pos = endMatchIndex;
       parser.advanceBy(endMatch[0].length);
     }
 
