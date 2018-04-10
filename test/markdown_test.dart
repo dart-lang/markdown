@@ -7,23 +7,25 @@ import 'package:test/test.dart';
 
 import 'util.dart';
 
-/// Most of these tests are based on observing how showdown behaves:
-/// http://softwaremaniacs.org/playground/showdown-highlight/
 void main() {
   testDirectory('original');
 
+  // Block syntax extensions
   testFile('extensions/fenced_code_blocks.unit',
       blockSyntaxes: [const FencedCodeBlockSyntax()]);
-  testFile('extensions/inline_html.unit',
-      inlineSyntaxes: [new InlineHtmlSyntax()]);
   testFile('extensions/headers_with_ids.unit',
       blockSyntaxes: [const HeaderWithIdSyntax()]);
   testFile('extensions/setext_headers_with_ids.unit',
       blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
   testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
 
+  // Inline syntax extensions
+  testFile('extensions/emojis.unit', inlineSyntaxes: [new EmojiSyntax()]);
+  testFile('extensions/inline_html.unit',
+      inlineSyntaxes: [new InlineHtmlSyntax()]);
+
   group('Resolver', () {
-    Node nyanResolver(String text) => new Text('~=[,,_${text}_,,]:3');
+    Node nyanResolver(String text, [_]) => new Text('~=[,,_${text}_,,]:3');
     validateCore(
         'simple link resolver',
         '''
@@ -53,6 +55,26 @@ resolve [*star* _underline_] thing
 <p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>
 ''',
         linkResolver: nyanResolver);
+
+    validateCore(
+        'link resolver uses un-normalized link label',
+        '''
+resolve [TH  IS] thing
+''',
+        '''
+<p>resolve ~=[,,_TH  IS_,,]:3 thing</p>
+''',
+        linkResolver: nyanResolver);
+
+    validateCore(
+        'can resolve brackets',
+        r'''
+resolve [\[\]] thing
+''',
+        '''
+<p>resolve ~=[,,_[]_,,]:3 thing</p>
+''',
+        linkResolver: nyanResolver);
   });
 
   group('Custom inline syntax', () {
@@ -67,7 +89,7 @@ nyan''',
 
     validateCore('dart custom links', 'links [are<foo>] awesome',
         '<p>links <a>are&lt;foo></a> awesome</p>\n',
-        linkResolver: (text) =>
+        linkResolver: (String text, [_]) =>
             new Element.text('a', text.replaceAll('<', '&lt;')));
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some

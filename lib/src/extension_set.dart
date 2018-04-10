@@ -4,10 +4,11 @@ import 'inline_parser.dart';
 /// ExtensionSets provide a simple grouping mechanism for common Markdown
 /// flavors.
 ///
-/// For example, the [gitHub] set of syntax extensions allows users to output
-/// HTML from their Markdown in a similar fashion to GitHub's parsing.
+/// For example, the [gitHubFlavored] set of syntax extensions allows users to
+/// output HTML from their Markdown in a similar fashion to GitHub's parsing.
 class ExtensionSet {
-  /// The [none] extension set renders Markdown similar to [Markdown.pl].
+  /// The [ExtensionSet.none] extension set renders Markdown similar to
+  /// [Markdown.pl].
   ///
   /// However, this set does not render _exactly_ the same as Markdown.pl;
   /// rather it is more-or-less the CommonMark standard of Markdown, without
@@ -37,20 +38,24 @@ class ExtensionSet {
     const SetextHeaderWithIdSyntax(),
     const TableSyntax()
   ], [
-    new InlineHtmlSyntax()
+    new InlineHtmlSyntax(),
+    new StrikethroughSyntax(),
+    new EmojiSyntax(),
+    new AutolinkExtensionSyntax(),
   ]);
 
   /// The [gitHubFlavored] extension set is close to compliance with the [GitHub
   /// flavored Markdown spec].
   ///
   /// [GitHub flavored Markdown]: https://github.github.com/gfm/
-  static final ExtensionSet gitHubFlavored = new ExtensionSet(
-      [const FencedCodeBlockSyntax(), const TableSyntax()],
-      [new InlineHtmlSyntax()]);
-
-  /// The deprecated name for the [gitHubFlavored] extension set.
-  @deprecated
-  static final ExtensionSet gitHub = gitHubFlavored;
+  static final ExtensionSet gitHubFlavored = new ExtensionSet([
+    const FencedCodeBlockSyntax(),
+    const TableSyntax()
+  ], [
+    new InlineHtmlSyntax(),
+    new StrikethroughSyntax(),
+    new AutolinkExtensionSyntax(),
+  ]);
 
   final List<BlockSyntax> blockSyntaxes;
   final List<InlineSyntax> inlineSyntaxes;

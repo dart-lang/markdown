@@ -1,3 +1,34 @@
+## 2.0.0-dev
+
+* **Breaking change:** The `Link` class has been renamed `LinkReference`, and
+  the `Document` field, `refLinks`, has been renamed `linkReferences`.
+* **Breaking change:** Remove the deprecated `ExtensionSet.gitHub` field.
+  Use `ExtensionSet.gitHubFlavored` instead.
+* **Breaking change:** Make all of the fields on `Document` read-only.
+* Overhaul support for emphasis (`*foo*` and `_foo_`) and strong emphasis
+  (`**foo**` and `__foo__`), dramatically improving CommonMark compliance.
+* Improve support for tab characters, and horizontal rules.
+* Add support for GitHub Flavored Markdown's Strikethrough extension. See the
+  [GFM spec][strikethrough].
+* The above fixes raise compliance with the CommonMark specs to 90%, and
+  compliance with the GFM specs to 87%.
+* Allow the binary script to take a `--extension-set` option.
+
+  A reminder: You can [run `bin/markdown.dart` from anywhere][pub-global] via:
+
+  ```shell
+  $ pub global activate markdown
+  $ markdown
+  ```
+
+[strikethrough]: https://github.github.com/gfm/#strikethrough-extension-
+[pub-global]: https://www.dartlang.org/tools/pub/cmd/pub-global#running-a-script-from-your-path
+
+## 1.1.1
+
+* Add support for GitHub's colon-based Emoji syntax. :tada:! This is available
+  in the `gitHubWeb` extension set.
+
 ## 1.1.0
 
 * Make the constructor for ExtensionSet public, for tools like dartdoc.

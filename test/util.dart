@@ -16,7 +16,9 @@ import 'package:test/test.dart';
 void testDirectory(String name) {
   for (var dataCase
       in dataCasesUnder(library: #markdown.test.util, subdirectory: name)) {
-    validateCore(dataCase.description, dataCase.input, dataCase.expectedOutput);
+    var description =
+        '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
+    validateCore(description, dataCase.input, dataCase.expectedOutput);
   }
 }
 
@@ -29,7 +31,9 @@ void testFile(String file,
     {Iterable<BlockSyntax> blockSyntaxes,
     Iterable<InlineSyntax> inlineSyntaxes}) {
   for (var dataCase in dataCasesInFile(path: p.join(_testDir, file))) {
-    validateCore(dataCase.description, dataCase.input, dataCase.expectedOutput,
+    var description =
+        '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
+    validateCore(description, dataCase.input, dataCase.expectedOutput,
         blockSyntaxes: blockSyntaxes, inlineSyntaxes: inlineSyntaxes);
   }
 }

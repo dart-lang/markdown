@@ -65,11 +65,6 @@ a * b * c _ d _ e
 
 <<<
 <p><em>a _b</em> c_</p>
->>> cannot nest tags of same type
-*a _b *c* d_ e*
-
-<<<
-<p><em>a _b </em>c<em> d_ e</em></p>
 >>> in the middle of a word
 a_b_c a__b__c a*b*c a**b**c
 <<<

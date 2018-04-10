@@ -22,7 +22,7 @@ final _headerPattern = new RegExp(r'^ {0,3}(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
 final _blockquotePattern = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 
 /// A line indented four spaces. Used for code blocks and lists.
-final _indentPattern = new RegExp(r'^(?:    |\t)(.*)$');
+final _indentPattern = new RegExp(r'^(?:    | {0,3}\t)(.*)$');
 
 /// Fenced code block.
 final _codePattern = new RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
@@ -30,7 +30,10 @@ final _codePattern = new RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
 /// SETEXT should win.
-final _hrPattern = new RegExp(r'^ {0,3}([-*_]) *\1 *\1(?:\1| )*$');
+final _hrPattern = new RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
+
+/// One or more whitespace, for compressing.
+final _oneOrMoreWhitespacePattern = new RegExp('[ \n\r\t]+');
 
 /// A line starting with one of these markers: `-`, `*`, `+`. May have up to
 /// three leading spaces before the marker and any number of spaces or tabs
@@ -580,6 +583,8 @@ abstract class ListSyntax extends BlockSyntax {
     _olPattern
   ];
 
+  static final _whitespaceRe = new RegExp('[ \t]*');
+
   Node parse(BlockParser parser) {
     var items = <ListItem>[];
     var childLines = <String>[];
@@ -604,6 +609,8 @@ abstract class ListSyntax extends BlockSyntax {
     int startNumber;
 
     while (!parser.isDone) {
+      var leadingSpace = _whitespaceRe.matchAsPrefix(parser.current).group(0);
+      var leadingExpandedTabLength = _expandedTabLength(leadingSpace);
       if (tryMatch(_emptyPattern)) {
         if (_emptyPattern.firstMatch(parser.next ?? '') != null) {
           // Two blank lines ends a list.
@@ -611,10 +618,15 @@ abstract class ListSyntax extends BlockSyntax {
         }
         // Add a blank line to the current list item.
         childLines.add('');
-      } else if (indent != null && parser.current.startsWith(indent)) {
+      } else if (indent != null && indent.length <= leadingExpandedTabLength) {
         // Strip off indent and add to current item.
-        var line = parser.current.replaceFirst(indent, '');
+        var line = parser.current
+            .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
+            .replaceFirst(indent, '');
         childLines.add(line);
+      } else if (tryMatch(_hrPattern)) {
+        // Horizontal rule takes precedence to a new list item.
+        break;
       } else if (tryMatch(_ulPattern) || tryMatch(_olPattern)) {
         var precedingWhitespace = match[1];
         var digits = match[2] ?? '';
@@ -735,6 +747,14 @@ abstract class ListSyntax extends BlockSyntax {
     }
     return anyEmpty;
   }
+
+  static int _expandedTabLength(String input) {
+    var length = 0;
+    for (var char in input.codeUnits) {
+      length += char == 0x9 ? 4 - (length % 4) : 1;
+    }
+    return length;
+  }
 }
 
 /// Parses unordered lists.
@@ -776,18 +796,35 @@ class TableSyntax extends BlockSyntax {
   /// * many body rows of body cells (`<td>` cells)
   Node parse(BlockParser parser) {
     var alignments = parseAlignments(parser.next);
-    var head = new Element('thead', [parseRow(parser, alignments, 'th')]);
+    var columnCount = alignments.length;
+    var headRow = parseRow(parser, alignments, 'th');
+    if (headRow.children.length != columnCount) {
+      return null;
+    }
+    var head = new Element('thead', [headRow]);
 
     // Advance past the divider of hyphens.
     parser.advance();
 
     var rows = <Element>[];
-    while (!parser.isDone && !parser.matches(_emptyPattern)) {
-      rows.add(parseRow(parser, alignments, 'td'));
+    while (!parser.isDone && !BlockSyntax.isAtBlockEnd(parser)) {
+      var row = parseRow(parser, alignments, 'td');
+      while (row.children.length < columnCount) {
+        // Insert synthetic empty cells.
+        row.children.add(new Element.empty('td'));
+      }
+      while (row.children.length > columnCount) {
+        row.children.removeLast();
+      }
+      rows.add(row);
     }
-    var body = new Element('tbody', rows);
+    if (rows.isEmpty) {
+      return new Element('table', [head]);
+    } else {
+      var body = new Element('tbody', rows);
 
-    return new Element('table', [head, body]);
+      return new Element('table', [head, body]);
+    }
   }
 
   List<String> parseAlignments(String line) {
@@ -987,11 +1024,12 @@ class ParagraphSyntax extends BlockSyntax {
       title = title.substring(1, title.length - 1);
     }
 
-    // References are case-insensitive.
-    label = label.toLowerCase().trim();
+    // References are case-insensitive, and internal whitespace is compressed.
+    label =
+        label.toLowerCase().trim().replaceAll(_oneOrMoreWhitespacePattern, ' ');
 
-    parser.document.refLinks
-        .putIfAbsent(label, () => new Link(label, destination, title));
+    parser.document.linkReferences
+        .putIfAbsent(label, () => new LinkReference(label, destination, title));
     return true;
   }
 }
