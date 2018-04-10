@@ -5,7 +5,7 @@ final _blnsJsonRawUrl =
     'https://github.com/minimaxir/big-list-of-naughty-strings/raw/master/blns.json';
 final _blnsFilePath = 'test/blns.dart';
 
-void main() async {
+Future<Null> main() async {
   var client = new HttpClient();
   var request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
   var response = await request.close();
