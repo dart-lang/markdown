@@ -2,9 +2,9 @@
 //
 // This file was generated from big-list-of-naughty-strings's JSON file:
 // https://github.com/minimaxir/big-list-of-naughty-strings/raw/master/blns.json
-// at 2018-04-10 14:33:03.753217 by the script, tool/update_blns.dart.
+// at 2018-04-10 14:36:01.480010 by the script, tool/update_blns.dart.
 
-const blns = <String>[
+const blns = const <String>[
   '',
   'undefined',
   'undef',
