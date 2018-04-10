@@ -7,11 +7,13 @@
 * **Breaking change:** Make all of the fields on `Document` read-only.
 * Overhaul support for emphasis (`*foo*` and `_foo_`) and strong emphasis
   (`**foo**` and `__foo__`), dramatically improving CommonMark compliance.
+* Overhaul support for links and images, again dramatically improving CommonMark
+  compliance.
 * Improve support for tab characters, and horizontal rules.
 * Add support for GitHub Flavored Markdown's Strikethrough extension. See the
   [GFM spec][strikethrough].
-* The above fixes raise compliance with the CommonMark specs to 90%, and
-  compliance with the GFM specs to 87%.
+* The above fixes raise compliance with the CommonMark specs to 93%, and
+  compliance with the GFM specs to 92%.
 * Allow the binary script to take a `--extension-set` option.
 
   A reminder: You can [run `bin/markdown.dart` from anywhere][pub-global] via:
