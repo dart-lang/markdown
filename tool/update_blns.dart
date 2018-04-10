@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-String _blnsJsonRawUrl =
+final _blnsJsonRawUrl =
     'https://github.com/minimaxir/big-list-of-naughty-strings/raw/master/blns.json';
-String _blnsFilePath = 'test/blns.dart';
+final _blnsFilePath = 'test/blns.dart';
 
 void main() async {
   var client = new HttpClient();
@@ -19,7 +19,7 @@ void main() async {
 // at ${new DateTime.now()} by the script, tool/update_blns.dart.
 
 ''');
-  blnsContent.writeln('var blns = <String>[');
+  blnsContent.writeln('const blns = <String>[');
   for (var str in json) {
     var escaped = str
         .replaceAll(r'\', r'\\')
