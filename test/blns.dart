@@ -2,7 +2,7 @@
 //
 // This file was generated from big-list-of-naughty-strings's JSON file:
 // https://github.com/minimaxir/big-list-of-naughty-strings/raw/master/blns.json
-// at 2018-04-10 14:36:01.480010 by the script, tool/update_blns.dart.
+// at 2018-04-10 18:37:21.478511 by the script, tool/update_blns.dart.
 
 const blns = const <String>[
   '',
