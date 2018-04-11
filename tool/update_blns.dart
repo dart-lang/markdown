@@ -8,10 +8,15 @@ final _blnsFilePath = 'test/blns.dart';
 
 Future<Null> main() async {
   var client = new HttpClient();
-  var request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
-  var response = await request.close();
-  var json = JSON.decode(await response.transform(UTF8.decoder).join(''))
-      as List<String>;
+  List<String> json;
+  try {
+    var request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
+    var response = await request.close();
+    json = JSON.decode(await response.transform(UTF8.decoder).join(''))
+        as List<String>;
+  } finally {
+    client.close();
+  }
   var blnsContent = new StringBuffer('''
 // GENERATED FILE. DO NOT EDIT.
 //
@@ -30,5 +35,4 @@ Future<Null> main() async {
   }
   blnsContent.writeln('];');
   new File(_blnsFilePath)..writeAsStringSync(blnsContent.toString());
-  exit(0);
 }
