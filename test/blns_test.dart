@@ -1,0 +1,39 @@
+// Copyright (c) 2017, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
+import 'package:markdown/markdown.dart';
+import 'package:test/test.dart';
+
+import 'blns.dart';
+
+// The BLNS tests merely test that `markdownToHtml` does not throw or hang while
+// processing "naughty string" inputs. While there are examples of multi-byte
+// characters, non-visible characters, etc., these tests should not be _relied
+// upon_ for testing multi-byte character support, etc.
+void main() {
+  test('parsing blns', () {
+    // This is more a test of update_blns.dart: we're testing that the strings
+    // were encoded half-decently, and nothing got globbed up into a big
+    // multiline string.
+    expect(blns, hasLength(507));
+  });
+
+  var index = 0;
+  for (var str in blns) {
+    test('blns string $index', () {
+      var result = markdownToHtml(str);
+      expect(result, new isInstanceOf<String>());
+    });
+    index++;
+  }
+
+  index = 0;
+  for (var str in blns) {
+    test('blns string $index w/ gitHubWeb', () {
+      var result = markdownToHtml(str, extensionSet: ExtensionSet.gitHubWeb);
+      expect(result, new isInstanceOf<String>());
+    });
+    index++;
+  }
+}
