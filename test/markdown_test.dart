@@ -25,7 +25,8 @@ void main() {
       inlineSyntaxes: [new InlineHtmlSyntax()]);
 
   group('Resolver', () {
-    Node nyanResolver(String text, [_]) => new Text('~=[,,_${text}_,,]:3');
+    Node nyanResolver(String text, [_]) =>
+        text.isEmpty ? null : new Text('~=[,,_${text}_,,]:3');
     validateCore(
         'simple link resolver',
         '''
@@ -67,9 +68,19 @@ resolve [TH  IS] thing
         linkResolver: nyanResolver);
 
     validateCore(
-        'can resolve brackets',
+        'can resolve escaped brackets',
         r'''
 resolve [\[\]] thing
+''',
+        '''
+<p>resolve ~=[,,_[]_,,]:3 thing</p>
+''',
+        linkResolver: nyanResolver);
+
+    validateCore(
+        'can choose to _not_ resolve something, like an empty link',
+        r'''
+resolve [[]] thing
 ''',
         '''
 <p>resolve ~=[,,_[]_,,]:3 thing</p>
