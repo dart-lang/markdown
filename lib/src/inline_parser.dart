@@ -82,7 +82,7 @@ class InlineParser {
 
     syntaxes.addAll(_defaultSyntaxes);
 
-    if (!this.document.guardHtml) {
+    if (this.document.encodeHtml) {
       syntaxes.addAll(_htmlSyntaxes);
     }
 

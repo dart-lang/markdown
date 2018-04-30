@@ -13,7 +13,7 @@ class Document {
   final ExtensionSet extensionSet;
   final Resolver linkResolver;
   final Resolver imageLinkResolver;
-  final bool guardHtml;
+  final bool encodeHtml;
   final _blockSyntaxes = new Set<BlockSyntax>();
   final _inlineSyntaxes = new Set<InlineSyntax>();
 
@@ -26,7 +26,7 @@ class Document {
       ExtensionSet extensionSet,
       this.linkResolver,
       this.imageLinkResolver,
-      this.guardHtml = false})
+      this.encodeHtml = true})
       : this.extensionSet = extensionSet ?? ExtensionSet.commonMark {
     this._blockSyntaxes
       ..addAll(blockSyntaxes ?? [])
