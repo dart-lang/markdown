@@ -1,0 +1,22 @@
+# See https://github.com/dart-lang/build/tree/master/build_web_compilers#configuration
+targets:
+  $default:
+    builders:
+      build_web_compilers|dart2js_archive_extractor:
+        options:
+          # Ensures --dump-info .dart.js.info.json file is preserved.
+          # Useful to track compiled size change
+          filter_outputs: false
+      build_web_compilers|entrypoint:
+        # These are globs for the entrypoints you want to compile.
+        generate_for:
+        - example/**.dart
+        options:
+          dart2js_args:
+            - --dump-info
+            - --minify
+            - --no-frequency-based-minification
+            - --no-source-maps
+            - --show-package-warnings
+            - --trust-primitives
+            - --trust-type-annotations
