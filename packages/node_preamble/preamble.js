@@ -7,7 +7,7 @@ self.location = {
   href: "file://" + (function() {
     var cwd = process.cwd();
     if (process.platform != "win32") return cwd;
-    return "/" + cwd.replace("\\", "/");
+    return "/" + cwd.replace(/\\/g, "/");
   })() + "/"
 };
 
