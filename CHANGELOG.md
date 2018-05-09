@@ -1,4 +1,4 @@
-## 2.0.0-dev
+## 2.0.0
 
 * **Breaking change:** The `Link` class has been renamed `LinkReference`, and
   the `Document` field, `refLinks`, has been renamed `linkReferences`.
@@ -14,6 +14,9 @@
   [GFM spec][strikethrough].
 * The above fixes raise compliance with the CommonMark specs to 93%, and
   compliance with the GFM specs to 92%.
+* Add an `encodeHtml` parameter to `Document`, which defaults to true. When
+  false, HTML entities (such as `&copy;` and the `<` character) will not be
+  escaped, useful when rendering Markdown in some output format other than HTML.
 * Allow the binary script to take a `--extension-set` option.
 
   A reminder: You can [run `bin/markdown.dart` from anywhere][pub-global] via:
