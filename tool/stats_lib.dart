@@ -25,7 +25,7 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
   var testFile = new File(p.join(toolDir, '${testPrefix}_tests.json'));
   var testsJson = testFile.readAsStringSync();
 
-  var testArray = JSON.decode(testsJson) as List<Map<String, dynamic>>;
+  var testArray = jsonDecode(testsJson) as List<Map<String, dynamic>>;
 
   var sections = new Map<String, List<CommonMarkTestCase>>();
 

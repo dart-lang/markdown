@@ -1,4 +1,4 @@
-import 'dart:convert' show JSON;
+import 'dart:convert' show jsonEncode, jsonDecode;
 import 'dart:io' show Directory, File, Platform, Process, exitCode;
 
 import 'package:args/args.dart' show ArgParser;
@@ -126,7 +126,7 @@ class DartdocCompare {
     var dartdocPubspec =
         loadYaml(new File(dartdocPubspecPath).readAsStringSync()) as Map;
     // make modifiable copy
-    dartdocPubspec = JSON.decode(JSON.encode(dartdocPubspec)) as Map;
+    dartdocPubspec = jsonDecode(jsonEncode(dartdocPubspec)) as Map;
 
     if (markdownRef == 'local') {
       dartdocPubspec['dependencies']['markdown'] = {
@@ -141,7 +141,7 @@ class DartdocCompare {
       };
     }
 
-    new File(dartdocPubspecPath).writeAsStringSync(JSON.encode(dartdocPubspec));
+    new File(dartdocPubspecPath).writeAsStringSync(jsonEncode(dartdocPubspec));
     return _system('pub', ['upgrade']);
   }
 }

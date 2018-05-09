@@ -8,7 +8,7 @@ executables:
   markdown:
 
 environment:
-  sdk: '>=1.12.0 <2.0.0'
+  sdk: '>=2.0.0-dev <2.0.0'
 
 dependencies:
   args: '^1.0.0'

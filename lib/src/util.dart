@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:charcode/charcode.dart';
 
 String escapeHtml(String html) =>
-    const HtmlEscape(HtmlEscapeMode.ELEMENT).convert(html);
+    const HtmlEscape(HtmlEscapeMode.element).convert(html);
 
 // Escape the contents of [value], so that it may be used as an HTML attribute.
 

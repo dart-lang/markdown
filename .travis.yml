@@ -1,7 +1,6 @@
 language: dart
 sudo: false
 dart:
-  - stable
   - dev
 dart_task:
   # Using the expanded reporter to work-around

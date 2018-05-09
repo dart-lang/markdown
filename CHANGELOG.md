@@ -1,3 +1,7 @@
+## 2.0.1
+
+* Require Dart 2.0.0-dev.
+
 ## 2.0.0
 
 * **Breaking change:** The `Link` class has been renamed `LinkReference`, and

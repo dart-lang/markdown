@@ -17,7 +17,7 @@ void _registerTests(Config config) {
   var tests = loadCommonMarkSections(config.prefix);
 
   var statsFile = getStatsFile(config.prefix);
-  var statsJson = JSON.decode(statsFile.readAsStringSync())
+  var statsJson = jsonDecode(statsFile.readAsStringSync())
       as Map<String, Map<String, String>>;
 
   group(config.prefix, () {
