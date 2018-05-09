@@ -25,6 +25,16 @@ class InlineParser {
     new TextSyntax(r' \* '),
     // "_" surrounded by spaces is left alone.
     new TextSyntax(r' _ '),
+    // Parse "**strong**" and "*emphasis*" tags.
+    new TagSyntax(r'\*+', requiresDelimiterRun: true),
+    // Parse "__strong__" and "_emphasis_" tags.
+    new TagSyntax(r'_+', requiresDelimiterRun: true),
+    new CodeSyntax(),
+    // We will add the LinkSyntax once we know about the specific link resolver.
+  ]);
+
+  static final List<InlineSyntax> _htmlSyntaxes =
+      new List<InlineSyntax>.unmodifiable(<InlineSyntax>[
     // Leave already-encoded HTML entities alone. Ensures we don't turn
     // "&amp;" into "&amp;amp;"
     new TextSyntax(r'&[#a-zA-Z0-9]*;'),
@@ -32,11 +42,6 @@ class InlineParser {
     new TextSyntax(r'&', sub: '&amp;'),
     // Encode "<". (Why not encode ">" too? Gruber is toying with us.)
     new TextSyntax(r'<', sub: '&lt;'),
-    // Parse "**strong**" and "*emphasis*" tags.
-    new TagSyntax(r'\*+', requiresDelimiterRun: true),
-    // Parse "__strong__" and "_emphasis_" tags.
-    new TagSyntax(r'_+', requiresDelimiterRun: true),
-    new CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
 
@@ -76,6 +81,10 @@ class InlineParser {
     }
 
     syntaxes.addAll(_defaultSyntaxes);
+
+    if (this.document.encodeHtml) {
+      syntaxes.addAll(_htmlSyntaxes);
+    }
 
     // Custom link resolvers go after the generic text syntax.
     syntaxes.insertAll(1, [
