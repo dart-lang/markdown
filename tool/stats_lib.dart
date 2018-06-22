@@ -25,12 +25,13 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
   var testFile = new File(p.join(toolDir, '${testPrefix}_tests.json'));
   var testsJson = testFile.readAsStringSync();
 
-  var testArray = jsonDecode(testsJson) as List<Map<String, dynamic>>;
+  var testArray = jsonDecode(testsJson) as List;
 
   var sections = new Map<String, List<CommonMarkTestCase>>();
 
   for (var exampleMap in testArray) {
-    var exampleTest = new CommonMarkTestCase.fromJson(exampleMap);
+    var exampleTest =
+        new CommonMarkTestCase.fromJson(exampleMap as Map<String, dynamic>);
 
     var sectionList =
         sections.putIfAbsent(exampleTest.section, () => <CommonMarkTestCase>[]);

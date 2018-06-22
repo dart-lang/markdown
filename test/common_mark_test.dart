@@ -17,8 +17,8 @@ void _registerTests(Config config) {
   var tests = loadCommonMarkSections(config.prefix);
 
   var statsFile = getStatsFile(config.prefix);
-  var statsJson = jsonDecode(statsFile.readAsStringSync())
-      as Map<String, Map<String, String>>;
+  var statsJson =
+      jsonDecode(statsFile.readAsStringSync()) as Map<String, dynamic>;
 
   group(config.prefix, () {
     tests.forEach((section, examples) {
