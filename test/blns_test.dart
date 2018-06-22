@@ -23,7 +23,7 @@ void main() {
   for (var str in blns) {
     test('blns string $index', () {
       var result = markdownToHtml(str);
-      expect(result, new isInstanceOf<String>());
+      expect(result, const TypeMatcher<String>());
     });
     index++;
   }
@@ -32,7 +32,7 @@ void main() {
   for (var str in blns) {
     test('blns string $index w/ gitHubWeb', () {
       var result = markdownToHtml(str, extensionSet: ExtensionSet.gitHubWeb);
-      expect(result, new isInstanceOf<String>());
+      expect(result, const TypeMatcher<String>());
     });
     index++;
   }

@@ -11,8 +11,10 @@ void main() {
       var document = new Document(encodeHtml: false);
       var result = document.parseInline('< &');
       expect(result, hasLength(1));
-      expect(result[0], new isInstanceOf<Text>());
-      expect((result[0] as Text).text, equals('< &'));
+      expect(
+          result[0],
+          const TypeMatcher<Text>()
+              .having((e) => e.text, 'text', equals('< &')));
     });
   });
 }
