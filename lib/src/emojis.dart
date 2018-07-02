@@ -2,7 +2,7 @@
 //
 // This file was generated from emojilib's emoji data file:
 // https://github.com/muan/emojilib/raw/master/emojis.json
-// at 2017-12-30 08:59:02.241410 by the script, tool/update_emojis.dart.
+// at 2018-07-02 15:07:49.422933 by the script, tool/update_emojis.dart.
 
 const emojis = const <String, String>{
   'grinning': '😀',
@@ -624,6 +624,8 @@ const emojis = const <String, String>{
   'woman_playing_handball': '🤾‍♀️',
   'man_playing_handball': '🤾‍♂️',
   'ice_skate': '⛸',
+  'curling_stone': '🥌',
+  'sled': '🛷',
   'bow_and_arrow': '🏹',
   'fishing_pole_and_fish': '🎣',
   'boxing_glove': '🥊',
@@ -720,6 +722,7 @@ const emojis = const <String, String>{
   'metro': '🚇',
   'tram': '🚊',
   'station': '🚉',
+  'flying_saucer': '🛸',
   'helicopter': '🚁',
   'small_airplane': '🛩',
   'airplane': '✈️',
@@ -1488,6 +1491,9 @@ const emojis = const <String, String>{
   'ukraine': '🇺🇦',
   'united_arab_emirates': '🇦🇪',
   'uk': '🇬🇧',
+  'england': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+  'scotland': '🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'wales': '🏴󠁧󠁢󠁷󠁬󠁳󠁿',
   'us': '🇺🇸',
   'us_virgin_islands': '🇻🇮',
   'uruguay': '🇺🇾',
