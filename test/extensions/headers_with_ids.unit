@@ -7,7 +7,7 @@
 ## 2. header again
 
 <<<
-<h2 id="header-again">2. header again</h2>
+<h2 id="2-header-again">2. header again</h2>
 >>> header with inline syntaxes
 ### headers **rock** `etc.`
 
@@ -25,3 +25,13 @@
 # *headers* etc.
 <<<
 <h1 id="headers-etc"><em>headers</em> etc.</h1>
+>>> numbers-only headers (like a changelog)
+# 1.2.34
+
+## 1.23.4
+
+## 1.2.3+4
+<<<
+<h1 id="1234">1.2.34</h1>
+<h2 id="1234-2">1.23.4</h2>
+<h2 id="1234-3">1.2.3+4</h2>
