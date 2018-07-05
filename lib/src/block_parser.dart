@@ -199,7 +199,6 @@ abstract class BlockSyntax {
       element.children.first.textContent
           .toLowerCase()
           .trim()
-          .replaceFirst(new RegExp(r'^[^a-z]+'), '')
           .replaceAll(new RegExp(r'[^a-z0-9 _-]'), '')
           .replaceAll(new RegExp(r'\s'), '-');
 }
