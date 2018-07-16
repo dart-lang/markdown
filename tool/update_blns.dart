@@ -12,8 +12,8 @@ Future<Null> main() async {
   try {
     var request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
     var response = await request.close();
-    json = jsonDecode(await response.transform(utf8.decoder).join(''))
-        as List<String>;
+    json = (jsonDecode(await response.transform(utf8.decoder).join('')) as List)
+        .cast<String>();
   } finally {
     client.close();
   }
