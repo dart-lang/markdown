@@ -76,3 +76,7 @@ links [are *awesome*]
 <a href="(yes-a-link)">a</a>
 [a](\(not-a-link))
 <a href="(yes-a-link))">a</a></p>
+>>> links with unbalanced parentheses
+[foo](link(1.png) (what?)
+<<<
+<p>[foo](link(1.png) (what?)</p>
