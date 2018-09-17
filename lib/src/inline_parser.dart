@@ -934,7 +934,7 @@ class LinkSyntax extends TagSyntax {
 
   // Walk the parser forward through any whitespace.
   void _moveThroughWhitespace(InlineParser parser) {
-    while (true) {
+    while (!parser.isDone) {
       var char = parser.charAt(parser.pos);
       if (char != $space &&
           char != $tab &&
@@ -945,7 +945,6 @@ class LinkSyntax extends TagSyntax {
         return;
       }
       parser.advanceBy(1);
-      if (parser.isDone) return;
     }
   }
 

@@ -24,6 +24,17 @@ void main() {
   testFile('extensions/inline_html.unit',
       inlineSyntaxes: [new InlineHtmlSyntax()]);
 
+  group('Corner cases', () {
+    validateCore(
+        'Incorrect Links',
+        '''
+5 Ethernet ([Music](
+''',
+        '''
+<p>5 Ethernet ([Music](</p>
+''');
+    });
+
   group('Resolver', () {
     Node nyanResolver(String text, [_]) =>
         text.isEmpty ? null : new Text('~=[,,_${text}_,,]:3');
