@@ -987,20 +987,16 @@ table AnalysisDriverResolvedUnit {
 table AnalysisDriverSubtype {
   /**
    * The names of defined instance members.
+   * They are indexes into [AnalysisDriverUnitError.strings] list.
    * The list is sorted in ascending order.
    */
-  members:[string] (id: 2);
+  members:[uint] (id: 1);
 
   /**
    * The name of the class.
+   * It is an index into [AnalysisDriverUnitError.strings] list.
    */
-  name:string (id: 0);
-
-  /**
-   * The identifiers of the direct supertypes.
-   * The list is sorted in ascending order.
-   */
-  supertypes:[string] (id: 1);
+  name:uint (id: 0);
 }
 
 /**
@@ -1089,7 +1085,15 @@ table AnalysisDriverUnitIndex {
   /**
    * The list of classes declared in the unit.
    */
-  subtypes:[AnalysisDriverSubtype] (id: 18);
+  subtypes:[AnalysisDriverSubtype] (id: 19);
+
+  /**
+   * The identifiers of supertypes of elements at corresponding indexes
+   * in [subtypes].  They are indexes into [strings] list. The list is sorted
+   * in ascending order.  There might be more than one element with the same
+   * value if there is more than one subtype of this supertype.
+   */
+  supertypes:[uint] (id: 18);
 
   /**
    * Each item of this list corresponds to the library URI of a unique library
@@ -1548,12 +1552,12 @@ table PackageBundle {
    * including this one).  This can be used to identify when the API of a
    * package may have changed.
    */
-  apiSignature:string (id: 7);
+  apiSignature:string (id: 7, deprecated);
 
   /**
    * Information about the packages this package depends on, if known.
    */
-  dependencies:[PackageDependencyInfo] (id: 8);
+  dependencies:[PackageDependencyInfo] (id: 8, deprecated);
 
   /**
    * Linked libraries.
@@ -1582,7 +1586,7 @@ table PackageBundle {
    * List of MD5 hashes of the files listed in [unlinkedUnitUris].  Each hash
    * is encoded as a hexadecimal string using lower case letters.
    */
-  unlinkedUnitHashes:[string] (id: 4);
+  unlinkedUnitHashes:[string] (id: 4, deprecated);
 
   /**
    * Unlinked information for the compilation units constituting the package.
@@ -1877,6 +1881,20 @@ table UnlinkedClass {
   nameOffset:uint (id: 1);
 
   /**
+   * Superclass constraints for this mixin declaration. The list will be empty
+   * if this class is not a mixin declaration, or if the declaration does not
+   * have an `on` clause (in which case the type `Object` is implied).
+   */
+  superclassConstraints:[EntityRef] (id: 14);
+
+  /**
+   * Names of methods, getters, setters, and operators that this mixin
+   * declaration super-invokes.  For setters this includes the trailing "=".
+   * The list will be empty if this class is not a mixin declaration.
+   */
+  superInvokedNames:[string] (id: 15);
+
+  /**
    * Supertype of the class, or `null` if either (a) the class doesn't
    * explicitly declare a supertype (and hence has supertype `Object`), or (b)
    * the class *is* `Object` (and hence has no supertype).
@@ -2041,6 +2059,11 @@ table UnlinkedEnum {
  * declaration.
  */
 table UnlinkedEnumValue {
+  /**
+   * Annotations for this value.
+   */
+  annotations:[UnlinkedExpr] (id: 3);
+
   /**
    * Documentation comment for the enum value, or `null` if there is no
    * documentation comment.
@@ -2815,6 +2838,11 @@ table UnlinkedUnit {
    * Offsets of the first character of each line in the source code.
    */
   lineStarts:[uint] (id: 17);
+
+  /**
+   * Mixins declared in the compilation unit.
+   */
+  mixins:[UnlinkedClass] (id: 20);
 
   /**
    * Part declarations in the compilation unit.
