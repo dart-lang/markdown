@@ -5,10 +5,13 @@
 /// Parses text in a Markdown-like format and renders to HTML.
 library markdown;
 
+import 'src/version.dart';
+
 export 'src/ast.dart';
 export 'src/block_parser.dart';
 export 'src/document.dart';
 export 'src/extension_set.dart';
 export 'src/html_renderer.dart';
 export 'src/inline_parser.dart';
-export 'src/version.dart';
+
+const version = packageVersion;
