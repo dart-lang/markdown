@@ -125,7 +125,7 @@ compliance with [CommonMark].
 
     ```console
     > cd /path/to/common_mark_dir
-    > python3 test/spec_tests.py --dump-tests \
+    > python3 test/spec_tests.py --dump-tests > \
       /path/to/markdown.dart/tool/common_mark_tests.json
     ```
 
