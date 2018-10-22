@@ -1,3 +1,4 @@
+include: package:pedantic/analysis_options.yaml
 analyzer:
   strong-mode:
     implicit-casts: false
@@ -16,7 +17,8 @@ linter:
     - avoid_return_types_on_setters
     - await_only_futures
     - camel_case_types
-    - comment_references
+    # https://github.com/dart-lang/linter/issues/574
+    #- comment_references
     - control_flow_in_finally
     - directives_ordering
     - empty_catches

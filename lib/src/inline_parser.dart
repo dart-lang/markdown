@@ -499,7 +499,7 @@ class TagSyntax extends InlineSyntax {
   /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
   final bool requiresDelimiterRun;
 
-  TagSyntax(String pattern, {String end, this.requiresDelimiterRun: false})
+  TagSyntax(String pattern, {String end, this.requiresDelimiterRun = false})
       : endPattern = new RegExp((end != null) ? end : pattern, multiLine: true),
         super(pattern);
 
@@ -587,7 +587,7 @@ class LinkSyntax extends TagSyntax {
 
   final Resolver linkResolver;
 
-  LinkSyntax({Resolver linkResolver, String pattern: r'\['})
+  LinkSyntax({Resolver linkResolver, String pattern = r'\['})
       : this.linkResolver = (linkResolver ?? (String _, [String __]) => null),
         super(pattern, end: r'\]');
 
