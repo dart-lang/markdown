@@ -129,7 +129,7 @@ class InlineParser {
     var nodes = _stack.last.children;
 
     // If the previous node is text too, just append.
-    if (nodes.length > 0 && nodes.last is Text) {
+    if (nodes.isNotEmpty && nodes.last is Text) {
       var textNode = nodes.last as Text;
       nodes[nodes.length - 1] = new Text('${textNode.text}$text');
     } else {
@@ -1184,7 +1184,7 @@ class TagState {
     parser._stack.removeLast();
 
     // If the stack is empty now, this is the special "results" node.
-    if (parser._stack.length == 0) return children;
+    if (parser._stack.isEmpty) return children;
     var endMatchIndex = parser.pos;
 
     // We are still parsing, so add this to its parent's children.
