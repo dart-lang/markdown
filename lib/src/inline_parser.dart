@@ -129,7 +129,7 @@ class InlineParser {
     var nodes = _stack.last.children;
 
     // If the previous node is text too, just append.
-    if (nodes.length > 0 && nodes.last is Text) {
+    if (nodes.isNotEmpty && nodes.last is Text) {
       var textNode = nodes.last as Text;
       nodes[nodes.length - 1] = new Text('${textNode.text}$text');
     } else {
@@ -499,7 +499,7 @@ class TagSyntax extends InlineSyntax {
   /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
   final bool requiresDelimiterRun;
 
-  TagSyntax(String pattern, {String end, this.requiresDelimiterRun: false})
+  TagSyntax(String pattern, {String end, this.requiresDelimiterRun = false})
       : endPattern = new RegExp((end != null) ? end : pattern, multiLine: true),
         super(pattern);
 
@@ -587,7 +587,7 @@ class LinkSyntax extends TagSyntax {
 
   final Resolver linkResolver;
 
-  LinkSyntax({Resolver linkResolver, String pattern: r'\['})
+  LinkSyntax({Resolver linkResolver, String pattern = r'\['})
       : this.linkResolver = (linkResolver ?? (String _, [String __]) => null),
         super(pattern, end: r'\]');
 
@@ -1184,7 +1184,7 @@ class TagState {
     parser._stack.removeLast();
 
     // If the stack is empty now, this is the special "results" node.
-    if (parser._stack.length == 0) return children;
+    if (parser._stack.isEmpty) return children;
     var endMatchIndex = parser.pos;
 
     // We are still parsing, so add this to its parent's children.

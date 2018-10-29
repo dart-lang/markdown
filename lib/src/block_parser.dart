@@ -589,7 +589,7 @@ abstract class ListSyntax extends BlockSyntax {
     var childLines = <String>[];
 
     void endItem() {
-      if (childLines.length > 0) {
+      if (childLines.isNotEmpty) {
         items.add(new ListItem(childLines));
         childLines = <String>[];
       }

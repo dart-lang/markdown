@@ -80,9 +80,9 @@ class CommonMarkTestCase {
 enum CompareLevel { strict, loose, fail, error }
 
 CompareLevel compareResult(Config config, CommonMarkTestCase expected,
-    {bool throwOnError: false,
-    bool verboseFail: false,
-    bool verboseLooseMatch: false}) {
+    {bool throwOnError = false,
+    bool verboseFail = false,
+    bool verboseLooseMatch = false}) {
   String output;
   try {
     output =

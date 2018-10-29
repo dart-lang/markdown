@@ -17,7 +17,7 @@ String markdownToHtml(String markdown,
     ExtensionSet extensionSet,
     Resolver linkResolver,
     Resolver imageLinkResolver,
-    bool inlineOnly: false}) {
+    bool inlineOnly = false}) {
   var document = new Document(
       blockSyntaxes: blockSyntaxes,
       inlineSyntaxes: inlineSyntaxes,

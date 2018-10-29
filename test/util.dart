@@ -43,7 +43,7 @@ void validateCore(String description, String markdown, String html,
     Iterable<InlineSyntax> inlineSyntaxes,
     Resolver linkResolver,
     Resolver imageLinkResolver,
-    bool inlineOnly: false}) {
+    bool inlineOnly = false}) {
   test(description, () {
     var result = markdownToHtml(markdown,
         blockSyntaxes: blockSyntaxes,

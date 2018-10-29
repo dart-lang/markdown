@@ -8,7 +8,7 @@ dart_task:
   - test: --reporter expanded
     xvfb: false
   - dartfmt
-  - dartanalyzer
+  - dartanalyzer: --fatal-warnings --fatal-infos .
 
 # Only building master means that we don't run two builds for each pull request.
 branches:
