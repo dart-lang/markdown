@@ -24,15 +24,12 @@ void main() {
   testFile('extensions/inline_html.unit', inlineSyntaxes: [InlineHtmlSyntax()]);
 
   group('Corner cases', () {
-    validateCore(
-        'Incorrect Links',
-        '''
+    validateCore('Incorrect Links', '''
 5 Ethernet ([Music](
-''',
-        '''
+''', '''
 <p>5 Ethernet ([Music](</p>
 ''');
-    });
+  });
 
   group('Resolver', () {
     Node nyanResolver(String text, [_]) =>
