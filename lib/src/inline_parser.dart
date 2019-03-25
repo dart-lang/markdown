@@ -1068,7 +1068,9 @@ class CodeSyntax extends InlineSyntax {
   }
 
   bool onMatch(InlineParser parser, Match match) {
-    parser.addNode(new Element.text('code', escapeHtml(match[2].trim())));
+    var code = match[2].trim();
+    if (parser.document.encodeHtml) code = escapeHtml(code);
+    parser.addNode(new Element.text('code', code));
     return true;
   }
 }
