@@ -22,9 +22,12 @@ void main() {
       var result = document.parseInline("```<p>Hello <em>Markdown</em></p>```");
       expect(result, hasLength(1));
       expect(
-        result[0],
-        const TypeMatcher<Element>()
-          .having((e) => e.textContent, 'text', equals("&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;")));
+          result[0],
+          const TypeMatcher<Element>().having(
+              (e) => e.textContent,
+              'text',
+              equals(
+                  "&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;")));
     });
 
     test('encodeHtml false prevents code block escaping', () {
@@ -32,9 +35,9 @@ void main() {
       var result = document.parseInline("```<p>Hello <em>Markdown</em></p>```");
       expect(result, hasLength(1));
       expect(
-        result[0],
-        const TypeMatcher<Element>()
-          .having((e) => e.textContent, 'text', equals("<p>Hello <em>Markdown</em></p>")));
+          result[0],
+          const TypeMatcher<Element>().having((e) => e.textContent, 'text',
+              equals("<p>Hello <em>Markdown</em></p>")));
     });
   });
 }
