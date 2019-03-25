@@ -12,7 +12,7 @@ const _sdk = 'sdk';
 const _help = 'help';
 
 void main(List<String> arguments) {
-  final parser = new ArgParser()
+  final parser = ArgParser()
     ..addSeparator("Usage: dartdoc-compare.dart [OPTIONS] <dart-package>")
     ..addOption(_dartdocDir, help: "Directory of the dartdoc package")
     ..addOption(_markdownBefore, help: "Markdown package 'before' ref")
@@ -35,7 +35,7 @@ void main(List<String> arguments) {
     exitCode = 1;
     return;
   }
-  var comparer = new DartdocCompare(
+  var comparer = DartdocCompare(
       options[_dartdocDir] as String,
       options[_markdownBefore] as String,
       options[_markdownAfter] as String,
@@ -66,7 +66,7 @@ class DartdocCompare {
   final String dartdocBin;
   final String dartdocPubspecPath;
   final bool sdk;
-  final String markdownPath = new File(Platform.script.path).parent.parent.path;
+  final String markdownPath = File(Platform.script.path).parent.parent.path;
 
   DartdocCompare(this.dartdocDir, this.markdownBefore, this.markdownAfter,
       this.dartdocBin, this.dartdocPubspecPath, this.sdk);
@@ -94,7 +94,7 @@ class DartdocCompare {
     _doInPath(dartdocDir, () {
       var returnCode = _updateDartdocPubspec(markdownRef);
       if (returnCode != 0) {
-        throw new Exception("Could not update dartdoc's pubspec!");
+        throw Exception("Could not update dartdoc's pubspec!");
       }
     });
     return _doInPath(path, () {
@@ -111,9 +111,9 @@ class DartdocCompare {
       }
 
       print('Command: $cmd ${args.join(' ')}');
-      var startTime = new DateTime.now();
+      var startTime = DateTime.now();
       _system(cmd, args);
-      var endTime = new DateTime.now();
+      var endTime = DateTime.now();
       var duration = endTime.difference(startTime).inSeconds;
       print('dartdoc generation for $markdownRef took $duration seconds.');
       print('');
@@ -124,7 +124,7 @@ class DartdocCompare {
 
   int _updateDartdocPubspec(String markdownRef) {
     var dartdocPubspec =
-        loadYaml(new File(dartdocPubspecPath).readAsStringSync()) as Map;
+        loadYaml(File(dartdocPubspecPath).readAsStringSync()) as Map;
     // make modifiable copy
     dartdocPubspec = jsonDecode(jsonEncode(dartdocPubspec)) as Map;
 
@@ -141,7 +141,7 @@ class DartdocCompare {
       };
     }
 
-    new File(dartdocPubspecPath).writeAsStringSync(jsonEncode(dartdocPubspec));
+    File(dartdocPubspecPath).writeAsStringSync(jsonEncode(dartdocPubspec));
     return _system('pub', ['upgrade']);
   }
 }

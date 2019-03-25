@@ -20,13 +20,12 @@ void main() {
   testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
 
   // Inline syntax extensions
-  testFile('extensions/emojis.unit', inlineSyntaxes: [new EmojiSyntax()]);
-  testFile('extensions/inline_html.unit',
-      inlineSyntaxes: [new InlineHtmlSyntax()]);
+  testFile('extensions/emojis.unit', inlineSyntaxes: [EmojiSyntax()]);
+  testFile('extensions/inline_html.unit', inlineSyntaxes: [InlineHtmlSyntax()]);
 
   group('Resolver', () {
     Node nyanResolver(String text, [_]) =>
-        text.isEmpty ? null : new Text('~=[,,_${text}_,,]:3');
+        text.isEmpty ? null : Text('~=[,,_${text}_,,]:3');
     validateCore(
         'simple link resolver',
         '''
@@ -89,7 +88,7 @@ resolve [[]] thing
   });
 
   group('Custom inline syntax', () {
-    var nyanSyntax = <InlineSyntax>[new TextSyntax('nyan', sub: '~=[,,_,,]:3')];
+    var nyanSyntax = <InlineSyntax>[TextSyntax('nyan', sub: '~=[,,_,,]:3')];
     validateCore(
         'simple inline syntax',
         '''
@@ -101,7 +100,7 @@ nyan''',
     validateCore('dart custom links', 'links [are<foo>] awesome',
         '<p>links <a>are&lt;foo></a> awesome</p>\n',
         linkResolver: (String text, [_]) =>
-            new Element.text('a', text.replaceAll('<', '&lt;')));
+            Element.text('a', text.replaceAll('<', '&lt;')));
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some
     // things are not quite working properly. The regexps are sometime a little

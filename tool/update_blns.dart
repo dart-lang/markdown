@@ -7,7 +7,7 @@ final _blnsJsonRawUrl =
 final _blnsFilePath = 'test/blns.dart';
 
 Future<Null> main() async {
-  var client = new HttpClient();
+  var client = HttpClient();
   List<String> json;
   try {
     var request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
@@ -17,12 +17,12 @@ Future<Null> main() async {
   } finally {
     client.close();
   }
-  var blnsContent = new StringBuffer('''
+  var blnsContent = StringBuffer('''
 // GENERATED FILE. DO NOT EDIT.
 //
 // This file was generated from big-list-of-naughty-strings's JSON file:
 // $_blnsJsonRawUrl
-// at ${new DateTime.now()} by the script, tool/update_blns.dart.
+// at ${DateTime.now()} by the script, tool/update_blns.dart.
 
 ''');
   blnsContent.writeln('const blns = const <String>[');
@@ -34,5 +34,5 @@ Future<Null> main() async {
     blnsContent.writeln("  '$escaped',");
   }
   blnsContent.writeln('];');
-  new File(_blnsFilePath)..writeAsStringSync(blnsContent.toString());
+  File(_blnsFilePath)..writeAsStringSync(blnsContent.toString());
 }

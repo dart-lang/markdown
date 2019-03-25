@@ -18,7 +18,7 @@ String markdownToHtml(String markdown,
     Resolver linkResolver,
     Resolver imageLinkResolver,
     bool inlineOnly = false}) {
-  var document = new Document(
+  var document = Document(
       blockSyntaxes: blockSyntaxes,
       inlineSyntaxes: inlineSyntaxes,
       extensionSet: extensionSet,
@@ -34,11 +34,11 @@ String markdownToHtml(String markdown,
 }
 
 /// Renders [nodes] to HTML.
-String renderToHtml(List<Node> nodes) => new HtmlRenderer().render(nodes);
+String renderToHtml(List<Node> nodes) => HtmlRenderer().render(nodes);
 
 /// Translates a parsed AST to HTML.
 class HtmlRenderer implements NodeVisitor {
-  static final _blockTags = new RegExp('blockquote|h1|h2|h3|h4|h5|h6|hr|p|pre');
+  static final _blockTags = RegExp('blockquote|h1|h2|h3|h4|h5|h6|hr|p|pre');
 
   StringBuffer buffer;
   Set<String> uniqueIds;
@@ -46,8 +46,8 @@ class HtmlRenderer implements NodeVisitor {
   HtmlRenderer();
 
   String render(List<Node> nodes) {
-    buffer = new StringBuffer();
-    uniqueIds = new LinkedHashSet<String>();
+    buffer = StringBuffer();
+    uniqueIds = LinkedHashSet<String>();
 
     for (final node in nodes) node.accept(this);
 

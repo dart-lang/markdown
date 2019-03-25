@@ -20,7 +20,7 @@ void main(List<String> args) {
   // Run the benchmark several times. This ensures the VM is warmed up and lets
   // us see how much variance there is.
   for (var i = 0; i <= numTrials; i++) {
-    var start = new DateTime.now();
+    var start = DateTime.now();
 
     // For a single benchmark, convert the source multiple times.
     var result;
@@ -29,7 +29,7 @@ void main(List<String> args) {
     }
 
     var elapsed =
-        new DateTime.now().difference(start).inMilliseconds / runsPerTrial;
+        DateTime.now().difference(start).inMilliseconds / runsPerTrial;
 
     // Keep track of the best run so far.
     if (elapsed >= best) continue;
@@ -53,7 +53,7 @@ void main(List<String> args) {
 
 String loadFile(String name) {
   var path = p.join(p.dirname(p.fromUri(Platform.script)), name);
-  return new File(path).readAsStringSync();
+  return File(path).readAsStringSync();
 }
 
 void printResult(String label, double time) {
