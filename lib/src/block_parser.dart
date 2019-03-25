@@ -7,33 +7,33 @@ import 'document.dart';
 import 'util.dart';
 
 /// The line contains only whitespace or is empty.
-final _emptyPattern = new RegExp(r'^(?:[ \t]*)$');
+final _emptyPattern = RegExp(r'^(?:[ \t]*)$');
 
 /// A series of `=` or `-` (on the next line) define setext-style headers.
-final _setextPattern = new RegExp(r'^[ ]{0,3}(=+|-+)\s*$');
+final _setextPattern = RegExp(r'^[ ]{0,3}(=+|-+)\s*$');
 
 /// Leading (and trailing) `#` define atx-style headers.
 ///
 /// Starts with 1-6 unescaped `#` characters which must not be followed by a
 /// non-space character. Line may end with any number of `#` characters,.
-final _headerPattern = new RegExp(r'^ {0,3}(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
+final _headerPattern = RegExp(r'^ {0,3}(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
 
 /// The line starts with `>` with one optional space after.
-final _blockquotePattern = new RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
+final _blockquotePattern = RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 
 /// A line indented four spaces. Used for code blocks and lists.
-final _indentPattern = new RegExp(r'^(?:    | {0,3}\t)(.*)$');
+final _indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');
 
 /// Fenced code block.
-final _codePattern = new RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
+final _codePattern = RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
 /// SETEXT should win.
-final _hrPattern = new RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
+final _hrPattern = RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
 
 /// One or more whitespace, for compressing.
-final _oneOrMoreWhitespacePattern = new RegExp('[ \n\r\t]+');
+final _oneOrMoreWhitespacePattern = RegExp('[ \n\r\t]+');
 
 /// A line starting with one of these markers: `-`, `*`, `+`. May have up to
 /// three leading spaces before the marker and any number of spaces or tabs
@@ -42,16 +42,15 @@ final _oneOrMoreWhitespacePattern = new RegExp('[ \n\r\t]+');
 /// Contains a dummy group at [2], so that the groups in [_ulPattern] and
 /// [_olPattern] match up; in both, [2] is the length of the number that begins
 /// the list marker.
-final _ulPattern = new RegExp(r'^([ ]{0,3})()([*+-])(([ \t])([ \t]*)(.*))?$');
+final _ulPattern = RegExp(r'^([ ]{0,3})()([*+-])(([ \t])([ \t]*)(.*))?$');
 
 /// A line starting with a number like `123.`. May have up to three leading
 /// spaces before the marker and any number of spaces or tabs after.
 final _olPattern =
-    new RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
+    RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
 
 /// A line of hyphens separated by at least one pipe.
-final _tablePattern =
-    new RegExp(r'^[ ]{0,3}\|?( *:?\-+:? *\|)+( *:?\-+:? *)?$');
+final _tablePattern = RegExp(r'^[ ]{0,3}\|?( *:?\-+:? *\|)+( *:?\-+:? *)?$');
 
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
@@ -78,13 +77,13 @@ class BlockParser {
   final List<BlockSyntax> standardBlockSyntaxes = [
     const EmptyBlockSyntax(),
     const BlockTagBlockHtmlSyntax(),
-    new LongBlockHtmlSyntax(r'^ {0,3}<pre(?:\s|>|$)', '</pre>'),
-    new LongBlockHtmlSyntax(r'^ {0,3}<script(?:\s|>|$)', '</script>'),
-    new LongBlockHtmlSyntax(r'^ {0,3}<style(?:\s|>|$)', '</style>'),
-    new LongBlockHtmlSyntax('^ {0,3}<!--', '-->'),
-    new LongBlockHtmlSyntax('^ {0,3}<\\?', '\\?>'),
-    new LongBlockHtmlSyntax('^ {0,3}<![A-Z]', '>'),
-    new LongBlockHtmlSyntax('^ {0,3}<!\\[CDATA\\[', '\\]\\]>'),
+    LongBlockHtmlSyntax(r'^ {0,3}<pre(?:\s|>|$)', '</pre>'),
+    LongBlockHtmlSyntax(r'^ {0,3}<script(?:\s|>|$)', '</script>'),
+    LongBlockHtmlSyntax(r'^ {0,3}<style(?:\s|>|$)', '</style>'),
+    LongBlockHtmlSyntax('^ {0,3}<!--', '-->'),
+    LongBlockHtmlSyntax('^ {0,3}<\\?', '\\?>'),
+    LongBlockHtmlSyntax('^ {0,3}<![A-Z]', '>'),
+    LongBlockHtmlSyntax('^ {0,3}<!\\[CDATA\\[', '\\]\\]>'),
     const OtherTagBlockHtmlSyntax(),
     const SetextHeaderSyntax(),
     const HeaderSyntax(),
@@ -119,7 +118,7 @@ class BlockParser {
   /// `peek(1)` is equivalent to [next].
   String peek(int linesAhead) {
     if (linesAhead < 0) {
-      throw new ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.');
+      throw ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.');
     }
     // Don't read past the end.
     if (_pos >= lines.length - linesAhead) return null;
@@ -199,8 +198,8 @@ abstract class BlockSyntax {
       element.children.first.textContent
           .toLowerCase()
           .trim()
-          .replaceAll(new RegExp(r'[^a-z0-9 _-]'), '')
-          .replaceAll(new RegExp(r'\s'), '-');
+          .replaceAll(RegExp(r'[^a-z0-9 _-]'), '')
+          .replaceAll(RegExp(r'\s'), '-');
 }
 
 class EmptyBlockSyntax extends BlockSyntax {
@@ -259,9 +258,9 @@ class SetextHeaderSyntax extends BlockSyntax {
       }
     }
 
-    var contents = new UnparsedContent(lines.join('\n'));
+    var contents = UnparsedContent(lines.join('\n'));
 
-    return new Element(tag, [contents]);
+    return Element(tag, [contents]);
   }
 
   bool _interperableAsParagraph(String line) =>
@@ -297,8 +296,8 @@ class HeaderSyntax extends BlockSyntax {
     var match = pattern.firstMatch(parser.current);
     parser.advance();
     var level = match[1].length;
-    var contents = new UnparsedContent(match[2].trim());
-    return new Element('h$level', [contents]);
+    var contents = UnparsedContent(match[2].trim());
+    return Element('h$level', [contents]);
   }
 }
 
@@ -350,9 +349,9 @@ class BlockquoteSyntax extends BlockSyntax {
     var childLines = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
-    var children = new BlockParser(childLines, parser.document).parseLines();
+    var children = BlockParser(childLines, parser.document).parseLines();
 
-    return new Element('blockquote', children);
+    return Element('blockquote', children);
   }
 }
 
@@ -399,7 +398,7 @@ class CodeBlockSyntax extends BlockSyntax {
     // Escape the code.
     var escaped = escapeHtml(childLines.join('\n'));
 
-    return new Element('pre', [new Element.text('code', escaped)]);
+    return Element('pre', [Element.text('code', escaped)]);
   }
 }
 
@@ -445,7 +444,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     // Escape the code.
     var escaped = escapeHtml(childLines.join('\n'));
 
-    var code = new Element.text('code', escaped);
+    var code = Element.text('code', escaped);
 
     // the info-string should be trimmed
     // http://spec.commonmark.org/0.22/#example-100
@@ -457,7 +456,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       code.attributes['class'] = "language-$infoString";
     }
 
-    var element = new Element('pre', [code]);
+    var element = Element('pre', [code]);
 
     return element;
   }
@@ -471,7 +470,7 @@ class HorizontalRuleSyntax extends BlockSyntax {
 
   Node parse(BlockParser parser) {
     parser.advance();
-    return new Element.empty('hr');
+    return Element.empty('hr');
   }
 }
 
@@ -488,7 +487,7 @@ abstract class BlockHtmlSyntax extends BlockSyntax {
 }
 
 class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
-  static final _pattern = new RegExp(
+  static final _pattern = RegExp(
       r'^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
       r'caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|'
       r'figcaption|figure|footer|form|frame|frameset|h1|head|header|hr|html|'
@@ -510,7 +509,7 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
       parser.advance();
     }
 
-    return new Text(childLines.join('\n'));
+    return Text(childLines.join('\n'));
   }
 }
 
@@ -526,7 +525,7 @@ class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
   //   * a close bracket, or
   //   * whitespace followed by not-brackets followed by a close bracket
   // * possible whitespace and the end of the line.
-  RegExp get pattern => new RegExp(r'^ {0,3}</?\w+(?:>|\s+[^>]*>)\s*$');
+  RegExp get pattern => RegExp(r'^ {0,3}</?\w+(?:>|\s+[^>]*>)\s*$');
 
   const OtherTagBlockHtmlSyntax();
 }
@@ -540,8 +539,8 @@ class LongBlockHtmlSyntax extends BlockHtmlSyntax {
   final RegExp _endPattern;
 
   LongBlockHtmlSyntax(String pattern, String endPattern)
-      : pattern = new RegExp(pattern),
-        _endPattern = new RegExp(endPattern);
+      : pattern = RegExp(pattern),
+        _endPattern = RegExp(endPattern);
 
   Node parse(BlockParser parser) {
     var childLines = <String>[];
@@ -553,7 +552,7 @@ class LongBlockHtmlSyntax extends BlockHtmlSyntax {
     }
 
     parser.advance();
-    return new Text(childLines.join('\n'));
+    return Text(childLines.join('\n'));
   }
 }
 
@@ -582,7 +581,7 @@ abstract class ListSyntax extends BlockSyntax {
     _olPattern
   ];
 
-  static final _whitespaceRe = new RegExp('[ \t]*');
+  static final _whitespaceRe = RegExp('[ \t]*');
 
   Node parse(BlockParser parser) {
     var items = <ListItem>[];
@@ -590,7 +589,7 @@ abstract class ListSyntax extends BlockSyntax {
 
     void endItem() {
       if (childLines.isNotEmpty) {
-        items.add(new ListItem(childLines));
+        items.add(ListItem(childLines));
         childLines = <String>[];
       }
     }
@@ -691,9 +690,9 @@ abstract class ListSyntax extends BlockSyntax {
     var anyEmptyLinesBetweenBlocks = false;
 
     for (var item in items) {
-      var itemParser = new BlockParser(item.lines, parser.document);
+      var itemParser = BlockParser(item.lines, parser.document);
       var children = itemParser.parseLines();
-      itemNodes.add(new Element('li', children));
+      itemNodes.add(Element('li', children));
       anyEmptyLinesBetweenBlocks =
           anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
@@ -717,10 +716,9 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     if (listTag == 'ol' && startNumber != 1) {
-      return new Element(listTag, itemNodes)
-        ..attributes['start'] = '$startNumber';
+      return Element(listTag, itemNodes)..attributes['start'] = '$startNumber';
     } else {
-      return new Element(listTag, itemNodes);
+      return Element(listTag, itemNodes);
     }
   }
 
@@ -774,9 +772,9 @@ class OrderedListSyntax extends ListSyntax {
 
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
-  static final _pipePattern = new RegExp(r'\s*\|\s*');
-  static final _openingPipe = new RegExp(r'^\|\s*');
-  static final _closingPipe = new RegExp(r'\s*\|$');
+  static final _pipePattern = RegExp(r'\s*\|\s*');
+  static final _openingPipe = RegExp(r'^\|\s*');
+  static final _closingPipe = RegExp(r'\s*\|$');
 
   bool get canEndBlock => false;
 
@@ -800,7 +798,7 @@ class TableSyntax extends BlockSyntax {
     if (headRow.children.length != columnCount) {
       return null;
     }
-    var head = new Element('thead', [headRow]);
+    var head = Element('thead', [headRow]);
 
     // Advance past the divider of hyphens.
     parser.advance();
@@ -810,7 +808,7 @@ class TableSyntax extends BlockSyntax {
       var row = parseRow(parser, alignments, 'td');
       while (row.children.length < columnCount) {
         // Insert synthetic empty cells.
-        row.children.add(new Element.empty('td'));
+        row.children.add(Element.empty('td'));
       }
       while (row.children.length > columnCount) {
         row.children.removeLast();
@@ -818,11 +816,11 @@ class TableSyntax extends BlockSyntax {
       rows.add(row);
     }
     if (rows.isEmpty) {
-      return new Element('table', [head]);
+      return Element('table', [head]);
     } else {
-      var body = new Element('tbody', rows);
+      var body = Element('tbody', rows);
 
-      return new Element('table', [head, body]);
+      return Element('table', [head, body]);
     }
   }
 
@@ -857,8 +855,8 @@ class TableSyntax extends BlockSyntax {
         continue;
       }
 
-      var contents = new UnparsedContent(cell);
-      row.add(new Element(cellType, [contents]));
+      var contents = UnparsedContent(cell);
+      row.add(Element(cellType, [contents]));
     }
 
     for (var i = 0; i < row.length && i < alignments.length; i++) {
@@ -866,15 +864,15 @@ class TableSyntax extends BlockSyntax {
       row[i].attributes['style'] = 'text-align: ${alignments[i]};';
     }
 
-    return new Element('tr', row);
+    return Element('tr', row);
   }
 }
 
 /// Parses paragraphs of regular text.
 class ParagraphSyntax extends BlockSyntax {
-  static final _reflinkDefinitionStart = new RegExp(r'[ ]{0,3}\[');
+  static final _reflinkDefinitionStart = RegExp(r'[ ]{0,3}\[');
 
-  static final _whitespacePattern = new RegExp(r'^\s*$');
+  static final _whitespacePattern = RegExp(r'^\s*$');
 
   bool get canEndBlock => false;
 
@@ -894,10 +892,10 @@ class ParagraphSyntax extends BlockSyntax {
     var paragraphLines = _extractReflinkDefinitions(parser, childLines);
     if (paragraphLines == null) {
       // Paragraph consisted solely of reference link definitions.
-      return new Text('');
+      return Text('');
     } else {
-      var contents = new UnparsedContent(paragraphLines.join('\n'));
-      return new Element('p', [contents]);
+      var contents = UnparsedContent(paragraphLines.join('\n'));
+      return Element('p', [contents]);
     }
   }
 
@@ -988,7 +986,7 @@ class ParagraphSyntax extends BlockSyntax {
   //
   // Returns whether [contents] could be parsed as a reference link definition.
   bool _parseReflinkDefinition(BlockParser parser, String contents) {
-    var pattern = new RegExp(
+    var pattern = RegExp(
         // Leading indentation.
         r'''^[ ]{0,3}'''
         // Reference id in brackets, and URL.
@@ -1028,7 +1026,7 @@ class ParagraphSyntax extends BlockSyntax {
         label.toLowerCase().trim().replaceAll(_oneOrMoreWhitespacePattern, ' ');
 
     parser.document.linkReferences
-        .putIfAbsent(label, () => new LinkReference(label, destination, title));
+        .putIfAbsent(label, () => LinkReference(label, destination, title));
     return true;
   }
 }

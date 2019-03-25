@@ -18,20 +18,20 @@ String get toolDir =>
         .path);
 
 File getStatsFile(String prefix) =>
-    new File(p.join(toolDir, '${prefix}_stats.json'));
+    File(p.join(toolDir, '${prefix}_stats.json'));
 
 Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
     String testPrefix) {
-  var testFile = new File(p.join(toolDir, '${testPrefix}_tests.json'));
+  var testFile = File(p.join(toolDir, '${testPrefix}_tests.json'));
   var testsJson = testFile.readAsStringSync();
 
   var testArray = jsonDecode(testsJson) as List;
 
-  var sections = new Map<String, List<CommonMarkTestCase>>();
+  var sections = Map<String, List<CommonMarkTestCase>>();
 
   for (var exampleMap in testArray) {
     var exampleTest =
-        new CommonMarkTestCase.fromJson(exampleMap as Map<String, dynamic>);
+        CommonMarkTestCase.fromJson(exampleMap as Map<String, dynamic>);
 
     var sectionList =
         sections.putIfAbsent(exampleTest.section, () => <CommonMarkTestCase>[]);
@@ -44,8 +44,8 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
 
 class Config {
   static final Config commonMarkConfig =
-      new Config._('common_mark', 'http://spec.commonmark.org/0.28/', null);
-  static final Config gfmConfig = new Config._(
+      Config._('common_mark', 'http://spec.commonmark.org/0.28/', null);
+  static final Config gfmConfig = Config._(
       'gfm', 'https://github.github.com/gfm/', ExtensionSet.gitHubFlavored);
 
   final String prefix;
@@ -67,7 +67,7 @@ class CommonMarkTestCase {
       this.markdown, this.html);
 
   factory CommonMarkTestCase.fromJson(Map<String, dynamic> json) {
-    return new CommonMarkTestCase(
+    return CommonMarkTestCase(
         json['example'] as int,
         json['section'] as String,
         json['start_line'] as int,

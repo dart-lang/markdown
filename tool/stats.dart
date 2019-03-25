@@ -10,7 +10,7 @@ import 'package:path/path.dart' as p;
 import 'stats_lib.dart';
 
 Future main(List<String> args) async {
-  final parser = new ArgParser()
+  final parser = ArgParser()
     ..addOption('section',
         help: 'Restrict tests to one section, provided after the option.')
     ..addFlag('raw',
@@ -72,12 +72,12 @@ Future main(List<String> args) async {
       config = Config.commonMarkConfig;
       break;
     default:
-      throw new ArgumentError('Does not support `$testPrefix`.');
+      throw ArgumentError('Does not support `$testPrefix`.');
   }
 
   var sections = loadCommonMarkSections(testPrefix);
 
-  var scores = new SplayTreeMap<String, SplayTreeMap<int, CompareLevel>>(
+  var scores = SplayTreeMap<String, SplayTreeMap<int, CompareLevel>>(
       compareAsciiLowerCaseNatural);
 
   sections.forEach((section, examples) {
@@ -85,8 +85,8 @@ Future main(List<String> args) async {
       return;
     }
     for (var e in examples) {
-      var nestedMap = scores.putIfAbsent(
-          section, () => new SplayTreeMap<int, CompareLevel>());
+      var nestedMap =
+          scores.putIfAbsent(section, () => SplayTreeMap<int, CompareLevel>());
 
       nestedMap[e.example] = compareResult(config, e,
           verboseFail: verbose, verboseLooseMatch: verboseLooseMatch);
@@ -114,7 +114,7 @@ Object _convert(obj) {
       case CompareLevel.loose:
         return 'loose';
       default:
-        throw new ArgumentError("`$obj` is unknown.");
+        throw ArgumentError("`$obj` is unknown.");
     }
   }
   if (obj is Map) {
@@ -164,7 +164,7 @@ Future _printFriendly(
   if (updateFiles) {
     var path = p.join(toolDir, '${testPrefix}_stats.txt');
     print('Updating $path');
-    var file = new File(path);
+    var file = File(path);
     sink = file.openWrite();
   } else {
     sink = stdout;

@@ -14,8 +14,8 @@ class Document {
   final Resolver linkResolver;
   final Resolver imageLinkResolver;
   final bool encodeHtml;
-  final _blockSyntaxes = new Set<BlockSyntax>();
-  final _inlineSyntaxes = new Set<InlineSyntax>();
+  final _blockSyntaxes = Set<BlockSyntax>();
+  final _inlineSyntaxes = Set<InlineSyntax>();
 
   Iterable<BlockSyntax> get blockSyntaxes => _blockSyntaxes;
   Iterable<InlineSyntax> get inlineSyntaxes => _inlineSyntaxes;
@@ -38,13 +38,13 @@ class Document {
 
   /// Parses the given [lines] of Markdown to a series of AST nodes.
   List<Node> parseLines(List<String> lines) {
-    var nodes = new BlockParser(lines, this).parseLines();
+    var nodes = BlockParser(lines, this).parseLines();
     _parseInlineContent(nodes);
     return nodes;
   }
 
   /// Parses the given inline Markdown [text] to a series of AST nodes.
-  List<Node> parseInline(String text) => new InlineParser(text, this).parse();
+  List<Node> parseInline(String text) => InlineParser(text, this).parse();
 
   void _parseInlineContent(List<Node> nodes) {
     for (var i = 0; i < nodes.length; i++) {

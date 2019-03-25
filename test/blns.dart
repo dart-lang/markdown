@@ -4,7 +4,7 @@
 // https://github.com/minimaxir/big-list-of-naughty-strings/raw/master/blns.json
 // at 2018-07-02 12:53:34.521084 by the script, tool/update_blns.dart.
 
-const blns = const <String>[
+const blns = <String>[
   '',
   'undefined',
   'undef',

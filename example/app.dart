@@ -8,8 +8,8 @@ final markdownInput = querySelector('#markdown') as TextAreaElement;
 final htmlDiv = querySelector('#html') as DivElement;
 final versionSpan = querySelector('.version') as SpanElement;
 
-final nullSanitizer = new NullTreeSanitizer();
-const typing = const Duration(milliseconds: 150);
+final nullSanitizer = NullTreeSanitizer();
+const typing = Duration(milliseconds: 150);
 final introText = r'''Markdown is the **best**!
 
 * It has lists.
@@ -89,10 +89,10 @@ void _typeItOut(String msg, int pos) {
     markdownInput.focus();
     _renderMarkdown();
     pos++;
-    timer = new Timer(typing, addCharacter);
+    timer = Timer(typing, addCharacter);
   }
 
-  timer = new Timer(typing, addCharacter);
+  timer = Timer(typing, addCharacter);
 }
 
 void _switchFlavor(Event e) {

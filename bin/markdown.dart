@@ -12,7 +12,7 @@ final extensionSets = <String, ExtensionSet>{
 };
 
 Future main(List<String> args) async {
-  var parser = new ArgParser()
+  var parser = ArgParser()
     ..addFlag('help', negatable: false, help: 'Print help text and exit')
     ..addFlag('version', negatable: false, help: 'Print version and exit')
     ..addOption('extension-set',
@@ -47,13 +47,13 @@ Future main(List<String> args) async {
 
   if (results.rest.length == 1) {
     // Read argument as a file path.
-    var input = new File(results.rest.first).readAsStringSync();
+    var input = File(results.rest.first).readAsStringSync();
     print(markdownToHtml(input, extensionSet: extensionSet));
     return;
   }
 
   // Read from stdin.
-  var buffer = new StringBuffer();
+  var buffer = StringBuffer();
   String line;
   while ((line = stdin.readLineSync()) != null) {
     buffer.writeln(line);

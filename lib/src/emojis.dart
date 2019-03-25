@@ -4,7 +4,7 @@
 // https://github.com/muan/emojilib/raw/master/emojis.json
 // at 2018-07-02 15:07:49.422933 by the script, tool/update_emojis.dart.
 
-const emojis = const <String, String>{
+const emojis = <String, String>{
   'grinning': '😀',
   'grimacing': '😬',
   'grin': '😁',
