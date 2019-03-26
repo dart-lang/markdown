@@ -1,3 +1,7 @@
+## 2.0.3
+
+* Added 68 new GitHub emojis.
+
 ## 2.0.2
 
 * Set max SDK version to `<3.0.0`, and adjust other dependencies.
