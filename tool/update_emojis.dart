@@ -21,7 +21,7 @@ Future<Null> main() async {
 // at ${DateTime.now()} by the script, tool/update_emojis.dart.
 
 ''');
-  emojisContent.writeln('const emojis = const <String, String>{');
+  emojisContent.writeln('const emojis = <String, String>{');
   var emojiCount = 0;
   var ignored = <String>[];
   json.forEach((String alias, Map<String, dynamic> info) {
