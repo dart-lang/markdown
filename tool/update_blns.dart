@@ -25,7 +25,7 @@ Future<Null> main() async {
 // at ${DateTime.now()} by the script, tool/update_blns.dart.
 
 ''');
-  blnsContent.writeln('const blns = const <String>[');
+  blnsContent.writeln('const blns = <String>[');
   for (var str in json) {
     var escaped = str
         .replaceAll(r'\', r'\\')
