@@ -39,5 +39,28 @@ void main() {
           const TypeMatcher<Element>().having((e) => e.textContent, 'text',
               equals("<p>Hello <em>Markdown</em></p>")));
     });
+
+    test('encodeHtml true allow code block escaping (BlockParser)', () {
+      var document = new Document(encodeHtml: true);
+      var lines = "```\n<p>Hello <em>Markdown</em></p>\n```\n".split('\n');
+      var result = document.parseLines(lines);
+      expect(result, hasLength(1));
+      expect(
+          result[0],
+          const TypeMatcher<Element>().having((e) => e.textContent, 'text',
+              equals("&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n")));
+    });
+
+    test('encodeHtml false prevents code block escaping (BlockParser)', () {
+      var document = new Document(encodeHtml: false);
+      var lines = "```\n<p>Hello <em>Markdown</em></p>\n```\n".split('\n');
+      var result = document.parseLines(lines);
+      expect(result, hasLength(1));
+      expect(
+          result[0],
+          const TypeMatcher<Element>().having((e) => e.textContent, 'text',
+              equals("<p>Hello <em>Markdown</em></p>\n")));
+    });
+
   });
 }
