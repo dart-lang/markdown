@@ -1070,7 +1070,7 @@ class CodeSyntax extends InlineSyntax {
 
     var code = match[2].trim();
     if (parser.document.encodeHtml) code = escapeHtml(code);
-    parser.addNode(new Element.text('code', code));
+    parser.addNode(Element.text('code', code));
 
     return true;
   }
