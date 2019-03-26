@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 void main() {
   group('Document', () {
     test('encodeHtml prevents less than and ampersand escaping', () {
-      var document = new Document(encodeHtml: false);
+      var document = Document(encodeHtml: false);
       var result = document.parseInline('< &');
       expect(result, hasLength(1));
       expect(

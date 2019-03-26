@@ -9,7 +9,7 @@ String escapeHtml(String html) =>
 
 // Based on http://spec.commonmark.org/0.28/#backslash-escapes.
 String escapeAttribute(String value) {
-  var result = new StringBuffer();
+  var result = StringBuffer();
   int ch;
   for (var i = 0; i < value.codeUnits.length; i++) {
     ch = value.codeUnitAt(i);
