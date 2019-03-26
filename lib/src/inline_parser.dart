@@ -895,7 +895,8 @@ class LinkSyntax extends TagSyntax {
         case $ff:
           var destination = buffer.toString();
           var title = _parseTitle(parser);
-          if (title == null && parser.charAt(parser.pos) != $rparen) {
+          if (title == null &&
+              (parser.isDone || parser.charAt(parser.pos) != $rparen)) {
             // This looked like an inline link, until we found this $space
             // followed by mystery characters; no longer a link.
             return null;
@@ -933,7 +934,7 @@ class LinkSyntax extends TagSyntax {
 
   // Walk the parser forward through any whitespace.
   void _moveThroughWhitespace(InlineParser parser) {
-    while (true) {
+    while (!parser.isDone) {
       var char = parser.charAt(parser.pos);
       if (char != $space &&
           char != $tab &&
@@ -944,7 +945,6 @@ class LinkSyntax extends TagSyntax {
         return;
       }
       parser.advanceBy(1);
-      if (parser.isDone) return;
     }
   }
 

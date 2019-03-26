@@ -23,6 +23,14 @@ void main() {
   testFile('extensions/emojis.unit', inlineSyntaxes: [EmojiSyntax()]);
   testFile('extensions/inline_html.unit', inlineSyntaxes: [InlineHtmlSyntax()]);
 
+  group('Corner cases', () {
+    validateCore('Incorrect Links', '''
+5 Ethernet ([Music](
+''', '''
+<p>5 Ethernet ([Music](</p>
+''');
+  });
+
   group('Resolver', () {
     Node nyanResolver(String text, [_]) =>
         text.isEmpty ? null : Text('~=[,,_${text}_,,]:3');
