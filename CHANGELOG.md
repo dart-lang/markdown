@@ -2,6 +2,7 @@
 
 * Render element attributes in the order they were defined.
   Aligns more closely with the strict spec definition.
+* Correctly render `&` within inline image titles.
 * Added 68 new GitHub emojis.
 
 ## 2.0.2
