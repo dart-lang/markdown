@@ -151,13 +151,17 @@ Future _printRaw(String testPrefix, Map scores, bool updateFiles) async {
   await sink.close();
 }
 
+String _pct(int value, int total, String section) =>
+    '${value.toString().padLeft(4)} '
+    'of ${total.toString().padLeft(4)} '
+    '– ${(100 * value / total).toStringAsFixed(1).padLeft(5)}%  $section';
+
 Future _printFriendly(
     String testPrefix,
     SplayTreeMap<String, SplayTreeMap<int, CompareLevel>> scores,
     bool updateFiles) async {
-  const countWidth = 4;
-
   var totalValid = 0;
+  var totalStrict = 0;
   var totalExamples = 0;
 
   IOSink sink;
@@ -182,20 +186,14 @@ Future _printFriendly(
 
     var sectionValidCount = sectionStrictCount + sectionLooseCount;
 
+    totalStrict += sectionStrictCount;
     totalValid += sectionValidCount;
 
-    var pct = (100 * sectionValidCount / total).toStringAsFixed(1).padLeft(5);
-
-    sink.writeln('${sectionValidCount.toString().padLeft(countWidth)} '
-        'of ${total.toString().padLeft(countWidth)} '
-        '– $pct%  $section');
+    sink.writeln(_pct(sectionValidCount, total, section));
   });
 
-  var pct = (100 * totalValid / totalExamples).toStringAsFixed(1).padLeft(5);
-
-  sink.writeln('${totalValid.toString().padLeft(countWidth)} '
-      'of ${totalExamples.toString().padLeft(countWidth)} '
-      '– $pct%  TOTAL');
+  sink.writeln(_pct(totalValid, totalExamples, 'TOTAL'));
+  sink.writeln(_pct(totalStrict, totalExamples, 'TOTAL Strict'));
 
   await sink.flush();
   await sink.close();
