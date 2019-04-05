@@ -1,5 +1,7 @@
 ## 2.0.3
 
+* Render element attributes in the order they were defined.
+  Aligns more closely with the strict spec definition.
 * Added 68 new GitHub emojis.
 
 ## 2.0.2

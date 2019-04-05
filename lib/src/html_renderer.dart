@@ -66,12 +66,8 @@ class HtmlRenderer implements NodeVisitor {
 
     buffer.write('<${element.tag}');
 
-    // Sort the keys so that we generate stable output.
-    var attributeNames = element.attributes.keys.toList();
-    attributeNames.sort((a, b) => a.compareTo(b));
-
-    for (var name in attributeNames) {
-      buffer.write(' $name="${element.attributes[name]}"');
+    for (var entry in element.attributes.entries) {
+      buffer.write(' ${entry.key}="${entry.value}"');
     }
 
     // attach header anchor ids generated from text
