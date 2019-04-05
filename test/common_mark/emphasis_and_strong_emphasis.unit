@@ -1,0 +1,523 @@
+>>> Emphasis and strong emphasis - 331
+*foo bar*
+<<<
+<p><em>foo bar</em></p>
+>>> Emphasis and strong emphasis - 332
+a * foo bar*
+<<<
+<p>a * foo bar*</p>
+>>> Emphasis and strong emphasis - 333
+a*"foo"*
+<<<
+<p>a*"foo"*</p>
+>>> Emphasis and strong emphasis - 334
+* a *
+<<<
+<p><em> a </em></p>
+>>> Emphasis and strong emphasis - 335
+foo*bar*
+<<<
+<p>foo<em>bar</em></p>
+>>> Emphasis and strong emphasis - 336
+5*6*78
+<<<
+<p>5<em>6</em>78</p>
+>>> Emphasis and strong emphasis - 337
+_foo bar_
+<<<
+<p><em>foo bar</em></p>
+>>> Emphasis and strong emphasis - 338
+_ foo bar_
+<<<
+<p>_ foo bar_</p>
+>>> Emphasis and strong emphasis - 339
+a_"foo"_
+<<<
+<p>a_"foo"_</p>
+>>> Emphasis and strong emphasis - 340
+foo_bar_
+<<<
+<p>foo_bar_</p>
+>>> Emphasis and strong emphasis - 341
+5_6_78
+<<<
+<p>5_6_78</p>
+>>> Emphasis and strong emphasis - 342
+пристаням_стремятся_
+<<<
+<p>пристаням_стремятся_</p>
+>>> Emphasis and strong emphasis - 343
+aa_"bb"_cc
+<<<
+<p>aa_"bb"_cc</p>
+>>> Emphasis and strong emphasis - 344
+foo-_(bar)_
+<<<
+<p>foo-<em>(bar)</em></p>
+>>> Emphasis and strong emphasis - 345
+_foo*
+<<<
+<p>_foo*</p>
+>>> Emphasis and strong emphasis - 346
+*foo bar *
+<<<
+<p>*foo bar *</p>
+>>> Emphasis and strong emphasis - 347
+*foo bar
+*
+<<<
+<p>*foo bar</p><ul><li></li></ul>
+>>> Emphasis and strong emphasis - 348
+*(*foo)
+<<<
+<p>*(*foo)</p>
+>>> Emphasis and strong emphasis - 349
+*(*foo*)*
+<<<
+<p><em>(<em>foo</em>)</em></p>
+>>> Emphasis and strong emphasis - 350
+*foo*bar
+<<<
+<p><em>foo</em>bar</p>
+>>> Emphasis and strong emphasis - 351
+_foo bar _
+<<<
+<p>_foo bar _</p>
+>>> Emphasis and strong emphasis - 352
+_(_foo)
+<<<
+<p>_(_foo)</p>
+>>> Emphasis and strong emphasis - 353
+_(_foo_)_
+<<<
+<p><em>(<em>foo</em>)</em></p>
+>>> Emphasis and strong emphasis - 354
+_foo_bar
+<<<
+<p>_foo_bar</p>
+>>> Emphasis and strong emphasis - 355
+_пристаням_стремятся
+<<<
+<p>_пристаням_стремятся</p>
+>>> Emphasis and strong emphasis - 356
+_foo_bar_baz_
+<<<
+<p><em>foo_bar_baz</em></p>
+>>> Emphasis and strong emphasis - 357
+_(bar)_.
+<<<
+<p><em>(bar)</em>.</p>
+>>> Emphasis and strong emphasis - 358
+**foo bar**
+<<<
+<p><strong>foo bar</strong></p>
+>>> Emphasis and strong emphasis - 359
+** foo bar**
+<<<
+<p>** foo bar**</p>
+>>> Emphasis and strong emphasis - 360
+a**"foo"**
+<<<
+<p>a**"foo"**</p>
+>>> Emphasis and strong emphasis - 361
+foo**bar**
+<<<
+<p>foo<strong>bar</strong></p>
+>>> Emphasis and strong emphasis - 362
+__foo bar__
+<<<
+<p><strong>foo bar</strong></p>
+>>> Emphasis and strong emphasis - 363
+__ foo bar__
+<<<
+<p>__ foo bar__</p>
+>>> Emphasis and strong emphasis - 364
+__
+foo bar__
+<<<
+<p>__
+foo bar__</p>
+>>> Emphasis and strong emphasis - 365
+a__"foo"__
+<<<
+<p>a__"foo"__</p>
+>>> Emphasis and strong emphasis - 366
+foo__bar__
+<<<
+<p>foo__bar__</p>
+>>> Emphasis and strong emphasis - 367
+5__6__78
+<<<
+<p>5__6__78</p>
+>>> Emphasis and strong emphasis - 368
+пристаням__стремятся__
+<<<
+<p>пристаням__стремятся__</p>
+>>> Emphasis and strong emphasis - 369
+__foo, __bar__, baz__
+<<<
+<p><strong>foo, <strong>bar</strong>, baz</strong></p>
+>>> Emphasis and strong emphasis - 370
+foo-__(bar)__
+<<<
+<p>foo-<strong>(bar)</strong></p>
+>>> Emphasis and strong emphasis - 371
+**foo bar **
+<<<
+<p>**foo bar **</p>
+>>> Emphasis and strong emphasis - 372
+**(**foo)
+<<<
+<p>**(**foo)</p>
+>>> Emphasis and strong emphasis - 373
+*(**foo**)*
+<<<
+<p><em>(<strong>foo</strong>)</em></p>
+>>> Emphasis and strong emphasis - 374
+**Gomphocarpus (*Gomphocarpus physocarpus*, syn.
+*Asclepias physocarpa*)**
+<<<
+<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.
+<em>Asclepias physocarpa</em>)</strong></p>
+>>> Emphasis and strong emphasis - 375
+**foo "*bar*" foo**
+<<<
+<p><strong>foo "<em>bar</em>" foo</strong></p>
+>>> Emphasis and strong emphasis - 376
+**foo**bar
+<<<
+<p><strong>foo</strong>bar</p>
+>>> Emphasis and strong emphasis - 377
+__foo bar __
+<<<
+<p>__foo bar __</p>
+>>> Emphasis and strong emphasis - 378
+__(__foo)
+<<<
+<p>__(__foo)</p>
+>>> Emphasis and strong emphasis - 379
+_(__foo__)_
+<<<
+<p><em>(<strong>foo</strong>)</em></p>
+>>> Emphasis and strong emphasis - 380
+__foo__bar
+<<<
+<p>__foo__bar</p>
+>>> Emphasis and strong emphasis - 381
+__пристаням__стремятся
+<<<
+<p>__пристаням__стремятся</p>
+>>> Emphasis and strong emphasis - 382
+__foo__bar__baz__
+<<<
+<p><strong>foo__bar__baz</strong></p>
+>>> Emphasis and strong emphasis - 383
+__(bar)__.
+<<<
+<p><strong>(bar)</strong>.</p>
+>>> Emphasis and strong emphasis - 384
+*foo [bar](/url)*
+<<<
+<p><em>foo <a href="/url">bar</a></em></p>
+>>> Emphasis and strong emphasis - 385
+*foo
+bar*
+<<<
+<p><em>foo
+bar</em></p>
+>>> Emphasis and strong emphasis - 386
+_foo __bar__ baz_
+<<<
+<p><em>foo <strong>bar</strong> baz</em></p>
+>>> Emphasis and strong emphasis - 387
+_foo _bar_ baz_
+<<<
+<p><em>foo <em>bar</em> baz</em></p>
+>>> Emphasis and strong emphasis - 388
+__foo_ bar_
+<<<
+<p><em><em>foo</em> bar</em></p>
+>>> Emphasis and strong emphasis - 389
+*foo *bar**
+<<<
+<p><em>foo <em>bar</em></em></p>
+>>> Emphasis and strong emphasis - 390
+*foo **bar** baz*
+<<<
+<p><em>foo <strong>bar</strong> baz</em></p>
+>>> Emphasis and strong emphasis - 391
+*foo**bar**baz*
+<<<
+<p><em>foo<strong>bar</strong>baz</em></p>
+>>> Emphasis and strong emphasis - 392
+***foo** bar*
+<<<
+<p><em><strong>foo</strong> bar</em></p>
+>>> Emphasis and strong emphasis - 393
+*foo **bar***
+<<<
+<p><em>foo <strong>bar</strong></em></p>
+>>> Emphasis and strong emphasis - 394
+*foo**bar***
+<<<
+<p><em>foo<strong>bar</strong></em></p>
+>>> Emphasis and strong emphasis - 395
+*foo **bar *baz* bim** bop*
+<<<
+<p><em>foo <strong>bar <em>baz</em> bim</strong> bop</em></p>
+>>> Emphasis and strong emphasis - 396
+*foo [*bar*](/url)*
+<<<
+<p><em>foo <a href="/url"><em>bar</em></a></em></p>
+>>> Emphasis and strong emphasis - 397
+** is not an empty emphasis
+<<<
+<p>** is not an empty emphasis</p>
+>>> Emphasis and strong emphasis - 398
+**** is not an empty strong emphasis
+<<<
+<p>**** is not an empty strong emphasis</p>
+>>> Emphasis and strong emphasis - 399
+**foo [bar](/url)**
+<<<
+<p><strong>foo <a href="/url">bar</a></strong></p>
+>>> Emphasis and strong emphasis - 400
+**foo
+bar**
+<<<
+<p><strong>foo
+bar</strong></p>
+>>> Emphasis and strong emphasis - 401
+__foo _bar_ baz__
+<<<
+<p><strong>foo <em>bar</em> baz</strong></p>
+>>> Emphasis and strong emphasis - 402
+__foo __bar__ baz__
+<<<
+<p><strong>foo <strong>bar</strong> baz</strong></p>
+>>> Emphasis and strong emphasis - 403
+____foo__ bar__
+<<<
+<p><strong><strong>foo</strong> bar</strong></p>
+>>> Emphasis and strong emphasis - 404
+**foo **bar****
+<<<
+<p><strong>foo <strong>bar</strong></strong></p>
+>>> Emphasis and strong emphasis - 405
+**foo *bar* baz**
+<<<
+<p><strong>foo <em>bar</em> baz</strong></p>
+>>> Emphasis and strong emphasis - 406
+**foo*bar*baz**
+<<<
+<p><strong>foo<em>bar</em>baz</strong></p>
+>>> Emphasis and strong emphasis - 407
+***foo* bar**
+<<<
+<p><strong><em>foo</em> bar</strong></p>
+>>> Emphasis and strong emphasis - 408
+**foo *bar***
+<<<
+<p><strong>foo <em>bar</em></strong></p>
+>>> Emphasis and strong emphasis - 409
+**foo *bar **baz**
+bim* bop**
+<<<
+<p><strong>foo <em>bar <strong>baz</strong>
+bim</em> bop</strong></p>
+>>> Emphasis and strong emphasis - 410
+**foo [*bar*](/url)**
+<<<
+<p><strong>foo <a href="/url"><em>bar</em></a></strong></p>
+>>> Emphasis and strong emphasis - 411
+__ is not an empty emphasis
+<<<
+<p>__ is not an empty emphasis</p>
+>>> Emphasis and strong emphasis - 412
+____ is not an empty strong emphasis
+<<<
+<p>____ is not an empty strong emphasis</p>
+>>> Emphasis and strong emphasis - 413
+foo ***
+<<<
+<p>foo ***</p>
+>>> Emphasis and strong emphasis - 414
+foo *\**
+<<<
+<p>foo <em>*</em></p>
+>>> Emphasis and strong emphasis - 415
+foo *_*
+<<<
+<p>foo <em>_</em></p>
+>>> Emphasis and strong emphasis - 416
+foo *****
+<<<
+<p>foo *****</p>
+>>> Emphasis and strong emphasis - 417
+foo **\***
+<<<
+<p>foo <strong>*</strong></p>
+>>> Emphasis and strong emphasis - 418
+foo **_**
+<<<
+<p>foo <strong>_</strong></p>
+>>> Emphasis and strong emphasis - 419
+**foo*
+<<<
+<p>*<em>foo</em></p>
+>>> Emphasis and strong emphasis - 420
+*foo**
+<<<
+<p><em>foo</em>*</p>
+>>> Emphasis and strong emphasis - 421
+***foo**
+<<<
+<p>*<strong>foo</strong></p>
+>>> Emphasis and strong emphasis - 422
+****foo*
+<<<
+<p>***<em>foo</em></p>
+>>> Emphasis and strong emphasis - 423
+**foo***
+<<<
+<p><strong>foo</strong>*</p>
+>>> Emphasis and strong emphasis - 424
+*foo****
+<<<
+<p><em>foo</em>***</p>
+>>> Emphasis and strong emphasis - 425
+foo ___
+<<<
+<p>foo ___</p>
+>>> Emphasis and strong emphasis - 426
+foo _\__
+<<<
+<p>foo <em>_</em></p>
+>>> Emphasis and strong emphasis - 427
+foo _*_
+<<<
+<p>foo <em>*</em></p>
+>>> Emphasis and strong emphasis - 428
+foo _____
+<<<
+<p>foo _____</p>
+>>> Emphasis and strong emphasis - 429
+foo __\___
+<<<
+<p>foo <strong>_</strong></p>
+>>> Emphasis and strong emphasis - 430
+foo __*__
+<<<
+<p>foo <strong>*</strong></p>
+>>> Emphasis and strong emphasis - 431
+__foo_
+<<<
+<p>_<em>foo</em></p>
+>>> Emphasis and strong emphasis - 432
+_foo__
+<<<
+<p><em>foo</em>_</p>
+>>> Emphasis and strong emphasis - 433
+___foo__
+<<<
+<p>_<strong>foo</strong></p>
+>>> Emphasis and strong emphasis - 434
+____foo_
+<<<
+<p>___<em>foo</em></p>
+>>> Emphasis and strong emphasis - 435
+__foo___
+<<<
+<p><strong>foo</strong>_</p>
+>>> Emphasis and strong emphasis - 436
+_foo____
+<<<
+<p><em>foo</em>___</p>
+>>> Emphasis and strong emphasis - 437
+**foo**
+<<<
+<p><strong>foo</strong></p>
+>>> Emphasis and strong emphasis - 438
+*_foo_*
+<<<
+<p><em><em>foo</em></em></p>
+>>> Emphasis and strong emphasis - 439
+__foo__
+<<<
+<p><strong>foo</strong></p>
+>>> Emphasis and strong emphasis - 440
+_*foo*_
+<<<
+<p><em><em>foo</em></em></p>
+>>> Emphasis and strong emphasis - 441
+****foo****
+<<<
+<p><strong><strong>foo</strong></strong></p>
+>>> Emphasis and strong emphasis - 442
+____foo____
+<<<
+<p><strong><strong>foo</strong></strong></p>
+>>> Emphasis and strong emphasis - 443
+******foo******
+<<<
+<p><strong><strong><strong>foo</strong></strong></strong></p>
+>>> Emphasis and strong emphasis - 444
+***foo***
+<<<
+<p><em><strong>foo</strong></em></p>
+>>> Emphasis and strong emphasis - 445
+_____foo_____
+<<<
+<p><em><strong><strong>foo</strong></strong></em></p>
+>>> Emphasis and strong emphasis - 446
+*foo _bar* baz_
+<<<
+<p><em>foo _bar</em> baz_</p>
+>>> Emphasis and strong emphasis - 447
+*foo __bar *baz bim__ bam*
+<<<
+<p><em>foo <strong>bar *baz bim</strong> bam</em></p>
+>>> Emphasis and strong emphasis - 448
+**foo **bar baz**
+<<<
+<p>**foo <strong>bar baz</strong></p>
+>>> Emphasis and strong emphasis - 449
+*foo *bar baz*
+<<<
+<p>*foo <em>bar baz</em></p>
+>>> Emphasis and strong emphasis - 450
+*[bar*](/url)
+<<<
+<p><em>[bar</em>](/url)</p>
+>>> Emphasis and strong emphasis - 451
+_foo [bar_](/url)
+<<<
+<p><em>foo [bar</em>](/url)</p>
+>>> Emphasis and strong emphasis - 452
+*<img src="foo" title="*"/>
+<<<
+<p>*<img src="foo" title="*"/></p>
+>>> Emphasis and strong emphasis - 453
+**<a href="**">
+<<<
+<p>**<a href="**"></p>
+>>> Emphasis and strong emphasis - 454
+__<a href="__">
+<<<
+<p>__<a href="__"></p>
+>>> Emphasis and strong emphasis - 455
+*a `*`*
+<<<
+<p><em>a <code>*</code></em></p>
+>>> Emphasis and strong emphasis - 456
+_a `_`_
+<<<
+<p><em>a <code>_</code></em></p>
+>>> Emphasis and strong emphasis - 457
+**a<http://foo.bar/?q=**>
+<<<
+<p>**a<a href="http://foo.bar/?q=**">http://foo.bar/?q=**</a></p>
+>>> Emphasis and strong emphasis - 458
+__a<http://foo.bar/?q=__>
+<<<
+<p>__a<a href="http://foo.bar/?q=__">http://foo.bar/?q=__</a></p>

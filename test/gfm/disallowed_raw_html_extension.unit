@@ -1,0 +1,10 @@
+>>> Disallowed Raw HTML (extension) - 636
+<strong> <title> <style> <em>
+
+<blockquote>
+  <xmp> is disallowed.  <XMP> is also disallowed.
+</blockquote>
+<<<
+<p><strong> <title> <style> <em></p><blockquote>
+  <xmp> is disallowed.  <XMP> is also disallowed.
+</blockquote>

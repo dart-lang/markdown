@@ -1,0 +1,11 @@
+>>> Strikethrough (extension) - 477
+~~Hi~~ Hello, world!
+<<<
+<p><del>Hi</del> Hello, world!</p>
+>>> Strikethrough (extension) - 478
+This ~~has a
+
+new paragraph~~.
+<<<
+<p>This ~~has a</p>
+<p>new paragraph~~.</p>

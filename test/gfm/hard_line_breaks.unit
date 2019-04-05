@@ -1,0 +1,82 @@
+>>> Hard line breaks - 637
+foo  
+baz
+<<<
+<p>foo<br />
+baz</p>
+>>> Hard line breaks - 638
+foo\
+baz
+<<<
+<p>foo<br />
+baz</p>
+>>> Hard line breaks - 639
+foo       
+baz
+<<<
+<p>foo<br />
+baz</p>
+>>> Hard line breaks - 640
+foo  
+     bar
+<<<
+<p>foo<br />
+     bar</p>
+>>> Hard line breaks - 641
+foo\
+     bar
+<<<
+<p>foo<br />
+     bar</p>
+>>> Hard line breaks - 642
+*foo  
+bar*
+<<<
+<p><em>foo<br />
+bar</em></p>
+>>> Hard line breaks - 643
+*foo\
+bar*
+<<<
+<p><em>foo<br />
+bar</em></p>
+>>> Hard line breaks - 644
+`code 
+span`
+<<<
+<p><code>code 
+span</code></p>
+>>> Hard line breaks - 645
+`code\
+span`
+<<<
+<p><code>code\
+span</code></p>
+>>> Hard line breaks - 646
+<a href="foo  
+bar">
+<<<
+<p><a href="foo  
+bar"></p>
+>>> Hard line breaks - 647
+<a href="foo\
+bar">
+<<<
+<p><a href="foo\
+bar"></p>
+>>> Hard line breaks - 648
+foo\
+<<<
+<p>foo\</p>
+>>> Hard line breaks - 649
+foo  
+<<<
+<p>foo  </p>
+>>> Hard line breaks - 650
+### foo\
+<<<
+<h3>foo\</h3>
+>>> Hard line breaks - 651
+### foo  
+<<<
+<h3>foo</h3>

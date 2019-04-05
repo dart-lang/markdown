@@ -1,0 +1,76 @@
+>>> Autolinks - 565
+<http://foo.bar.baz>
+<<<
+<p><a href="http://foo.bar.baz">http://foo.bar.baz</a></p>
+>>> Autolinks - 566
+<http://foo.bar.baz/test?q=hello&id=22&boolean>
+<<<
+<p><a href="http://foo.bar.baz/test?q=hello&id=22&boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
+>>> Autolinks - 567
+<irc://foo.bar:2233/baz>
+<<<
+<p><a href="irc://foo.bar:2233/baz">irc://foo.bar:2233/baz</a></p>
+>>> Autolinks - 568
+<MAILTO:FOO@BAR.BAZ>
+<<<
+<p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>
+>>> Autolinks - 569
+<a+b+c:d>
+<<<
+<p><a href="a+b+c:d">a+b+c:d</a></p>
+>>> Autolinks - 570
+<made-up-scheme://foo,bar>
+<<<
+<p><a href="made-up-scheme://foo,bar">made-up-scheme://foo,bar</a></p>
+>>> Autolinks - 571
+<http://../>
+<<<
+<p><a href="http://../">http://../</a></p>
+>>> Autolinks - 572
+<localhost:5001/foo>
+<<<
+<p><a href="localhost:5001/foo">localhost:5001/foo</a></p>
+>>> Autolinks - 573
+<http://foo.bar/baz bim>
+<<<
+<p>&lt;http://foo.bar/baz bim></p>
+>>> Autolinks - 574
+<http://example.com/\[\>
+<<<
+<p><a href="http://example.com/%5C%5B%5C">http://example.com/\[\</a></p>
+>>> Autolinks - 575
+<foo@bar.example.com>
+<<<
+<p><a href="mailto:foo@bar.example.com">foo@bar.example.com</a></p>
+>>> Autolinks - 576
+<foo+special@Bar.baz-bar0.com>
+<<<
+<p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>
+>>> Autolinks - 577
+<foo\+@bar.example.com>
+<<<
+<p>&lt;foo+@bar.example.com></p>
+>>> Autolinks - 578
+<>
+<<<
+<p>&lt;></p>
+>>> Autolinks - 579
+< http://foo.bar >
+<<<
+<p>&lt; http://foo.bar ></p>
+>>> Autolinks - 580
+<m:abc>
+<<<
+<p>&lt;m:abc></p>
+>>> Autolinks - 581
+<foo.bar.baz>
+<<<
+<p>&lt;foo.bar.baz></p>
+>>> Autolinks - 582
+http://example.com
+<<<
+<p>http://example.com</p>
+>>> Autolinks - 583
+foo@bar.example.com
+<<<
+<p>foo@bar.example.com</p>

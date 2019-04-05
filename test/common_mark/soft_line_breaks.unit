@@ -1,0 +1,12 @@
+>>> Soft line breaks - 620
+foo
+baz
+<<<
+<p>foo
+baz</p>
+>>> Soft line breaks - 621
+foo 
+ baz
+<<<
+<p>foo 
+ baz</p>

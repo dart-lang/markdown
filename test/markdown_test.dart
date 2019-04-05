@@ -23,6 +23,9 @@ void main() {
   testFile('extensions/emojis.unit', inlineSyntaxes: [EmojiSyntax()]);
   testFile('extensions/inline_html.unit', inlineSyntaxes: [InlineHtmlSyntax()]);
 
+  testDirectory('common_mark');
+  testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
+
   group('Corner cases', () {
     validateCore('Incorrect Links', '''
 5 Ethernet ([Music](

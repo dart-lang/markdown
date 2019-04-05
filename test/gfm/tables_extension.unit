@@ -1,0 +1,57 @@
+>>> Tables (extension) - 192
+| foo | bar |
+| --- | --- |
+| baz | bim |
+<<<
+<table><thead><tr><th>foo</th><th>bar</th></tr></thead><tbody><tr><td>baz</td><td>bim</td></tr></tbody></table>
+>>> Tables (extension) - 193
+| abc | defghi |
+:-: | -----------:
+bar | baz
+<<<
+<table><thead><tr><th style="text-align: center;">abc</th><th style="text-align: right;">defghi</th></tr></thead><tbody><tr><td style="text-align: center;">bar</td><td style="text-align: right;">baz</td></tr></tbody></table>
+>>> Tables (extension) - 194
+| f\|oo  |
+| ------ |
+| b `\|` az |
+| b **\|** im |
+<<<
+<table><thead><tr><th>f|oo</th></tr></thead><tbody><tr><td>b <code>|</code> az</td></tr><tr><td>b <strong>|</strong> im</td></tr></tbody></table>
+>>> Tables (extension) - 195
+| abc | def |
+| --- | --- |
+| bar | baz |
+> bar
+<<<
+<table><thead><tr><th>abc</th><th>def</th></tr></thead><tbody><tr><td>bar</td><td>baz</td></tr></tbody></table>
+<blockquote>
+<p>bar</p></blockquote>
+>>> Tables (extension) - 196
+| abc | def |
+| --- | --- |
+| bar | baz |
+bar
+
+bar
+<<<
+<table><thead><tr><th>abc</th><th>def</th></tr></thead><tbody><tr><td>bar</td><td>baz</td></tr><tr><td>bar</td><td /></tr></tbody></table>
+<p>bar</p>
+>>> Tables (extension) - 197
+| abc | def |
+| --- |
+| bar |
+<<<
+<p>| --- |
+| bar |</p>
+>>> Tables (extension) - 198
+| abc | def |
+| --- | --- |
+| bar |
+| bar | baz | boo |
+<<<
+<table><thead><tr><th>abc</th><th>def</th></tr></thead><tbody><tr><td>bar</td><td /></tr><tr><td>bar</td><td>baz</td></tr></tbody></table>
+>>> Tables (extension) - 199
+| abc | def |
+| --- | --- |
+<<<
+<table><thead><tr><th>abc</th><th>def</th></tr></thead></table>

@@ -1,0 +1,415 @@
+>>> HTML blocks - 116
+<table><tr><td>
+<pre>
+**Hello**,
+
+_world_.
+</pre>
+</td></tr></table>
+<<<
+<table><tr><td>
+<pre>
+**Hello**,
+<p><em>world</em>.
+</pre></p></td></tr></table>
+>>> HTML blocks - 117
+<table>
+  <tr>
+    <td>
+           hi
+    </td>
+  </tr>
+</table>
+
+okay.
+<<<
+<table>
+  <tr>
+    <td>
+           hi
+    </td>
+  </tr>
+</table>
+<p>okay.</p>
+>>> HTML blocks - 118
+ <div>
+  *hello*
+         <foo><a>
+<<<
+ <div>
+  *hello*
+         <foo><a>
+>>> HTML blocks - 119
+</div>
+*foo*
+<<<
+</div>
+*foo*
+>>> HTML blocks - 120
+<DIV CLASS="foo">
+
+*Markdown*
+
+</DIV>
+<<<
+<DIV CLASS="foo">
+<p><em>Markdown</em></p></DIV>
+>>> HTML blocks - 121
+<div id="foo"
+  class="bar">
+</div>
+<<<
+<div id="foo"
+  class="bar">
+</div>
+>>> HTML blocks - 122
+<div id="foo" class="bar
+  baz">
+</div>
+<<<
+<div id="foo" class="bar
+  baz">
+</div>
+>>> HTML blocks - 123
+<div>
+*foo*
+
+*bar*
+<<<
+<div>
+*foo*
+<p><em>bar</em></p>
+>>> HTML blocks - 124
+<div id="foo"
+*hi*
+<<<
+<div id="foo"
+*hi*
+>>> HTML blocks - 125
+<div class
+foo
+<<<
+<div class
+foo
+>>> HTML blocks - 126
+<div *???-&&&-<---
+*foo*
+<<<
+<div *???-&&&-<---
+*foo*
+>>> HTML blocks - 127
+<div><a href="bar">*foo*</a></div>
+<<<
+<div><a href="bar">*foo*</a></div>
+>>> HTML blocks - 128
+<table><tr><td>
+foo
+</td></tr></table>
+<<<
+<table><tr><td>
+foo
+</td></tr></table>
+>>> HTML blocks - 129
+<div></div>
+``` c
+int x = 33;
+```
+<<<
+<div></div>
+``` c
+int x = 33;
+```
+>>> HTML blocks - 130
+<a href="foo">
+*bar*
+</a>
+<<<
+<a href="foo">
+*bar*
+</a>
+>>> HTML blocks - 131
+<Warning>
+*bar*
+</Warning>
+<<<
+<Warning>
+*bar*
+</Warning>
+>>> HTML blocks - 132
+<i class="foo">
+*bar*
+</i>
+<<<
+<i class="foo">
+*bar*
+</i>
+>>> HTML blocks - 133
+</ins>
+*bar*
+<<<
+</ins>
+*bar*
+>>> HTML blocks - 134
+<del>
+*foo*
+</del>
+<<<
+<del>
+*foo*
+</del>
+>>> HTML blocks - 135
+<del>
+
+*foo*
+
+</del>
+<<<
+<del>
+<p><em>foo</em></p></del>
+>>> HTML blocks - 136
+<del>*foo*</del>
+<<<
+<p><del><em>foo</em></del></p>
+>>> HTML blocks - 137
+<pre language="haskell"><code>
+import Text.HTML.TagSoup
+
+main :: IO ()
+main = print $ parseTags tags
+</code></pre>
+okay
+<<<
+<pre language="haskell"><code>
+import Text.HTML.TagSoup
+
+main :: IO ()
+main = print $ parseTags tags
+</code></pre>
+<p>okay</p>
+>>> HTML blocks - 138
+<script type="text/javascript">
+// JavaScript example
+
+document.getElementById("demo").innerHTML = "Hello JavaScript!";
+</script>
+okay
+<<<
+<script type="text/javascript">
+// JavaScript example
+
+document.getElementById("demo").innerHTML = "Hello JavaScript!";
+</script>
+<p>okay</p>
+>>> HTML blocks - 139
+<style
+  type="text/css">
+h1 {color:red;}
+
+p {color:blue;}
+</style>
+okay
+<<<
+<style
+  type="text/css">
+h1 {color:red;}
+
+p {color:blue;}
+</style>
+<p>okay</p>
+>>> HTML blocks - 140
+<style
+  type="text/css">
+
+foo
+<<<
+<style
+  type="text/css">
+
+foo
+
+>>> HTML blocks - 141
+> <div>
+> foo
+
+bar
+<<<
+<blockquote><div>
+foo</blockquote>
+<p>bar</p>
+>>> HTML blocks - 142
+- <div>
+- foo
+<<<
+<ul><li><div></li><li>foo</li></ul>
+>>> HTML blocks - 143
+<style>p{color:red;}</style>
+*foo*
+<<<
+<style>p{color:red;}</style>
+<p><em>foo</em></p>
+>>> HTML blocks - 144
+<!-- foo -->*bar*
+*baz*
+<<<
+<!-- foo -->*bar*
+<p><em>baz</em></p>
+>>> HTML blocks - 145
+<script>
+foo
+</script>1. *bar*
+<<<
+<script>
+foo
+</script>1. *bar*
+>>> HTML blocks - 146
+<!-- Foo
+
+bar
+   baz -->
+okay
+<<<
+<!-- Foo
+
+bar
+   baz -->
+<p>okay</p>
+>>> HTML blocks - 147
+<?php
+
+  echo '>';
+
+?>
+okay
+<<<
+<?php
+
+  echo '>';
+
+?>
+<p>okay</p>
+>>> HTML blocks - 148
+<!DOCTYPE html>
+<<<
+<!DOCTYPE html>
+>>> HTML blocks - 149
+<![CDATA[
+function matchwo(a,b)
+{
+  if (a < b && a < 0) then {
+    return 1;
+
+  } else {
+
+    return 0;
+  }
+}
+]]>
+okay
+<<<
+<![CDATA[
+function matchwo(a,b)
+{
+  if (a < b && a < 0) then {
+    return 1;
+
+  } else {
+
+    return 0;
+  }
+}
+]]>
+<p>okay</p>
+>>> HTML blocks - 150
+  <!-- foo -->
+
+    <!-- foo -->
+<<<
+  <!-- foo -->
+<pre><code>&lt;!-- foo --&gt;
+</code></pre>
+>>> HTML blocks - 151
+  <div>
+
+    <div>
+<<<
+  <div>
+<pre><code>&lt;div&gt;
+</code></pre>
+>>> HTML blocks - 152
+Foo
+<div>
+bar
+</div>
+<<<
+<p>Foo</p><div>
+bar
+</div>
+>>> HTML blocks - 153
+<div>
+bar
+</div>
+*foo*
+<<<
+<div>
+bar
+</div>
+*foo*
+>>> HTML blocks - 154
+Foo
+<a href="bar">
+baz
+<<<
+<p>Foo
+<a href="bar">
+baz</p>
+>>> HTML blocks - 155
+<div>
+
+*Emphasized* text.
+
+</div>
+<<<
+<div>
+<p><em>Emphasized</em> text.</p></div>
+>>> HTML blocks - 156
+<div>
+*Emphasized* text.
+</div>
+<<<
+<div>
+*Emphasized* text.
+</div>
+>>> HTML blocks - 157
+<table>
+
+<tr>
+
+<td>
+Hi
+</td>
+
+</tr>
+
+</table>
+<<<
+<table><tr><td>
+Hi
+</td></tr></table>
+>>> HTML blocks - 158
+<table>
+
+  <tr>
+
+    <td>
+      Hi
+    </td>
+
+  </tr>
+
+</table>
+<<<
+<table>  <tr>
+<pre><code>&lt;td&gt;
+  Hi
+&lt;/td&gt;
+</code></pre>  </tr></table>

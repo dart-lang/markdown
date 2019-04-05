@@ -1,0 +1,64 @@
+>>> Entity and numeric character references - 315
+&nbsp; &amp; &copy; &AElig; &Dcaron;
+&frac34; &HilbertSpace; &DifferentialD;
+&ClockwiseContourIntegral; &ngE;
+<<<
+<p>&nbsp; &amp; &copy; &AElig; &Dcaron;
+&frac34; &HilbertSpace; &DifferentialD;
+&ClockwiseContourIntegral; &ngE;</p>
+>>> Entity and numeric character references - 316
+&#35; &#1234; &#992; &#0;
+<<<
+<p>&#35; &#1234; &#992; &#0;</p>
+>>> Entity and numeric character references - 317
+&#X22; &#XD06; &#xcab;
+<<<
+<p>&#X22; &#XD06; &#xcab;</p>
+>>> Entity and numeric character references - 318
+&nbsp &x; &#; &#x;
+&#987654321;
+&#abcdef0;
+&ThisIsNotDefined; &hi?;
+<<<
+<p>&amp;nbsp &x; &#; &#x;
+&#987654321;
+&#abcdef0;
+&ThisIsNotDefined; &amp;hi?;</p>
+>>> Entity and numeric character references - 319
+&copy
+<<<
+<p>&amp;copy</p>
+>>> Entity and numeric character references - 320
+&MadeUpEntity;
+<<<
+<p>&MadeUpEntity;</p>
+>>> Entity and numeric character references - 321
+<a href="&ouml;&ouml;.html">
+<<<
+<a href="&ouml;&ouml;.html">
+>>> Entity and numeric character references - 322
+[foo](/f&ouml;&ouml; "f&ouml;&ouml;")
+<<<
+<p><a href="/f&ouml;&ouml;" title="f&ouml;&ouml;">foo</a></p>
+>>> Entity and numeric character references - 323
+[foo]
+
+[foo]: /f&ouml;&ouml; "f&ouml;&ouml;"
+<<<
+<p><a href="/f&ouml;&ouml;" title="f&ouml;&ouml;">foo</a></p>
+>>> Entity and numeric character references - 324
+``` f&ouml;&ouml;
+foo
+```
+<<<
+<pre><code class="language-f&amp;ouml;&amp;ouml;">foo
+</code></pre>
+>>> Entity and numeric character references - 325
+`f&ouml;&ouml;`
+<<<
+<p><code>f&amp;ouml;&amp;ouml;</code></p>
+>>> Entity and numeric character references - 326
+    f&ouml;f&ouml;
+<<<
+<pre><code>f&amp;ouml;f&amp;ouml;
+</code></pre>

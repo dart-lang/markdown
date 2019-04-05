@@ -11,6 +11,8 @@ import 'package:html/parser.dart' show parseFragment;
 import 'package:markdown/markdown.dart' show markdownToHtml, ExtensionSet;
 import 'package:path/path.dart' as p;
 
+import '../test/util.dart';
+
 // Locate the "tool" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
 String get toolDir =>
@@ -78,11 +80,22 @@ class CommonMarkTestCase {
         json['markdown'] as String,
         json['html'] as String);
   }
+
+  @override
+  String toString() => '$section - $example';
 }
 
 enum CompareLevel { strict, loose, fail, error }
 
-CompareLevel compareResult(Config config, CommonMarkTestCase testCase,
+class CompareResult {
+  final CompareLevel compareLevel;
+  final CommonMarkTestCase testCase;
+  final String result;
+
+  CompareResult(this.testCase, this.result, this.compareLevel);
+}
+
+CompareResult compareResult(Config config, CommonMarkTestCase testCase,
     {bool throwOnError = false,
     bool verboseFail = false,
     bool verboseLooseMatch = false}) {
@@ -99,11 +112,11 @@ CompareLevel compareResult(Config config, CommonMarkTestCase testCase,
           config.baseUrl, 'ERROR', testCase, 'Thrown: $err\n$stackTrace');
     }
 
-    return CompareLevel.error;
+    return CompareResult(testCase, null, CompareLevel.error);
   }
 
   if (testCase.html == output) {
-    return CompareLevel.strict;
+    return CompareResult(testCase, output, CompareLevel.strict);
   }
 
   var expectedParsed = parseFragment(testCase.html);
@@ -119,10 +132,12 @@ CompareLevel compareResult(Config config, CommonMarkTestCase testCase,
     _printVerboseFailure(config.baseUrl, 'LOOSE', testCase, output);
   }
 
-  return looseMatch ? CompareLevel.loose : CompareLevel.fail;
+  return CompareResult(
+      testCase, output, looseMatch ? CompareLevel.loose : CompareLevel.fail);
 }
 
-String _indent(String s) => s.splitMapJoin('\n', onNonMatch: (n) => '    $n');
+String _indent(String s) =>
+    s.splitMapJoin('\n', onNonMatch: (n) => '    ${whitespaceColor(n)}');
 
 void _printVerboseFailure(String baseUrl, String message,
     CommonMarkTestCase testCase, String actual) {

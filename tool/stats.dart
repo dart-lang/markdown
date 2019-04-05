@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:collection/collection.dart';
+import 'package:expected_output/expected_output.dart';
 import 'package:path/path.dart' as p;
 
 import 'stats_lib.dart';
@@ -76,6 +77,13 @@ Future main(List<String> args) async {
   }
 }
 
+final _sectionNameReplace = RegExp('[ \\)\\(]+');
+
+String _unitOutput(Iterable<DataCase> cases) => cases.map((dataCase) => '''
+>>> ${dataCase.front_matter}
+${dataCase.input}<<<
+${dataCase.expectedOutput}''').join();
+
 Future<void> _processConfig(
   String testPrefix,
   bool raw,
@@ -95,12 +103,34 @@ Future<void> _processConfig(
     if (specifiedSection != null && entry.key != specifiedSection) {
       return;
     }
+
+    final units = <DataCase>[];
+
     for (var e in entry.value) {
+      final result = compareResult(config, e,
+          verboseFail: verbose, verboseLooseMatch: verboseLooseMatch);
+
+      units.add(DataCase(
+        front_matter: result.testCase.toString(),
+        input: result.testCase.markdown,
+        expectedOutput: result.result,
+      ));
+
       var nestedMap = scores.putIfAbsent(
           entry.key, () => SplayTreeMap<int, CompareLevel>());
+      nestedMap[e.example] = result.compareLevel;
+    }
 
-      nestedMap[e.example] = compareResult(config, e,
-          verboseFail: verbose, verboseLooseMatch: verboseLooseMatch);
+    if (updateFiles && units.isNotEmpty) {
+      var fileName =
+          entry.key.toLowerCase().replaceAll(_sectionNameReplace, '_');
+      while (fileName.endsWith('_')) {
+        fileName = fileName.substring(0, fileName.length - 1);
+      }
+      fileName = '$fileName.unit';
+      File(p.join('test', testPrefix, fileName))
+        ..createSync(recursive: true)
+        ..writeAsStringSync(_unitOutput(units));
     }
   }
 
