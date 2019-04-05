@@ -1008,7 +1008,8 @@ class ImageSyntax extends LinkSyntax {
     element.attributes['src'] = escapeHtml(destination);
     element.attributes['alt'] = state?.textContent ?? '';
     if (title != null && title.isNotEmpty) {
-      element.attributes['title'] = escapeAttribute(title);
+      element.attributes['title'] =
+          escapeAttribute(title.replaceAll('&', '&amp;'));
     }
     return element;
   }
