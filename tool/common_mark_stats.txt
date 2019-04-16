@@ -5,7 +5,7 @@
   22 of   25 –  88.0%  Block quotes
   16 of   17 –  94.1%  Code spans
  124 of  128 –  96.9%  Emphasis and strong emphasis
-  10 of   12 –  83.3%  Entity and numeric character references
+   9 of   12 –  75.0%  Entity and numeric character references
   25 of   28 –  89.3%  Fenced code blocks
   15 of   15 – 100.0%  Hard line breaks
   43 of   43 – 100.0%  HTML blocks
@@ -24,4 +24,4 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 580 of  624 –  92.9%  TOTAL
+ 579 of  624 –  92.8%  TOTAL
