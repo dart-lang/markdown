@@ -9,6 +9,9 @@ import 'package:path/path.dart' as p;
 
 import 'stats_lib.dart';
 
+final _configs =
+    List<Config>.unmodifiable([Config.commonMarkConfig, Config.gfmConfig]);
+
 Future main(List<String> args) async {
   final parser = ArgParser()
     ..addOption('section',
@@ -27,9 +30,7 @@ Future main(List<String> args) async {
         defaultsTo: false,
         help: 'Print details for "loose" matches.',
         negatable: false)
-    ..addOption('flavor',
-        allowed: [Config.commonMarkConfig.prefix, Config.gfmConfig.prefix],
-        defaultsTo: Config.commonMarkConfig.prefix)
+    ..addOption('flavor', allowed: _configs.map((c) => c.prefix))
     ..addFlag('help', defaultsTo: false, negatable: false);
 
   ArgResults options;
@@ -61,37 +62,47 @@ Future main(List<String> args) async {
     return;
   }
 
-  final testPrefix = options['flavor'] as String;
-
-  Config config;
-  switch (testPrefix) {
-    case 'gfm':
-      config = Config.gfmConfig;
-      break;
-    case 'common_mark':
-      config = Config.commonMarkConfig;
-      break;
-    default:
-      throw ArgumentError('Does not support `$testPrefix`.');
+  var testPrefix = options['flavor'] as String;
+  if (!updateFiles) {
+    testPrefix = _configs.first.prefix;
   }
+
+  final testPrefixes =
+      testPrefix == null ? _configs.map((c) => c.prefix) : <String>[testPrefix];
+
+  for (var testPrefix in testPrefixes) {
+    await _processConfig(testPrefix, raw, updateFiles, verbose,
+        specifiedSection, verboseLooseMatch);
+  }
+}
+
+Future<void> _processConfig(
+  String testPrefix,
+  bool raw,
+  bool updateFiles,
+  bool verbose,
+  String specifiedSection,
+  bool verboseLooseMatch,
+) async {
+  final config = _configs.singleWhere((c) => c.prefix == testPrefix);
 
   var sections = loadCommonMarkSections(testPrefix);
 
   var scores = SplayTreeMap<String, SplayTreeMap<int, CompareLevel>>(
       compareAsciiLowerCaseNatural);
 
-  sections.forEach((section, examples) {
-    if (specifiedSection != null && section != specifiedSection) {
+  for (var entry in sections.entries) {
+    if (specifiedSection != null && entry.key != specifiedSection) {
       return;
     }
-    for (var e in examples) {
-      var nestedMap =
-          scores.putIfAbsent(section, () => SplayTreeMap<int, CompareLevel>());
+    for (var e in entry.value) {
+      var nestedMap = scores.putIfAbsent(
+          entry.key, () => SplayTreeMap<int, CompareLevel>());
 
       nestedMap[e.example] = compareResult(config, e,
           verboseFail: verbose, verboseLooseMatch: verboseLooseMatch);
     }
-  });
+  }
 
   if (raw || updateFiles) {
     await _printRaw(testPrefix, scores, updateFiles);
