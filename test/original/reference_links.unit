@@ -81,7 +81,8 @@ Title">awesome</a></p>
 > [are]: http://foo.com
 <<<
 <blockquote>
-<p>links <a href="http://foo.com">are</a> awesome</p></blockquote>
+<p>links <a href="http://foo.com">are</a> awesome</p>
+</blockquote>
 >>> reference link regression for github.com/dart-lang/markdown/issues/176
 [![Coverage Status][coverage_status]][coverage_page]
 

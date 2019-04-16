@@ -82,7 +82,8 @@ bbb
 <<<
 <blockquote>
 <pre><code>aaa
-</code></pre></blockquote>
+</code></pre>
+</blockquote>
 <p>bbb</p>
 >>> Fenced code blocks - 99
 ```

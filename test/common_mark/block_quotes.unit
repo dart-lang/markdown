@@ -6,7 +6,8 @@
 <blockquote>
 <h1>Foo</h1>
 <p>bar
-baz</p></blockquote>
+baz</p>
+</blockquote>
 >>> Block quotes - 199
 ># Foo
 >bar
@@ -15,7 +16,8 @@ baz</p></blockquote>
 <blockquote>
 <h1>Foo</h1>
 <p>bar
-baz</p></blockquote>
+baz</p>
+</blockquote>
 >>> Block quotes - 200
    > # Foo
    > bar
@@ -24,7 +26,8 @@ baz</p></blockquote>
 <blockquote>
 <h1>Foo</h1>
 <p>bar
-baz</p></blockquote>
+baz</p>
+</blockquote>
 >>> Block quotes - 201
     > # Foo
     > bar
@@ -42,7 +45,8 @@ baz
 <blockquote>
 <h1>Foo</h1>
 <p>bar
-baz</p></blockquote>
+baz</p>
+</blockquote>
 >>> Block quotes - 203
 > bar
 baz
@@ -51,26 +55,36 @@ baz
 <blockquote>
 <p>bar
 baz
-foo</p></blockquote>
+foo</p>
+</blockquote>
 >>> Block quotes - 204
 > foo
 ---
 <<<
 <blockquote>
-<p>foo</p></blockquote>
+<p>foo</p>
+</blockquote>
 <hr />
 >>> Block quotes - 205
 > - foo
 - bar
 <<<
-<blockquote><ul><li>foo</li></ul></blockquote><ul><li>bar</li></ul>
+<blockquote>
+<ul>
+<li>foo</li>
+</ul>
+</blockquote>
+<ul>
+<li>bar</li>
+</ul>
 >>> Block quotes - 206
 >     foo
     bar
 <<<
 <blockquote>
 <pre><code>foo
-</code></pre></blockquote>
+</code></pre>
+</blockquote>
 <pre><code>bar
 </code></pre>
 >>> Block quotes - 207
@@ -80,7 +94,8 @@ foo
 <<<
 <blockquote>
 <pre><code>foo
-</code></pre></blockquote>
+</code></pre>
+</blockquote>
 <pre><code>
 </code></pre>
 >>> Block quotes - 208
@@ -88,42 +103,49 @@ foo
     - bar
 <<<
 <blockquote>
-<p>foo</p></blockquote>
+<p>foo</p>
+</blockquote>
 <pre><code>- bar
 </code></pre>
 >>> Block quotes - 209
 >
 <<<
-<blockquote></blockquote>
+<blockquote>
+</blockquote>
 >>> Block quotes - 210
 >
 >  
 > 
 <<<
-<blockquote></blockquote>
+<blockquote>
+</blockquote>
 >>> Block quotes - 211
 >
 > foo
 >  
 <<<
 <blockquote>
-<p>foo</p></blockquote>
+<p>foo</p>
+</blockquote>
 >>> Block quotes - 212
 > foo
 
 > bar
 <<<
 <blockquote>
-<p>foo</p></blockquote>
+<p>foo</p>
+</blockquote>
 <blockquote>
-<p>bar</p></blockquote>
+<p>bar</p>
+</blockquote>
 >>> Block quotes - 213
 > foo
 > bar
 <<<
 <blockquote>
 <p>foo
-bar</p></blockquote>
+bar</p>
+</blockquote>
 >>> Block quotes - 214
 > foo
 >
@@ -131,38 +153,44 @@ bar</p></blockquote>
 <<<
 <blockquote>
 <p>foo</p>
-<p>bar</p></blockquote>
+<p>bar</p>
+</blockquote>
 >>> Block quotes - 215
 foo
 > bar
 <<<
 <p>foo</p>
 <blockquote>
-<p>bar</p></blockquote>
+<p>bar</p>
+</blockquote>
 >>> Block quotes - 216
 > aaa
 ***
 > bbb
 <<<
 <blockquote>
-<p>aaa</p></blockquote>
+<p>aaa</p>
+</blockquote>
 <hr />
 <blockquote>
-<p>bbb</p></blockquote>
+<p>bbb</p>
+</blockquote>
 >>> Block quotes - 217
 > bar
 baz
 <<<
 <blockquote>
 <p>bar
-baz</p></blockquote>
+baz</p>
+</blockquote>
 >>> Block quotes - 218
 > bar
 
 baz
 <<<
 <blockquote>
-<p>bar</p></blockquote>
+<p>bar</p>
+</blockquote>
 <p>baz</p>
 >>> Block quotes - 219
 > bar
@@ -171,7 +199,8 @@ baz
 <<<
 <blockquote>
 <p>bar</p>
-<p>baz</p></blockquote>
+<p>baz</p>
+</blockquote>
 >>> Block quotes - 220
 > > > foo
 bar
@@ -180,7 +209,10 @@ bar
 <blockquote>
 <blockquote>
 <p>foo
-bar</p></blockquote></blockquote></blockquote>
+bar</p>
+</blockquote>
+</blockquote>
+</blockquote>
 >>> Block quotes - 221
 >>> foo
 > bar
@@ -191,7 +223,10 @@ bar</p></blockquote></blockquote></blockquote>
 <blockquote>
 <p>foo
 bar
-baz</p></blockquote></blockquote></blockquote>
+baz</p>
+</blockquote>
+</blockquote>
+</blockquote>
 >>> Block quotes - 222
 >     code
 
@@ -199,6 +234,8 @@ baz</p></blockquote></blockquote></blockquote>
 <<<
 <blockquote>
 <pre><code>code
-</code></pre></blockquote>
+</code></pre>
+</blockquote>
 <blockquote>
-<p>   not code</p></blockquote>
+<p>not code</p>
+</blockquote>

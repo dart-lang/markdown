@@ -25,7 +25,8 @@ bar | baz
 <<<
 <table><thead><tr><th>abc</th><th>def</th></tr></thead><tbody><tr><td>bar</td><td>baz</td></tr></tbody></table>
 <blockquote>
-<p>bar</p></blockquote>
+<p>bar</p>
+</blockquote>
 >>> Tables (extension) - 202
 | abc | def |
 | --- | --- |

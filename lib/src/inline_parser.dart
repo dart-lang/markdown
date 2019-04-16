@@ -40,8 +40,10 @@ class InlineParser {
     TextSyntax(r'&[#a-zA-Z0-9]*;'),
     // Encode "&".
     TextSyntax(r'&', sub: '&amp;'),
-    // Encode "<". (Why not encode ">" too? Gruber is toying with us.)
+    // Encode "<".
     TextSyntax(r'<', sub: '&lt;'),
+    // Encode ">".
+    TextSyntax(r'>', sub: '&gt;'),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
 
@@ -206,8 +208,15 @@ class TextSyntax extends InlineSyntax {
       : substitute = sub,
         super(pattern);
 
+  /// Adds a [Text] node to [parser] and returns `true` if there is a
+  /// [substitute], as long as the preceding character (if any) is not a `/`.
+  ///
+  /// Otherwise, the parser is advanced by the length of [match] and `false` is
+  /// returned.
   bool onMatch(InlineParser parser, Match match) {
-    if (substitute == null) {
+    if (substitute == null ||
+        (match.start > 0 &&
+            match.input.substring(match.start - 1, match.start) == '/')) {
       // Just use the original matched text.
       parser.advanceBy(match[0].length);
       return false;
@@ -1068,7 +1077,7 @@ class CodeSyntax extends InlineSyntax {
   }
 
   bool onMatch(InlineParser parser, Match match) {
-    var code = match[2].trim();
+    var code = match[2].trim().replaceAll('\n', ' ');
     if (parser.document.encodeHtml) code = escapeHtml(code);
     parser.addNode(Element.text('code', code));
 

@@ -40,7 +40,7 @@ Foo
     ***
 <<<
 <p>Foo
-    ***</p>
+***</p>
 >>> Thematic breaks - 20
 _____________________________________
 <<<
@@ -74,14 +74,19 @@ a------
 >>> Thematic breaks - 26
  *-*
 <<<
-<p> <em>-</em></p>
+<p><em>-</em></p>
 >>> Thematic breaks - 27
 - foo
 ***
 - bar
 <<<
-<ul><li>foo</li></ul>
-<hr /><ul><li>bar</li></ul>
+<ul>
+<li>foo</li>
+</ul>
+<hr />
+<ul>
+<li>bar</li>
+</ul>
 >>> Thematic breaks - 28
 Foo
 ***
@@ -102,11 +107,20 @@ bar
 * * *
 * Bar
 <<<
-<ul><li>Foo</li></ul>
-<hr /><ul><li>Bar</li></ul>
+<ul>
+<li>Foo</li>
+</ul>
+<hr />
+<ul>
+<li>Bar</li>
+</ul>
 >>> Thematic breaks - 31
 - Foo
 - * * *
 <<<
-<ul><li>Foo</li><li>
-<hr /></li></ul>
+<ul>
+<li>Foo</li>
+<li>
+<hr />
+</li>
+</ul>

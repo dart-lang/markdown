@@ -165,7 +165,8 @@ Foo
 <<<
 <h1><a href="/url">Foo</a></h1>
 <blockquote>
-<p>bar</p></blockquote>
+<p>bar</p>
+</blockquote>
 >>> Link reference definitions - 184
 [foo]: /url
 bar
@@ -201,7 +202,8 @@ bar</h1>
 > [foo]: /url
 <<<
 <p><a href="/url">foo</a></p>
-<blockquote></blockquote>
+<blockquote>
+</blockquote>
 >>> Link reference definitions - 188
 [foo]: /url
 <<<

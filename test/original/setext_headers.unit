@@ -19,7 +19,9 @@ text
 -
 
 <<<
-<ul><li></li></ul>
+<ul>
+<li></li>
+</ul>
 >>> can be multiline
 header
 on two lines

@@ -33,7 +33,7 @@
 >>> Autolinks - 598
 <http://foo.bar/baz bim>
 <<<
-<p>&lt;http://foo.bar/baz bim></p>
+<p>&lt;http://foo.bar/baz bim&gt;</p>
 >>> Autolinks - 599
 <http://example.com/\[\>
 <<<
@@ -49,23 +49,23 @@
 >>> Autolinks - 602
 <foo\+@bar.example.com>
 <<<
-<p>&lt;foo+@bar.example.com></p>
+<p>&lt;foo+@bar.example.com&gt;</p>
 >>> Autolinks - 603
 <>
 <<<
-<p>&lt;></p>
+<p>&lt;&gt;</p>
 >>> Autolinks - 604
 < http://foo.bar >
 <<<
-<p>&lt; http://foo.bar ></p>
+<p>&lt; http://foo.bar &gt;</p>
 >>> Autolinks - 605
 <m:abc>
 <<<
-<p>&lt;m:abc></p>
+<p>&lt;m:abc&gt;</p>
 >>> Autolinks - 606
 <foo.bar.baz>
 <<<
-<p>&lt;foo.bar.baz></p>
+<p>&lt;foo.bar.baz&gt;</p>
 >>> Autolinks - 607
 http://example.com
 <<<

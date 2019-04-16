@@ -53,7 +53,7 @@ foo
     # bar
 <<<
 <p>foo
-    # bar</p>
+# bar</p>
 >>> ATX headings - 41
 ## foo ##
   ###   bar    ###

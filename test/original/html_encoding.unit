@@ -3,11 +3,11 @@
 
 <<<
 <p>&lt; &amp;</p>
->>> greater than is not escaped
+>>> greater than is escaped
 not you >
 
 <<<
-<p>not you ></p>
+<p>not you &gt;</p>
 >>> existing entities are untouched
 &amp;
 

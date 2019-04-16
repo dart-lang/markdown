@@ -66,7 +66,7 @@ Foo
     ---
 <<<
 <p>Foo
-    ---</p>
+---</p>
 >>> Setext headings - 58
 Foo
 = =
@@ -106,7 +106,8 @@ of dashes"/>
 ---
 <<<
 <blockquote>
-<p>Foo</p></blockquote>
+<p>Foo</p>
+</blockquote>
 <hr />
 >>> Setext headings - 63
 > foo
@@ -114,13 +115,16 @@ bar
 ===
 <<<
 <blockquote>
-<p>foo</p></blockquote>
+<p>foo</p>
+</blockquote>
 <h1>bar</h1>
 >>> Setext headings - 64
 - Foo
 ---
 <<<
-<ul><li>Foo</li></ul>
+<ul>
+<li>Foo</li>
+</ul>
 <hr />
 >>> Setext headings - 65
 Foo
@@ -156,7 +160,9 @@ Baz
 - foo
 -----
 <<<
-<ul><li>foo</li></ul>
+<ul>
+<li>foo</li>
+</ul>
 <hr />
 >>> Setext headings - 70
     foo
@@ -170,7 +176,8 @@ Baz
 -----
 <<<
 <blockquote>
-<p>foo</p></blockquote>
+<p>foo</p>
+</blockquote>
 <hr />
 >>> Setext headings - 72
 \> foo
