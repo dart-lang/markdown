@@ -44,14 +44,12 @@ bar</em></p>
 `code 
 span`
 <<<
-<p><code>code 
-span</code></p>
+<p><code>code  span</code></p>
 >>> Hard line breaks - 638
 `code\
 span`
 <<<
-<p><code>code\
-span</code></p>
+<p><code>code\ span</code></p>
 >>> Hard line breaks - 639
 <a href="foo  
 bar">

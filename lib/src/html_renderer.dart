@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:collection';
+import 'dart:convert';
 
 import 'ast.dart';
 import 'block_parser.dart';
@@ -36,12 +37,29 @@ String markdownToHtml(String markdown,
 /// Renders [nodes] to HTML.
 String renderToHtml(List<Node> nodes) => HtmlRenderer().render(nodes);
 
+const _blockTags = [
+  'blockquote',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'hr',
+  'li',
+  'ol',
+  'p',
+  'pre',
+  'ul',
+];
+
 /// Translates a parsed AST to HTML.
 class HtmlRenderer implements NodeVisitor {
-  static final _blockTags = RegExp('blockquote|h1|h2|h3|h4|h5|h6|hr|p|pre');
-
   StringBuffer buffer;
   Set<String> uniqueIds;
+
+  final _elementStack = <Element>[];
+  String _lastVisitedTag;
 
   HtmlRenderer();
 
@@ -55,13 +73,23 @@ class HtmlRenderer implements NodeVisitor {
   }
 
   void visitText(Text text) {
-    buffer.write(text.text);
+    var content = text.text;
+    if (const ['p', 'li'].contains(_lastVisitedTag)) {
+      content =
+          LineSplitter.split(content).map((line) => line.trimLeft()).join('\n');
+      if (text.text.endsWith('\n')) {
+        content = '$content\n';
+      }
+    }
+    buffer.write(content);
+
+    _lastVisitedTag = null;
   }
 
   bool visitElementBefore(Element element) {
     // Hackish. Separate block-level elements with newlines.
-    if (buffer.isNotEmpty && _blockTags.firstMatch(element.tag) != null) {
-      buffer.write('\n');
+    if (buffer.isNotEmpty && _blockTags.contains(element.tag)) {
+      buffer.writeln();
     }
 
     buffer.write('<${element.tag}');
@@ -75,6 +103,8 @@ class HtmlRenderer implements NodeVisitor {
       buffer.write(' id="${uniquifyId(element.generatedId)}"');
     }
 
+    _lastVisitedTag = element.tag;
+
     if (element.isEmpty) {
       // Empty element like <hr/>.
       buffer.write(' />');
@@ -85,13 +115,26 @@ class HtmlRenderer implements NodeVisitor {
 
       return false;
     } else {
+      _elementStack.add(element);
       buffer.write('>');
       return true;
     }
   }
 
   void visitElementAfter(Element element) {
+    assert(identical(_elementStack.last, element));
+
+    if (element.children != null &&
+        element.children.isNotEmpty &&
+        _blockTags.contains(_lastVisitedTag) &&
+        _blockTags.contains(element.tag)) {
+      buffer.writeln();
+    } else if (element.tag == 'blockquote') {
+      buffer.writeln();
+    }
     buffer.write('</${element.tag}>');
+
+    _lastVisitedTag = _elementStack.removeLast().tag;
   }
 
   /// Uniquifies an id generated from text.

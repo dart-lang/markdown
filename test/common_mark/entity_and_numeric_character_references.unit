@@ -73,7 +73,10 @@ foo
 
 * foo
 <<<
-<p>&#42; foo</p><ul><li>foo</li></ul>
+<p>&#42; foo</p>
+<ul>
+<li>foo</li>
+</ul>
 >>> Entity and numeric character references - 325
 foo&#10;&#10;bar
 <<<

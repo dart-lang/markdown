@@ -23,8 +23,7 @@ before `first
 second` after
 
 <<<
-<p>before <code>first
-second</code> after</p>
+<p>before <code>first second</code> after</p>
 >>> simple double backticks
 before ``source`` after
 
@@ -50,15 +49,13 @@ before `in tick
 another` after
 
 <<<
-<p>before <code>in tick
-another</code> after</p>
+<p>before <code>in tick another</code> after</p>
 >>> multiline double backticks with spaces
 before ``in `tick`
 another`` after
 
 <<<
-<p>before <code>in `tick`
-another</code> after</p>
+<p>before <code>in `tick` another</code> after</p>
 >>> ignore markup inside code
 before `*b* _c_` after
 

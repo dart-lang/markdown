@@ -10,16 +10,25 @@
 
     bar
 <<<
-<ul><li>
+<ul>
+<li>
 <p>foo</p>
-<p>bar</p></li></ul>
+<p>bar</p>
+</li>
+</ul>
 >>> Indented code blocks - 79
 1.  foo
 
     - bar
 <<<
-<ol><li>
-<p> foo</p><ul><li>bar</li></ul></li></ol>
+<ol>
+<li>
+<p>foo</p>
+<ul>
+<li>bar</li>
+</ul>
+</li>
+</ol>
 >>> Indented code blocks - 80
     <a/>
     *hi*
@@ -61,7 +70,7 @@ Foo
 
 <<<
 <p>Foo
-    bar</p>
+bar</p>
 >>> Indented code blocks - 84
     foo
 bar

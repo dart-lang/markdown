@@ -35,9 +35,7 @@ bar
 baz
 ``
 <<<
-<p><code>foo
-bar  
-baz</code></p>
+<p><code>foo bar   baz</code></p>
 >>> Code spans - 346
 ``
 foo 
@@ -48,8 +46,7 @@ foo
 `foo   bar 
 baz`
 <<<
-<p><code>foo   bar 
-baz</code></p>
+<p><code>foo   bar  baz</code></p>
 >>> Code spans - 348
 `foo\`bar`
 <<<
@@ -73,7 +70,7 @@ baz</code></p>
 >>> Code spans - 353
 `<a href="`">`
 <<<
-<p><code>&lt;a href="</code>">`</p>
+<p><code>&lt;a href="</code>"&gt;`</p>
 >>> Code spans - 354
 <a href="`">`
 <<<
@@ -81,7 +78,7 @@ baz</code></p>
 >>> Code spans - 355
 `<http://foo.bar.`baz>`
 <<<
-<p><code>&lt;http://foo.bar.</code>baz>`</p>
+<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>
 >>> Code spans - 356
 <http://foo.bar.`baz>`
 <<<

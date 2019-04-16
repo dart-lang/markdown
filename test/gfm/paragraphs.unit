@@ -28,21 +28,21 @@ bbb
   aaa
  bbb
 <<<
-<p>  aaa
- bbb</p>
+<p>aaa
+bbb</p>
 >>> Paragraphs - 193
 aaa
              bbb
                                        ccc
 <<<
 <p>aaa
-             bbb
-                                       ccc</p>
+bbb
+ccc</p>
 >>> Paragraphs - 194
    aaa
 bbb
 <<<
-<p>   aaa
+<p>aaa
 bbb</p>
 >>> Paragraphs - 195
     aaa

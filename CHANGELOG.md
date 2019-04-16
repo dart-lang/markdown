@@ -1,3 +1,11 @@
+## 2.1.0
+
+* Improve strict spec compliance of `>` handling by always encoding as `&gt;`
+  – unless preceded by `/`.
+* Improve strict spec compliance for `blockquote` by always putting the closing
+  tag on a new line.
+* Improve strict spec compliance for `code` elements defined with "\`".
+
 ## 2.0.3
 
 * Render element attributes in the order they were defined.

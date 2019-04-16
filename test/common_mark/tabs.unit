@@ -20,30 +20,40 @@
 
 	bar
 <<<
-<ul><li>
+<ul>
+<li>
 <p>foo</p>
-<p>bar</p></li></ul>
+<p>bar</p>
+</li>
+</ul>
 >>> Tabs - 5
 - foo
 
 		bar
 <<<
-<ul><li>
+<ul>
+<li>
 <p>foo</p>
 <pre><code>  bar
-</code></pre></li></ul>
+</code></pre>
+</li>
+</ul>
 >>> Tabs - 6
 >		foo
 <<<
 <blockquote>
 <pre><code>	foo
-</code></pre></blockquote>
+</code></pre>
+</blockquote>
 >>> Tabs - 7
 -		foo
 <<<
-<ul><li>
+<ul>
+<li>
 <pre><code>foo
-</code></pre></li></ul>
+</code></pre>
+</li>
+</ul>
 >>> Tabs - 8
     foo
 	bar
@@ -56,7 +66,17 @@ bar
    - bar
 	 - baz
 <<<
-<ul><li>foo<ul><li>bar<ul><li>baz</li></ul></li></ul></li></ul>
+<ul>
+<li>foo
+<ul>
+<li>bar
+<ul>
+<li>baz</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 >>> Tabs - 10
 #	Foo
 <<<

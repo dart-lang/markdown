@@ -11,7 +11,8 @@ with two lines.</p>
 <pre><code>indented code
 </code></pre>
 <blockquote>
-<p>A block quote.</p></blockquote>
+<p>A block quote.</p>
+</blockquote>
 >>> List items - 224
 1.  A paragraph
     with two lines.
@@ -20,34 +21,45 @@ with two lines.</p>
 
     > A block quote.
 <<<
-<ol><li>
-<p> A paragraph
+<ol>
+<li>
+<p>A paragraph
 with two lines.</p>
 <pre><code>indented code
 </code></pre>
 <blockquote>
-<p>A block quote.</p></blockquote></li></ol>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>
 >>> List items - 225
 - one
 
  two
 <<<
-<ul><li>one</li></ul>
-<p> two</p>
+<ul>
+<li>one</li>
+</ul>
+<p>two</p>
 >>> List items - 226
 - one
 
   two
 <<<
-<ul><li>
+<ul>
+<li>
 <p>one</p>
-<p>two</p></li></ul>
+<p>two</p>
+</li>
+</ul>
 >>> List items - 227
  -    one
 
      two
 <<<
-<ul><li>   one</li></ul>
+<ul>
+<li>one</li>
+</ul>
 <pre><code> two
 </code></pre>
 >>> List items - 228
@@ -55,26 +67,40 @@ with two lines.</p>
 
       two
 <<<
-<ul><li>
-<p>   one</p>
-<p>two</p></li></ul>
+<ul>
+<li>
+<p>one</p>
+<p>two</p>
+</li>
+</ul>
 >>> List items - 229
    > > 1.  one
 >>
 >>     two
 <<<
 <blockquote>
-<blockquote><ol><li>
-<p> one</p>
-<p>two</p></li></ol></blockquote></blockquote>
+<blockquote>
+<ol>
+<li>
+<p>one</p>
+<p>two</p>
+</li>
+</ol>
+</blockquote>
+</blockquote>
 >>> List items - 230
 >>- one
 >>
   >  > two
 <<<
 <blockquote>
-<blockquote><ul><li>one</li></ul>
-<p>two</p></blockquote></blockquote>
+<blockquote>
+<ul>
+<li>one</li>
+</ul>
+<p>two</p>
+</blockquote>
+</blockquote>
 >>> List items - 231
 -one
 
@@ -88,8 +114,10 @@ with two lines.</p>
 
   bar
 <<<
-<ul><li>foo</li></ul>
-<p>  bar</p>
+<ul>
+<li>foo</li>
+</ul>
+<p>bar</p>
 >>> List items - 233
 1.  foo
 
@@ -101,13 +129,17 @@ with two lines.</p>
 
     > bam
 <<<
-<ol><li>
-<p> foo</p>
+<ol>
+<li>
+<p>foo</p>
 <pre><code>bar
 </code></pre>
 <p>baz</p>
 <blockquote>
-<p>bam</p></blockquote></li></ol>
+<p>bam</p>
+</blockquote>
+</li>
+</ol>
 >>> List items - 234
 - Foo
 
@@ -116,16 +148,21 @@ with two lines.</p>
 
       baz
 <<<
-<ul><li>
+<ul>
+<li>
 <p>Foo</p>
 <pre><code>bar
-</code></pre></li></ul>
+</code></pre>
+</li>
+</ul>
 <pre><code>  baz
 </code></pre>
 >>> List items - 235
 123456789. ok
 <<<
-<ol start="123456789"><li>ok</li></ol>
+<ol start="123456789">
+<li>ok</li>
+</ol>
 >>> List items - 236
 1234567890. not ok
 <<<
@@ -133,11 +170,15 @@ with two lines.</p>
 >>> List items - 237
 0. ok
 <<<
-<ol start="0"><li>ok</li></ol>
+<ol start="0">
+<li>ok</li>
+</ol>
 >>> List items - 238
 003. ok
 <<<
-<ol start="3"><li>ok</li></ol>
+<ol start="3">
+<li>ok</li>
+</ol>
 >>> List items - 239
 -1. not ok
 <<<
@@ -147,19 +188,25 @@ with two lines.</p>
 
       bar
 <<<
-<ul><li>
+<ul>
+<li>
 <p>foo</p>
 <pre><code>bar
-</code></pre></li></ul>
+</code></pre>
+</li>
+</ul>
 >>> List items - 241
   10.  foo
 
            bar
 <<<
-<ol start="10"><li>
-<p> foo</p>
+<ol start="10">
+<li>
+<p>foo</p>
 <pre><code>bar
-</code></pre></li></ol>
+</code></pre>
+</li>
+</ol>
 >>> List items - 242
     indented code
 
@@ -179,12 +226,15 @@ paragraph
 
        more code
 <<<
-<ol><li>
+<ol>
+<li>
 <pre><code>indented code
 </code></pre>
 <p>paragraph</p>
 <pre><code>more code
-</code></pre></li></ol>
+</code></pre>
+</li>
+</ol>
 >>> List items - 244
 1.      indented code
 
@@ -192,34 +242,42 @@ paragraph
 
        more code
 <<<
-<ol><li>
+<ol>
+<li>
 <pre><code> indented code
 </code></pre>
 <p>paragraph</p>
 <pre><code>more code
-</code></pre></li></ol>
+</code></pre>
+</li>
+</ol>
 >>> List items - 245
    foo
 
 bar
 <<<
-<p>   foo</p>
+<p>foo</p>
 <p>bar</p>
 >>> List items - 246
 -    foo
 
   bar
 <<<
-<ul><li>   foo</li></ul>
-<p>  bar</p>
+<ul>
+<li>foo</li>
+</ul>
+<p>bar</p>
 >>> List items - 247
 -  foo
 
    bar
 <<<
-<ul><li>
-<p> foo</p>
-<p>bar</p></li></ul>
+<ul>
+<li>
+<p>foo</p>
+<p>bar</p>
+</li>
+</ul>
 >>> List items - 248
 -
   foo
@@ -230,45 +288,70 @@ bar
 -
       baz
 <<<
-<ul><li>foo</li><li>
+<ul>
+<li>foo</li>
+<li>
 <pre><code>bar
-</code></pre></li><li>
+</code></pre>
+</li>
+<li>
 <pre><code>baz
-</code></pre></li></ul>
+</code></pre>
+</li>
+</ul>
 >>> List items - 249
 -   
   foo
 <<<
-<ul><li>foo</li></ul>
+<ul>
+<li>foo</li>
+</ul>
 >>> List items - 250
 -
 
   foo
 <<<
-<ul><li>
-<p>foo</p></li></ul>
+<ul>
+<li>
+<p>foo</p>
+</li>
+</ul>
 >>> List items - 251
 - foo
 -
 - bar
 <<<
-<ul><li>foo</li><li></li><li>bar</li></ul>
+<ul>
+<li>foo</li>
+<li></li>
+<li>bar</li>
+</ul>
 >>> List items - 252
 - foo
 -   
 - bar
 <<<
-<ul><li>foo</li><li></li><li>bar</li></ul>
+<ul>
+<li>foo</li>
+<li></li>
+<li>bar</li>
+</ul>
 >>> List items - 253
 1. foo
 2.
 3. bar
 <<<
-<ol><li>foo</li><li></li><li>bar</li></ol>
+<ol>
+<li>foo</li>
+<li></li>
+<li>bar</li>
+</ol>
 >>> List items - 254
 *
 <<<
-<ul><li></li></ul>
+<ul>
+<li></li>
+</ul>
 >>> List items - 255
 foo
 *
@@ -276,8 +359,14 @@ foo
 foo
 1.
 <<<
-<p>foo</p><ul><li></li></ul>
-<p>foo</p><ol><li></li></ol>
+<p>foo</p>
+<ul>
+<li></li>
+</ul>
+<p>foo</p>
+<ol>
+<li></li>
+</ol>
 >>> List items - 256
  1.  A paragraph
      with two lines.
@@ -286,13 +375,17 @@ foo
 
      > A block quote.
 <<<
-<ol><li>
-<p> A paragraph
+<ol>
+<li>
+<p>A paragraph
 with two lines.</p>
 <pre><code>indented code
 </code></pre>
 <blockquote>
-<p>A block quote.</p></blockquote></li></ol>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>
 >>> List items - 257
   1.  A paragraph
       with two lines.
@@ -301,13 +394,17 @@ with two lines.</p>
 
       > A block quote.
 <<<
-<ol><li>
-<p> A paragraph
+<ol>
+<li>
+<p>A paragraph
 with two lines.</p>
 <pre><code>indented code
 </code></pre>
 <blockquote>
-<p>A block quote.</p></blockquote></li></ol>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>
 >>> List items - 258
    1.  A paragraph
        with two lines.
@@ -316,13 +413,17 @@ with two lines.</p>
 
        > A block quote.
 <<<
-<ol><li>
-<p> A paragraph
+<ol>
+<li>
+<p>A paragraph
 with two lines.</p>
 <pre><code>indented code
 </code></pre>
 <blockquote>
-<p>A block quote.</p></blockquote></li></ol>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>
 >>> List items - 259
     1.  A paragraph
         with two lines.
@@ -346,73 +447,141 @@ with two lines.
 
       > A block quote.
 <<<
-<ol><li>
-<p> A paragraph
+<ol>
+<li>
+<p>A paragraph
 with two lines.</p>
 <pre><code>indented code
 </code></pre>
 <blockquote>
-<p>A block quote.</p></blockquote></li></ol>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>
 >>> List items - 261
   1.  A paragraph
     with two lines.
 <<<
-<ol><li> A paragraph
-    with two lines.</li></ol>
+<ol>
+<li>A paragraph
+with two lines.</li>
+</ol>
 >>> List items - 262
 > 1. > Blockquote
 continued here.
 <<<
-<blockquote><ol><li>
+<blockquote>
+<ol>
+<li>
 <blockquote>
 <p>Blockquote
-continued here.</p></blockquote></li></ol></blockquote>
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
 >>> List items - 263
 > 1. > Blockquote
 > continued here.
 <<<
-<blockquote><ol><li>
+<blockquote>
+<ol>
+<li>
 <blockquote>
 <p>Blockquote
-continued here.</p></blockquote></li></ol></blockquote>
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
 >>> List items - 264
 - foo
   - bar
     - baz
       - boo
 <<<
-<ul><li>foo<ul><li>bar<ul><li>baz<ul><li>boo</li></ul></li></ul></li></ul></li></ul>
+<ul>
+<li>foo
+<ul>
+<li>bar
+<ul>
+<li>baz
+<ul>
+<li>boo</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 >>> List items - 265
 - foo
  - bar
   - baz
    - boo
 <<<
-<ul><li>foo</li><li>bar</li><li>baz</li><li>boo</li></ul>
+<ul>
+<li>foo</li>
+<li>bar</li>
+<li>baz</li>
+<li>boo</li>
+</ul>
 >>> List items - 266
 10) foo
     - bar
 <<<
-<ol start="10"><li>foo<ul><li>bar</li></ul></li></ol>
+<ol start="10">
+<li>foo
+<ul>
+<li>bar</li>
+</ul>
+</li>
+</ol>
 >>> List items - 267
 10) foo
    - bar
 <<<
-<ol start="10"><li>foo</li></ol><ul><li>bar</li></ul>
+<ol start="10">
+<li>foo</li>
+</ol>
+<ul>
+<li>bar</li>
+</ul>
 >>> List items - 268
 - - foo
 <<<
-<ul><li><ul><li>foo</li></ul></li></ul>
+<ul>
+<li>
+<ul>
+<li>foo</li>
+</ul>
+</li>
+</ul>
 >>> List items - 269
 1. - 2. foo
 <<<
-<ol><li><ul><li><ol start="2"><li>foo</li></ol></li></ul></li></ol>
+<ol>
+<li>
+<ul>
+<li>
+<ol start="2">
+<li>foo</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>
 >>> List items - 270
 - # Foo
 - Bar
   ---
   baz
 <<<
-<ul><li>
-<h1>Foo</h1></li><li>
-<h2>Bar</h2>baz</li></ul>
+<ul>
+<li>
+<h1>Foo</h1>
+</li>
+<li>
+<h2>Bar</h2>baz</li>
+</ul>

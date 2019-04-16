@@ -234,13 +234,17 @@ foo
 bar
 <<<
 <blockquote><div>
-foo</blockquote>
+foo
+</blockquote>
 <p>bar</p>
 >>> HTML blocks - 144
 - <div>
 - foo
 <<<
-<ul><li><div></li><li>foo</li></ul>
+<ul>
+<li><div></li>
+<li>foo</li>
+</ul>
 >>> HTML blocks - 145
 <style>p{color:red;}</style>
 *foo*
