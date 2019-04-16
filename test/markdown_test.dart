@@ -29,6 +29,13 @@ void main() {
 ''', '''
 <p>5 Ethernet ([Music](</p>
 ''');
+
+    validateCore('Escaping code block language', '''
+```"/><a/href="url">arbitrary_html</a>
+```
+''', '''
+<pre><code class="language-&quot;/&gt;&lt;a/href=&quot;url&quot;&gt;arbitrary_html&lt;/a&gt;"></code></pre>
+''');
   });
 
   group('Resolver', () {
