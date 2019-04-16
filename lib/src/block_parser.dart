@@ -443,7 +443,6 @@ class FencedCodeBlockSyntax extends BlockSyntax {
 
     var text = childLines.join('\n');
     if (parser.document.encodeHtml) {
-      // Escape the code.
       text = escapeHtml(text);
     }
     var code = Element.text('code', text);
@@ -454,7 +453,13 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     if (infoString.isNotEmpty) {
       // only use the first word in the syntax
       // http://spec.commonmark.org/0.22/#example-100
-      infoString = infoString.split(' ').first;
+      var firstSpace = infoString.indexOf(' ');
+      if (firstSpace >= 0) {
+        infoString = infoString.substring(0, firstSpace);
+      }
+      if (parser.document.encodeHtml) {
+        infoString = escapeHtmlAttribute(infoString);
+      }
       code.attributes['class'] = "language-$infoString";
     }
 

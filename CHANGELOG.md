@@ -3,7 +3,8 @@
 * Render element attributes in the order they were defined.
   Aligns more closely with the strict spec definition.
 * Correctly render `&` within inline image titles.
-* Added 68 new GitHub emojis.
+* Add 68 new GitHub emojis.
+* Escape HTML attribute for fenced code blocks, in the info string.
 
 ## 2.0.2
 
