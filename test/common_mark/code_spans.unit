@@ -1,73 +1,101 @@
->>> Code spans - 314
+>>> Code spans - 328
 `foo`
 <<<
 <p><code>foo</code></p>
->>> Code spans - 315
-`` foo ` bar  ``
+>>> Code spans - 329
+`` foo ` bar ``
 <<<
 <p><code>foo ` bar</code></p>
->>> Code spans - 316
+>>> Code spans - 330
 ` `` `
 <<<
 <p><code>``</code></p>
->>> Code spans - 317
+>>> Code spans - 331
+`  ``  `
+<<<
+<p><code>``</code></p>
+>>> Code spans - 332
+` a`
+<<<
+<p><code>a</code></p>
+>>> Code spans - 333
+` b `
+<<<
+<p><code>b</code></p>
+>>> Code spans - 334
+` `
+`  `
+<<<
+<p><code></code>
+<code></code></p>
+>>> Code spans - 335
 ``
 foo
+bar  
+baz
+``
+<<<
+<p><code>foo
+bar  
+baz</code></p>
+>>> Code spans - 336
+``
+foo 
 ``
 <<<
 <p><code>foo</code></p>
->>> Code spans - 318
-`foo   bar
-  baz`
+>>> Code spans - 337
+`foo   bar 
+baz`
 <<<
-<p><code>foo   bar
-  baz</code></p>
->>> Code spans - 319
-`a  b`
-<<<
-<p><code>a  b</code></p>
->>> Code spans - 320
-`foo `` bar`
-<<<
-<p><code>foo `` bar</code></p>
->>> Code spans - 321
+<p><code>foo   bar 
+baz</code></p>
+>>> Code spans - 338
 `foo\`bar`
 <<<
 <p><code>foo\</code>bar`</p>
->>> Code spans - 322
+>>> Code spans - 339
+``foo`bar``
+<<<
+<p><code>foo`bar</code></p>
+>>> Code spans - 340
+` foo `` bar `
+<<<
+<p><code>foo `` bar</code></p>
+>>> Code spans - 341
 *foo`*`
 <<<
 <p>*foo<code>*</code></p>
->>> Code spans - 323
+>>> Code spans - 342
 [not a `link](/foo`)
 <<<
 <p>[not a <code>link](/foo</code>)</p>
->>> Code spans - 324
+>>> Code spans - 343
 `<a href="`">`
 <<<
 <p><code>&lt;a href="</code>">`</p>
->>> Code spans - 325
+>>> Code spans - 344
 <a href="`">`
 <<<
 <p><a href="`">`</p>
->>> Code spans - 326
+>>> Code spans - 345
 `<http://foo.bar.`baz>`
 <<<
 <p><code>&lt;http://foo.bar.</code>baz>`</p>
->>> Code spans - 327
+>>> Code spans - 346
 <http://foo.bar.`baz>`
 <<<
 <p><a href="http://foo.bar.%60baz">http://foo.bar.`baz</a>`</p>
->>> Code spans - 328
+>>> Code spans - 347
 ```foo``
 <<<
 <pre><code class="language-foo``">
 </code></pre>
->>> Code spans - 329
+>>> Code spans - 348
 `foo
 <<<
 <p>`foo</p>
->>> Code spans - 330
+>>> Code spans - 349
 `foo``bar``
 <<<
 <p>`foo<code>bar</code></p>

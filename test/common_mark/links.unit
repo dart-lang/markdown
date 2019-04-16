@@ -1,60 +1,76 @@
->>> Links - 459
+>>> Links - 481
 [link](/uri "title")
 <<<
 <p><a href="/uri" title="title">link</a></p>
->>> Links - 460
+>>> Links - 482
 [link](/uri)
 <<<
 <p><a href="/uri">link</a></p>
->>> Links - 461
+>>> Links - 483
 [link]()
 <<<
 <p><a href="">link</a></p>
->>> Links - 462
+>>> Links - 484
 [link](<>)
 <<<
 <p><a href="">link</a></p>
->>> Links - 463
+>>> Links - 485
 [link](/my uri)
 <<<
 <p>[link](/my uri)</p>
->>> Links - 464
+>>> Links - 486
 [link](</my uri>)
 <<<
 <p>[link](</my uri>)</p>
->>> Links - 465
+>>> Links - 487
 [link](foo
 bar)
 <<<
 <p>[link](foo
 bar)</p>
->>> Links - 466
+>>> Links - 488
 [link](<foo
 bar>)
 <<<
 <p>[link](<foo
 bar>)</p>
->>> Links - 467
+>>> Links - 489
+[a](<b)c>)
+<<<
+<p><a href="b)c">a</a></p>
+>>> Links - 490
+[link](<foo\>)
+<<<
+<p>[link](&lt;foo>)</p>
+>>> Links - 491
+[a](<b)c
+[a](<b)c>
+[a](<b>c)
+<<<
+<p>[a](&lt;b)c
+[a](&lt;b)c>
+[a](<b>c)</p>
+>>> Links - 492
 [link](\(foo\))
 <<<
 <p><a href="(foo)">link</a></p>
->>> Links - 468
+>>> Links - 493
 [link](foo(and(bar)))
 <<<
 <p><a href="foo(and(bar))">link</a></p>
->>> Links - 469
+>>> Links - 494
 [link](foo\(and\(bar\))
 <<<
 <p><a href="foo(and(bar)">link</a></p>
->>> Links - 470
+>>> Links - 495
 [link](<foo(and(bar)>)
 <<<
 <p><a href="foo(and(bar)">link</a></p>
->>> Links - 471
+>>> Links - 496
 [link](foo\)\:)
 <<<
 <p><a href="foo):">link</a></p>
->>> Links - 472
+>>> Links - 497
 [link](#fragment)
 
 [link](http://example.com#fragment)
@@ -64,19 +80,19 @@ bar>)</p>
 <p><a href="#fragment">link</a></p>
 <p><a href="http://example.com#fragment">link</a></p>
 <p><a href="http://example.com?foo=3#frag">link</a></p>
->>> Links - 473
+>>> Links - 498
 [link](foo\bar)
 <<<
 <p><a href="foo%5Cbar">link</a></p>
->>> Links - 474
+>>> Links - 499
 [link](foo%20b&auml;)
 <<<
 <p><a href="foo%20b&auml;">link</a></p>
->>> Links - 475
+>>> Links - 500
 [link]("title")
 <<<
 <p><a href="%22title%22">link</a></p>
->>> Links - 476
+>>> Links - 501
 [link](/url "title")
 [link](/url 'title')
 [link](/url (title))
@@ -84,189 +100,189 @@ bar>)</p>
 <p><a href="/url" title="title">link</a>
 <a href="/url" title="title">link</a>
 <a href="/url" title="title">link</a></p>
->>> Links - 477
+>>> Links - 502
 [link](/url "title \"&quot;")
 <<<
 <p><a href="/url" title="title %22&quot;">link</a></p>
->>> Links - 478
+>>> Links - 503
 [link](/url "title")
 <<<
 <p><a href="/url %22title%22">link</a></p>
->>> Links - 479
+>>> Links - 504
 [link](/url "title "and" title")
 <<<
 <p>[link](/url "title "and" title")</p>
->>> Links - 480
+>>> Links - 505
 [link](/url 'title "and" title')
 <<<
 <p><a href="/url" title="title %22and%22 title">link</a></p>
->>> Links - 481
+>>> Links - 506
 [link](   /uri
   "title"  )
 <<<
 <p><a href="/uri" title="title">link</a></p>
->>> Links - 482
+>>> Links - 507
 [link] (/uri)
 <<<
 <p>[link] (/uri)</p>
->>> Links - 483
+>>> Links - 508
 [link [foo [bar]]](/uri)
 <<<
 <p><a href="/uri">link [foo [bar]]</a></p>
->>> Links - 484
+>>> Links - 509
 [link] bar](/uri)
 <<<
 <p>[link] bar](/uri)</p>
->>> Links - 485
+>>> Links - 510
 [link [bar](/uri)
 <<<
 <p>[link <a href="/uri">bar</a></p>
->>> Links - 486
+>>> Links - 511
 [link \[bar](/uri)
 <<<
 <p><a href="/uri">link [bar</a></p>
->>> Links - 487
+>>> Links - 512
 [link *foo **bar** `#`*](/uri)
 <<<
 <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
->>> Links - 488
+>>> Links - 513
 [![moon](moon.jpg)](/uri)
 <<<
 <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
->>> Links - 489
+>>> Links - 514
 [foo [bar](/uri)](/uri)
 <<<
 <p>[foo <a href="/uri">bar</a>](/uri)</p>
->>> Links - 490
+>>> Links - 515
 [foo *[bar [baz](/uri)](/uri)*](/uri)
 <<<
 <p>[foo <em>[bar <a href="/uri">baz</a>](/uri)</em>](/uri)</p>
->>> Links - 491
+>>> Links - 516
 ![[[foo](uri1)](uri2)](uri3)
 <<<
 <p><img src="uri3" alt="[foo](uri2)" /></p>
->>> Links - 492
+>>> Links - 517
 *[foo*](/uri)
 <<<
 <p><em>[foo</em>](/uri)</p>
->>> Links - 493
+>>> Links - 518
 [foo *bar](baz*)
 <<<
 <p><a href="baz*">foo *bar</a></p>
->>> Links - 494
+>>> Links - 519
 *foo [bar* baz]
 <<<
 <p><em>foo [bar</em> baz]</p>
->>> Links - 495
+>>> Links - 520
 [foo <bar attr="](baz)">
 <<<
 <p>[foo <bar attr="](baz)"></p>
->>> Links - 496
+>>> Links - 521
 [foo`](/uri)`
 <<<
 <p>[foo<code>](/uri)</code></p>
->>> Links - 497
+>>> Links - 522
 [foo<http://example.com/?search=](uri)>
 <<<
 <p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>
->>> Links - 498
+>>> Links - 523
 [foo][bar]
 
 [bar]: /url "title"
 <<<
 <p><a href="/url" title="title">foo</a></p>
->>> Links - 499
+>>> Links - 524
 [link [foo [bar]]][ref]
 
 [ref]: /uri
 <<<
 <p><a href="/uri">link [foo [bar]]</a></p>
->>> Links - 500
+>>> Links - 525
 [link \[bar][ref]
 
 [ref]: /uri
 <<<
 <p><a href="/uri">link [bar</a></p>
->>> Links - 501
+>>> Links - 526
 [link *foo **bar** `#`*][ref]
 
 [ref]: /uri
 <<<
 <p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>
->>> Links - 502
+>>> Links - 527
 [![moon](moon.jpg)][ref]
 
 [ref]: /uri
 <<<
 <p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>
->>> Links - 503
+>>> Links - 528
 [foo [bar](/uri)][ref]
 
 [ref]: /uri
 <<<
 <p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>
->>> Links - 504
+>>> Links - 529
 [foo *bar [baz][ref]*][ref]
 
 [ref]: /uri
 <<<
 <p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>
->>> Links - 505
+>>> Links - 530
 *[foo*][ref]
 
 [ref]: /uri
 <<<
 <p><em>[foo</em>]<a href="/uri">ref</a></p>
->>> Links - 506
+>>> Links - 531
 [foo *bar][ref]
 
 [ref]: /uri
 <<<
 <p><a href="/uri">foo *bar</a></p>
->>> Links - 507
+>>> Links - 532
 [foo <bar attr="][ref]">
 
 [ref]: /uri
 <<<
 <p>[foo <bar attr="][ref]"></p>
->>> Links - 508
+>>> Links - 533
 [foo`][ref]`
 
 [ref]: /uri
 <<<
 <p>[foo<code>][ref]</code></p>
->>> Links - 509
+>>> Links - 534
 [foo<http://example.com/?search=][ref]>
 
 [ref]: /uri
 <<<
 <p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>
->>> Links - 510
+>>> Links - 535
 [foo][BaR]
 
 [bar]: /url "title"
 <<<
 <p><a href="/url" title="title">foo</a></p>
->>> Links - 511
+>>> Links - 536
 [Толпой][Толпой] is a Russian word.
 
 [ТОЛПОЙ]: /url
 <<<
 <p><a href="/url">Толпой</a> is a Russian word.</p>
->>> Links - 512
+>>> Links - 537
 [Foo
   bar]: /url
 
 [Baz][Foo bar]
 <<<
 <p><a href="/url">Baz</a></p>
->>> Links - 513
+>>> Links - 538
 [foo] [bar]
 
 [bar]: /url "title"
 <<<
 <p>[foo] <a href="/url" title="title">bar</a></p>
->>> Links - 514
+>>> Links - 539
 [foo]
 [bar]
 
@@ -274,7 +290,7 @@ bar>)</p>
 <<<
 <p>[foo]
 <a href="/url" title="title">bar</a></p>
->>> Links - 515
+>>> Links - 540
 [foo]: /url1
 
 [foo]: /url2
@@ -282,52 +298,52 @@ bar>)</p>
 [bar][foo]
 <<<
 <p><a href="/url1">bar</a></p>
->>> Links - 516
+>>> Links - 541
 [bar][foo\!]
 
 [foo!]: /url
 <<<
 <p>[bar][foo!]</p>
->>> Links - 517
+>>> Links - 542
 [foo][ref[]
 
 [ref[]: /uri
 <<<
 <p><a href="/uri">foo</a></p>
->>> Links - 518
+>>> Links - 543
 [foo][ref[bar]]
 
 [ref[bar]]: /uri
 <<<
 <p>[foo][ref[bar]]</p>
 <p>[ref[bar]]: /uri</p>
->>> Links - 519
+>>> Links - 544
 [[[foo]]]
 
 [[[foo]]]: /url
 <<<
 <p>[[[foo]]]</p>
 <p>[[[foo]]]: /url</p>
->>> Links - 520
+>>> Links - 545
 [foo][ref\[]
 
 [ref\[]: /uri
 <<<
 <p><a href="/uri">foo</a></p>
->>> Links - 521
+>>> Links - 546
 [bar\\]: /uri
 
 [bar\\]
 <<<
 <p><a href="/uri">bar\</a></p>
->>> Links - 522
+>>> Links - 547
 []
 
 []: /uri
 <<<
 <p>[]</p>
 <p>[]: /uri</p>
->>> Links - 523
+>>> Links - 548
 [
  ]
 
@@ -338,25 +354,25 @@ bar>)</p>
  ]</p>
 <p>[
  ]: /uri</p>
->>> Links - 524
+>>> Links - 549
 [foo][]
 
 [foo]: /url "title"
 <<<
 <p><a href="/url" title="title">foo</a></p>
->>> Links - 525
+>>> Links - 550
 [*foo* bar][]
 
 [*foo* bar]: /url "title"
 <<<
 <p><a href="/url" title="title"><em>foo</em> bar</a></p>
->>> Links - 526
+>>> Links - 551
 [Foo][]
 
 [foo]: /url "title"
 <<<
 <p><a href="/url" title="title">Foo</a></p>
->>> Links - 527
+>>> Links - 552
 [foo] 
 []
 
@@ -364,93 +380,93 @@ bar>)</p>
 <<<
 <p><a href="/url" title="title">foo</a> 
 []</p>
->>> Links - 528
+>>> Links - 553
 [foo]
 
 [foo]: /url "title"
 <<<
 <p><a href="/url" title="title">foo</a></p>
->>> Links - 529
+>>> Links - 554
 [*foo* bar]
 
 [*foo* bar]: /url "title"
 <<<
 <p><a href="/url" title="title"><em>foo</em> bar</a></p>
->>> Links - 530
+>>> Links - 555
 [[*foo* bar]]
 
 [*foo* bar]: /url "title"
 <<<
 <p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>
->>> Links - 531
+>>> Links - 556
 [[bar [foo]
 
 [foo]: /url
 <<<
 <p>[[bar <a href="/url">foo</a></p>
->>> Links - 532
+>>> Links - 557
 [Foo]
 
 [foo]: /url "title"
 <<<
 <p><a href="/url" title="title">Foo</a></p>
->>> Links - 533
+>>> Links - 558
 [foo] bar
 
 [foo]: /url
 <<<
 <p><a href="/url">foo</a> bar</p>
->>> Links - 534
+>>> Links - 559
 \[foo]
 
 [foo]: /url "title"
 <<<
 <p>[foo]</p>
->>> Links - 535
+>>> Links - 560
 [foo*]: /url
 
 *[foo*]
 <<<
 <p><em>[foo</em>]</p>
->>> Links - 536
+>>> Links - 561
 [foo][bar]
 
 [foo]: /url1
 [bar]: /url2
 <<<
 <p><a href="/url2">foo</a></p>
->>> Links - 537
+>>> Links - 562
 [foo][]
 
 [foo]: /url1
 <<<
 <p><a href="/url1">foo</a></p>
->>> Links - 538
+>>> Links - 563
 [foo]()
 
 [foo]: /url1
 <<<
 <p><a href="">foo</a></p>
->>> Links - 539
+>>> Links - 564
 [foo](not a link)
 
 [foo]: /url1
 <<<
 <p><a href="/url1">foo</a>(not a link)</p>
->>> Links - 540
+>>> Links - 565
 [foo][bar][baz]
 
 [baz]: /url
 <<<
 <p>[foo]<a href="/url">bar</a></p>
->>> Links - 541
+>>> Links - 566
 [foo][bar][baz]
 
 [baz]: /url1
 [bar]: /url2
 <<<
 <p><a href="/url2">foo</a><a href="/url1">baz</a></p>
->>> Links - 542
+>>> Links - 567
 [foo][bar][baz]
 
 [baz]: /url1

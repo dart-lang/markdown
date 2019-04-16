@@ -1,10 +1,10 @@
->>> Link reference definitions - 159
+>>> Link reference definitions - 161
 [foo]: /url "title"
 
 [foo]
 <<<
 <p><a href="/url" title="title">foo</a></p>
->>> Link reference definitions - 160
+>>> Link reference definitions - 162
    [foo]: 
       /url  
            'the title'  
@@ -12,21 +12,24 @@
 [foo]
 <<<
 <p><a href="/url" title="the title">foo</a></p>
->>> Link reference definitions - 161
+>>> Link reference definitions - 163
 [Foo*bar\]]:my_(url) 'title (with parens)'
 
 [Foo*bar\]]
 <<<
 <p><a href="my_(url)" title="title (with parens)">Foo*bar]</a></p>
->>> Link reference definitions - 162
+>>> Link reference definitions - 164
 [Foo bar]:
-<my%20url>
+<my url>
 'title'
 
 [Foo bar]
 <<<
-<p><a href="my%20url" title="title">Foo bar</a></p>
->>> Link reference definitions - 163
+<p>[Foo bar]:
+<my url>
+'title'</p>
+<p>[Foo bar]</p>
+>>> Link reference definitions - 165
 [foo]: /url '
 title
 line1
@@ -40,7 +43,7 @@ title
 line1
 line2
 ">foo</a></p>
->>> Link reference definitions - 164
+>>> Link reference definitions - 166
 [foo]: /url 'title
 
 with blank line'
@@ -50,73 +53,85 @@ with blank line'
 <p>[foo]: /url 'title</p>
 <p>with blank line'</p>
 <p>[foo]</p>
->>> Link reference definitions - 165
+>>> Link reference definitions - 167
 [foo]:
 /url
 
 [foo]
 <<<
 <p><a href="/url">foo</a></p>
->>> Link reference definitions - 166
+>>> Link reference definitions - 168
 [foo]:
 
 [foo]
 <<<
 <p>[foo]:</p>
 <p>[foo]</p>
->>> Link reference definitions - 167
+>>> Link reference definitions - 169
+[foo]: <>
+
+[foo]
+<<<
+<p><a href="<>">foo</a></p>
+>>> Link reference definitions - 170
+[foo]: <bar>(baz)
+
+[foo]
+<<<
+<p><a href="bar" title="baz">foo</a></p>
+>>> Link reference definitions - 171
 [foo]: /url\bar\*baz "foo\"bar\baz"
 
 [foo]
 <<<
 <p>[foo]: /url\bar*baz "foo"bar\baz"</p>
 <p>[foo]</p>
->>> Link reference definitions - 168
+>>> Link reference definitions - 172
 [foo]
 
 [foo]: url
 <<<
 <p><a href="url">foo</a></p>
->>> Link reference definitions - 169
+>>> Link reference definitions - 173
 [foo]
 
 [foo]: first
 [foo]: second
 <<<
 <p><a href="first">foo</a></p>
->>> Link reference definitions - 170
+>>> Link reference definitions - 174
 [FOO]: /url
 
 [Foo]
 <<<
 <p><a href="/url">Foo</a></p>
->>> Link reference definitions - 171
+>>> Link reference definitions - 175
 [ΑΓΩ]: /φου
 
 [αγω]
 <<<
 <p><a href="/φου">αγω</a></p>
->>> Link reference definitions - 172
+>>> Link reference definitions - 176
 [foo]: /url
 <<<
 
->>> Link reference definitions - 173
+>>> Link reference definitions - 177
 [
 foo
 ]: /url
 bar
 <<<
 <p>bar</p>
->>> Link reference definitions - 174
+>>> Link reference definitions - 178
 [foo]: /url "title" ok
 <<<
 <p>[foo]: /url "title" ok</p>
->>> Link reference definitions - 175
+>>> Link reference definitions - 179
 [foo]: /url
 "title" ok
 <<<
 <p>"title" ok</p>
->>> Link reference definitions - 176
+>>> Link reference definitions - 180
     [foo]: /url "title"
 
 [foo]
@@ -124,7 +139,7 @@ bar
 <pre><code>[foo]: /url "title"
 </code></pre>
 <p>[foo]</p>
->>> Link reference definitions - 177
+>>> Link reference definitions - 181
 ```
 [foo]: /url
 ```
@@ -134,7 +149,7 @@ bar
 <pre><code>[foo]: /url
 </code></pre>
 <p>[foo]</p>
->>> Link reference definitions - 178
+>>> Link reference definitions - 182
 Foo
 [bar]: /baz
 
@@ -143,7 +158,7 @@ Foo
 <p>Foo
 [bar]: /baz</p>
 <p>[bar]</p>
->>> Link reference definitions - 179
+>>> Link reference definitions - 183
 # [Foo]
 [foo]: /url
 > bar
@@ -151,7 +166,23 @@ Foo
 <h1><a href="/url">Foo</a></h1>
 <blockquote>
 <p>bar</p></blockquote>
->>> Link reference definitions - 180
+>>> Link reference definitions - 184
+[foo]: /url
+bar
+===
+[foo]
+<<<
+<h1>[foo]: /url
+bar</h1>
+<p>[foo]</p>
+>>> Link reference definitions - 185
+[foo]: /url
+===
+[foo]
+<<<
+<h1>[foo]: /url</h1>
+<p>[foo]</p>
+>>> Link reference definitions - 186
 [foo]: /foo-url "foo"
 [bar]: /bar-url
   "bar"
@@ -164,10 +195,14 @@ Foo
 <p><a href="/foo-url" title="foo">foo</a>,
 <a href="/bar-url" title="bar">bar</a>,
 <a href="/baz-url">baz</a></p>
->>> Link reference definitions - 181
+>>> Link reference definitions - 187
 [foo]
 
 > [foo]: /url
 <<<
 <p><a href="/url">foo</a></p>
 <blockquote></blockquote>
+>>> Link reference definitions - 188
+[foo]: /url
+<<<
+

@@ -1,4 +1,4 @@
->>> HTML blocks - 116
+>>> HTML blocks - 118
 <table><tr><td>
 <pre>
 **Hello**,
@@ -12,7 +12,7 @@ _world_.
 **Hello**,
 <p><em>world</em>.
 </pre></p></td></tr></table>
->>> HTML blocks - 117
+>>> HTML blocks - 119
 <table>
   <tr>
     <td>
@@ -31,21 +31,21 @@ okay.
   </tr>
 </table>
 <p>okay.</p>
->>> HTML blocks - 118
- <div>
-  *hello*
-         <foo><a>
-<<<
- <div>
-  *hello*
-         <foo><a>
->>> HTML blocks - 119
-</div>
-*foo*
-<<<
-</div>
-*foo*
 >>> HTML blocks - 120
+ <div>
+  *hello*
+         <foo><a>
+<<<
+ <div>
+  *hello*
+         <foo><a>
+>>> HTML blocks - 121
+</div>
+*foo*
+<<<
+</div>
+*foo*
+>>> HTML blocks - 122
 <DIV CLASS="foo">
 
 *Markdown*
@@ -54,23 +54,23 @@ okay.
 <<<
 <DIV CLASS="foo">
 <p><em>Markdown</em></p></DIV>
->>> HTML blocks - 121
-<div id="foo"
-  class="bar">
-</div>
-<<<
-<div id="foo"
-  class="bar">
-</div>
->>> HTML blocks - 122
-<div id="foo" class="bar
-  baz">
-</div>
-<<<
-<div id="foo" class="bar
-  baz">
-</div>
 >>> HTML blocks - 123
+<div id="foo"
+  class="bar">
+</div>
+<<<
+<div id="foo"
+  class="bar">
+</div>
+>>> HTML blocks - 124
+<div id="foo" class="bar
+  baz">
+</div>
+<<<
+<div id="foo" class="bar
+  baz">
+</div>
+>>> HTML blocks - 125
 <div>
 *foo*
 
@@ -79,77 +79,77 @@ okay.
 <div>
 *foo*
 <p><em>bar</em></p>
->>> HTML blocks - 124
-<div id="foo"
-*hi*
-<<<
-<div id="foo"
-*hi*
->>> HTML blocks - 125
-<div class
-foo
-<<<
-<div class
-foo
 >>> HTML blocks - 126
-<div *???-&&&-<---
-*foo*
+<div id="foo"
+*hi*
 <<<
-<div *???-&&&-<---
-*foo*
+<div id="foo"
+*hi*
 >>> HTML blocks - 127
-<div><a href="bar">*foo*</a></div>
+<div class
+foo
 <<<
-<div><a href="bar">*foo*</a></div>
+<div class
+foo
 >>> HTML blocks - 128
-<table><tr><td>
-foo
-</td></tr></table>
+<div *???-&&&-<---
+*foo*
 <<<
-<table><tr><td>
-foo
-</td></tr></table>
+<div *???-&&&-<---
+*foo*
 >>> HTML blocks - 129
-<div></div>
-``` c
-int x = 33;
-```
+<div><a href="bar">*foo*</a></div>
 <<<
-<div></div>
-``` c
-int x = 33;
-```
+<div><a href="bar">*foo*</a></div>
 >>> HTML blocks - 130
-<a href="foo">
-*bar*
-</a>
+<table><tr><td>
+foo
+</td></tr></table>
 <<<
-<a href="foo">
-*bar*
-</a>
+<table><tr><td>
+foo
+</td></tr></table>
 >>> HTML blocks - 131
-<Warning>
-*bar*
-</Warning>
+<div></div>
+``` c
+int x = 33;
+```
 <<<
-<Warning>
-*bar*
-</Warning>
+<div></div>
+``` c
+int x = 33;
+```
 >>> HTML blocks - 132
-<i class="foo">
+<a href="foo">
 *bar*
-</i>
+</a>
 <<<
-<i class="foo">
+<a href="foo">
 *bar*
-</i>
+</a>
 >>> HTML blocks - 133
-</ins>
+<Warning>
 *bar*
+</Warning>
 <<<
-</ins>
+<Warning>
 *bar*
+</Warning>
 >>> HTML blocks - 134
+<i class="foo">
+*bar*
+</i>
+<<<
+<i class="foo">
+*bar*
+</i>
+>>> HTML blocks - 135
+</ins>
+*bar*
+<<<
+</ins>
+*bar*
+>>> HTML blocks - 136
 <del>
 *foo*
 </del>
@@ -157,7 +157,7 @@ int x = 33;
 <del>
 *foo*
 </del>
->>> HTML blocks - 135
+>>> HTML blocks - 137
 <del>
 
 *foo*
@@ -166,57 +166,57 @@ int x = 33;
 <<<
 <del>
 <p><em>foo</em></p></del>
->>> HTML blocks - 136
+>>> HTML blocks - 138
 <del>*foo*</del>
 <<<
 <p><del><em>foo</em></del></p>
->>> HTML blocks - 137
-<pre language="haskell"><code>
-import Text.HTML.TagSoup
-
-main :: IO ()
-main = print $ parseTags tags
-</code></pre>
-okay
-<<<
-<pre language="haskell"><code>
-import Text.HTML.TagSoup
-
-main :: IO ()
-main = print $ parseTags tags
-</code></pre>
-<p>okay</p>
->>> HTML blocks - 138
-<script type="text/javascript">
-// JavaScript example
-
-document.getElementById("demo").innerHTML = "Hello JavaScript!";
-</script>
-okay
-<<<
-<script type="text/javascript">
-// JavaScript example
-
-document.getElementById("demo").innerHTML = "Hello JavaScript!";
-</script>
-<p>okay</p>
 >>> HTML blocks - 139
-<style
-  type="text/css">
-h1 {color:red;}
+<pre language="haskell"><code>
+import Text.HTML.TagSoup
 
-p {color:blue;}
-</style>
+main :: IO ()
+main = print $ parseTags tags
+</code></pre>
 okay
 <<<
-<style
-  type="text/css">
-h1 {color:red;}
+<pre language="haskell"><code>
+import Text.HTML.TagSoup
 
-p {color:blue;}
-</style>
+main :: IO ()
+main = print $ parseTags tags
+</code></pre>
 <p>okay</p>
 >>> HTML blocks - 140
+<script type="text/javascript">
+// JavaScript example
+
+document.getElementById("demo").innerHTML = "Hello JavaScript!";
+</script>
+okay
+<<<
+<script type="text/javascript">
+// JavaScript example
+
+document.getElementById("demo").innerHTML = "Hello JavaScript!";
+</script>
+<p>okay</p>
+>>> HTML blocks - 141
+<style
+  type="text/css">
+h1 {color:red;}
+
+p {color:blue;}
+</style>
+okay
+<<<
+<style
+  type="text/css">
+h1 {color:red;}
+
+p {color:blue;}
+</style>
+<p>okay</p>
+>>> HTML blocks - 142
 <style
   type="text/css">
 
@@ -227,7 +227,7 @@ foo
 
 foo
 
->>> HTML blocks - 141
+>>> HTML blocks - 143
 > <div>
 > foo
 
@@ -236,90 +236,90 @@ bar
 <blockquote><div>
 foo</blockquote>
 <p>bar</p>
->>> HTML blocks - 142
+>>> HTML blocks - 144
 - <div>
 - foo
 <<<
 <ul><li><div></li><li>foo</li></ul>
->>> HTML blocks - 143
+>>> HTML blocks - 145
 <style>p{color:red;}</style>
 *foo*
 <<<
 <style>p{color:red;}</style>
 <p><em>foo</em></p>
->>> HTML blocks - 144
+>>> HTML blocks - 146
 <!-- foo -->*bar*
 *baz*
 <<<
 <!-- foo -->*bar*
 <p><em>baz</em></p>
->>> HTML blocks - 145
-<script>
-foo
-</script>1. *bar*
-<<<
-<script>
-foo
-</script>1. *bar*
->>> HTML blocks - 146
-<!-- Foo
-
-bar
-   baz -->
-okay
-<<<
-<!-- Foo
-
-bar
-   baz -->
-<p>okay</p>
 >>> HTML blocks - 147
-<?php
-
-  echo '>';
-
-?>
-okay
+<script>
+foo
+</script>1. *bar*
 <<<
-<?php
-
-  echo '>';
-
-?>
-<p>okay</p>
+<script>
+foo
+</script>1. *bar*
 >>> HTML blocks - 148
-<!DOCTYPE html>
-<<<
-<!DOCTYPE html>
->>> HTML blocks - 149
-<![CDATA[
-function matchwo(a,b)
-{
-  if (a < b && a < 0) then {
-    return 1;
+<!-- Foo
 
-  } else {
-
-    return 0;
-  }
-}
-]]>
+bar
+   baz -->
 okay
 <<<
-<![CDATA[
-function matchwo(a,b)
-{
-  if (a < b && a < 0) then {
-    return 1;
+<!-- Foo
 
-  } else {
+bar
+   baz -->
+<p>okay</p>
+>>> HTML blocks - 149
+<?php
 
-    return 0;
-  }
-}
-]]>
+  echo '>';
+
+?>
+okay
+<<<
+<?php
+
+  echo '>';
+
+?>
 <p>okay</p>
 >>> HTML blocks - 150
+<!DOCTYPE html>
+<<<
+<!DOCTYPE html>
+>>> HTML blocks - 151
+<![CDATA[
+function matchwo(a,b)
+{
+  if (a < b && a < 0) then {
+    return 1;
+
+  } else {
+
+    return 0;
+  }
+}
+]]>
+okay
+<<<
+<![CDATA[
+function matchwo(a,b)
+{
+  if (a < b && a < 0) then {
+    return 1;
+
+  } else {
+
+    return 0;
+  }
+}
+]]>
+<p>okay</p>
+>>> HTML blocks - 152
   <!-- foo -->
 
     <!-- foo -->
@@ -327,7 +327,7 @@ function matchwo(a,b)
   <!-- foo -->
 <pre><code>&lt;!-- foo --&gt;
 </code></pre>
->>> HTML blocks - 151
+>>> HTML blocks - 153
   <div>
 
     <div>
@@ -335,7 +335,7 @@ function matchwo(a,b)
   <div>
 <pre><code>&lt;div&gt;
 </code></pre>
->>> HTML blocks - 152
+>>> HTML blocks - 154
 Foo
 <div>
 bar
@@ -344,7 +344,7 @@ bar
 <p>Foo</p><div>
 bar
 </div>
->>> HTML blocks - 153
+>>> HTML blocks - 155
 <div>
 bar
 </div>
@@ -354,7 +354,7 @@ bar
 bar
 </div>
 *foo*
->>> HTML blocks - 154
+>>> HTML blocks - 156
 Foo
 <a href="bar">
 baz
@@ -362,7 +362,7 @@ baz
 <p>Foo
 <a href="bar">
 baz</p>
->>> HTML blocks - 155
+>>> HTML blocks - 157
 <div>
 
 *Emphasized* text.
@@ -371,7 +371,7 @@ baz</p>
 <<<
 <div>
 <p><em>Emphasized</em> text.</p></div>
->>> HTML blocks - 156
+>>> HTML blocks - 158
 <div>
 *Emphasized* text.
 </div>
@@ -379,7 +379,7 @@ baz</p>
 <div>
 *Emphasized* text.
 </div>
->>> HTML blocks - 157
+>>> HTML blocks - 159
 <table>
 
 <tr>
@@ -395,7 +395,7 @@ Hi
 <table><tr><td>
 Hi
 </td></tr></table>
->>> HTML blocks - 158
+>>> HTML blocks - 160
 <table>
 
   <tr>

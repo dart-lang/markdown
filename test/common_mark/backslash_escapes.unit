@@ -1,12 +1,12 @@
->>> Backslash escapes - 289
+>>> Backslash escapes - 298
 \!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
 <<<
 <p>!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~</p>
->>> Backslash escapes - 290
+>>> Backslash escapes - 299
 \	\A\a\ \3\φ\«
 <<<
 <p>\	\A\a\ \3\φ\«</p>
->>> Backslash escapes - 291
+>>> Backslash escapes - 300
 \*not emphasized*
 \<br/> not a tag
 \[not a link](/foo)
@@ -15,6 +15,7 @@
 \* not a list
 \# not a heading
 \[foo]: /url "not a reference"
+\&ouml; not a character entity
 <<<
 <p>*not emphasized*
 <br/> not a tag
@@ -23,52 +24,53 @@
 1. not a list
 * not a list
 # not a heading
-[foo]: /url "not a reference"</p>
->>> Backslash escapes - 292
+[foo]: /url "not a reference"
+&ouml; not a character entity</p>
+>>> Backslash escapes - 301
 \\*emphasis*
 <<<
 <p>\<em>emphasis</em></p>
->>> Backslash escapes - 293
+>>> Backslash escapes - 302
 foo\
 bar
 <<<
 <p>foo<br />
 bar</p>
->>> Backslash escapes - 294
+>>> Backslash escapes - 303
 `` \[\` ``
 <<<
 <p><code>\[\`</code></p>
->>> Backslash escapes - 295
+>>> Backslash escapes - 304
     \[\]
 <<<
 <pre><code>\[\]
 </code></pre>
->>> Backslash escapes - 296
+>>> Backslash escapes - 305
 ~~~
 \[\]
 ~~~
 <<<
 <pre><code>\[\]
 </code></pre>
->>> Backslash escapes - 297
+>>> Backslash escapes - 306
 <http://example.com?find=\*>
 <<<
 <p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
->>> Backslash escapes - 298
+>>> Backslash escapes - 307
 <a href="/bar\/)">
 <<<
 <a href="/bar\/)">
->>> Backslash escapes - 299
+>>> Backslash escapes - 308
 [foo](/bar\* "ti\*tle")
 <<<
 <p><a href="/bar*" title="ti*tle">foo</a></p>
->>> Backslash escapes - 300
+>>> Backslash escapes - 309
 [foo]
 
 [foo]: /bar\* "ti\*tle"
 <<<
 <p><a href="/bar*" title="ti*tle">foo</a></p>
->>> Backslash escapes - 301
+>>> Backslash escapes - 310
 ``` foo\+bar
 foo
 ```

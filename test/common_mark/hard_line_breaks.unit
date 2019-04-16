@@ -1,82 +1,82 @@
->>> Hard line breaks - 605
+>>> Hard line breaks - 630
 foo  
 baz
 <<<
 <p>foo<br />
 baz</p>
->>> Hard line breaks - 606
+>>> Hard line breaks - 631
 foo\
 baz
 <<<
 <p>foo<br />
 baz</p>
->>> Hard line breaks - 607
+>>> Hard line breaks - 632
 foo       
 baz
 <<<
 <p>foo<br />
 baz</p>
->>> Hard line breaks - 608
+>>> Hard line breaks - 633
 foo  
      bar
 <<<
 <p>foo<br />
      bar</p>
->>> Hard line breaks - 609
+>>> Hard line breaks - 634
 foo\
      bar
 <<<
 <p>foo<br />
      bar</p>
->>> Hard line breaks - 610
+>>> Hard line breaks - 635
 *foo  
 bar*
 <<<
 <p><em>foo<br />
 bar</em></p>
->>> Hard line breaks - 611
+>>> Hard line breaks - 636
 *foo\
 bar*
 <<<
 <p><em>foo<br />
 bar</em></p>
->>> Hard line breaks - 612
-`code  
+>>> Hard line breaks - 637
+`code 
 span`
 <<<
-<p><code>code  
+<p><code>code 
 span</code></p>
->>> Hard line breaks - 613
+>>> Hard line breaks - 638
 `code\
 span`
 <<<
 <p><code>code\
 span</code></p>
->>> Hard line breaks - 614
+>>> Hard line breaks - 639
 <a href="foo  
 bar">
 <<<
 <p><a href="foo  
 bar"></p>
->>> Hard line breaks - 615
+>>> Hard line breaks - 640
 <a href="foo\
 bar">
 <<<
 <p><a href="foo\
 bar"></p>
->>> Hard line breaks - 616
+>>> Hard line breaks - 641
 foo\
 <<<
 <p>foo\</p>
->>> Hard line breaks - 617
+>>> Hard line breaks - 642
 foo  
 <<<
 <p>foo  </p>
->>> Hard line breaks - 618
+>>> Hard line breaks - 643
 ### foo\
 <<<
 <h3>foo\</h3>
->>> Hard line breaks - 619
+>>> Hard line breaks - 644
 ### foo  
 <<<
 <h3>foo</h3>
