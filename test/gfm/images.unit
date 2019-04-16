@@ -1,80 +1,80 @@
->>> Images - 563
+>>> Images - 580
 ![foo](/url "title")
 <<<
 <p><img src="/url" alt="foo" title="title" /></p>
->>> Images - 564
+>>> Images - 581
 ![foo *bar*]
 
 [foo *bar*]: train.jpg "train & tracks"
 <<<
 <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
->>> Images - 565
+>>> Images - 582
 ![foo ![bar](/url)](/url2)
 <<<
 <p>![foo <img src="/url" alt="bar" />](/url2)</p>
->>> Images - 566
+>>> Images - 583
 ![foo [bar](/url)](/url2)
 <<<
 <p><img src="/url2" alt="foo bar" /></p>
->>> Images - 567
+>>> Images - 584
 ![foo *bar*][]
 
 [foo *bar*]: train.jpg "train & tracks"
 <<<
 <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
->>> Images - 568
+>>> Images - 585
 ![foo *bar*][foobar]
 
 [FOOBAR]: train.jpg "train & tracks"
 <<<
 <p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>
->>> Images - 569
+>>> Images - 586
 ![foo](train.jpg)
 <<<
 <p><img src="train.jpg" alt="foo" /></p>
->>> Images - 570
+>>> Images - 587
 My ![foo bar](/path/to/train.jpg  "title"   )
 <<<
 <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
->>> Images - 571
+>>> Images - 588
 ![foo](<url>)
 <<<
 <p><img src="url" alt="foo" /></p>
->>> Images - 572
+>>> Images - 589
 ![](/url)
 <<<
 <p><img src="/url" alt="" /></p>
->>> Images - 573
+>>> Images - 590
 ![foo][bar]
 
 [bar]: /url
 <<<
 <p><img src="/url" alt="foo" /></p>
->>> Images - 574
+>>> Images - 591
 ![foo][bar]
 
 [BAR]: /url
 <<<
 <p><img src="/url" alt="foo" /></p>
->>> Images - 575
+>>> Images - 592
 ![foo][]
 
 [foo]: /url "title"
 <<<
 <p><img src="/url" alt="foo" title="title" /></p>
->>> Images - 576
+>>> Images - 593
 ![*foo* bar][]
 
 [*foo* bar]: /url "title"
 <<<
 <p><img src="/url" alt="foo bar" title="title" /></p>
->>> Images - 577
+>>> Images - 594
 ![Foo][]
 
 [foo]: /url "title"
 <<<
 <p><img src="/url" alt="Foo" title="title" /></p>
->>> Images - 578
+>>> Images - 595
 ![foo] 
 []
 
@@ -82,38 +82,38 @@ My ![foo bar](/path/to/train.jpg  "title"   )
 <<<
 <p><img src="/url" alt="foo" title="title" /> 
 []</p>
->>> Images - 579
+>>> Images - 596
 ![foo]
 
 [foo]: /url "title"
 <<<
 <p><img src="/url" alt="foo" title="title" /></p>
->>> Images - 580
+>>> Images - 597
 ![*foo* bar]
 
 [*foo* bar]: /url "title"
 <<<
 <p><img src="/url" alt="foo bar" title="title" /></p>
->>> Images - 581
+>>> Images - 598
 ![[foo]]
 
 [[foo]]: /url "title"
 <<<
 <p>![[foo]]</p>
 <p>[[foo]]: /url "title"</p>
->>> Images - 582
+>>> Images - 599
 ![Foo]
 
 [foo]: /url "title"
 <<<
 <p><img src="/url" alt="Foo" title="title" /></p>
->>> Images - 583
+>>> Images - 600
 !\[foo]
 
 [foo]: /url "title"
 <<<
 <p>![foo]</p>
->>> Images - 584
+>>> Images - 601
 \![foo]
 
 [foo]: /url "title"

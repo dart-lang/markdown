@@ -1,8 +1,8 @@
->>> Strikethrough (extension) - 477
+>>> Strikethrough (extension) - 491
 ~~Hi~~ Hello, world!
 <<<
 <p><del>Hi</del> Hello, world!</p>
->>> Strikethrough (extension) - 478
+>>> Strikethrough (extension) - 492
 This ~~has a
 
 new paragraph~~.

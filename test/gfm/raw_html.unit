@@ -1,40 +1,40 @@
->>> Raw HTML - 615
+>>> Raw HTML - 632
 <a><bab><c2c>
 <<<
 <p><a><bab><c2c></p>
->>> Raw HTML - 616
+>>> Raw HTML - 633
 <a/><b2/>
 <<<
 <p>&lt;a/>&lt;b2/></p>
->>> Raw HTML - 617
+>>> Raw HTML - 634
 <a  /><b2
 data="foo" >
 <<<
 <p><a  /><b2
 data="foo" ></p>
->>> Raw HTML - 618
+>>> Raw HTML - 635
 <a foo="bar" bam = 'baz <em>"</em>'
 _boolean zoop:33=zoop:33 />
 <<<
 <p><a foo="bar" bam = 'baz <em>"</em>'
 _boolean zoop:33=zoop:33 /></p>
->>> Raw HTML - 619
+>>> Raw HTML - 636
 Foo <responsive-image src="foo.jpg" />
 <<<
 <p>Foo <responsive-image src="foo.jpg" /></p>
->>> Raw HTML - 620
+>>> Raw HTML - 637
 <33> <__>
 <<<
 <p>&lt;33> &lt;__></p>
->>> Raw HTML - 621
+>>> Raw HTML - 638
 <a h*#ref="hi">
 <<<
 <a h*#ref="hi">
->>> Raw HTML - 622
+>>> Raw HTML - 639
 <a href="hi'> <a href=hi'>
 <<<
 <p><a href="hi'> <a href=hi'></p>
->>> Raw HTML - 623
+>>> Raw HTML - 640
 < a><
 foo><bar/ >
 <foo bar=baz
@@ -44,56 +44,56 @@ bim!bop />
 foo>&lt;bar/ >
 <foo bar=baz
 bim!bop /></p>
->>> Raw HTML - 624
+>>> Raw HTML - 641
 <a href='bar'title=title>
 <<<
 <a href='bar'title=title>
->>> Raw HTML - 625
+>>> Raw HTML - 642
 </a></foo >
 <<<
 <p></a></foo ></p>
->>> Raw HTML - 626
+>>> Raw HTML - 643
 </a href="foo">
 <<<
 </a href="foo">
->>> Raw HTML - 627
+>>> Raw HTML - 644
 foo <!-- this is a
 comment - with hyphen -->
 <<<
 <p>foo &lt;!-- this is a
 comment - with hyphen --></p>
->>> Raw HTML - 628
+>>> Raw HTML - 645
 foo <!-- not a comment -- two hyphens -->
 <<<
 <p>foo &lt;!-- not a comment -- two hyphens --></p>
->>> Raw HTML - 629
+>>> Raw HTML - 646
 foo <!--> foo -->
 
 foo <!-- foo--->
 <<<
 <p>foo &lt;!--> foo --></p>
 <p>foo &lt;!-- foo---></p>
->>> Raw HTML - 630
+>>> Raw HTML - 647
 foo <?php echo $a; ?>
 <<<
 <p>foo <?php echo $a; ?></p>
->>> Raw HTML - 631
+>>> Raw HTML - 648
 foo <!ELEMENT br EMPTY>
 <<<
 <p>foo <!ELEMENT br EMPTY></p>
->>> Raw HTML - 632
+>>> Raw HTML - 649
 foo <![CDATA[>&<]]>
 <<<
 <p>foo &lt;![CDATA[>&amp;&lt;]]></p>
->>> Raw HTML - 633
+>>> Raw HTML - 650
 foo <a href="&ouml;">
 <<<
 <p>foo <a href="&ouml;"></p>
->>> Raw HTML - 634
+>>> Raw HTML - 651
 foo <a href="\*">
 <<<
 <p>foo <a href="\*"></p>
->>> Raw HTML - 635
+>>> Raw HTML - 652
 <a href="\"">
 <<<
 <a href="\"">
