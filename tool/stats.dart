@@ -84,6 +84,10 @@ String _unitOutput(Iterable<DataCase> cases) => cases.map((dataCase) => '''
 ${dataCase.input}<<<
 ${dataCase.expectedOutput}''').join();
 
+/// Set this to `true` and rerun `--update-files` to ease finding easy strict
+/// fixes.
+const _improveStrict = false;
+
 Future<void> _processConfig(
   String testPrefix,
   bool raw,
@@ -113,7 +117,10 @@ Future<void> _processConfig(
       units.add(DataCase(
         front_matter: result.testCase.toString(),
         input: result.testCase.markdown,
-        expectedOutput: result.result,
+        expectedOutput:
+            (_improveStrict && result.compareLevel == CompareLevel.loose)
+                ? result.testCase.html
+                : result.result,
       ));
 
       var nestedMap = scores.putIfAbsent(
