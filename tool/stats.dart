@@ -234,7 +234,7 @@ Future _printFriendly(
   });
 
   sink.writeln(_pct(totalValid, totalExamples, 'TOTAL'));
-  sink.writeln(_pct(totalStrict, totalExamples, 'TOTAL Strict'));
+  sink.writeln(_pct(totalStrict, totalValid, 'TOTAL Strict'));
 
   await sink.flush();
   await sink.close();
