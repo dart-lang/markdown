@@ -67,7 +67,9 @@ class HtmlRenderer implements NodeVisitor {
     buffer = StringBuffer();
     uniqueIds = LinkedHashSet<String>();
 
-    for (final node in nodes) node.accept(this);
+    for (final node in nodes) {
+      node.accept(this);
+    }
 
     return buffer.toString();
   }
