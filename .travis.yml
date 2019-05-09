@@ -1,14 +1,21 @@
 language: dart
-sudo: false
+
 dart:
+  - 2.0.0
   - dev
+
 dart_task:
   # Using the expanded reporter to work-around
   # https://github.com/dart-lang/markdown/issues/191
   - test: --reporter expanded
     xvfb: false
-  - dartfmt
   - dartanalyzer: --fatal-warnings --fatal-infos .
+
+matrix:
+  include:
+  # Only validate formatting using the dev release
+  - dart: dev
+    dart_task: dartfmt
 
 # Only building master means that we don't run two builds for each pull request.
 branches:
