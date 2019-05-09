@@ -103,8 +103,9 @@ class InlineParser {
       // See if any of the current tags on the stack match.  This takes
       // priority over other possible matches.
       if (_stack.reversed
-          .any((state) => state.syntax != null && state.tryMatch(this)))
+          .any((state) => state.syntax != null && state.tryMatch(this))) {
         continue;
+      }
 
       // See if the current text matches any defined markdown syntax.
       if (syntaxes.any((syntax) => syntax.tryMatch(this))) continue;
@@ -644,9 +645,9 @@ class LinkSyntax extends TagSyntax {
       parser.advanceBy(1);
       var leftParenIndex = parser.pos;
       var inlineLink = _parseInlineLink(parser);
-      if (inlineLink != null)
+      if (inlineLink != null) {
         return _tryAddInlineLink(parser, state, inlineLink);
-
+      }
       // Reset the parser position.
       parser.pos = leftParenIndex;
 
