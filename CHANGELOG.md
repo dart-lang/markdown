@@ -174,8 +174,8 @@
 * Fix a few bugs in inline code syntax.
 * Ignore underscores inside words (#41).
 
-[test]: https://pub.dartlang.org/packages/test
-[unittest]: https://pub.dartlang.org/packages/unittest
+[test]: https://pub.dev/packages/test
+[unittest]: https://pub.dev/packages/unittest
 
 ## 0.7.2
 
