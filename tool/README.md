@@ -35,7 +35,7 @@ dartdoc's output. Here's how it works:
    5. Repeat steps 2 and 3.
    6. Diff the output of steps 3 and 5, and show you how to diff it yourself.
 
-[dartdoc]: https://pub.dartlang.org/packages/dartdoc
+[dartdoc]: https://pub.dev/packages/dartdoc
 [dartdoc git repository]: https://github.com/dart-lang/dartdoc
 
 ## stats.dart

@@ -14,8 +14,8 @@ sample of real-world markdown:
 Tests are specified using the top-level [`test()`][test] function, and test
 assertions are made using [`expect()`][expect]:
 
-[test]: http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_test
-[expect]: http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_expect
+[test]: https://pub.dev/documentation/test_core/latest/test_core/test.html
+[expect]: https://pub.dev/documentation/test_api/latest/test_api/expect.html
 
 ```dart
 import "package:test/test.dart";
@@ -67,7 +67,7 @@ void main() {
 Any matchers from the [`matcher`][matcher] package can be used with `expect()`
 to do complex validations:
 
-[matcher]: http://www.dartdocs.org/documentation/matcher/latest/index.html#matcher/matcher
+[matcher]: https://pub.dev/documentation/matcher/latest/matcher/matcher-library.html
 
 ```dart
 import "package:test/test.dart";
@@ -130,7 +130,7 @@ void main() {
 }
 ```
 
-[TestOn]: http://www.dartdocs.org/documentation/test/latest/index.html#test/test.TestOn
+[TestOn]: https://pub.dev/documentation/test_api/latest/test_api/TestOn-class.html
 
 The string you pass to `@TestOn` is what's called a "platform selector", and it
 specifies exactly which platforms a test can run on. It can be as simple as the
@@ -240,7 +240,7 @@ asynchrony. The [`completion()`][completion] matcher can be used to test
 `Futures`; it ensures that the test doesn't finish until the `Future` completes,
 and runs a matcher against that `Future`'s value.
 
-[completion]: http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_completion
+[completion]: https://pub.dev/documentation/test_api/latest/test_api/completion.html
 
 ```dart
 import "dart:async";
@@ -258,7 +258,7 @@ The [`throwsA()`][throwsA] matcher and the various `throwsExceptionType`
 matchers work with both synchronous callbacks and asynchronous `Future`s. They
 ensure that a particular type of exception is thrown:
 
-[throwsA]: http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_throwsA
+[throwsA]: https://pub.dev/documentation/test_api/latest/test_api/throwsA.html
 
 ```dart
 import "dart:async";
@@ -295,7 +295,7 @@ void main() {
 }
 ```
 
-[expectAsync]: http://www.dartdocs.org/documentation/test/latest/index.html#test/test@id_expectAsync
+[expectAsync]: https://pub.dev/documentation/test_api/latest/test_api/expectAsync.html
 
 ## Running Tests with Custom HTML
 
