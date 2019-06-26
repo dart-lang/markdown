@@ -10,7 +10,8 @@ Future<Null> main() async {
   var client = HttpClient();
   var request = await client.getUrl(Uri.parse(_emojisJsonRawUrl));
   var response = await request.close();
-  var json = jsonDecode(await response.transform(utf8.decoder).join(''))
+  var json = jsonDecode(
+          await response.cast<List<int>>().transform(utf8.decoder).join(''))
       .map((alias, info) => MapEntry(alias, info.cast<String, dynamic>()))
       .cast<String, Map<String, dynamic>>();
   var emojisContent = StringBuffer('''
