@@ -183,7 +183,7 @@ Baz
 \> foo
 ------
 <<<
-<h2>> foo</h2>
+<h2>&gt; foo</h2>
 >>> Setext headings - 73
 Foo
 

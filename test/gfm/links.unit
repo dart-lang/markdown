@@ -41,7 +41,7 @@ bar>)</p>
 >>> Links - 502
 [link](<foo\>)
 <<<
-<p>[link](&lt;foo>)</p>
+<p>[link](&lt;foo&gt;)</p>
 >>> Links - 503
 [a](<b)c
 [a](<b)c>

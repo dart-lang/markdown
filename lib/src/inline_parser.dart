@@ -234,8 +234,20 @@ class EscapeSyntax extends InlineSyntax {
   EscapeSyntax() : super(r'''\\[!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]''');
 
   bool onMatch(InlineParser parser, Match match) {
-    // Insert the substitution.
-    parser.addNode(Text(match[0][1]));
+    final char = match[0].codeUnitAt(1);
+    // Insert the substitution. Why these three charactes are replaced with
+    // their equivalent HTML entity referenced appears to be missing from the
+    // CommonMark spec, but is very present in all of the examples.
+    // https://talk.commonmark.org/t/entity-ification-of-quotes-and-brackets-missing-from-spec/3207
+    if (char == $double_quote) {
+      parser.addNode(Text('&quot;'));
+    } else if (char == $lt) {
+      parser.addNode(Text('&lt;'));
+    } else if (char == $gt) {
+      parser.addNode(Text('&gt;'));
+    } else {
+      parser.addNode(Text(match[0][1]));
+    }
     return true;
   }
 }
