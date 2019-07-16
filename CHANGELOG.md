@@ -5,6 +5,8 @@
 * Improve strict spec compliance for `blockquote` by always putting the closing
   tag on a new line.
 * Improve strict spec compliance for `code` elements defined with "\`".
+* Properly encode `<`, `>`, and `"` as their respective HTML entities when
+  interpreted as text.
 
 ## 2.0.3
 
