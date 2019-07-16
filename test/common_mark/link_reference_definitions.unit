@@ -84,7 +84,7 @@ with blank line'
 
 [foo]
 <<<
-<p>[foo]: /url\bar*baz "foo"bar\baz"</p>
+<p>[foo]: /url\bar*baz "foo&quot;bar\baz"</p>
 <p>[foo]</p>
 >>> Link reference definitions - 172
 [foo]

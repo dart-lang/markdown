@@ -5,8 +5,8 @@ and \? and \@ and \[ and \\ and \] and \^ and \_ and \` and \{ and \| and \}
 and \~.
 
 <<<
-<p>Punctuations like ! and " and # and $ and % and & and ' and ( and )
-and * and + and , and - and . and / and : and ; and < and = and >
+<p>Punctuations like ! and &quot; and # and $ and % and & and ' and ( and )
+and * and + and , and - and . and / and : and ; and &lt; and = and &gt;
 and ? and @ and [ and \ and ] and ^ and _ and ` and { and | and }
 and ~.</p>
 >>> Inline code blocks can be escaped.

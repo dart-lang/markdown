@@ -1,7 +1,7 @@
 >>> Backslash escapes - 298
 \!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
 <<<
-<p>!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~</p>
+<p>!&quot;#$%&'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
 >>> Backslash escapes - 299
 \	\A\a\ \3\φ\«
 <<<
@@ -18,7 +18,7 @@
 \&ouml; not a character entity
 <<<
 <p>*not emphasized*
-<br/> not a tag
+&lt;br/> not a tag
 [not a link](/foo)
 `not code`
 1. not a list
