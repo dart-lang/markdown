@@ -105,7 +105,7 @@ Future<void> _processConfig(
 
   for (var entry in sections.entries) {
     if (specifiedSection != null && entry.key != specifiedSection) {
-      return;
+      continue;
     }
 
     final units = <DataCase>[];
