@@ -7,6 +7,7 @@
 * Improve strict spec compliance for `code` elements defined with "\`".
 * Properly encode `<`, `>`, and `"` as their respective HTML entities when
   interpreted as text.
+* Improve inline code parsing when using multiple backticks.
 
 ## 2.0.3
 

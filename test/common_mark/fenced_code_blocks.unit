@@ -166,9 +166,8 @@ aaa
 ``` ```
 aaa
 <<<
-<pre><code class="language-```">aaa
-
-</code></pre>
+<p><code></code>
+aaa</p>
 >>> Fenced code blocks - 109
 ~~~~~~
 aaa
@@ -232,9 +231,8 @@ end
 ``` aa ```
 foo
 <<<
-<pre><code class="language-aa">foo
-
-</code></pre>
+<p><code>aa</code>
+foo</p>
 >>> Fenced code blocks - 116
 ~~~ aa ``` ~~~
 foo
