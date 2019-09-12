@@ -413,7 +413,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
   const FencedCodeBlockSyntax();
 
   bool canParse(BlockParser parser) {
-    var match = pattern.firstMatch(parser.current);
+    final match = pattern.firstMatch(parser.current);
     if (match == null) return false;
     final codeFence = match.group(1);
     final infoString = match.group(2);
@@ -421,11 +421,8 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     //
     // > If the info string comes after a backtick fence, it may not contain
     // > any backtick characters.
-    if (codeFence.codeUnitAt(0) == $backquote &&
-        infoString.codeUnits.contains($backquote)) {
-      return false;
-    }
-    return true;
+    return (codeFence.codeUnitAt(0) != $backquote ||
+        !infoString.codeUnits.contains($backquote));
   }
 
   List<String> parseChildLines(BlockParser parser, [String endBlock]) {
