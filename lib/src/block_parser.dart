@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:charcode/charcode.dart';
+
 import 'ast.dart';
 import 'document.dart';
 import 'util.dart';
@@ -25,7 +27,7 @@ final _blockquotePattern = RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 final _indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');
 
 /// Fenced code block.
-final _codePattern = RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
+final _codeFencePattern = RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
@@ -265,7 +267,7 @@ class SetextHeaderSyntax extends BlockSyntax {
 
   bool _interperableAsParagraph(String line) =>
       !(_indentPattern.hasMatch(line) ||
-          _codePattern.hasMatch(line) ||
+          _codeFencePattern.hasMatch(line) ||
           _headerPattern.hasMatch(line) ||
           _blockquotePattern.hasMatch(line) ||
           _hrPattern.hasMatch(line) ||
@@ -404,11 +406,24 @@ class CodeBlockSyntax extends BlockSyntax {
 
 /// Parses preformatted code blocks between two ~~~ or ``` sequences.
 ///
-/// See [Pandoc's documentation](http://pandoc.org/README.html#fenced-code-blocks).
+/// See the CommonMark spec: https://spec.commonmark.org/0.29/#fenced-code-blocks
 class FencedCodeBlockSyntax extends BlockSyntax {
-  RegExp get pattern => _codePattern;
+  RegExp get pattern => _codeFencePattern;
 
   const FencedCodeBlockSyntax();
+
+  bool canParse(BlockParser parser) {
+    final match = pattern.firstMatch(parser.current);
+    if (match == null) return false;
+    final codeFence = match.group(1);
+    final infoString = match.group(2);
+    // From the CommonMark spec:
+    //
+    // > If the info string comes after a backtick fence, it may not contain
+    // > any backtick characters.
+    return (codeFence.codeUnitAt(0) != $backquote ||
+        !infoString.codeUnits.contains($backquote));
+  }
 
   List<String> parseChildLines(BlockParser parser, [String endBlock]) {
     if (endBlock == null) endBlock = '';

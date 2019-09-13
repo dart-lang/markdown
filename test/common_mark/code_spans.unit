@@ -86,8 +86,7 @@ baz`
 >>> Code spans - 347
 ```foo``
 <<<
-<pre><code class="language-foo``">
-</code></pre>
+<p>```foo``</p>
 >>> Code spans - 348
 `foo
 <<<
