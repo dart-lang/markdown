@@ -397,10 +397,11 @@ class CodeBlockSyntax extends BlockSyntax {
     // The Markdown tests expect a trailing newline.
     childLines.add('');
 
-    // Escape the code.
-    var escaped = escapeHtml(childLines.join('\n'));
+    var content = parser.document.encodeHtml
+        ? escapeHtml(childLines.join('\n'))
+        : childLines.join('\n');
 
-    return Element('pre', [Element.text('code', escaped)]);
+    return Element('pre', [Element.text('code', content)]);
   }
 }
 
