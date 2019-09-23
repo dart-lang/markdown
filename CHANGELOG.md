@@ -8,6 +8,8 @@
 * Properly encode `<`, `>`, and `"` as their respective HTML entities when
   interpreted as text.
 * Improve inline code parsing when using multiple backticks.
+* Do not encode HTML in indented code blocks when `encodeHtml` is false (e.g.
+  when used in Flutter).
 
 ## 2.0.3
 
