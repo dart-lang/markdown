@@ -59,14 +59,16 @@ void main() {
         var lines = "```\n<p>Hello <em>Markdown</em></p>\n```\n".split('\n');
         var result = document.parseLines(lines);
         var codeBlock = result.single as Element;
-        expect(codeBlock.textContent, equals("<p>Hello <em>Markdown</em></p>\n"));
+        expect(
+            codeBlock.textContent, equals("<p>Hello <em>Markdown</em></p>\n"));
       });
 
       test('leaves HTML alone, in an indented code block', () {
         var lines = "    <p>Hello <em>Markdown</em></p>\n".split('\n');
         var result = document.parseLines(lines);
         var codeBlock = result.single as Element;
-        expect(codeBlock.textContent, equals("<p>Hello <em>Markdown</em></p>\n"));
+        expect(
+            codeBlock.textContent, equals("<p>Hello <em>Markdown</em></p>\n"));
       });
     });
   });
