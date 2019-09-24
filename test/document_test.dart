@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:convert';
+
 import 'package:markdown/markdown.dart';
 import 'package:test/test.dart';
 
@@ -41,6 +43,16 @@ void main() {
         var codeBlock = result.single as Element;
         expect(codeBlock.textContent,
             equals("&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n"));
+      });
+
+      test('encodeHtml spaces are preserved in text', () {
+        // Example to get a <p> tag rendered before a text node.
+        var contents = 'Sample\n\n<pre>\n A\n B\n</pre>';
+        var document = Document(encodeHtml: true);
+        var lines = LineSplitter.split(contents).toList();
+        var nodes = BlockParser(lines, document).parseLines();
+        var result = HtmlRenderer().render(nodes);
+        expect(result, '<p>\n</p><pre>\n A\n B\n</pre>');
       });
     });
 
