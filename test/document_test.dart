@@ -61,7 +61,7 @@ void main() {
 
       test('leaves HTML alone, in a code snippet', () {
         var result =
-        document.parseInline("```<p>Hello <em>Markdown</em></p>```");
+            document.parseInline("```<p>Hello <em>Markdown</em></p>```");
         var codeSnippet = result.single as Element;
         expect(
             codeSnippet.textContent, equals("<p>Hello <em>Markdown</em></p>"));
