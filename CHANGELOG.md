@@ -1,3 +1,7 @@
+## 2.1.1
+
+*  Fix for encoding HTML for text string that contains `<pre>` ([#263](https://github.com/dart-lang/markdown/issues/263)).
+
 ## 2.1.0
 
 * Improve strict spec compliance of `>` handling by always encoding as `&gt;`
