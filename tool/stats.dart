@@ -13,7 +13,7 @@ import 'stats_lib.dart';
 final _configs =
     List<Config>.unmodifiable([Config.commonMarkConfig, Config.gfmConfig]);
 
-Future main(List<String> args) async {
+Future<void> main(List<String> args) async {
   final parser = ArgParser()
     ..addOption('section',
         help: 'Restrict tests to one section, provided after the option.')
@@ -150,7 +150,7 @@ Future<void> _processConfig(
   }
 }
 
-Object _convert(obj) {
+Object _convert(Object obj) {
   if (obj is CompareLevel) {
     switch (obj) {
       case CompareLevel.strict:
@@ -166,7 +166,7 @@ Object _convert(obj) {
     }
   }
   if (obj is Map) {
-    var map = {};
+    var map = <String, Object>{};
     obj.forEach((k, v) {
       var newKey = k.toString();
       map[newKey] = v;
@@ -176,7 +176,8 @@ Object _convert(obj) {
   return obj;
 }
 
-Future _printRaw(String testPrefix, Map scores, bool updateFiles) async {
+Future<void> _printRaw(String testPrefix,
+    Map<String, Map<int, CompareLevel>> scores, bool updateFiles) async {
   IOSink sink;
   if (updateFiles) {
     var file = getStatsFile(testPrefix);
@@ -204,7 +205,7 @@ String _pct(int value, int total, String section) =>
     'of ${total.toString().padLeft(4)} '
     '– ${(100 * value / total).toStringAsFixed(1).padLeft(5)}%  $section';
 
-Future _printFriendly(
+Future<void> _printFriendly(
     String testPrefix,
     SplayTreeMap<String, SplayTreeMap<int, CompareLevel>> scores,
     bool updateFiles) async {
