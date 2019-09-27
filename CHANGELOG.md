@@ -1,6 +1,11 @@
+## 2.1.2-dev
+
+* Dropping support for Dart 2.0.0 through 2.1.0.
+
 ## 2.1.1
 
-*  Fix for encoding HTML for text string that contains `<pre>` ([#263](https://github.com/dart-lang/markdown/issues/263)).
+* Fix for encoding HTML for text string that contains `<pre>`
+  ([#263](https://github.com/dart-lang/markdown/issues/263)).
 
 ## 2.1.0
 

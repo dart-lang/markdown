@@ -11,7 +11,7 @@ final extensionSets = <String, ExtensionSet>{
   'GitHubWeb': ExtensionSet.gitHubWeb,
 };
 
-Future main(List<String> args) async {
+Future<void> main(List<String> args) async {
   var parser = ArgParser()
     ..addFlag('help', negatable: false, help: 'Print help text and exit')
     ..addFlag('version', negatable: false, help: 'Print version and exit')

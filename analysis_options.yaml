@@ -1,5 +1,8 @@
 include: package:pedantic/analysis_options.yaml
 analyzer:
+  language:
+    strict-inference: true
+    strict-raw-types: true
   strong-mode:
     implicit-casts: false
   errors:
@@ -8,27 +11,22 @@ analyzer:
     unused_element: error
     unused_import: error
     unused_local_variable: error
+    # TODO(srawlins): Re-enable this once "unused" parameters are exempted.
+    inference_failure_on_untyped_parameter: ignore
 linter:
   rules:
     #- annotate_overrides
-    - avoid_empty_else
-    - avoid_init_to_null
     - avoid_null_checks_in_equality_operators
-    - avoid_return_types_on_setters
     - await_only_futures
     - camel_case_types
     # https://github.com/dart-lang/linter/issues/574
     #- comment_references
     - control_flow_in_finally
     - directives_ordering
-    - empty_catches
-    - empty_constructor_bodies
     - empty_statements
     - hash_and_equals
     - implementation_imports
     - iterable_contains_unrelated_type
-    - library_names
-    - library_prefixes
     - list_remove_unrelated_type
     - non_constant_identifier_names
     - omit_local_variable_types
@@ -37,14 +35,7 @@ linter:
     - package_api_docs
     - prefer_final_fields
     - prefer_generic_function_type_aliases
-    - prefer_is_not_empty
     #- prefer_single_quotes
-    - slash_for_doc_comments
     - test_types_in_equals
     - throw_in_finally
-    - type_init_formals
     - unnecessary_brace_in_string_interps
-    - unnecessary_const
-    - unnecessary_new
-    - unrelated_type_equality_checks
-    - valid_regexps

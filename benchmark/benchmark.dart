@@ -23,7 +23,7 @@ void main(List<String> args) {
     var start = DateTime.now();
 
     // For a single benchmark, convert the source multiple times.
-    var result;
+    String result;
     for (var j = 0; j < runsPerTrial; j++) {
       result = markdownToHtml(source);
     }
