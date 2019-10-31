@@ -1,6 +1,8 @@
 ## 2.1.2-dev
 
-* Dropping support for Dart 2.0.0 through 2.1.0.
+* Drop support for Dart 2.0.0 through 2.1.0.
+* Recognize Unicode ellipsis (…) and other Unicode punctuation as punctuation
+  when parsing potential emphasis.
 
 ## 2.1.1
 

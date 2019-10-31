@@ -39,6 +39,12 @@ void main() {
 ''', '''
 <pre><code class="language-&quot;/&gt;&lt;a/href=&quot;url&quot;&gt;arbitrary_html&lt;/a&gt;"></code></pre>
 ''');
+
+    validateCore('Unicode ellipsis as punctuation', '''
+"Connecting dot **A** to **B.**…"
+''', '''
+<p>"Connecting dot <strong>A</strong> to <strong>B.</strong>…"</p>
+''');
   });
 
   group('Resolver', () {
