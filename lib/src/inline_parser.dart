@@ -22,9 +22,9 @@ class InlineParser {
     // Allow any punctuation to be escaped.
     EscapeSyntax(),
     // "*" surrounded by spaces is left alone.
-    TextSyntax(r' \* '),
+    TextSyntax(r' \* ', startCharacter: $space),
     // "_" surrounded by spaces is left alone.
-    TextSyntax(r' _ '),
+    TextSyntax(r' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
     TagSyntax(r'\*+', requiresDelimiterRun: true),
     // Parse "__strong__" and "_emphasis_" tags.
@@ -37,13 +37,13 @@ class InlineParser {
       List<InlineSyntax>.unmodifiable(<InlineSyntax>[
     // Leave already-encoded HTML entities alone. Ensures we don't turn
     // "&amp;" into "&amp;amp;"
-    TextSyntax(r'&[#a-zA-Z0-9]*;'),
+    TextSyntax(r'&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
     // Encode "&".
-    TextSyntax(r'&', sub: '&amp;'),
+    TextSyntax(r'&', sub: '&amp;', startCharacter: $ampersand),
     // Encode "<".
-    TextSyntax(r'<', sub: '&lt;'),
+    TextSyntax(r'<', sub: '&lt;', startCharacter: $lt),
     // Encode ">".
-    TextSyntax(r'>', sub: '&gt;'),
+    TextSyntax(r'>', sub: '&gt;', startCharacter: $gt),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
 
@@ -164,7 +164,17 @@ class InlineParser {
 abstract class InlineSyntax {
   final RegExp pattern;
 
-  InlineSyntax(String pattern) : pattern = RegExp(pattern, multiLine: true);
+  /// The first character of [pattern], to be used as an efficient first check
+  /// that this syntax matches the current parser position.
+  final int _startCharacter;
+
+  /// Create a new [InlineSyntax] which matches text on [pattern].
+  ///
+  /// If [startCharacter] is passed, it is used as a pre-matching check which
+  /// is faster than matching against [pattern].
+  InlineSyntax(String pattern, {int startCharacter})
+      : pattern = RegExp(pattern, multiLine: true),
+        _startCharacter = startCharacter;
 
   /// Tries to match at the parser's current position.
   ///
@@ -172,6 +182,14 @@ abstract class InlineSyntax {
   /// Returns whether or not the pattern successfully matched.
   bool tryMatch(InlineParser parser, [int startMatchPos]) {
     if (startMatchPos == null) startMatchPos = parser.pos;
+
+    // Before matching with the regular expression [pattern], which can be
+    // expensive on some platforms, check if even the first character matches
+    // this syntax.
+    if (_startCharacter != null &&
+        parser.source.codeUnitAt(startMatchPos) != _startCharacter) {
+      return false;
+    }
 
     final startMatch = pattern.matchAsPrefix(parser.source, startMatchPos);
     if (startMatch == null) return false;
@@ -205,9 +223,14 @@ class LineBreakSyntax extends InlineSyntax {
 class TextSyntax extends InlineSyntax {
   final String substitute;
 
-  TextSyntax(String pattern, {String sub})
+  /// Create a new [TextSyntax] which matches text on [pattern].
+  ///
+  /// If [sub] is passed, it is used as a simple replacement for [pattern]. If
+  /// [startCharacter] is passed, it is used as a pre-matching check which is
+  /// faster than matching against [pattern].
+  TextSyntax(String pattern, {String sub, int startCharacter})
       : substitute = sub,
-        super(pattern);
+        super(pattern, startCharacter: startCharacter);
 
   /// Adds a [Text] node to [parser] and returns `true` if there is a
   /// [substitute], as long as the preceding character (if any) is not a `/`.
@@ -262,7 +285,9 @@ class EscapeSyntax extends InlineSyntax {
 /// TODO(srawlins): improve accuracy while ensuring performance, once
 /// Markdown benchmarking is more mature.
 class InlineHtmlSyntax extends TextSyntax {
-  InlineHtmlSyntax() : super(r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?:\s[^>]*)?>');
+  InlineHtmlSyntax()
+      : super(r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?:\s[^>]*)?>',
+            startCharacter: $lt);
 }
 
 /// Matches autolinks like `<foo@bar.example.com>`.
@@ -273,7 +298,7 @@ class EmailAutolinkSyntax extends InlineSyntax {
       r'''[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}'''
       r'''[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*''';
 
-  EmailAutolinkSyntax() : super('<($_email)>');
+  EmailAutolinkSyntax() : super('<($_email)>', startCharacter: $lt);
 
   bool onMatch(InlineParser parser, Match match) {
     var url = match[1];
@@ -551,9 +576,17 @@ class TagSyntax extends InlineSyntax {
   /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
   final bool requiresDelimiterRun;
 
-  TagSyntax(String pattern, {String end, this.requiresDelimiterRun = false})
+  /// Create a new [TagSyntax] which matches text on [pattern].
+  ///
+  /// If [end] is passed, it is used as the pattern which denotes the end of
+  /// matching text. Otherwise, [pattern] is used. If [requiresDelimiterRun] is
+  /// passed, this syntax parses according to the same nesting rules as
+  /// emphasis delimiters.  If [startCharacter] is passed, it is used as a
+  /// pre-matching check which is faster than matching against [pattern].
+  TagSyntax(String pattern,
+      {String end, this.requiresDelimiterRun = false, int startCharacter})
       : endPattern = RegExp((end != null) ? end : pattern, multiLine: true),
-        super(pattern);
+        super(pattern, startCharacter: startCharacter);
 
   bool onMatch(InlineParser parser, Match match) {
     var runLength = match.group(0).length;
@@ -638,9 +671,12 @@ class LinkSyntax extends TagSyntax {
 
   final Resolver linkResolver;
 
-  LinkSyntax({Resolver linkResolver, String pattern = r'\['})
+  LinkSyntax(
+      {Resolver linkResolver,
+      String pattern = r'\[',
+      int startCharacter = $lbracket})
       : this.linkResolver = (linkResolver ?? (String _, [String __]) => null),
-        super(pattern, end: r'\]');
+        super(pattern, end: r'\]', startCharacter: startCharacter);
 
   // The pending [TagState]s, all together, are "active" or "inactive" based on
   // whether a link element has just been parsed.
@@ -1053,7 +1089,10 @@ class LinkSyntax extends TagSyntax {
 /// `![alternate text][label]`.
 class ImageSyntax extends LinkSyntax {
   ImageSyntax({Resolver linkResolver})
-      : super(linkResolver: linkResolver, pattern: r'!\[');
+      : super(
+            linkResolver: linkResolver,
+            pattern: r'!\[',
+            startCharacter: $exclamation);
 
   Node _createNode(TagState state, String destination, String title) {
     var element = Element.empty('img');
