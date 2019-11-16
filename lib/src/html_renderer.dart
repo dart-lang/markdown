@@ -12,19 +12,22 @@ import 'extension_set.dart';
 import 'inline_parser.dart';
 
 /// Converts the given string of Markdown to HTML.
-String markdownToHtml(String markdown,
-    {Iterable<BlockSyntax> blockSyntaxes,
-    Iterable<InlineSyntax> inlineSyntaxes,
-    ExtensionSet extensionSet,
-    Resolver linkResolver,
-    Resolver imageLinkResolver,
-    bool inlineOnly = false}) {
+String markdownToHtml(
+  String markdown, {
+  Iterable<BlockSyntax> blockSyntaxes,
+  Iterable<InlineSyntax> inlineSyntaxes,
+  ExtensionSet extensionSet,
+  Resolver linkResolver,
+  Resolver imageLinkResolver,
+  bool inlineOnly = false,
+}) {
   var document = Document(
-      blockSyntaxes: blockSyntaxes,
-      inlineSyntaxes: inlineSyntaxes,
-      extensionSet: extensionSet,
-      linkResolver: linkResolver,
-      imageLinkResolver: imageLinkResolver);
+    blockSyntaxes: blockSyntaxes,
+    inlineSyntaxes: inlineSyntaxes,
+    extensionSet: extensionSet,
+    linkResolver: linkResolver,
+    imageLinkResolver: imageLinkResolver,
+  );
 
   if (inlineOnly) return renderToHtml(document.parseInline(markdown));
 
@@ -78,7 +81,7 @@ class HtmlRenderer implements NodeVisitor {
     var content = text.text;
     if (const ['p', 'li'].contains(_lastVisitedTag)) {
       var lines = LineSplitter.split(content);
-      content = (content.contains('<pre>'))
+      content = content.contains('<pre>')
           ? lines.join('\n')
           : lines.map((line) => line.trimLeft()).join('\n');
       if (text.text.endsWith('\n')) {

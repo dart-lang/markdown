@@ -67,7 +67,7 @@ class InlineParser {
     // User specified syntaxes are the first syntaxes to be evaluated.
     syntaxes.addAll(document.inlineSyntaxes);
 
-    var documentHasCustomInlineSyntaxes = document.inlineSyntaxes
+    var hasCustomInlineSyntaxes = document.inlineSyntaxes
         .any((s) => !document.extensionSet.inlineSyntaxes.contains(s));
 
     // This first RegExp matches plain text to accelerate parsing. It's written
@@ -75,7 +75,7 @@ class InlineParser {
     // Markdown is plain text, so it's faster to match one RegExp per 'word'
     // rather than fail to match all the following RegExps at each non-syntax
     // character position.
-    if (documentHasCustomInlineSyntaxes) {
+    if (hasCustomInlineSyntaxes) {
       // We should be less aggressive in blowing past "words".
       syntaxes.add(TextSyntax(r'[A-Za-z0-9]+(?=\s)'));
     } else {
@@ -302,7 +302,8 @@ class EmailAutolinkSyntax extends InlineSyntax {
 
   bool onMatch(InlineParser parser, Match match) {
     var url = match[1];
-    var anchor = Element.text('a', escapeHtml(url));
+    var text = parser.document.encodeHtml ? escapeHtml(url) : url;
+    var anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull('mailto:$url');
     parser.addNode(anchor);
 
@@ -316,7 +317,8 @@ class AutolinkSyntax extends InlineSyntax {
 
   bool onMatch(InlineParser parser, Match match) {
     var url = match[1];
-    var anchor = Element.text('a', escapeHtml(url));
+    var text = parser.document.encodeHtml ? escapeHtml(url) : url;
+    var anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull(url);
     parser.addNode(anchor);
 
@@ -331,17 +333,21 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   // Autolinks can only come at the beginning of a line, after whitespace, or
   // any of the delimiting characters *, _, ~, and (.
   static const start = r'(?:^|[\s*_~(>])';
+
   // An extended url autolink will be recognized when one of the schemes
   // http://, https://, or ftp://, followed by a valid domain
   static const scheme = r'(?:(?:https?|ftp):\/\/|www\.)';
+
   // A valid domain consists of alphanumeric characters, underscores (_),
   // hyphens (-) and periods (.). There must be at least one period, and no
   // underscores may be present in the last two segments of the domain.
   static const domainPart = r'\w\-';
   static const domain = '[$domainPart][$domainPart.]+';
+
   // A valid domain consists of alphanumeric characters, underscores (_),
   // hyphens (-) and periods (.).
   static const path = r'[^\s<]*';
+
   // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not
   // be considered part of the autolink
   static const truncatingPunctuationPositive = r'[?!.,:*_~]';
@@ -427,7 +433,8 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       href = 'http://$href';
     }
 
-    final anchor = Element.text('a', escapeHtml(url));
+    final text = parser.document.encodeHtml ? escapeHtml(url) : url;
+    final anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull(href);
     parser.addNode(anchor);
 
@@ -478,6 +485,7 @@ class _DelimiterRun {
       r'\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F'
       r'\uFF5B\uFF5D\uFF5F-\uFF65'
       ']');
+
   // TODO(srawlins): Unicode whitespace
   static final String whitespace = ' \t\r\n';
 
@@ -488,13 +496,14 @@ class _DelimiterRun {
   final bool isPrecededByPunctuation;
   final bool isFollowedByPunctuation;
 
-  _DelimiterRun._(
-      {this.char,
-      this.length,
-      this.isLeftFlanking,
-      this.isRightFlanking,
-      this.isPrecededByPunctuation,
-      this.isFollowedByPunctuation});
+  _DelimiterRun._({
+    this.char,
+    this.length,
+    this.isLeftFlanking,
+    this.isRightFlanking,
+    this.isPrecededByPunctuation,
+    this.isFollowedByPunctuation,
+  });
 
   static _DelimiterRun tryParse(InlineParser parser, int runStart, int runEnd) {
     bool leftFlanking,
@@ -542,12 +551,13 @@ class _DelimiterRun {
     }
 
     return _DelimiterRun._(
-        char: parser.charAt(runStart),
-        length: runEnd - runStart + 1,
-        isLeftFlanking: leftFlanking,
-        isRightFlanking: rightFlanking,
-        isPrecededByPunctuation: precededByPunctuation,
-        isFollowedByPunctuation: followedByPunctuation);
+      char: parser.charAt(runStart),
+      length: runEnd - runStart + 1,
+      isLeftFlanking: leftFlanking,
+      isRightFlanking: rightFlanking,
+      isPrecededByPunctuation: precededByPunctuation,
+      isFollowedByPunctuation: followedByPunctuation,
+    );
   }
 
   String toString() =>
@@ -769,7 +779,10 @@ class LinkSyntax extends TagSyntax {
   ///
   /// [label] does not need to be normalized.
   Node _resolveReferenceLink(
-      String label, TagState state, Map<String, LinkReference> linkReferences) {
+    String label,
+    TagState state,
+    Map<String, LinkReference> linkReferences,
+  ) {
     var normalizedLabel = label.toLowerCase();
     var linkReference = linkReferences[normalizedLabel];
     if (linkReference != null) {
@@ -1096,7 +1109,7 @@ class ImageSyntax extends LinkSyntax {
 
   Node _createNode(TagState state, String destination, String title) {
     var element = Element.empty('img');
-    element.attributes['src'] = escapeHtml(destination);
+    element.attributes['src'] = destination;
     element.attributes['alt'] = state?.textContent ?? '';
     if (title != null && title.isNotEmpty) {
       element.attributes['title'] =

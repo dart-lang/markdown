@@ -20,8 +20,10 @@ class ExtensionSet {
   /// The [commonMark] extension set is close to compliance with [CommonMark].
   ///
   /// [CommonMark]: http://commonmark.org/
-  static final ExtensionSet commonMark =
-      ExtensionSet([const FencedCodeBlockSyntax()], [InlineHtmlSyntax()]);
+  static final ExtensionSet commonMark = ExtensionSet(
+    [const FencedCodeBlockSyntax()],
+    [InlineHtmlSyntax()],
+  );
 
   /// The [gitHubWeb] extension set renders Markdown similarly to GitHub.
   ///
