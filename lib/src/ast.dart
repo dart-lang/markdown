@@ -52,14 +52,15 @@ class Element implements Node {
     }
   }
 
-  String get textContent => children == null
-      ? ''
-      : children.map((Node child) => child.textContent).join('');
+  String get textContent {
+    return (children ?? []).map((Node child) => child.textContent).join('');
+  }
 }
 
 /// A plain text element.
 class Text implements Node {
   final String text;
+
   Text(this.text);
 
   void accept(NodeVisitor visitor) => visitor.visitText(this);
@@ -75,6 +76,7 @@ class Text implements Node {
 /// definitions.
 class UnparsedContent implements Node {
   final String textContent;
+
   UnparsedContent(this.textContent);
 
   void accept(NodeVisitor visitor) => null;

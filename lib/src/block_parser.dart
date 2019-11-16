@@ -397,9 +397,10 @@ class CodeBlockSyntax extends BlockSyntax {
     // The Markdown tests expect a trailing newline.
     childLines.add('');
 
-    var content = parser.document.encodeHtml
-        ? escapeHtml(childLines.join('\n'))
-        : childLines.join('\n');
+    var content = childLines.join('\n');
+    if (parser.document.encodeHtml) {
+      content = escapeHtml(content);
+    }
 
     return Element('pre', [Element.text('code', content)]);
   }
@@ -516,7 +517,7 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
       r'figcaption|figure|footer|form|frame|frameset|h1|head|header|hr|html|'
       r'iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|'
       r'option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|'
-      'title|tr|track|ul)'
+      r'title|tr|track|ul)'
       r'(?:\s|>|/>|$)');
 
   /// The [_pattern] regular expression above is very expensive, even on
@@ -792,6 +793,7 @@ abstract class ListSyntax extends BlockSyntax {
 /// Parses unordered lists.
 class UnorderedListSyntax extends ListSyntax {
   RegExp get pattern => _ulPattern;
+
   String get listTag => 'ul';
 
   const UnorderedListSyntax();
@@ -800,6 +802,7 @@ class UnorderedListSyntax extends ListSyntax {
 /// Parses ordered lists.
 class OrderedListSyntax extends ListSyntax {
   RegExp get pattern => _olPattern;
+
   String get listTag => 'ol';
 
   const OrderedListSyntax();

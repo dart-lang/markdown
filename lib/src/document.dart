@@ -18,16 +18,17 @@ class Document {
   final _inlineSyntaxes = Set<InlineSyntax>();
 
   Iterable<BlockSyntax> get blockSyntaxes => _blockSyntaxes;
+
   Iterable<InlineSyntax> get inlineSyntaxes => _inlineSyntaxes;
 
-  Document(
-      {Iterable<BlockSyntax> blockSyntaxes,
-      Iterable<InlineSyntax> inlineSyntaxes,
-      ExtensionSet extensionSet,
-      this.linkResolver,
-      this.imageLinkResolver,
-      this.encodeHtml = true})
-      : this.extensionSet = extensionSet ?? ExtensionSet.commonMark {
+  Document({
+    Iterable<BlockSyntax> blockSyntaxes,
+    Iterable<InlineSyntax> inlineSyntaxes,
+    ExtensionSet extensionSet,
+    this.linkResolver,
+    this.imageLinkResolver,
+    this.encodeHtml = true,
+  }) : this.extensionSet = extensionSet ?? ExtensionSet.commonMark {
     this._blockSyntaxes
       ..addAll(blockSyntaxes ?? [])
       ..addAll(this.extensionSet.blockSyntaxes);
