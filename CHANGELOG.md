@@ -1,3 +1,8 @@
+## 2.1.3
+
+* Do not encode HTML in link URLs. Also do not encode HTML in link text when
+  `encodeHtml` is false (e.g. when used in Flutter).
+
 ## 2.1.2
 
 * Drop support for Dart 2.0.0 through 2.1.0.
