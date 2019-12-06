@@ -119,5 +119,6 @@ void _switchFlavor(Event e) {
 }
 
 class NullTreeSanitizer implements NodeTreeSanitizer {
+  @override
   void sanitizeTree(Node node) {}
 }

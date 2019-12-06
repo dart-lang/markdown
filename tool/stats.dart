@@ -162,7 +162,7 @@ Object _convert(Object obj) {
       case CompareLevel.loose:
         return 'loose';
       default:
-        throw ArgumentError("`$obj` is unknown.");
+        throw ArgumentError('`$obj` is unknown.');
     }
   }
   if (obj is Map) {

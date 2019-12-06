@@ -14,8 +14,8 @@ class Document {
   final Resolver linkResolver;
   final Resolver imageLinkResolver;
   final bool encodeHtml;
-  final _blockSyntaxes = Set<BlockSyntax>();
-  final _inlineSyntaxes = Set<InlineSyntax>();
+  final _blockSyntaxes = <BlockSyntax>{};
+  final _inlineSyntaxes = <InlineSyntax>{};
 
   Iterable<BlockSyntax> get blockSyntaxes => _blockSyntaxes;
 
@@ -28,11 +28,11 @@ class Document {
     this.linkResolver,
     this.imageLinkResolver,
     this.encodeHtml = true,
-  }) : this.extensionSet = extensionSet ?? ExtensionSet.commonMark {
-    this._blockSyntaxes
+  }) : extensionSet = extensionSet ?? ExtensionSet.commonMark {
+    _blockSyntaxes
       ..addAll(blockSyntaxes ?? [])
       ..addAll(this.extensionSet.blockSyntaxes);
-    this._inlineSyntaxes
+    _inlineSyntaxes
       ..addAll(inlineSyntaxes ?? [])
       ..addAll(this.extensionSet.inlineSyntaxes);
   }
