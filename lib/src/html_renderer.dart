@@ -93,6 +93,7 @@ class HtmlRenderer implements NodeVisitor {
     _lastVisitedTag = null;
   }
 
+  @override
   bool visitElementBefore(Element element) {
     // Hackish. Separate block-level elements with newlines.
     if (buffer.isNotEmpty && _blockTags.contains(element.tag)) {
@@ -128,6 +129,7 @@ class HtmlRenderer implements NodeVisitor {
     }
   }
 
+  @override
   void visitElementAfter(Element element) {
     assert(identical(_elementStack.last, element));
 

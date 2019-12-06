@@ -718,6 +718,7 @@ class LinkSyntax extends TagSyntax {
     return true;
   }
 
+  @override
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
     if (!_pendingStatesAreActive) return false;
 
@@ -1114,6 +1115,7 @@ class ImageSyntax extends LinkSyntax {
             pattern: r'!\[',
             startCharacter: $exclamation);
 
+  @override
   Node _createNode(TagState state, String destination, String title) {
     var element = Element.empty('img');
     element.attributes['src'] = destination;
@@ -1131,6 +1133,7 @@ class ImageSyntax extends LinkSyntax {
   // Otherwise, it is treated as an inline image.
   //
   // Returns whether the image was added successfully.
+  @override
   bool _tryAddReferenceLink(InlineParser parser, TagState state, String label) {
     var element =
         _resolveReferenceLink(label, state, parser.document.linkReferences);
@@ -1159,6 +1162,7 @@ class CodeSyntax extends InlineSyntax {
 
   CodeSyntax() : super(_pattern);
 
+  @override
   bool tryMatch(InlineParser parser, [int startMatchPos]) {
     if (parser.pos > 0 && parser.charAt(parser.pos - 1) == $backquote) {
       // Not really a match! We can't just sneak past one backtick to try the
@@ -1178,6 +1182,7 @@ class CodeSyntax extends InlineSyntax {
     return true;
   }
 
+  @override
   bool onMatch(InlineParser parser, Match match) {
     var code = match[2].trim().replaceAll('\n', ' ');
     if (parser.document.encodeHtml) code = escapeHtml(code);
@@ -1197,6 +1202,7 @@ class EmojiSyntax extends InlineSyntax {
   // underscores, but GitHub also supports `:+1:` and `:-1:`.
   EmojiSyntax() : super(':([a-z0-9_+-]+):');
 
+  @override
   bool onMatch(InlineParser parser, Match match) {
     var alias = match[1];
     var emoji = emojis[alias];

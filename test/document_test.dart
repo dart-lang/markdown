@@ -23,26 +23,26 @@ void main() {
       var document = Document(encodeHtml: true);
 
       test('encodes HTML in an inline code snippet', () {
-        var result = document.parseInline("``<p>Hello <em>Markdown</em></p>``");
+        var result = document.parseInline('``<p>Hello <em>Markdown</em></p>``');
         var codeSnippet = result.single as Element;
         expect(codeSnippet.textContent,
-            equals("&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;"));
+            equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;'));
       });
 
       test('encodes HTML in a fenced code block', () {
-        var lines = "```\n<p>Hello <em>Markdown</em></p>\n```\n".split('\n');
+        var lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.split('\n');
         var result = document.parseLines(lines);
         var codeBlock = result.single as Element;
         expect(codeBlock.textContent,
-            equals("&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n"));
+            equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n'));
       });
 
       test('encodes HTML in an indented code block', () {
-        var lines = "    <p>Hello <em>Markdown</em></p>\n".split('\n');
+        var lines = '    <p>Hello <em>Markdown</em></p>\n'.split('\n');
         var result = document.parseLines(lines);
         var codeBlock = result.single as Element;
         expect(codeBlock.textContent,
-            equals("&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n"));
+            equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n'));
       });
 
       test('encodeHtml spaces are preserved in text', () {
@@ -61,26 +61,26 @@ void main() {
 
       test('leaves HTML alone, in a code snippet', () {
         var result =
-            document.parseInline("```<p>Hello <em>Markdown</em></p>```");
+            document.parseInline('```<p>Hello <em>Markdown</em></p>```');
         var codeSnippet = result.single as Element;
         expect(
-            codeSnippet.textContent, equals("<p>Hello <em>Markdown</em></p>"));
+            codeSnippet.textContent, equals('<p>Hello <em>Markdown</em></p>'));
       });
 
       test('leaves HTML alone, in a fenced code block', () {
-        var lines = "```\n<p>Hello <em>Markdown</em></p>\n```\n".split('\n');
+        var lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.split('\n');
         var result = document.parseLines(lines);
         var codeBlock = result.single as Element;
         expect(
-            codeBlock.textContent, equals("<p>Hello <em>Markdown</em></p>\n"));
+            codeBlock.textContent, equals('<p>Hello <em>Markdown</em></p>\n'));
       });
 
       test('leaves HTML alone, in an indented code block', () {
-        var lines = "    <p>Hello <em>Markdown</em></p>\n".split('\n');
+        var lines = '    <p>Hello <em>Markdown</em></p>\n'.split('\n');
         var result = document.parseLines(lines);
         var codeBlock = result.single as Element;
         expect(
-            codeBlock.textContent, equals("<p>Hello <em>Markdown</em></p>\n"));
+            codeBlock.textContent, equals('<p>Hello <em>Markdown</em></p>\n'));
       });
     });
   });

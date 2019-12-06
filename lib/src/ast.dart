@@ -79,10 +79,12 @@ class Text implements Node {
 /// of a document are still being parsed, in order to gather all reference link
 /// definitions.
 class UnparsedContent implements Node {
+  @override
   final String textContent;
 
   UnparsedContent(this.textContent);
 
+  @override
   void accept(NodeVisitor visitor) => null;
 }
 
