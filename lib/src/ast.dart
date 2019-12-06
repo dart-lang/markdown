@@ -41,6 +41,7 @@ class Element implements Node {
   /// Whether this element is self-closing.
   bool get isEmpty => children == null;
 
+  @override
   void accept(NodeVisitor visitor) {
     if (visitor.visitElementBefore(this)) {
       if (children != null) {
@@ -52,6 +53,7 @@ class Element implements Node {
     }
   }
 
+  @override
   String get textContent {
     return (children ?? []).map((Node child) => child.textContent).join('');
   }
@@ -63,8 +65,10 @@ class Text implements Node {
 
   Text(this.text);
 
+  @override
   void accept(NodeVisitor visitor) => visitor.visitText(this);
 
+  @override
   String get textContent => text;
 }
 

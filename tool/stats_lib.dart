@@ -32,7 +32,7 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
 
   var testArray = jsonDecode(testsJson) as List;
 
-  var sections = Map<String, List<CommonMarkTestCase>>();
+  var sections = <String, List<CommonMarkTestCase>>{};
 
   for (var exampleMap in testArray) {
     var exampleTest =

@@ -13,14 +13,14 @@ const _help = 'help';
 
 void main(List<String> arguments) {
   final parser = ArgParser()
-    ..addSeparator("Usage: dartdoc-compare.dart [OPTIONS] <dart-package>")
-    ..addOption(_dartdocDir, help: "Directory of the dartdoc package")
+    ..addSeparator('Usage: dartdoc-compare.dart [OPTIONS] <dart-package>')
+    ..addOption(_dartdocDir, help: 'Directory of the dartdoc package')
     ..addOption(_markdownBefore, help: "Markdown package 'before' ref")
     ..addOption(_markdownAfter,
-        defaultsTo: "HEAD", help: "Markdown package 'after' ref (or 'local')")
+        defaultsTo: 'HEAD', help: "Markdown package 'after' ref (or 'local')")
     ..addFlag(_sdk,
-        defaultsTo: false, negatable: false, help: "Is the package the SDK?")
-    ..addFlag(_help, abbr: "h", hide: true);
+        defaultsTo: false, negatable: false, help: 'Is the package the SDK?')
+    ..addFlag(_help, abbr: 'h', hide: true);
 
   var options = parser.parse(arguments);
   if (options[_help] as bool) {
@@ -30,7 +30,7 @@ void main(List<String> arguments) {
   }
   if (options[_dartdocDir] == null || options[_markdownBefore] == null) {
     print(
-        "Invalid arguments: Options --$_dartdocDir and --$_markdownBefore must be specified");
+        'Invalid arguments: Options --$_dartdocDir and --$_markdownBefore must be specified');
     print(parser.usage);
     exitCode = 1;
     return;
@@ -39,8 +39,8 @@ void main(List<String> arguments) {
       options[_dartdocDir] as String,
       options[_markdownBefore] as String,
       options[_markdownAfter] as String,
-      absolute(options[_dartdocDir] as String, "bin/dartdoc.dart"),
-      absolute(options[_dartdocDir] as String, "pubspec.yaml"),
+      absolute(options[_dartdocDir] as String, 'bin/dartdoc.dart'),
+      absolute(options[_dartdocDir] as String, 'pubspec.yaml'),
       options[_sdk] as bool);
 
   String path;
@@ -79,18 +79,18 @@ class DartdocCompare {
     var outAfter = _runDartdoc(markdownAfter, package);
 
     // Compare outputs
-    var diffOptions = ["-r", "-B", outBefore, outAfter];
-    var result = Process.runSync("diff", diffOptions, runInShell: true);
-    var nlines = "\n".allMatches(result.stdout as String).length;
-    print("Diff lines: $nlines");
-    print("diff ${diffOptions.join(" ")}");
+    var diffOptions = ['-r', '-B', outBefore, outAfter];
+    var result = Process.runSync('diff', diffOptions, runInShell: true);
+    var nlines = '\n'.allMatches(result.stdout as String).length;
+    print('Diff lines: $nlines');
+    print('diff ${diffOptions.join(" ")}');
     return result.exitCode == 0;
   }
 
   String _runDartdoc(String markdownRef, String path) {
-    print("==========================================================");
-    print("Running dartdoc for $markdownRef...");
-    print("==========================================================");
+    print('==========================================================');
+    print('Running dartdoc for $markdownRef...');
+    print('==========================================================');
     _doInPath(dartdocDir, () {
       var returnCode = _updateDartdocPubspec(markdownRef);
       if (returnCode != 0) {
@@ -102,9 +102,9 @@ class DartdocCompare {
         _system('pub', ['upgrade']);
       }
       var out = Directory.systemTemp
-          .createTempSync("dartdoc-compare-${markdownRef}__");
-      var cmd = "dart";
-      var args = ["$dartdocBin", "--output=${out.path}"];
+          .createTempSync('dartdoc-compare-${markdownRef}__');
+      var cmd = 'dart';
+      var args = ['$dartdocBin', '--output=${out.path}'];
 
       if (sdk) {
         args.add('--sdk-docs');
@@ -153,7 +153,7 @@ int _system(String cmd, List<String> args) {
   return result.exitCode;
 }
 
-T _doInPath<T>(String path, T f()) {
+T _doInPath<T>(String path, T Function() f) {
   if (path == null) {
     return f();
   }

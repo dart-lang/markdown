@@ -205,10 +205,12 @@ abstract class BlockSyntax {
 }
 
 class EmptyBlockSyntax extends BlockSyntax {
+  @override
   RegExp get pattern => _emptyPattern;
 
   const EmptyBlockSyntax();
 
+  @override
   Node parse(BlockParser parser) {
     parser.encounteredBlankLine = true;
     parser.advance();
@@ -222,6 +224,7 @@ class EmptyBlockSyntax extends BlockSyntax {
 class SetextHeaderSyntax extends BlockSyntax {
   const SetextHeaderSyntax();
 
+  @override
   bool canParse(BlockParser parser) {
     if (!_interperableAsParagraph(parser.current)) return false;
     var i = 1;
@@ -242,6 +245,7 @@ class SetextHeaderSyntax extends BlockSyntax {
     }
   }
 
+  @override
   Node parse(BlockParser parser) {
     var lines = <String>[];
     String tag;
@@ -281,6 +285,7 @@ class SetextHeaderSyntax extends BlockSyntax {
 class SetextHeaderWithIdSyntax extends SetextHeaderSyntax {
   const SetextHeaderWithIdSyntax();
 
+  @override
   Node parse(BlockParser parser) {
     var element = super.parse(parser) as Element;
     element.generatedId = BlockSyntax.generateAnchorHash(element);
@@ -290,10 +295,12 @@ class SetextHeaderWithIdSyntax extends SetextHeaderSyntax {
 
 /// Parses atx-style headers: `## Header ##`.
 class HeaderSyntax extends BlockSyntax {
+  @override
   RegExp get pattern => _headerPattern;
 
   const HeaderSyntax();
 
+  @override
   Node parse(BlockParser parser) {
     var match = pattern.firstMatch(parser.current);
     parser.advance();
@@ -307,6 +314,7 @@ class HeaderSyntax extends BlockSyntax {
 class HeaderWithIdSyntax extends HeaderSyntax {
   const HeaderWithIdSyntax();
 
+  @override
   Node parse(BlockParser parser) {
     var element = super.parse(parser) as Element;
     element.generatedId = BlockSyntax.generateAnchorHash(element);
@@ -316,10 +324,12 @@ class HeaderWithIdSyntax extends HeaderSyntax {
 
 /// Parses email-style blockquotes: `> quote`.
 class BlockquoteSyntax extends BlockSyntax {
+  @override
   RegExp get pattern => _blockquotePattern;
 
   const BlockquoteSyntax();
 
+  @override
   List<String> parseChildLines(BlockParser parser) {
     // Grab all of the lines that form the blockquote, stripping off the ">".
     var childLines = <String>[];
@@ -347,6 +357,7 @@ class BlockquoteSyntax extends BlockSyntax {
     return childLines;
   }
 
+  @override
   Node parse(BlockParser parser) {
     var childLines = parseChildLines(parser);
 
@@ -359,12 +370,15 @@ class BlockquoteSyntax extends BlockSyntax {
 
 /// Parses preformatted code blocks that are indented four spaces.
 class CodeBlockSyntax extends BlockSyntax {
+  @override
   RegExp get pattern => _indentPattern;
 
+  @override
   bool get canEndBlock => false;
 
   const CodeBlockSyntax();
 
+  @override
   List<String> parseChildLines(BlockParser parser) {
     var childLines = <String>[];
 
@@ -391,6 +405,7 @@ class CodeBlockSyntax extends BlockSyntax {
     return childLines;
   }
 
+  @override
   Node parse(BlockParser parser) {
     var childLines = parseChildLines(parser);
 
@@ -410,10 +425,12 @@ class CodeBlockSyntax extends BlockSyntax {
 ///
 /// See the CommonMark spec: https://spec.commonmark.org/0.29/#fenced-code-blocks
 class FencedCodeBlockSyntax extends BlockSyntax {
+  @override
   RegExp get pattern => _codeFencePattern;
 
   const FencedCodeBlockSyntax();
 
+  @override
   bool canParse(BlockParser parser) {
     final match = pattern.firstMatch(parser.current);
     if (match == null) return false;
@@ -427,8 +444,9 @@ class FencedCodeBlockSyntax extends BlockSyntax {
         !infoString.codeUnits.contains($backquote));
   }
 
+  @override
   List<String> parseChildLines(BlockParser parser, [String endBlock]) {
-    if (endBlock == null) endBlock = '';
+    endBlock ??= '';
 
     var childLines = <String>[];
     parser.advance();
@@ -447,6 +465,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     return childLines;
   }
 
+  @override
   Node parse(BlockParser parser) {
     // Get the syntax identifier, if there is one.
     var match = pattern.firstMatch(parser.current);
@@ -477,7 +496,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       if (parser.document.encodeHtml) {
         infoString = escapeHtmlAttribute(infoString);
       }
-      code.attributes['class'] = "language-$infoString";
+      code.attributes['class'] = 'language-$infoString';
     }
 
     var element = Element('pre', [code]);
@@ -488,6 +507,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
 
 /// Parses horizontal rules like `---`, `_ _ _`, `*  *  *`, etc.
 class HorizontalRuleSyntax extends BlockSyntax {
+  @override
   RegExp get pattern => _hrPattern;
 
   const HorizontalRuleSyntax();

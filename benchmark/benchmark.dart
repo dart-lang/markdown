@@ -11,8 +11,8 @@ import 'package:markdown/markdown.dart';
 const numTrials = 100;
 const runsPerTrial = 50;
 
-final source = loadFile("input.md");
-final expected = loadFile("output.html");
+final source = loadFile('input.md');
+final expected = loadFile('output.html');
 
 void main(List<String> args) {
   var best = double.infinity;
@@ -38,7 +38,7 @@ void main(List<String> args) {
     // Sanity check to make sure the output is what we expect and to make sure
     // the VM doesn't optimize "dead" code away.
     if (result != expected) {
-      print("Incorrect output:\n$result");
+      print('Incorrect output:\n$result');
       exit(1);
     }
 
@@ -48,7 +48,7 @@ void main(List<String> args) {
     printResult("Run ${padLeft('#$i', 3)}", elapsed);
   }
 
-  printResult("Best   ", best);
+  printResult('Best   ', best);
 }
 
 String loadFile(String name) {
@@ -57,14 +57,14 @@ String loadFile(String name) {
 }
 
 void printResult(String label, double time) {
-  print("$label: ${padLeft(time.toStringAsFixed(2), 4)}ms "
+  print('$label: ${padLeft(time.toStringAsFixed(2), 4)}ms '
       "${'=' * ((time * 20).toInt())}");
 }
 
 String padLeft(input, int length) {
   var result = input.toString();
   if (result.length < length) {
-    result = " " * (length - result.length) + result;
+    result = ' ' * (length - result.length) + result;
   }
 
   return result;
