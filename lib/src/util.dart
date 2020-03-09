@@ -8,9 +8,10 @@ String escapeHtml(String html) =>
 String escapeHtmlAttribute(String text) =>
     const HtmlEscape(HtmlEscapeMode.attribute).convert(text);
 
-// Escape the contents of [value], so that it may be used as an HTML attribute.
-
-// Based on http://spec.commonmark.org/0.28/#backslash-escapes.
+/// Escapes the contents of [value], so that it may be used as an HTML
+/// attribute.
+///
+/// Based on http://spec.commonmark.org/0.28/#backslash-escapes.
 String escapeAttribute(String value) {
   var result = StringBuffer();
   int ch;
@@ -72,3 +73,12 @@ String escapeAttribute(String value) {
   }
   return result.toString();
 }
+
+/// One or more whitespace, for compressing.
+final _oneOrMoreWhitespacePattern = RegExp('[ \n\r\t]+');
+
+/// "Normalizes" a link label, according to the [CommonMark spec].
+///
+/// [CommonMark spec] https://spec.commonmark.org/0.29/#link-label
+String normalizeLinkLabel(String label) =>
+    label.trim().replaceAll(_oneOrMoreWhitespacePattern, ' ').toLowerCase();

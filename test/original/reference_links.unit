@@ -90,3 +90,11 @@ Title">awesome</a></p>
 [coverage_status]: https://coveralls.io/repos/github/yeradis/stay_points.dart/badge.svg?branch=master
 <<<
 <p><a href="https://coveralls.io/github/yeradis/stay_points.dart?branch=master"><img src="https://coveralls.io/repos/github/yeradis/stay_points.dart/badge.svg?branch=master" alt="Coverage Status" /></a></p>
+>>> compressed reference link label is normalized
+Text [foo
+bar][].
+
+[foo bar]: http://bar.com
+<<<
+<p>Text <a href="http://bar.com">foo
+bar</a>.</p>
