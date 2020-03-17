@@ -172,18 +172,6 @@ equivalent to <code>!windows</code>.</p>
 </ul>
 <p>For example, if you wanted to run a test on every browser but Chrome, you would
 write <code>@TestOn("browser &amp;&amp; !chrome")</code>.</p>
-<h3>Running Tests on Dartium</h3>
-<p>Tests can be run on <a href="https://www.dartlang.org/tools/dartium/">Dartium</a> by passing the <code>-p dartium</code> flag. If you're
-using the Dart Editor, the test runner will be able to find Dartium
-automatically. On Mac OS, you can also <a href="https://github.com/dart-lang/homebrew-dart">install it using Homebrew</a>.
-Otherwise, make sure there's an executable called <code>dartium</code> (on Mac OS or Linux)
-or <code>dartium.exe</code> (on Windows) on your system path.</p>
-<p>Similarly, tests can be run on the headless Dartium content shell by passing <code>-p content-shell</code>. The content shell is installed along with Dartium when using
-Homebrew. Otherwise, you can downloaded it manually <a href="http://gsdview.appspot.com/dart-archive/channels/stable/release/latest/dartium/">from this
-page</a>; if you do, make sure the executable named <code>content_shell</code>
-(on Mac OS or Linux) or <code>content_shell.exe</code> (on Windows) is on your system path.</p>
-<p><a href="https://github.com/dart-lang/test/issues/63">In the future</a>, there will be a more explicit way to configure the
-location of both the Dartium and content shell executables.</p>
 <h2>Asynchronous Tests</h2>
 <p>Tests written with <code>async</code>/<code>await</code> will work automatically. The test runner
 won't consider the test finished until the returned <code>Future</code> completes.</p>
@@ -370,39 +358,3 @@ can also be a list of these values.</p>
 <p>If multiple platforms match, the configuration is applied in order from first to
 last, just as they would in nested groups. This means that for configuration
 like duration-based timeouts, the last matching value wins.</p>
-<h2>Testing With <code>barback</code></h2>
-<p>Packages using the <code>barback</code> transformer system may need to test code that's
-created or modified using transformers. The test runner handles this using the
-<code>--pub-serve</code> option, which tells it to load the test code from a <code>pub serve</code>
-instance rather than from the filesystem.</p>
-<p>Before using the <code>--pub-serve</code> option, add the <code>test/pub_serve</code> transformer to
-your <code>pubspec.yaml</code>. This transformer adds the necessary bootstrapping code that
-allows the test runner to load your tests properly:</p>
-<pre><code class="language-yaml">transformers:
-- test/pub_serve:
-    $include: test/**_test{.*,}.dart
-</code></pre>
-<p>Note that if you're using the test runner along with <a href="https://www.dartlang.org/polymer/"><code>polymer</code></a>, you
-have to make sure that the <code>test/pub_serve</code> transformer comes <em>after</em> the
-<code>polymer</code> transformer:</p>
-<pre><code class="language-yaml">transformers:
-- polymer
-- test/pub_serve:
-    $include: test/**_test{.*,}.dart
-</code></pre>
-<p>Then, start up <code>pub serve</code>. Make sure to pay attention to which port it's using
-to serve your <code>test/</code> directory:</p>
-<pre><code class="language-shell">$ pub serve
-Loading source assets...
-Loading test/pub_serve transformers...
-Serving my_app web on http://localhost:8080
-Serving my_app test on http://localhost:8081
-Build completed successfully
-</code></pre>
-<p>In this case, the port is <code>8081</code>. In another terminal, pass this port to
-<code>--pub-serve</code> and otherwise invoke <code>pub run test:test</code> as normal:</p>
-<pre><code class="language-shell">$ pub run test:test --pub-serve=8081 -p chrome
-"pub serve" is compiling test/my_app_test.dart...
-"pub serve" is compiling test/utils_test.dart...
-00:00 +42: All tests passed!
-</code></pre>
