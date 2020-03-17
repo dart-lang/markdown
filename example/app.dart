@@ -13,7 +13,7 @@ const typing = Duration(milliseconds: 150);
 final introText = r'''Markdown is the **best**!
 
 * It has lists.
-* It has [links](http://dartlang.org).
+* It has [links](http://dart.dev).
 * It has _so much more_...''';
 
 // Flavor support.

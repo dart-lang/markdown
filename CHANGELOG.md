@@ -77,7 +77,7 @@
   ```
 
 [strikethrough]: https://github.github.com/gfm/#strikethrough-extension-
-[pub-global]: https://www.dartlang.org/tools/pub/cmd/pub-global#running-a-script-from-your-path
+[pub-global]: https://dart.dev/tools/pub/cmd/pub-global#running-a-script-from-your-path
 
 ## 1.1.1
 

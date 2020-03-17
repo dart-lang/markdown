@@ -141,4 +141,4 @@ compliance with [CommonMark].
 [CommonMark source]: https://github.com/jgm/CommonMark/
 [pandoc-auto_identifiers]: http://pandoc.org/README.html#extension-auto_identifiers
 ["Markdown's XSS Vulnerability (and how to mitigate it)"]: https://github.com/showdownjs/showdown/wiki/Markdown%27s-XSS-Vulnerability-(and-how-to-mitigate-it)
-[NodeValidator]: https://api.dartlang.org/stable/latest/dart-html/NodeValidator-class.html
+[NodeValidator]: https://api.dart.dev/stable/dart-html/NodeValidator-class.html

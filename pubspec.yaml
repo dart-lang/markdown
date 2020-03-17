@@ -2,7 +2,6 @@ name: markdown
 version: 2.1.4-dev
 
 description: A library for converting markdown to HTML.
-author: Dart Team <misc@dartlang.org>
 homepage: https://github.com/dart-lang/markdown
 
 executables:
