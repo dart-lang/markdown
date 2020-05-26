@@ -841,10 +841,6 @@ class OrderedListSyntax extends ListSyntax {
 
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
-  static final _pipePattern = RegExp(r'\s*\|\s*');
-  static final _openingPipe = RegExp(r'^\|\s*');
-  static final _closingPipe = RegExp(r'\s*\|$');
-
   @override
   bool get canEndBlock => false;
 
@@ -897,8 +893,23 @@ class TableSyntax extends BlockSyntax {
   }
 
   List<String> parseAlignments(String line) {
-    line = line.replaceFirst(_openingPipe, '').replaceFirst(_closingPipe, '');
-    return line.split('|').map((column) {
+    var startIndex = _walkPastOpeningPipe(line);
+
+    var endIndex = line.length - 1;
+    while (endIndex > 0) {
+      var ch = line.codeUnitAt(endIndex);
+      if (ch == $pipe) {
+        endIndex--;
+        break;
+      }
+      if (ch != $space && ch != $tab) {
+        break;
+      }
+      endIndex--;
+    }
+
+    // Optimization: We walk [line] too many times. One lap should do it.
+    return line.substring(startIndex, endIndex + 1).split('|').map((column) {
       column = column.trim();
       if (column.startsWith(':') && column.endsWith(':')) return 'center';
       if (column.startsWith(':')) return 'left';
@@ -907,36 +918,17 @@ class TableSyntax extends BlockSyntax {
     }).toList();
   }
 
+  /// Parses a table row at the current line into a table row element, with
+  /// parsed table cells.
+  ///
+  /// [alignments] is used to annotate an alignment on each cell, and
+  /// [cellType] is used to declare either "td" or "th" cells.
   Element parseRow(
       BlockParser parser, List<String> alignments, String cellType) {
     var line = parser.current;
     var cells = <String>[];
-    var index = 0;
+    var index = _walkPastOpeningPipe(line);
     var cellBuffer = StringBuffer();
-
-    void walkPastLeadingWhitespace() {
-      while (index < line.length) {
-        var ch = line.codeUnitAt(index);
-        if (ch != $space && ch != $tab) {
-          break;
-        }
-        index++;
-      }
-    }
-
-    // Walk past possible opening pipe.
-    while (index < line.length) {
-      var ch = line.codeUnitAt(index);
-      if (ch == $pipe) {
-        index++;
-        walkPastLeadingWhitespace();
-      }
-      if (ch != $space && ch != $tab) {
-        // No leading pipe.
-        break;
-      }
-      index++;
-    }
 
     while (true) {
       if (index >= line.length) {
@@ -976,7 +968,7 @@ class TableSyntax extends BlockSyntax {
         cellBuffer.clear();
         // Walk forward past any whitespace which leads the next cell.
         index++;
-        walkPastLeadingWhitespace();
+        index = _walkPastWhitespace(line, index);
         if (index >= line.length) {
           // This row ended with a trailing pipe.
           break;
@@ -997,6 +989,43 @@ class TableSyntax extends BlockSyntax {
     }
 
     return Element('tr', row);
+  }
+
+  /// Walks past whitespace in [line] starting at [index].
+  ///
+  /// Returns the index of the first non-whitespace character.
+  int _walkPastWhitespace(String line, int index) {
+    while (index < line.length) {
+      var ch = line.codeUnitAt(index);
+      if (ch != $space && ch != $tab) {
+        break;
+      }
+      index++;
+    }
+    return index;
+  }
+
+  /// Walks past the opening pipe (and any whitespace that surrounds it) in
+  /// [line].
+  ///
+  /// Returns the index of the first non-whitespace character after the pipe.
+  /// If no opening pipe is found, this just returns the index of the first
+  /// non-whitespace character.
+  int _walkPastOpeningPipe(String line) {
+    var index = 0;
+    while (index < line.length) {
+      var ch = line.codeUnitAt(index);
+      if (ch == $pipe) {
+        index++;
+        index = _walkPastWhitespace(line, index);
+      }
+      if (ch != $space && ch != $tab) {
+        // No leading pipe.
+        break;
+      }
+      index++;
+    }
+    return index;
   }
 }
 
