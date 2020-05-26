@@ -84,3 +84,10 @@ too | many | cells | here
 
 <<<
 <table><thead><tr><th>Name</th><th>Character</th></tr></thead><tbody><tr><td>Backtick</td><td>`</td></tr><tr><td>Pipe</td><td>|</td></tr></tbody></table>
+>>> escape pipe, preserve trailing whitespace
+| Name     | Character |
+| ---      | ---       |
+| Pipe     | \| abcdef |
+
+<<<
+<table><thead><tr><th>Name</th><th>Character</th></tr></thead><tbody><tr><td>Pipe</td><td>| abcdef</td></tr></tbody></table>

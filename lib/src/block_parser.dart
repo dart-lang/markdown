@@ -911,8 +911,8 @@ class TableSyntax extends BlockSyntax {
       BlockParser parser, List<String> alignments, String cellType) {
     var line = parser.current;
     var cells = <String>[];
-    var cellStartIndex = 0;
     var index = 0;
+    var cellBuffer = StringBuffer();
 
     void walkPastLeadingWhitespace() {
       while (index < line.length) {
@@ -922,31 +922,6 @@ class TableSyntax extends BlockSyntax {
         }
         index++;
       }
-      cellStartIndex = index;
-    }
-
-    void addCell() {
-      // Walk backwards from the `|` (or end of line) past any trailing
-      // whitespace.
-      var cellEndIndex = index - 1;
-      while (true) {
-        if (cellEndIndex <= cellStartIndex) {
-          // This cell is just whitespace, which is ok.
-          cellEndIndex++;
-          break;
-        }
-        var ch = line.codeUnitAt(cellEndIndex);
-        if (ch != $space && ch != $tab) {
-          // This non-whitespace character must be included.
-          cellEndIndex++;
-          break;
-        }
-        cellEndIndex--;
-      }
-      cells.add(line.substring(cellStartIndex, cellEndIndex));
-      // Walk forward past any whitespace which leads the next cell.
-      index++;
-      walkPastLeadingWhitespace();
     }
 
     // Walk past possible opening pipe.
@@ -962,32 +937,54 @@ class TableSyntax extends BlockSyntax {
       }
       index++;
     }
-    cellStartIndex = index;
 
     while (true) {
       if (index >= line.length) {
         // This row ended without a trailing pipe, which is fine.
-        addCell();
+        cells.add(cellBuffer.toString().trimRight());
+        cellBuffer.clear();
         break;
       }
       var ch = line.codeUnitAt(index);
       if (ch == $backslash) {
         if (index == line.length - 1) {
-          // add?
+          // A table row ending in a backslash is not well-specified, but it
+          // looks like GitHub just allows the character as part of the text of
+          // the last cell.
+          cellBuffer.writeCharCode(ch);
+          cells.add(cellBuffer.toString().trimRight());
+          cellBuffer.clear();
           break;
         }
-        // Skip the next character.
+        var escaped = line.codeUnitAt(index + 1);
+        if (escaped == $pipe) {
+          // GitHub Flavored Markdown has a strange bit here; the pipe is to be
+          // escaped before any other inline processing. One consequence, for
+          // example, is that "| `\|` |" should be parsed as a cell with a code
+          // element with text "|", rather than "\|". Most parsers are not
+          // compliant with this corner, but this is what is specified, and what
+          // GitHub does in practice.
+          cellBuffer.writeCharCode(escaped);
+        } else {
+          // The [InlineParser] will handle the escaping.
+          cellBuffer.writeCharCode(ch);
+          cellBuffer.writeCharCode(escaped);
+        }
         index += 2;
-        continue;
-      }
-      if (ch == $pipe) {
-        addCell();
-        if (index + 1 >= line.length - 1) {
+      } else if (ch == $pipe) {
+        cells.add(cellBuffer.toString().trimRight());
+        cellBuffer.clear();
+        // Walk forward past any whitespace which leads the next cell.
+        index++;
+        walkPastLeadingWhitespace();
+        if (index >= line.length) {
           // This row ended with a trailing pipe.
           break;
         }
+      } else {
+        cellBuffer.writeCharCode(ch);
+        index++;
       }
-      index++;
     }
     parser.advance();
     var row = [
