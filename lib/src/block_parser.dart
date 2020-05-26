@@ -909,27 +909,90 @@ class TableSyntax extends BlockSyntax {
 
   Element parseRow(
       BlockParser parser, List<String> alignments, String cellType) {
-    var line = parser.current
-        .replaceFirst(_openingPipe, '')
-        .replaceFirst(_closingPipe, '');
-    var cells = line.split(_pipePattern);
-    parser.advance();
-    var row = <Element>[];
-    String preCell;
+    var line = parser.current;
+    var cells = <String>[];
+    var cellStartIndex = 0;
+    var index = 0;
 
-    for (var cell in cells) {
-      if (preCell != null) {
-        cell = preCell + cell;
-        preCell = null;
+    void walkPastLeadingWhitespace() {
+      while (index < line.length) {
+        var ch = line.codeUnitAt(index);
+        if (ch != $space && ch != $tab) {
+          break;
+        }
+        index++;
       }
-      if (cell.endsWith('\\')) {
-        preCell = cell.substring(0, cell.length - 1) + '|';
+      cellStartIndex = index;
+    }
+
+    void addCell() {
+      // Walk backwards from the `|` (or end of line) past any trailing
+      // whitespace.
+      var cellEndIndex = index - 1;
+      while (true) {
+        if (cellEndIndex <= cellStartIndex) {
+          // This cell is just whitespace, which is ok.
+          cellEndIndex++;
+          break;
+        }
+        var ch = line.codeUnitAt(cellEndIndex);
+        if (ch != $space && ch != $tab) {
+          // This non-whitespace character must be included.
+          cellEndIndex++;
+          break;
+        }
+        cellEndIndex--;
+      }
+      cells.add(line.substring(cellStartIndex, cellEndIndex));
+      // Walk forward past any whitespace which leads the next cell.
+      index++;
+      walkPastLeadingWhitespace();
+    }
+
+    // Walk past possible opening pipe.
+    while (index < line.length) {
+      var ch = line.codeUnitAt(index);
+      if (ch == $pipe) {
+        index++;
+        walkPastLeadingWhitespace();
+      }
+      if (ch != $space && ch != $tab) {
+        // No leading pipe.
+        break;
+      }
+      index++;
+    }
+    cellStartIndex = index;
+
+    while (true) {
+      if (index >= line.length) {
+        // This row ended without a trailing pipe, which is fine.
+        addCell();
+        break;
+      }
+      var ch = line.codeUnitAt(index);
+      if (ch == $backslash) {
+        if (index == line.length - 1) {
+          // add?
+          break;
+        }
+        // Skip the next character.
+        index += 2;
         continue;
       }
-
-      var contents = UnparsedContent(cell);
-      row.add(Element(cellType, [contents]));
+      if (ch == $pipe) {
+        addCell();
+        if (index + 1 >= line.length - 1) {
+          // This row ended with a trailing pipe.
+          break;
+        }
+      }
+      index++;
     }
+    parser.advance();
+    var row = [
+      for (var cell in cells) Element(cellType, [UnparsedContent(cell)])
+    ];
 
     for (var i = 0; i < row.length && i < alignments.length; i++) {
       if (alignments[i] == null) continue;
