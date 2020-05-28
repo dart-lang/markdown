@@ -16,7 +16,7 @@ void main() {
     // This is more a test of update_blns.dart: we're testing that the strings
     // were encoded half-decently, and nothing got globbed up into a big
     // multiline string.
-    expect(blns, hasLength(504));
+    expect(blns, hasLength(515));
   });
 
   var index = 0;
