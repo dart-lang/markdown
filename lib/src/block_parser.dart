@@ -841,10 +841,6 @@ class OrderedListSyntax extends ListSyntax {
 
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
-  static final _pipePattern = RegExp(r'\s*\|\s*');
-  static final _openingPipe = RegExp(r'^\|\s*');
-  static final _closingPipe = RegExp(r'\s*\|$');
-
   @override
   bool get canEndBlock => false;
 
@@ -897,8 +893,23 @@ class TableSyntax extends BlockSyntax {
   }
 
   List<String> parseAlignments(String line) {
-    line = line.replaceFirst(_openingPipe, '').replaceFirst(_closingPipe, '');
-    return line.split('|').map((column) {
+    var startIndex = _walkPastOpeningPipe(line);
+
+    var endIndex = line.length - 1;
+    while (endIndex > 0) {
+      var ch = line.codeUnitAt(endIndex);
+      if (ch == $pipe) {
+        endIndex--;
+        break;
+      }
+      if (ch != $space && ch != $tab) {
+        break;
+      }
+      endIndex--;
+    }
+
+    // Optimization: We walk [line] too many times. One lap should do it.
+    return line.substring(startIndex, endIndex + 1).split('|').map((column) {
       column = column.trim();
       if (column.startsWith(':') && column.endsWith(':')) return 'center';
       if (column.startsWith(':')) return 'left';
@@ -907,29 +918,70 @@ class TableSyntax extends BlockSyntax {
     }).toList();
   }
 
+  /// Parses a table row at the current line into a table row element, with
+  /// parsed table cells.
+  ///
+  /// [alignments] is used to annotate an alignment on each cell, and
+  /// [cellType] is used to declare either "td" or "th" cells.
   Element parseRow(
       BlockParser parser, List<String> alignments, String cellType) {
-    var line = parser.current
-        .replaceFirst(_openingPipe, '')
-        .replaceFirst(_closingPipe, '');
-    var cells = line.split(_pipePattern);
-    parser.advance();
-    var row = <Element>[];
-    String preCell;
+    var line = parser.current;
+    var cells = <String>[];
+    var index = _walkPastOpeningPipe(line);
+    var cellBuffer = StringBuffer();
 
-    for (var cell in cells) {
-      if (preCell != null) {
-        cell = preCell + cell;
-        preCell = null;
+    while (true) {
+      if (index >= line.length) {
+        // This row ended without a trailing pipe, which is fine.
+        cells.add(cellBuffer.toString().trimRight());
+        cellBuffer.clear();
+        break;
       }
-      if (cell.endsWith('\\')) {
-        preCell = cell.substring(0, cell.length - 1) + '|';
-        continue;
+      var ch = line.codeUnitAt(index);
+      if (ch == $backslash) {
+        if (index == line.length - 1) {
+          // A table row ending in a backslash is not well-specified, but it
+          // looks like GitHub just allows the character as part of the text of
+          // the last cell.
+          cellBuffer.writeCharCode(ch);
+          cells.add(cellBuffer.toString().trimRight());
+          cellBuffer.clear();
+          break;
+        }
+        var escaped = line.codeUnitAt(index + 1);
+        if (escaped == $pipe) {
+          // GitHub Flavored Markdown has a strange bit here; the pipe is to be
+          // escaped before any other inline processing. One consequence, for
+          // example, is that "| `\|` |" should be parsed as a cell with a code
+          // element with text "|", rather than "\|". Most parsers are not
+          // compliant with this corner, but this is what is specified, and what
+          // GitHub does in practice.
+          cellBuffer.writeCharCode(escaped);
+        } else {
+          // The [InlineParser] will handle the escaping.
+          cellBuffer.writeCharCode(ch);
+          cellBuffer.writeCharCode(escaped);
+        }
+        index += 2;
+      } else if (ch == $pipe) {
+        cells.add(cellBuffer.toString().trimRight());
+        cellBuffer.clear();
+        // Walk forward past any whitespace which leads the next cell.
+        index++;
+        index = _walkPastWhitespace(line, index);
+        if (index >= line.length) {
+          // This row ended with a trailing pipe.
+          break;
+        }
+      } else {
+        cellBuffer.writeCharCode(ch);
+        index++;
       }
-
-      var contents = UnparsedContent(cell);
-      row.add(Element(cellType, [contents]));
     }
+    parser.advance();
+    var row = [
+      for (var cell in cells) Element(cellType, [UnparsedContent(cell)])
+    ];
 
     for (var i = 0; i < row.length && i < alignments.length; i++) {
       if (alignments[i] == null) continue;
@@ -937,6 +989,43 @@ class TableSyntax extends BlockSyntax {
     }
 
     return Element('tr', row);
+  }
+
+  /// Walks past whitespace in [line] starting at [index].
+  ///
+  /// Returns the index of the first non-whitespace character.
+  int _walkPastWhitespace(String line, int index) {
+    while (index < line.length) {
+      var ch = line.codeUnitAt(index);
+      if (ch != $space && ch != $tab) {
+        break;
+      }
+      index++;
+    }
+    return index;
+  }
+
+  /// Walks past the opening pipe (and any whitespace that surrounds it) in
+  /// [line].
+  ///
+  /// Returns the index of the first non-whitespace character after the pipe.
+  /// If no opening pipe is found, this just returns the index of the first
+  /// non-whitespace character.
+  int _walkPastOpeningPipe(String line) {
+    var index = 0;
+    while (index < line.length) {
+      var ch = line.codeUnitAt(index);
+      if (ch == $pipe) {
+        index++;
+        index = _walkPastWhitespace(line, index);
+      }
+      if (ch != $space && ch != $tab) {
+        // No leading pipe.
+        break;
+      }
+      index++;
+    }
+    return index;
   }
 }
 
