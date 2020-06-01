@@ -4,17 +4,16 @@
 
 import 'dart:io';
 
-import 'package:path/path.dart' as p;
-
 import 'package:markdown/markdown.dart';
+import 'package:path/path.dart' as p;
 
 const numTrials = 100;
 const runsPerTrial = 50;
 
-final source = loadFile('input.md');
-final expected = loadFile('output.html');
+final source = _loadFile('input.md');
+final expected = _loadFile('output.html');
 
-void main(List<String> args) {
+void main() {
   var best = double.infinity;
 
   // Run the benchmark several times. This ensures the VM is warmed up and lets
@@ -45,23 +44,23 @@ void main(List<String> args) {
     // Don't print the first run. It's always terrible since the VM hasn't
     // warmed up yet.
     if (i == 0) continue;
-    printResult("Run ${padLeft('#$i', 3)}", elapsed);
+    _printResult("Run ${_padLeft('#$i', 3)}", elapsed);
   }
 
-  printResult('Best   ', best);
+  _printResult('Best   ', best);
 }
 
-String loadFile(String name) {
+String _loadFile(String name) {
   var path = p.join(p.dirname(p.fromUri(Platform.script)), name);
   return File(path).readAsStringSync();
 }
 
-void printResult(String label, double time) {
-  print('$label: ${padLeft(time.toStringAsFixed(2), 4)}ms '
+void _printResult(String label, double time) {
+  print('$label: ${_padLeft(time.toStringAsFixed(2), 4)}ms '
       "${'=' * ((time * 20).toInt())}");
 }
 
-String padLeft(input, int length) {
+String _padLeft(String input, int length) {
   var result = input.toString();
   if (result.length < length) {
     result = ' ' * (length - result.length) + result;

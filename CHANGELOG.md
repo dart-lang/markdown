@@ -1,3 +1,8 @@
+## 2.1.4
+
+* Correctly parse a reference link with a newline in the link reference part
+  ([#281](https://github.com/dart-lang/markdown/issues/281)).
+
 ## 2.1.3
 
 * Do not encode HTML in link URLs. Also do not encode HTML in link text when

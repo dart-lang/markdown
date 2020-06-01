@@ -1,4 +1,4 @@
-include: package:pedantic/analysis_options.yaml
+include: package:pedantic/analysis_options.1.9.0.yaml
 analyzer:
   language:
     strict-inference: true
@@ -7,7 +7,6 @@ analyzer:
     implicit-casts: false
   errors:
     dead_code: error
-    override_on_non_overriding_method: error
     unused_element: error
     unused_import: error
     unused_local_variable: error
@@ -15,8 +14,6 @@ analyzer:
     inference_failure_on_untyped_parameter: ignore
 linter:
   rules:
-    #- annotate_overrides
-    - avoid_null_checks_in_equality_operators
     - await_only_futures
     - camel_case_types
     # https://github.com/dart-lang/linter/issues/574
@@ -29,13 +26,9 @@ linter:
     - iterable_contains_unrelated_type
     - list_remove_unrelated_type
     - non_constant_identifier_names
-    - omit_local_variable_types
     - only_throw_errors
     - overridden_fields
     - package_api_docs
-    - prefer_final_fields
-    - prefer_generic_function_type_aliases
-    #- prefer_single_quotes
     - test_types_in_equals
     - throw_in_finally
     - unnecessary_brace_in_string_interps
