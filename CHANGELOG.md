@@ -1,3 +1,9 @@
+## 2.1.5
+
+* Overhaul table row parsing. This does not have many consequences, except that
+  whitespace around escaped pipes is handled better.
+  ([#287](https://github.com/dart-lang/markdown/issues/287)).
+
 ## 2.1.4
 
 * Correctly parse a reference link with a newline in the link reference part
