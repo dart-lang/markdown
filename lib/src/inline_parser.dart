@@ -17,7 +17,6 @@ class InlineParser {
     EmailAutolinkSyntax(),
     AutolinkSyntax(),
     LineBreakSyntax(),
-    LinkSyntax(),
     ImageSyntax(),
     // Allow any punctuation to be escaped.
     EscapeSyntax(),
@@ -44,7 +43,6 @@ class InlineParser {
     TextSyntax(r'<', sub: '&lt;', startCharacter: $lt),
     // Encode ">".
     TextSyntax(r'>', sub: '&gt;', startCharacter: $gt),
-    // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
 
   /// The string of Markdown being parsed.
