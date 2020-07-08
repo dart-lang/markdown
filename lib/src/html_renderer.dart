@@ -53,6 +53,23 @@ const _blockTags = [
   'p',
   'pre',
   'ul',
+  'address',
+  'article',
+  'aside',
+  'details',
+  'dd',
+  'div',
+  'dl',
+  'dt',
+  'figcaption',
+  'figure',
+  'footer',
+  'header',
+  'hgroup',
+  'main',
+  'nav',
+  'section',
+  'table'
 ];
 
 /// Translates a parsed AST to HTML.
