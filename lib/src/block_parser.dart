@@ -51,6 +51,10 @@ final _olPattern =
 /// A line of hyphens separated by at least one pipe.
 final _tablePattern = RegExp(r'^[ ]{0,3}\|?( *:?\-+:? *\|)+( *:?\-+:? *)?$');
 
+/// A pattern which should never be used. It just satisfies non-nullability of
+/// pattern fields.
+final _dummyPattern = RegExp('');
+
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
 class BlockParser {
@@ -162,7 +166,7 @@ abstract class BlockSyntax {
   const BlockSyntax();
 
   /// Gets the regex used to identify the beginning of this block, if any.
-  RegExp get pattern => null;
+  RegExp get pattern;
 
   bool get canEndBlock => true;
 
@@ -219,6 +223,9 @@ class EmptyBlockSyntax extends BlockSyntax {
 
 /// Parses setext-style headers.
 class SetextHeaderSyntax extends BlockSyntax {
+  @override
+  RegExp get pattern => _dummyPattern;
+
   const SetextHeaderSyntax();
 
   @override
@@ -263,7 +270,7 @@ class SetextHeaderSyntax extends BlockSyntax {
 
     var contents = UnparsedContent(lines.join('\n'));
 
-    return Element(tag, [contents]);
+    return Element(tag /*!*/, [contents]);
   }
 
   bool _interperableAsParagraph(String line) =>
@@ -334,7 +341,7 @@ class BlockquoteSyntax extends BlockSyntax {
     while (!parser.isDone) {
       var match = pattern.firstMatch(parser.current);
       if (match != null) {
-        childLines.add(match[1]);
+        childLines.add(match[1] /*!*/);
         parser.advance();
         continue;
       }
@@ -657,7 +664,7 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
 
-    Match match;
+    /*late*/ Match match;
     bool tryMatch(RegExp pattern) {
       match = pattern.firstMatch(parser.current);
       return match != null;
@@ -689,12 +696,12 @@ abstract class ListSyntax extends BlockSyntax {
         // Horizontal rule takes precedence to a new list item.
         break;
       } else if (tryMatch(_ulPattern) || tryMatch(_olPattern)) {
-        var precedingWhitespace = match[1];
+        var precedingWhitespace = match[1] /*!*/;
         var digits = match[2] ?? '';
         if (startNumber == null && digits.isNotEmpty) {
           startNumber = int.parse(digits);
         }
-        var marker = match[3];
+        var marker = match[3] /*!*/;
         var firstWhitespace = match[5] ?? '';
         var restWhitespace = match[6] ?? '';
         var content = match[7] ?? '';
@@ -768,11 +775,14 @@ abstract class ListSyntax extends BlockSyntax {
       // We must post-process the list items, converting any top-level paragraph
       // elements to just text elements.
       for (var item in itemNodes) {
-        for (var i = 0; i < item.children.length; i++) {
-          var child = item.children[i];
-          if (child is Element && child.tag == 'p') {
-            item.children.removeAt(i);
-            item.children.insertAll(i, child.children);
+        var children = item.children;
+        if (children != null) {
+          for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child is Element && child.tag == 'p') {
+              children.removeAt(i);
+              children.insertAll(i, child.children);
+            }
           }
         }
       }
@@ -844,6 +854,9 @@ class TableSyntax extends BlockSyntax {
   @override
   bool get canEndBlock => false;
 
+  @override
+  RegExp get pattern => _dummyPattern;
+
   const TableSyntax();
 
   @override
@@ -874,9 +887,15 @@ class TableSyntax extends BlockSyntax {
     var rows = <Element>[];
     while (!parser.isDone && !BlockSyntax.isAtBlockEnd(parser)) {
       var row = parseRow(parser, alignments, 'td');
-      while (row.children.length < columnCount) {
-        // Insert synthetic empty cells.
-        row.children.add(Element.empty('td'));
+      var children = row.children;
+      if (children != null) {
+        while (children.length < columnCount) {
+          // Insert synthetic empty cells.
+          children.add(Element.empty('td'));
+        }
+        while (children.length > columnCount) {
+          children.removeLast();
+        }
       }
       while (row.children.length > columnCount) {
         row.children.removeLast();
@@ -1036,6 +1055,9 @@ class ParagraphSyntax extends BlockSyntax {
   static final _whitespacePattern = RegExp(r'^\s*$');
 
   @override
+  RegExp get pattern => _dummyPattern;
+
+  @override
   bool get canEndBlock => false;
 
   const ParagraphSyntax();
@@ -1169,7 +1191,7 @@ class ParagraphSyntax extends BlockSyntax {
     }
 
     var label = match[1];
-    var destination = match[2] ?? match[3];
+    var destination = (match[2] ?? match[3]) /*!*/;
     var title = match[4];
 
     // The label must contain at least one non-whitespace character.

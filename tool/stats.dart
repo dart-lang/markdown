@@ -51,10 +51,10 @@ Future<void> main(List<String> args) async {
   }
 
   var specifiedSection = options['section'] as String;
-  var raw = options['raw'] as bool;
-  var verbose = options['verbose'] as bool;
-  var verboseLooseMatch = options['verbose-loose'] as bool;
-  var updateFiles = options['update-files'] as bool;
+  var raw = options['raw'] as bool /*!*/;
+  var verbose = options['verbose'] as bool /*!*/;
+  var verboseLooseMatch = options['verbose-loose'] as bool /*!*/;
+  var updateFiles = options['update-files'] as bool /*!*/;
 
   if (updateFiles && (raw || verbose || (specifiedSection != null))) {
     stderr.writeln('The `update-files` flag must be used by itself');
