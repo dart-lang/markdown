@@ -74,10 +74,10 @@ class CommonMarkTestCase {
   factory CommonMarkTestCase.fromJson(Map<String, dynamic> json) {
     return CommonMarkTestCase(
         json['example'] as int,
-        json['section'] as String,
+        json['section'] as String /*!*/,
         json['start_line'] as int,
         json['end_line'] as int,
-        json['markdown'] as String,
+        json['markdown'] as String /*!*/,
         json['html'] as String);
   }
 

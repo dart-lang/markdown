@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:charcode/charcode.dart';
+import 'package:meta/meta.dart';
 
 import 'ast.dart';
 import 'document.dart';
@@ -113,7 +114,7 @@ class InlineParser {
     }
 
     // Unwind any unmatched tags and get the results.
-    return _stack[0].close(this, null);
+    return _stack[0].close(this, null) ?? [];
   }
 
   int charAt(int index) => source.codeUnitAt(index);
@@ -303,7 +304,7 @@ class EmailAutolinkSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    var url = match[1];
+    var url = match[1] /*!*/;
     var text = parser.document.encodeHtml ? escapeHtml(url) : url;
     var anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull('mailto:$url');
@@ -407,9 +408,10 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     // https://github.github.com/gfm/#example-599
     final trailingPunc = regExpTrailingPunc.firstMatch(url);
     if (trailingPunc != null) {
-      url = url.substring(0, url.length - trailingPunc[0].length);
-      href = href.substring(0, href.length - trailingPunc[0].length);
-      matchLength -= trailingPunc[0].length;
+      var trailingLength = trailingPunc[0].length;
+      url = url.substring(0, url.length - trailingLength);
+      href = href.substring(0, href.length - trailingLength);
+      matchLength -= trailingLength;
     }
 
     // If an autolink ends in a semicolon (;), we check to see if it appears
@@ -422,9 +424,10 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       final entityRef = regExpEndsWithColon.firstMatch(url);
       if (entityRef != null) {
         // Strip out HTML entity reference
-        url = url.substring(0, url.length - entityRef[0].length);
-        href = href.substring(0, href.length - entityRef[0].length);
-        matchLength -= entityRef[0].length;
+        var entityRefLength = entityRef[0].length;
+        url = url.substring(0, url.length - entityRefLength);
+        href = href.substring(0, href.length - entityRefLength);
+        matchLength -= entityRefLength;
       }
     }
 
@@ -499,12 +502,12 @@ class _DelimiterRun {
   final bool isFollowedByPunctuation;
 
   _DelimiterRun._({
-    this.char,
-    this.length,
-    this.isLeftFlanking,
-    this.isRightFlanking,
-    this.isPrecededByPunctuation,
-    this.isFollowedByPunctuation,
+    @required this.char,
+    @required this.length,
+    @required this.isLeftFlanking,
+    @required this.isRightFlanking,
+    @required this.isPrecededByPunctuation,
+    @required this.isFollowedByPunctuation,
   });
 
   static _DelimiterRun tryParse(InlineParser parser, int runStart, int runEnd) {
