@@ -1,7 +1,9 @@
 language: dart
 
 dart:
-  - 2.6.0
+  # Because of build_runner difficulties with the null safety experiment, only
+  # run on dev channel for a while.
+  # - 2.6.0
   - dev
 
 dart_task:
