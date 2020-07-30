@@ -1,3 +1,10 @@
+## 2.1.6
+
+* Fix for custom link resolvers
+  ([#295](https://github.com/dart-lang/markdown/issues/295)).
+* Add missing HTML 5 block-level items
+  ([#294](https://github.com/dart-lang/markdown/pull/294)).
+
 ## 2.1.5
 
 * Overhaul table row parsing. This does not have many consequences, except that
