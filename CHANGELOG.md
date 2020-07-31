@@ -1,3 +1,7 @@
+## 2.1.7
+
+* Add dependency on the meta package
+
 ## 2.1.6
 
 * Fix for custom link resolvers
