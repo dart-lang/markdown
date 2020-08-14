@@ -57,29 +57,55 @@ void main() {
 ### Extension sets
 
 To make extension management easy, you can also just specify an extension set.
-Both `markdownToHtml()` and `new Document()` accept an `extensionSet` named
-parameter. Right now there are two extension sets:
+Both `markdownToHtml()` and `Document()` accept an `extensionSet` named
+parameter. Currently, there are four pre-defined extension sets:
 
 * `ExtensionSet.none` includes no extensions. With no extensions, Markdown
-  documents will be parsed closely to how they might be parsed by the original
+  documents will be parsed with a default set of block and inline syntax
+  parsers that closely match how the document might be parsed by the original
   [Perl Markdown][] implementation.
-* `ExtensionSet.commonMark` includes two extensions so far, which bring this
-  package's Markdown parsing closer to what is found in the [CommonMark] spec:
 
-  * `new InlineHtmlSyntax()`
-  * `const FencedCodeBlockSyntax()`
+* `ExtensionSet.commonMark` includes two extensions in addition to the default
+  parsers to bring the parsed output closer to the [CommonMark] specification:
 
-* `ExtensionSet.gitHubWeb` includes seven extensions:
+  * Block Syntax Parser
+    * `const FencedCodeBlockSyntax()`
+  
+  * Inline Syntax Parser
+    * `InlineHtmlSyntax()`
 
-  * `new EmojiSyntax()`
-  * `new InlineHtmlSyntax()`
-  * `const HeaderWithIdSyntax()`, which adds `id` attributes to ATX-style
-    headers, for easy intra-document linking.
-  * `const SetextHeaderWithIdSyntax()`, which adds `id` attributes to
-    Setext-style headers, for easy intra-document linking.
-  * `const FencedCodeBlockSyntax()`
-  * `new StrikethroughSyntax()`
-  * `const TableSyntax()`
+* `ExtensionSet.gitHubFlavored` includes five extensions in addition to the default
+  parsers to bring the parsed output close to the [GitHub Flavored] Markdown
+  specification: 
+
+  * Block Syntax Parser
+    * `const FencedCodeBlockSyntax()`
+    * `const TableSyntax()`
+  
+  * Inline Syntax Parser
+    * `InlineHtmlSyntax()`
+    * `StrikethroughSyntax()`
+    * `AutolinkExtensionSyntax()`
+
+* `ExtensionSet.gitHubWeb` includes eight extensions. The same set of parsers use
+   in the `gitHubFlavored` extension set with the addition of the block syntax parsers,
+   HeaderWithIdSyntax and SetextHeaderWithIdSyntax, which add `id` attributes to
+   headers and inline syntac parser, EmojiSyntax, for parsing GitHub style emoji
+   characters:
+
+  * Block Syntax Parser
+    * `const FencedCodeBlockSyntax()`
+    * `const HeaderWithIdSyntax()`, which adds `id` attributes to ATX-style
+      headers, for easy intra-document linking.
+    * `const SetextHeaderWithIdSyntax()`, which adds `id` attributes to
+      Setext-style headers, for easy intra-document linking.
+    * `const TableSyntax()`
+  
+  * Inline Syntax Parser
+    * `InlineHtmlSyntax()`
+    * `StrikethroughSyntax()`
+    * `EmojiSyntax()`
+    * `AutolinkExtensionSyntax()`
 
 ### Custom syntax extensions
 
