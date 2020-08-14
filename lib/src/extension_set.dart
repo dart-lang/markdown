@@ -15,14 +15,21 @@ class ExtensionSet {
   /// fenced code blocks, or inline HTML.
   ///
   /// [Markdown.pl]: http://daringfireball.net/projects/markdown/syntax
-  static final ExtensionSet none = ExtensionSet([], []);
+  static final ExtensionSet none = ExtensionSet(
+    List<BlockSyntax>.unmodifiable(<BlockSyntax>[]),
+    List<InlineSyntax>.unmodifiable(<InlineSyntax>[]),
+  );
 
   /// The [commonMark] extension set is close to compliance with [CommonMark].
   ///
   /// [CommonMark]: http://commonmark.org/
   static final ExtensionSet commonMark = ExtensionSet(
-    [const FencedCodeBlockSyntax()],
-    [InlineHtmlSyntax()],
+    List<BlockSyntax>.unmodifiable(
+      <BlockSyntax>[const FencedCodeBlockSyntax()],
+    ),
+    List<InlineSyntax>.unmodifiable(
+      <InlineSyntax>[InlineHtmlSyntax()],
+    ),
   );
 
   /// The [gitHubWeb] extension set renders Markdown similarly to GitHub.
@@ -34,30 +41,44 @@ class ExtensionSet {
   /// linkable IDs.)
   ///
   /// [GitHub flavored Markdown]: https://github.github.com/gfm/
-  static final ExtensionSet gitHubWeb = ExtensionSet([
-    const FencedCodeBlockSyntax(),
-    const HeaderWithIdSyntax(),
-    const SetextHeaderWithIdSyntax(),
-    const TableSyntax()
-  ], [
-    InlineHtmlSyntax(),
-    StrikethroughSyntax(),
-    EmojiSyntax(),
-    AutolinkExtensionSyntax(),
-  ]);
+  static final ExtensionSet gitHubWeb = ExtensionSet(
+    List<BlockSyntax>.unmodifiable(
+      <BlockSyntax>[
+        const FencedCodeBlockSyntax(),
+        const HeaderWithIdSyntax(),
+        const SetextHeaderWithIdSyntax(),
+        const TableSyntax(),
+      ],
+    ),
+    List<InlineSyntax>.unmodifiable(
+      <InlineSyntax>[
+        InlineHtmlSyntax(),
+        StrikethroughSyntax(),
+        EmojiSyntax(),
+        AutolinkExtensionSyntax()
+      ],
+    ),
+  );
 
   /// The [gitHubFlavored] extension set is close to compliance with the [GitHub
   /// flavored Markdown spec].
   ///
   /// [GitHub flavored Markdown]: https://github.github.com/gfm/
-  static final ExtensionSet gitHubFlavored = ExtensionSet([
-    const FencedCodeBlockSyntax(),
-    const TableSyntax()
-  ], [
-    InlineHtmlSyntax(),
-    StrikethroughSyntax(),
-    AutolinkExtensionSyntax(),
-  ]);
+  static final ExtensionSet gitHubFlavored = ExtensionSet(
+    List<BlockSyntax>.unmodifiable(
+      <BlockSyntax>[
+        const FencedCodeBlockSyntax(),
+        const TableSyntax(),
+      ],
+    ),
+    List<InlineSyntax>.unmodifiable(
+      <InlineSyntax>[
+        InlineHtmlSyntax(),
+        StrikethroughSyntax(),
+        AutolinkExtensionSyntax()
+      ],
+    ),
+  );
 
   final List<BlockSyntax> blockSyntaxes;
   final List<InlineSyntax> inlineSyntaxes;
