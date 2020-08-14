@@ -755,8 +755,8 @@ abstract class ListSyntax extends BlockSyntax {
     endItem();
     var itemNodes = <Element>[];
 
-    items.forEach(removeLeadingEmptyLine);
-    var anyEmptyLines = removeTrailingEmptyLines(items);
+    items.forEach(_removeLeadingEmptyLine);
+    var anyEmptyLines = _removeTrailingEmptyLines(items);
     var anyEmptyLinesBetweenBlocks = false;
 
     for (var item in items) {
@@ -795,15 +795,20 @@ abstract class ListSyntax extends BlockSyntax {
     }
   }
 
-  void removeLeadingEmptyLine(ListItem item) {
+  void _removeLeadingEmptyLine(ListItem item) {
     if (item.lines.isNotEmpty && _emptyPattern.hasMatch(item.lines.first)) {
       item.lines.removeAt(0);
     }
   }
 
+  @Deprecated(
+      'Public method was intended to be private; will be removed in a major '
+      'version release, as early as markdown 3.0.0')
+  void removeLeadingEmptyLine(ListItem item) => _removeLeadingEmptyLine(item);
+
   /// Removes any trailing empty lines and notes whether any items are separated
   /// by such lines.
-  bool removeTrailingEmptyLines(List<ListItem> items) {
+  bool _removeTrailingEmptyLines(List<ListItem> items) {
     var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
       if (items[i].lines.length == 1) continue;
@@ -817,6 +822,12 @@ abstract class ListSyntax extends BlockSyntax {
     }
     return anyEmpty;
   }
+
+  @Deprecated(
+      'Public method was intended to be private; will be removed in a major '
+      'version release, as early as markdown 3.0.0')
+  bool removeTrailingEmptyLines(List<ListItem> items) =>
+      _removeTrailingEmptyLines(items);
 
   static int _expandedTabLength(String input) {
     var length = 0;
@@ -873,9 +884,9 @@ class TableSyntax extends BlockSyntax {
   /// * many body rows of body cells (`<td>` cells)
   @override
   Node parse(BlockParser parser) {
-    var alignments = parseAlignments(parser.next);
+    var alignments = _parseAlignments(parser.next);
     var columnCount = alignments.length;
-    var headRow = parseRow(parser, alignments, 'th');
+    var headRow = _parseRow(parser, alignments, 'th');
     if (headRow.children.length != columnCount) {
       return null;
     }
@@ -886,7 +897,7 @@ class TableSyntax extends BlockSyntax {
 
     var rows = <Element>[];
     while (!parser.isDone && !BlockSyntax.isAtBlockEnd(parser)) {
-      var row = parseRow(parser, alignments, 'td');
+      var row = _parseRow(parser, alignments, 'td');
       var children = row.children;
       if (children != null) {
         while (children.length < columnCount) {
@@ -911,7 +922,7 @@ class TableSyntax extends BlockSyntax {
     }
   }
 
-  List<String> parseAlignments(String line) {
+  List<String> _parseAlignments(String line) {
     var startIndex = _walkPastOpeningPipe(line);
 
     var endIndex = line.length - 1;
@@ -937,12 +948,17 @@ class TableSyntax extends BlockSyntax {
     }).toList();
   }
 
+  @Deprecated(
+      'Public method was intended to be private; will be removed in a major '
+      'version release, as early as markdown 3.0.0')
+  List<String> parseAlignments(String line) => _parseAlignments(line);
+
   /// Parses a table row at the current line into a table row element, with
   /// parsed table cells.
   ///
   /// [alignments] is used to annotate an alignment on each cell, and
   /// [cellType] is used to declare either "td" or "th" cells.
-  Element parseRow(
+  Element _parseRow(
       BlockParser parser, List<String> alignments, String cellType) {
     var line = parser.current;
     var cells = <String>[];
@@ -1009,6 +1025,13 @@ class TableSyntax extends BlockSyntax {
 
     return Element('tr', row);
   }
+
+  @Deprecated(
+      'Public method was intended to be private; will be removed in a major '
+      'version release, as early as markdown 3.0.0')
+  Element parseRow(
+          BlockParser parser, List<String> alignments, String cellType) =>
+      _parseRow(parser, alignments, cellType);
 
   /// Walks past whitespace in [line] starting at [index].
   ///
