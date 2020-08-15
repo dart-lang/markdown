@@ -1,3 +1,10 @@
+## 2.1.8
+
+* Deprecate the _public_ methods `ListSyntax.removeLeadingEmptyLine`,
+  `ListSyntax.removeTrailingEmptyLines`, `TableSyntax.parseAlignments`,
+  `TableSyntax.parseRow`. These will be made private in a major version bump as
+  early as 3.0.0.
+
 ## 2.1.7
 
 * Add dependency on the meta package
