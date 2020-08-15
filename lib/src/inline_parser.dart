@@ -81,17 +81,17 @@ class InlineParser {
       syntaxes.add(TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9](?=\s)'));
     }
 
+    // Custom link resolvers go after the generic text syntax.
+    syntaxes.addAll([
+      LinkSyntax(linkResolver: document.linkResolver),
+      ImageSyntax(linkResolver: document.imageLinkResolver)
+    ]);
+
     syntaxes.addAll(_defaultSyntaxes);
 
     if (document.encodeHtml) {
       syntaxes.addAll(_htmlSyntaxes);
     }
-
-    // Custom link resolvers go after the generic text syntax.
-    syntaxes.insertAll(1, [
-      LinkSyntax(linkResolver: document.linkResolver),
-      ImageSyntax(linkResolver: document.imageLinkResolver)
-    ]);
   }
 
   List<Node> parse() {
