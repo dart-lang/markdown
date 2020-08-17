@@ -1,3 +1,9 @@
+## 3.0.0-dev
+
+* **Breaking change:** Remove `ListSyntax.removeLeadingEmptyLine`,
+  `ListSyntax.removeTrailingEmptyLines`, `TableSyntax.parseAlignments`,
+  `TableSyntax.parseRow`.
+
 ## 2.1.8
 
 * Deprecate the _public_ methods `ListSyntax.removeLeadingEmptyLine`,
