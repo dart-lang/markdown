@@ -801,11 +801,6 @@ abstract class ListSyntax extends BlockSyntax {
     }
   }
 
-  @Deprecated(
-      'Public method was intended to be private; will be removed in a major '
-      'version release, as early as markdown 3.0.0')
-  void removeLeadingEmptyLine(ListItem item) => _removeLeadingEmptyLine(item);
-
   /// Removes any trailing empty lines and notes whether any items are separated
   /// by such lines.
   bool _removeTrailingEmptyLines(List<ListItem> items) {
@@ -822,12 +817,6 @@ abstract class ListSyntax extends BlockSyntax {
     }
     return anyEmpty;
   }
-
-  @Deprecated(
-      'Public method was intended to be private; will be removed in a major '
-      'version release, as early as markdown 3.0.0')
-  bool removeTrailingEmptyLines(List<ListItem> items) =>
-      _removeTrailingEmptyLines(items);
 
   static int _expandedTabLength(String input) {
     var length = 0;
@@ -948,11 +937,6 @@ class TableSyntax extends BlockSyntax {
     }).toList();
   }
 
-  @Deprecated(
-      'Public method was intended to be private; will be removed in a major '
-      'version release, as early as markdown 3.0.0')
-  List<String> parseAlignments(String line) => _parseAlignments(line);
-
   /// Parses a table row at the current line into a table row element, with
   /// parsed table cells.
   ///
@@ -1025,13 +1009,6 @@ class TableSyntax extends BlockSyntax {
 
     return Element('tr', row);
   }
-
-  @Deprecated(
-      'Public method was intended to be private; will be removed in a major '
-      'version release, as early as markdown 3.0.0')
-  Element parseRow(
-          BlockParser parser, List<String> alignments, String cellType) =>
-      _parseRow(parser, alignments, cellType);
 
   /// Walks past whitespace in [line] starting at [index].
   ///
