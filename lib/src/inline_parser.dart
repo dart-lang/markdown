@@ -500,6 +500,7 @@ class _DelimiterRun {
   final bool isRightFlanking;
   final bool isPrecededByPunctuation;
   final bool isFollowedByPunctuation;
+  final bool allowIntraWord;
 
   _DelimiterRun._({
     @required this.char,
@@ -508,9 +509,11 @@ class _DelimiterRun {
     @required this.isRightFlanking,
     @required this.isPrecededByPunctuation,
     @required this.isFollowedByPunctuation,
+    @required this.allowIntraWord,
   });
 
-  static _DelimiterRun tryParse(InlineParser parser, int runStart, int runEnd) {
+  static _DelimiterRun tryParse(InlineParser parser, int runStart, int runEnd,
+      {bool allowIntraWord = false}) {
     bool leftFlanking,
         rightFlanking,
         precededByPunctuation,
@@ -538,7 +541,8 @@ class _DelimiterRun {
     } else {
       leftFlanking = !followedByPunctuation ||
           whitespace.contains(preceding) ||
-          precededByPunctuation;
+          precededByPunctuation ||
+          allowIntraWord;
     }
 
     // http://spec.commonmark.org/0.28/#right-flanking-delimiter-run
@@ -547,7 +551,8 @@ class _DelimiterRun {
     } else {
       rightFlanking = !precededByPunctuation ||
           whitespace.contains(following) ||
-          followedByPunctuation;
+          followedByPunctuation ||
+          allowIntraWord;
     }
 
     if (!leftFlanking && !rightFlanking) {
@@ -562,6 +567,7 @@ class _DelimiterRun {
       isRightFlanking: rightFlanking,
       isPrecededByPunctuation: precededByPunctuation,
       isFollowedByPunctuation: followedByPunctuation,
+      allowIntraWord: allowIntraWord,
     );
   }
 
@@ -573,12 +579,18 @@ class _DelimiterRun {
   // Whether a delimiter in this run can open emphasis or strong emphasis.
   bool get canOpen =>
       isLeftFlanking &&
-      (char == $asterisk || !isRightFlanking || isPrecededByPunctuation);
+      (char == $asterisk ||
+          !isRightFlanking ||
+          allowIntraWord ||
+          isPrecededByPunctuation);
 
   // Whether a delimiter in this run can close emphasis or strong emphasis.
   bool get canClose =>
       isRightFlanking &&
-      (char == $asterisk || !isLeftFlanking || isFollowedByPunctuation);
+      (char == $asterisk ||
+          !isLeftFlanking ||
+          allowIntraWord ||
+          isFollowedByPunctuation);
 }
 
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
@@ -592,6 +604,11 @@ class TagSyntax extends InlineSyntax {
   /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
   final bool requiresDelimiterRun;
 
+  /// Whether to allow intra-word delimiter runs. CommonMark emphasis and
+  /// strong emphasis does not allow this, but GitHub-Flavored Markdown allows
+  /// it on strikethrough.
+  final bool allowIntraWord;
+
   /// Create a new [TagSyntax] which matches text on [pattern].
   ///
   /// If [end] is passed, it is used as the pattern which denotes the end of
@@ -600,7 +617,10 @@ class TagSyntax extends InlineSyntax {
   /// emphasis delimiters.  If [startCharacter] is passed, it is used as a
   /// pre-matching check which is faster than matching against [pattern].
   TagSyntax(String pattern,
-      {String end, this.requiresDelimiterRun = false, int startCharacter})
+      {String end,
+      this.requiresDelimiterRun = false,
+      int startCharacter,
+      this.allowIntraWord = false})
       : endPattern = RegExp((end != null) ? end : pattern, multiLine: true),
         super(pattern, startCharacter: startCharacter);
 
@@ -614,7 +634,8 @@ class TagSyntax extends InlineSyntax {
       return true;
     }
 
-    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
+    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd,
+        allowIntraWord: allowIntraWord);
     if (delimiterRun != null && delimiterRun.canOpen) {
       parser.openTag(TagState(parser.pos, matchEnd + 1, this, delimiterRun));
       return true;
@@ -629,7 +650,8 @@ class TagSyntax extends InlineSyntax {
     var matchStart = parser.pos;
     var matchEnd = parser.pos + runLength - 1;
     var openingRunLength = state.endPos - state.startPos;
-    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
+    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd,
+        allowIntraWord: allowIntraWord);
 
     if (openingRunLength == 1 && runLength == 1) {
       parser.addNode(Element('em', state.children));
@@ -665,14 +687,16 @@ class TagSyntax extends InlineSyntax {
 
 /// Matches strikethrough syntax according to the GFM spec.
 class StrikethroughSyntax extends TagSyntax {
-  StrikethroughSyntax() : super('~+', requiresDelimiterRun: true);
+  StrikethroughSyntax()
+      : super('~+', requiresDelimiterRun: true, allowIntraWord: true);
 
   @override
   bool onMatchEnd(InlineParser parser, Match match, TagState state) {
     var runLength = match.group(0).length;
     var matchStart = parser.pos;
     var matchEnd = parser.pos + runLength - 1;
-    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd);
+    var delimiterRun = _DelimiterRun.tryParse(parser, matchStart, matchEnd,
+        allowIntraWord: allowIntraWord);
     if (!delimiterRun.isRightFlanking) {
       return false;
     }
@@ -1256,8 +1280,9 @@ class TagState {
     var openingRunLength = endPos - startPos;
     var closingMatchStart = parser.pos;
     var closingMatchEnd = parser.pos + runLength - 1;
-    var closingDelimiterRun =
-        _DelimiterRun.tryParse(parser, closingMatchStart, closingMatchEnd);
+    var closingDelimiterRun = _DelimiterRun.tryParse(
+        parser, closingMatchStart, closingMatchEnd,
+        allowIntraWord: openingDelimiterRun.allowIntraWord);
     if (closingDelimiterRun != null && closingDelimiterRun.canClose) {
       // Emphasis rules #9 and #10:
       var oneRunOpensAndCloses =
