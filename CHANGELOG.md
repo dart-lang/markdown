@@ -3,6 +3,8 @@
 * **Breaking change:** Remove `ListSyntax.removeLeadingEmptyLine`,
   `ListSyntax.removeTrailingEmptyLines`, `TableSyntax.parseAlignments`,
   `TableSyntax.parseRow`.
+* Allow intra-word strikethrough in GFM
+  ([#300](https://github.com/dart-lang/markdown/issues/300)).
 
 ## 2.1.8
 

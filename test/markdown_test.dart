@@ -22,6 +22,8 @@ void main() {
   // Inline syntax extensions
   testFile('extensions/emojis.unit', inlineSyntaxes: [EmojiSyntax()]);
   testFile('extensions/inline_html.unit', inlineSyntaxes: [InlineHtmlSyntax()]);
+  testFile('extensions/strikethrough.unit',
+      inlineSyntaxes: [StrikethroughSyntax()]);
 
   testDirectory('common_mark');
   testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
