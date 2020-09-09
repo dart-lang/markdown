@@ -202,6 +202,8 @@ abstract class BlockSyntax {
         // which accepts a [BlockParser], but this would be a breaking change,
         // so we're going with this temporarily.
         var match = s.pattern.firstMatch(parser.current);
+        // The seventh group, in both [_olPattern] and [_ulPattern] is the text
+        // after the delimiter.
         return match[7]?.isNotEmpty ?? false;
       }
       return s.canEndBlock;
