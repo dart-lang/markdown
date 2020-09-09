@@ -359,14 +359,10 @@ foo
 foo
 1.
 <<<
-<p>foo</p>
-<ul>
-<li></li>
-</ul>
-<p>foo</p>
-<ol>
-<li></li>
-</ol>
+<p>foo
+*</p>
+<p>foo
+1.</p>
 >>> List items - 256
  1.  A paragraph
      with two lines.

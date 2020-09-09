@@ -193,7 +193,21 @@ abstract class BlockSyntax {
   /// Gets whether or not [parser]'s current line should end the previous block.
   static bool isAtBlockEnd(BlockParser parser) {
     if (parser.isDone) return true;
-    return parser.blockSyntaxes.any((s) => s.canParse(parser) && s.canEndBlock);
+    return parser.blockSyntaxes.any((s) {
+      if (!s.canParse(parser)) return false;
+      if (s is ListSyntax) {
+        // An empty list cannot interrupt a paragraph. See
+        // https://spec.commonmark.org/0.29/#example-255.
+        // Ideally, [BlockSyntax.canEndBlock] should be changed to be a method
+        // which accepts a [BlockParser], but this would be a breaking change,
+        // so we're going with this temporarily.
+        var match = s.pattern.firstMatch(parser.current);
+        // The seventh group, in both [_olPattern] and [_ulPattern] is the text
+        // after the delimiter.
+        return match[7]?.isNotEmpty ?? false;
+      }
+      return s.canEndBlock;
+    });
   }
 
   /// Generates a valid HTML anchor from the inner text of [element].
