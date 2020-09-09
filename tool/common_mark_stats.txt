@@ -4,7 +4,7 @@
    1 of    1 – 100.0%  Blank lines
   22 of   25 –  88.0%  Block quotes
   22 of   22 – 100.0%  Code spans
- 125 of  131 –  95.4%  Emphasis and strong emphasis
+ 126 of  131 –  96.2%  Emphasis and strong emphasis
   14 of   17 –  82.4%  Entity and numeric character references
   28 of   29 –  96.6%  Fenced code blocks
   15 of   15 – 100.0%  Hard line breaks
@@ -14,7 +14,7 @@
    1 of    1 – 100.0%  Inlines
   21 of   28 –  75.0%  Link reference definitions
   78 of   87 –  89.7%  Links
-  44 of   48 –  91.7%  List items
+  45 of   48 –  93.8%  List items
   22 of   26 –  84.6%  Lists
    8 of    8 – 100.0%  Paragraphs
    1 of    1 – 100.0%  Precedence
@@ -24,5 +24,5 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 601 of  649 –  92.6%  TOTAL
- 527 of  601 –  87.7%  TOTAL Strict
+ 603 of  649 –  92.9%  TOTAL
+ 529 of  603 –  87.7%  TOTAL Strict
