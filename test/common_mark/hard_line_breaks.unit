@@ -69,7 +69,7 @@ foo\
 >>> Hard line breaks - 642
 foo  
 <<<
-<p>foo  </p>
+<p>foo</p>
 >>> Hard line breaks - 643
 ### foo\
 <<<

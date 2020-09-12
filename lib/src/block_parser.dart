@@ -282,7 +282,7 @@ class SetextHeaderSyntax extends BlockSyntax {
       }
     }
 
-    var contents = UnparsedContent(lines.join('\n'));
+    var contents = UnparsedContent(lines.join('\n').trimRight());
 
     return Element(tag /*!*/, [contents]);
   }
@@ -587,7 +587,7 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
       parser.advance();
     }
 
-    return Text(childLines.join('\n'));
+    return Text(childLines.join('\n').trimRight());
   }
 }
 
@@ -634,7 +634,7 @@ class LongBlockHtmlSyntax extends BlockHtmlSyntax {
     }
 
     parser.advance();
-    return Text(childLines.join('\n'));
+    return Text(childLines.join('\n').trimRight());
   }
 }
 
@@ -1094,7 +1094,7 @@ class ParagraphSyntax extends BlockSyntax {
       // Paragraph consisted solely of reference link definitions.
       return Text('');
     } else {
-      var contents = UnparsedContent(paragraphLines.join('\n'));
+      var contents = UnparsedContent(paragraphLines.join('\n').trimRight());
       return Element('p', [contents]);
     }
   }

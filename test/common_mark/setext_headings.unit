@@ -20,7 +20,7 @@ baz*
 ====
 <<<
 <h1>  Foo <em>bar
-baz</em>	</h1>
+baz</em></h1>
 >>> Setext headings - 53
 Foo
 -------------------------
@@ -82,7 +82,7 @@ Foo
 Foo  
 -----
 <<<
-<h2>Foo  </h2>
+<h2>Foo</h2>
 >>> Setext headings - 60
 Foo\
 ----
