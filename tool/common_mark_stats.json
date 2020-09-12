@@ -305,7 +305,7 @@
   "639": "strict",
   "640": "strict",
   "641": "strict",
-  "642": "loose",
+  "642": "strict",
   "643": "strict",
   "644": "strict"
  },
@@ -334,7 +334,7 @@
   "139": "strict",
   "140": "strict",
   "141": "strict",
-  "142": "loose",
+  "142": "strict",
   "143": "loose",
   "144": "loose",
   "145": "strict",
@@ -600,7 +600,7 @@
   "193": "strict",
   "194": "strict",
   "195": "strict",
-  "196": "loose"
+  "196": "strict"
  },
  "Precedence": {
   "12": "strict"
@@ -638,7 +638,7 @@
   "56": "strict",
   "57": "strict",
   "58": "strict",
-  "59": "loose",
+  "59": "strict",
   "60": "strict",
   "61": "loose",
   "62": "strict",
