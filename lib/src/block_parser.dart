@@ -168,7 +168,7 @@ abstract class BlockSyntax {
   /// Gets the regex used to identify the beginning of this block, if any.
   RegExp get pattern;
 
-  bool get canEndBlock => true;
+  bool canEndBlock(BlockParser parser) => true;
 
   bool canParse(BlockParser parser) {
     return pattern.hasMatch(parser.current);
@@ -193,21 +193,8 @@ abstract class BlockSyntax {
   /// Gets whether or not [parser]'s current line should end the previous block.
   static bool isAtBlockEnd(BlockParser parser) {
     if (parser.isDone) return true;
-    return parser.blockSyntaxes.any((s) {
-      if (!s.canParse(parser)) return false;
-      if (s is ListSyntax) {
-        // An empty list cannot interrupt a paragraph. See
-        // https://spec.commonmark.org/0.29/#example-255.
-        // Ideally, [BlockSyntax.canEndBlock] should be changed to be a method
-        // which accepts a [BlockParser], but this would be a breaking change,
-        // so we're going with this temporarily.
-        var match = s.pattern.firstMatch(parser.current);
-        // The seventh group, in both [_olPattern] and [_ulPattern] is the text
-        // after the delimiter.
-        return match[7]?.isNotEmpty ?? false;
-      }
-      return s.canEndBlock;
-    });
+    return parser.blockSyntaxes
+        .any((s) => s.canParse(parser) && s.canEndBlock(parser));
   }
 
   /// Generates a valid HTML anchor from the inner text of [element].
@@ -392,7 +379,7 @@ class CodeBlockSyntax extends BlockSyntax {
   RegExp get pattern => _indentPattern;
 
   @override
-  bool get canEndBlock => false;
+  bool canEndBlock(BlockParser parser) => false;
 
   const CodeBlockSyntax();
 
@@ -545,7 +532,7 @@ class HorizontalRuleSyntax extends BlockSyntax {
 ///     parser, not an HTML parser!
 abstract class BlockHtmlSyntax extends BlockSyntax {
   @override
-  bool get canEndBlock => true;
+  bool canEndBlock(BlockParser parser) => true;
 
   const BlockHtmlSyntax();
 }
@@ -593,7 +580,7 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
 
 class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
   @override
-  bool get canEndBlock => false;
+  bool canEndBlock(BlockParser parser) => false;
 
   // Really hacky way to detect "other" HTML. This matches:
   //
@@ -648,7 +635,17 @@ class ListItem {
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
   @override
-  bool get canEndBlock => true;
+  bool canEndBlock(BlockParser parser) {
+    // An empty list cannot interrupt a paragraph. See
+    // https://spec.commonmark.org/0.29/#example-255.
+    // Ideally, [BlockSyntax.canEndBlock] should be changed to be a method
+    // which accepts a [BlockParser], but this would be a breaking change,
+    // so we're going with this temporarily.
+    var match = pattern.firstMatch(parser.current);
+    // The seventh group, in both [_olPattern] and [_ulPattern] is the text
+    // after the delimiter.
+    return match[7]?.isNotEmpty ?? false;
+  }
 
   String get listTag;
 
@@ -866,7 +863,7 @@ class OrderedListSyntax extends ListSyntax {
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
   @override
-  bool get canEndBlock => false;
+  bool canEndBlock(BlockParser parser) => false;
 
   @override
   RegExp get pattern => _dummyPattern;
@@ -1072,7 +1069,7 @@ class ParagraphSyntax extends BlockSyntax {
   RegExp get pattern => _dummyPattern;
 
   @override
-  bool get canEndBlock => false;
+  bool canEndBlock(BlockParser parser) => false;
 
   const ParagraphSyntax();
 

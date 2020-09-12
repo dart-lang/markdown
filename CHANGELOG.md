@@ -5,6 +5,8 @@
   `TableSyntax.parseRow`.
 * Allow intra-word strikethrough in GFM
   ([#300](https://github.com/dart-lang/markdown/issues/300)).
+* **Breaking change:** Change `BlockSyntax.canEndBlock` from a getter to a
+  method accepting a BlockParser.
 
 ## 2.1.8
 
