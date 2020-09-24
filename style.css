@@ -50,7 +50,7 @@ html, body {
 .toolbar {
   /* Styled like Material Toolbar. */
   align-items: center;
-  background-color: #22d3c5; /* Taken from webdev.dartlang.org. */
+  background-color: #22d3c5;
   box-sizing: border-box;
   color: rgba(0, 0, 0, 0.87);
   display: flex;
@@ -102,7 +102,7 @@ textarea {
 }
 
 textarea:focus {
-  border-color: #22d3c5; /* Taken from webdev.dartlang.org. */
+  border-color: #22d3c5;
   border-width: 0 0 2px;
   outline: 0;
   padding-bottom: 0;
