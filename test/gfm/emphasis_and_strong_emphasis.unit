@@ -269,11 +269,11 @@ __foo_ bar_
 >>> Emphasis and strong emphasis - 425
 foo***bar***baz
 <<<
-<p>foo***bar***baz</p>
+<p>foo<em><strong>bar</strong></em>baz</p>
 >>> Emphasis and strong emphasis - 426
 foo******bar*********baz
 <<<
-<p>foo******bar*********baz</p>
+<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>
 >>> Emphasis and strong emphasis - 427
 *foo **bar *baz* bim** bop*
 <<<
@@ -501,11 +501,11 @@ _____foo_____
 >>> Emphasis and strong emphasis - 482
 *[bar*](/url)
 <<<
-<p><em>[bar</em>](/url)</p>
+<p>*<a href="/url">bar*</a></p>
 >>> Emphasis and strong emphasis - 483
 _foo [bar_](/url)
 <<<
-<p><em>foo [bar</em>](/url)</p>
+<p>_foo <a href="/url">bar_</a></p>
 >>> Emphasis and strong emphasis - 484
 *<img src="foo" title="*"/>
 <<<
