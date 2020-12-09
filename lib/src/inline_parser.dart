@@ -673,6 +673,8 @@ abstract class Delimiter {
   TagSyntax get syntax;
 }
 
+/// A simple delimiter implements the [Delimiter] interface with basic fields,
+/// and does not have the concept of "left-flanking" or "right-flanking".
 class SimpleDelimiter implements Delimiter {
   @override
   Text node;
@@ -708,6 +710,11 @@ class SimpleDelimiter implements Delimiter {
       : isActive = true;
 }
 
+/// An implementation of [Delimiter] which uses concepts of "left-flanking" and
+/// "right-flanking" to determine the values of [canOpen] and [canClose].
+///
+/// This is primarily used when parsing emphasis and strong emphasis, but can
+/// also be used by other extensions of [TagSyntax].
 class DelimiterRun implements Delimiter {
   /// According to
   /// [CommonMark](https://spec.commonmark.org/0.29/#punctuation-character):
@@ -759,10 +766,6 @@ class DelimiterRun implements Delimiter {
   @override
   final TagSyntax syntax;
 
-  final bool isLeftFlanking;
-  final bool isRightFlanking;
-  final bool isPrecededByPunctuation;
-  final bool isFollowedByPunctuation;
   final bool allowIntraWord;
 
   @override
@@ -775,10 +778,10 @@ class DelimiterRun implements Delimiter {
     @required this.node,
     @required this.char,
     @required this.syntax,
-    @required this.isLeftFlanking,
-    @required this.isRightFlanking,
-    @required this.isPrecededByPunctuation,
-    @required this.isFollowedByPunctuation,
+    @required bool isLeftFlanking,
+    @required bool isRightFlanking,
+    @required bool isPrecededByPunctuation,
+    @required bool isFollowedByPunctuation,
     @required this.allowIntraWord,
   })  : canOpen = isLeftFlanking &&
             (char == $asterisk ||
@@ -857,9 +860,8 @@ class DelimiterRun implements Delimiter {
   }
 
   @override
-  String toString() =>
-      '<char: $char, length: $length, isLeftFlanking: $isLeftFlanking, '
-      'isRightFlanking: $isRightFlanking>';
+  String toString() => '<char: $char, length: $length, canOpen: $canOpen, '
+      'canClose: $canClose>';
 }
 
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
@@ -920,6 +922,15 @@ class TagSyntax extends InlineSyntax {
     }
   }
 
+  /// Attempts to close this tag at the current position.
+  ///
+  /// If a tag cannot be closed at the current position (for example, if a link
+  /// reference cannot be found for a link tag's label), then `null` is
+  /// returned.
+  ///
+  /// If a tag can be closed at the current position, then this method calls
+  /// [getChildren], in which [parser] parses any nested text into child nodes.
+  /// The returned [Node] incorpororates these child nodes.
   Node close(InlineParser parser, Delimiter opener, Delimiter closer,
       {@required List<Node> Function() getChildren}) {
     var strong = opener.length >= 2 && closer.length >= 2;
