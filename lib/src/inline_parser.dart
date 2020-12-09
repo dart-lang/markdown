@@ -312,6 +312,9 @@ class InlineParser {
   int charAt(int index) => source.codeUnitAt(index);
 
   void writeText() {
+    if (pos == start) {
+      return;
+    }
     var text = source.substring(start, pos);
     _tree.add(Text(text));
     start = pos;
