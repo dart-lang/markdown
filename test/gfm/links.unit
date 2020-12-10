@@ -164,7 +164,7 @@ bar>)</p>
 >>> Links - 529
 *[foo*](/uri)
 <<<
-<p><em>[foo</em>](/uri)</p>
+<p>*<a href="/uri">foo*</a></p>
 >>> Links - 530
 [foo *bar](baz*)
 <<<
@@ -232,7 +232,7 @@ bar>)</p>
 
 [ref]: /uri
 <<<
-<p><em>[foo</em>]<a href="/uri">ref</a></p>
+<p>*<a href="/uri">foo*</a></p>
 >>> Links - 543
 [foo *bar][ref]
 
@@ -351,9 +351,9 @@ bar>)</p>
  ]: /uri
 <<<
 <p>[
- ]</p>
+]</p>
 <p>[
- ]: /uri</p>
+]: /uri</p>
 >>> Links - 561
 [foo][]
 
@@ -427,7 +427,7 @@ bar>)</p>
 
 *[foo*]
 <<<
-<p><em>[foo</em>]</p>
+<p>*<a href="/url">foo*</a></p>
 >>> Links - 573
 [foo][bar]
 

@@ -1,3 +1,18 @@
+## 4.0.0-dev
+
+* **Breaking change:** The TagSyntax constructor no longer takes an `end`
+  parameter. TagSyntax no longer implements `onMatchEnd`. Instead, TagSyntax
+  implements a method called `close` which creates and returns a Node, if a
+  Node can be created and closed at the current position. If the TagSyntax
+  instance cannot create a Node at the current position, the method should
+  return `null`. Some TagSyntax subclasses will unconditionally create a tag in
+  `close`, while others may be unable to, such as LinkSyntax, if an inline or
+  reference link could not be resolved.
+* Improved parsing of nested links, images, and emphasis. CommonMark compliance
+  of emphasis-parsing improves to 99%, and link-parsing compliance rises to
+  93%. Overall compliance improves to 94% and overall GitHub-flavored Markdown
+  improves to 93%.
+
 ## 3.0.0
 
 * **Breaking change:** Remove `ListSyntax.removeLeadingEmptyLine`,
