@@ -7,8 +7,8 @@ import 'package:test/test.dart';
 
 import 'util.dart';
 
-void main() {
-  testDirectory('original');
+void main() async {
+  await testDirectory('original');
 
   // Block syntax extensions
   testFile('extensions/fenced_code_blocks.unit',
@@ -25,8 +25,8 @@ void main() {
   testFile('extensions/strikethrough.unit',
       inlineSyntaxes: [StrikethroughSyntax()]);
 
-  testDirectory('common_mark');
-  testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
+  await testDirectory('common_mark');
+  await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
 
   group('Corner cases', () {
     validateCore('Incorrect Links', '''
