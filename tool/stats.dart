@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 import 'package:collection/collection.dart';
-import 'package:expected_output/expected_output.dart';
 import 'package:path/path.dart' as p;
 
 import 'stats_lib.dart';
