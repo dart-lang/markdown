@@ -13,11 +13,11 @@ import 'inline_parser.dart';
 /// Converts the given string of Markdown to HTML.
 String markdownToHtml(
   String markdown, {
-  Iterable<BlockSyntax> blockSyntaxes,
-  Iterable<InlineSyntax> inlineSyntaxes,
-  ExtensionSet extensionSet,
-  Resolver linkResolver,
-  Resolver imageLinkResolver,
+  Iterable<BlockSyntax> blockSyntaxes = const [],
+  Iterable<InlineSyntax> inlineSyntaxes = const [],
+  ExtensionSet? extensionSet,
+  Resolver? linkResolver,
+  Resolver? imageLinkResolver,
   bool inlineOnly = false,
 }) {
   var document = Document(
@@ -37,7 +37,7 @@ String markdownToHtml(
 }
 
 /// Renders [nodes] to HTML.
-String renderToHtml(List<Node> nodes) => HtmlRenderer().render(nodes);
+String renderToHtml(List<Node?> nodes) => HtmlRenderer().render(nodes);
 
 const _blockTags = [
   'blockquote',
@@ -74,20 +74,20 @@ const _blockTags = [
 
 /// Translates a parsed AST to HTML.
 class HtmlRenderer implements NodeVisitor {
-  StringBuffer buffer;
-  Set<String> uniqueIds;
+  late StringBuffer buffer;
+  late Set<String> uniqueIds;
 
   final _elementStack = <Element>[];
-  String _lastVisitedTag;
+  String? _lastVisitedTag;
 
   HtmlRenderer();
 
-  String render(List<Node> nodes) {
+  String render(List<Node?> nodes) {
     buffer = StringBuffer();
     uniqueIds = <String>{};
 
     for (final node in nodes) {
-      node.accept(this);
+      node!.accept(this);
     }
 
     return buffer.toString();
@@ -123,9 +123,11 @@ class HtmlRenderer implements NodeVisitor {
       buffer.write(' ${entry.key}="${entry.value}"');
     }
 
+    var generatedId = element.generatedId;
+
     // attach header anchor ids generated from text
-    if (element.generatedId != null) {
-      buffer.write(' id="${uniquifyId(element.generatedId)}"');
+    if (generatedId != null) {
+      buffer.write(' id="${uniquifyId(generatedId)}"');
     }
 
     _lastVisitedTag = element.tag;
@@ -151,7 +153,7 @@ class HtmlRenderer implements NodeVisitor {
     assert(identical(_elementStack.last, element));
 
     if (element.children != null &&
-        element.children.isNotEmpty &&
+        element.children!.isNotEmpty &&
         _blockTags.contains(_lastVisitedTag) &&
         _blockTags.contains(element.tag)) {
       buffer.writeln();
