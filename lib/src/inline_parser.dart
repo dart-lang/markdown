@@ -376,7 +376,7 @@ abstract class InlineSyntax {
     // Write any existing plain text up to this point.
     parser.writeText();
 
-    if (onMatch(parser, startMatch)) parser.consume(startMatch[0]!.length);
+    if (onMatch(parser, startMatch)) parser.consume(startMatch.match.length);
     return true;
   }
 
@@ -423,7 +423,7 @@ class TextSyntax extends InlineSyntax {
         (match.start > 0 &&
             match.input.substring(match.start - 1, match.start) == '/')) {
       // Just use the original matched text.
-      parser.advanceBy(match[0]!.length);
+      parser.advanceBy(match.match.length);
       return false;
     }
 
@@ -439,7 +439,7 @@ class EscapeSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    var chars = match[0]!;
+    var chars = match.match;
     var char = chars.codeUnitAt(1);
     // Insert the substitution. Why these three charactes are replaced with
     // their equivalent HTML entity referenced appears to be missing from the
@@ -589,7 +589,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     // https://github.github.com/gfm/#example-599
     final trailingPunc = regExpTrailingPunc.firstMatch(url);
     if (trailingPunc != null) {
-      var trailingLength = trailingPunc[0]!.length;
+      var trailingLength = trailingPunc.match.length;
       url = url.substring(0, url.length - trailingLength);
       href = href.substring(0, href.length - trailingLength);
       matchLength -= trailingLength;
@@ -605,7 +605,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       final entityRef = regExpEndsWithColon.firstMatch(url);
       if (entityRef != null) {
         // Strip out HTML entity reference
-        var entityRefLength = entityRef[0]!.length;
+        var entityRefLength = entityRef.match.length;
         url = url.substring(0, url.length - entityRefLength);
         href = href.substring(0, href.length - entityRefLength);
         matchLength -= entityRefLength;
@@ -1412,7 +1412,7 @@ class CodeSyntax extends InlineSyntax {
       return false;
     }
     parser.writeText();
-    if (onMatch(parser, match)) parser.consume(match[0]!.length);
+    if (onMatch(parser, match)) parser.consume(match.match.length);
     return true;
   }
 
