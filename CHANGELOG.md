@@ -1,5 +1,7 @@
 ## 4.0.0-dev
 
+* Migrate package to Dart's null safety language feature, requiring Dart
+  2.12 or higher.
 * **Breaking change:** The TagSyntax constructor no longer takes an `end`
   parameter. TagSyntax no longer implements `onMatchEnd`. Instead, TagSyntax
   implements a method called `close` which creates and returns a Node, if a

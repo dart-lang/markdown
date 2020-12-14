@@ -1196,7 +1196,7 @@ class ParagraphSyntax extends BlockSyntax {
       // Not a reference link definition.
       return false;
     }
-    if (match[0]!.length < contents.length) {
+    if (match.match.length < contents.length) {
       // Trailing text. No good.
       return false;
     }
