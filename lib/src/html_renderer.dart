@@ -37,7 +37,7 @@ String markdownToHtml(
 }
 
 /// Renders [nodes] to HTML.
-String renderToHtml(List<Node?> nodes) => HtmlRenderer().render(nodes);
+String renderToHtml(List<Node> nodes) => HtmlRenderer().render(nodes);
 
 const _blockTags = [
   'blockquote',
@@ -82,12 +82,12 @@ class HtmlRenderer implements NodeVisitor {
 
   HtmlRenderer();
 
-  String render(List<Node?> nodes) {
+  String render(List<Node> nodes) {
     buffer = StringBuffer();
     uniqueIds = <String>{};
 
     for (final node in nodes) {
-      node!.accept(this);
+      node.accept(this);
     }
 
     return buffer.toString();
@@ -96,7 +96,7 @@ class HtmlRenderer implements NodeVisitor {
   @override
   void visitText(Text text) {
     var content = text.text;
-    if (const ['p', 'li'].contains(_lastVisitedTag)) {
+    if (const ['br', 'p', 'li'].contains(_lastVisitedTag)) {
       var lines = LineSplitter.split(content);
       content = content.contains('<pre>')
           ? lines.join('\n')

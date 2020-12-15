@@ -21,13 +21,13 @@ foo
      bar
 <<<
 <p>foo<br />
-     bar</p>
+bar</p>
 >>> Hard line breaks - 658
 foo\
      bar
 <<<
 <p>foo<br />
-     bar</p>
+bar</p>
 >>> Hard line breaks - 659
 *foo  
 bar*
