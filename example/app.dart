@@ -1,3 +1,7 @@
+// Copyright (c) 2020, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:html';
 import 'package:markdown/markdown.dart' as md;
@@ -20,7 +24,7 @@ final introText = r'''Markdown is the **best**!
 final basicRadio = querySelector('#basic-radio') as HtmlElement;
 final commonmarkRadio = querySelector('#commonmark-radio') as HtmlElement;
 final gfmRadio = querySelector('#gfm-radio') as HtmlElement;
-md.ExtensionSet extensionSet;
+md.ExtensionSet? extensionSet;
 
 final extensionSets = {
   'basic-radio': md.ExtensionSet.none,
@@ -46,7 +50,7 @@ void main() {
 
   // GitHub is the default extension set.
   gfmRadio.attributes['checked'] = '';
-  gfmRadio.querySelector('.glyph').text = 'radio_button_checked';
+  gfmRadio.querySelector('.glyph')!.text = 'radio_button_checked';
   extensionSet = extensionSets[gfmRadio.id];
   _renderMarkdown();
 
@@ -55,8 +59,8 @@ void main() {
   gfmRadio.onClick.listen(_switchFlavor);
 }
 
-void _renderMarkdown([Event event]) {
-  var markdown = markdownInput.value;
+void _renderMarkdown([Event? event]) {
+  var markdown = markdownInput.value!;
 
   htmlDiv.setInnerHtml(md.markdownToHtml(markdown, extensionSet: extensionSet),
       treeSanitizer: nullSanitizer);
@@ -77,9 +81,9 @@ void _renderMarkdown([Event event]) {
 }
 
 void _typeItOut(String msg, int pos) {
-  Timer timer;
+  late Timer timer;
   markdownInput.onKeyUp.listen((_) {
-    timer?.cancel();
+    timer.cancel();
   });
   void addCharacter() {
     if (pos > msg.length) {
@@ -100,19 +104,19 @@ void _switchFlavor(Event e) {
   if (!target.attributes.containsKey('checked')) {
     if (basicRadio != target) {
       basicRadio.attributes.remove('checked');
-      basicRadio.querySelector('.glyph').text = 'radio_button_unchecked';
+      basicRadio.querySelector('.glyph')!.text = 'radio_button_unchecked';
     }
     if (commonmarkRadio != target) {
       commonmarkRadio.attributes.remove('checked');
-      commonmarkRadio.querySelector('.glyph').text = 'radio_button_unchecked';
+      commonmarkRadio.querySelector('.glyph')!.text = 'radio_button_unchecked';
     }
     if (gfmRadio != target) {
       gfmRadio.attributes.remove('checked');
-      gfmRadio.querySelector('.glyph').text = 'radio_button_unchecked';
+      gfmRadio.querySelector('.glyph')!.text = 'radio_button_unchecked';
     }
 
     target.attributes['checked'] = '';
-    target.querySelector('.glyph').text = 'radio_button_checked';
+    target.querySelector('.glyph')!.text = 'radio_button_checked';
     extensionSet = extensionSets[target.id];
     _renderMarkdown();
   }

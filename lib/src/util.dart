@@ -1,3 +1,7 @@
+// Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+
 import 'dart:convert';
 
 import 'package:charcode/charcode.dart';
@@ -82,3 +86,8 @@ final _oneOrMoreWhitespacePattern = RegExp('[ \n\r\t]+');
 /// [CommonMark spec] https://spec.commonmark.org/0.29/#link-label
 String normalizeLinkLabel(String label) =>
     label.trim().replaceAll(_oneOrMoreWhitespacePattern, ' ').toLowerCase();
+
+extension MatchExtensions on Match {
+  /// Returns the whole match String
+  String get match => this[0]!;
+}

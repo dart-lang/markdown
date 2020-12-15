@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-typedef Resolver = Node Function(String name, [String title]);
+typedef Resolver = Node? Function(String name, [String? title]);
 
 /// Base class for any AST item.
 ///
@@ -16,9 +16,9 @@ abstract class Node {
 /// A named tag that can contain other nodes.
 class Element implements Node {
   final String tag;
-  final List<Node> children;
+  final List<Node>? children;
   final Map<String, String> attributes;
-  String generatedId;
+  String? generatedId;
 
   /// Instantiates a [tag] Element with [children].
   Element(this.tag, this.children) : attributes = <String, String>{};
@@ -45,7 +45,7 @@ class Element implements Node {
   void accept(NodeVisitor visitor) {
     if (visitor.visitElementBefore(this)) {
       if (children != null) {
-        for (var child in children) {
+        for (var child in children!) {
           child.accept(visitor);
         }
       }
@@ -55,7 +55,7 @@ class Element implements Node {
 
   @override
   String get textContent {
-    return (children ?? []).map((Node child) => child.textContent).join('');
+    return (children ?? []).map((Node? child) => child!.textContent).join('');
   }
 }
 

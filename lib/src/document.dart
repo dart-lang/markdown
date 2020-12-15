@@ -11,8 +11,8 @@ import 'inline_parser.dart';
 class Document {
   final Map<String, LinkReference> linkReferences = <String, LinkReference>{};
   final ExtensionSet extensionSet;
-  final Resolver linkResolver;
-  final Resolver imageLinkResolver;
+  final Resolver? linkResolver;
+  final Resolver? imageLinkResolver;
   final bool encodeHtml;
   final _blockSyntaxes = <BlockSyntax>{};
   final _inlineSyntaxes = <InlineSyntax>{};
@@ -22,9 +22,9 @@ class Document {
   Iterable<InlineSyntax> get inlineSyntaxes => _inlineSyntaxes;
 
   Document({
-    Iterable<BlockSyntax> blockSyntaxes,
-    Iterable<InlineSyntax> inlineSyntaxes,
-    ExtensionSet extensionSet,
+    Iterable<BlockSyntax>? blockSyntaxes,
+    Iterable<InlineSyntax>? inlineSyntaxes,
+    ExtensionSet? extensionSet,
     this.linkResolver,
     this.imageLinkResolver,
     this.encodeHtml = true,
@@ -45,7 +45,7 @@ class Document {
   }
 
   /// Parses the given inline Markdown [text] to a series of AST nodes.
-  List<Node> parseInline(String text) => InlineParser(text, this).parse();
+  List<Node> parseInline(String? text) => InlineParser(text, this).parse();
 
   void _parseInlineContent(List<Node> nodes) {
     for (var i = 0; i < nodes.length; i++) {
@@ -56,7 +56,7 @@ class Document {
         nodes.insertAll(i, inlineNodes);
         i += inlineNodes.length - 1;
       } else if (node is Element && node.children != null) {
-        _parseInlineContent(node.children);
+        _parseInlineContent(node.children!);
       }
     }
   }
@@ -76,7 +76,7 @@ class LinkReference {
   final String destination;
 
   /// The [link title](http://spec.commonmark.org/0.28/#link-title).
-  final String title;
+  final String? title;
 
   /// Construct a new [LinkReference], with all necessary fields.
   ///

@@ -2,8 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// Used by `dataCasesUnder` below to find the current directory.
-library markdown.test.util;
+// @dart=2.9
 
 import 'dart:isolate';
 
@@ -27,13 +26,15 @@ Future<void> testDirectory(String name, {ExtensionSet extensionSet}) async {
   }
 }
 
+Future<String> get markdownPackageRoot async =>
+    p.dirname(p.dirname((await Isolate.resolvePackageUri(
+            Uri.parse('package:markdown/markdown.dart')))
+        .path));
+
 void testFile(String file,
     {Iterable<BlockSyntax> blockSyntaxes,
     Iterable<InlineSyntax> inlineSyntaxes}) async {
-  var markdownLibRoot = p.dirname((await Isolate.resolvePackageUri(
-          Uri.parse('package:markdown/markdown.dart')))
-      .path);
-  var directory = p.join(p.dirname(markdownLibRoot), 'test');
+  var directory = p.join(await markdownPackageRoot, 'test');
   for (var dataCase in dataCasesInFile(path: p.join(directory, file))) {
     var description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';

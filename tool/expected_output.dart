@@ -5,11 +5,11 @@
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:meta/meta.dart';
 import 'package:path/path.dart' as p;
 
 /// Parse and yield data cases (each a [DataCase]) from [path].
-Iterable<DataCase> dataCasesInFile({String path, String baseDir}) sync* {
+Iterable<DataCase> dataCasesInFile(
+    {required String path, String? baseDir}) sync* {
   var file = p.basename(path).replaceFirst(RegExp(r'\..+$'), '');
   baseDir ??= p.relative(p.dirname(path), from: p.dirname(p.dirname(path)));
 
@@ -61,7 +61,7 @@ Iterable<DataCase> dataCasesInFile({String path, String baseDir}) sync* {
 /// cases are read from files located immediately in [directory], or
 /// recursively, according to [recursive].
 Iterable<DataCase> _dataCases({
-  String directory,
+  required String directory,
   String extension = 'unit',
   bool recursive = true,
 }) {
@@ -113,12 +113,12 @@ Iterable<DataCase> _dataCases({
 /// }
 /// ```
 Stream<DataCase> dataCasesUnder({
-  @required String testDirectory,
+  required String testDirectory,
   String extension = 'unit',
   bool recursive = true,
 }) async* {
   var markdownLibRoot = p.dirname((await Isolate.resolvePackageUri(
-          Uri.parse('package:markdown/markdown.dart')))
+          Uri.parse('package:markdown/markdown.dart')))!
       .path);
   var directory =
       p.joinAll([p.dirname(markdownLibRoot), 'test', testDirectory]);
@@ -142,14 +142,14 @@ class DataCase {
   final String expectedOutput;
 
   DataCase({
-    this.directory,
-    this.file,
+    this.directory = '',
+    this.file = '',
     // ignore: non_constant_identifier_names
-    this.front_matter,
-    this.description,
-    this.skip,
-    this.input,
-    this.expectedOutput,
+    this.front_matter = '',
+    this.description = '',
+    this.skip = false,
+    required this.input,
+    required this.expectedOutput,
   });
 
   /// A good standard description for `test()`, derived from the data directory,
