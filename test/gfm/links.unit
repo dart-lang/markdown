@@ -21,7 +21,7 @@
 >>> Links - 498
 [link](</my uri>)
 <<<
-<p>[link](</my uri>)</p>
+<p><a href="/my%20uri">link</a></p>
 >>> Links - 499
 [link](foo
 bar)

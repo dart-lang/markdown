@@ -93,7 +93,7 @@ class InlineParser {
 
     syntaxes.addAll(_defaultSyntaxes);
 
-    if (document.encodeHtml) {
+    if (_encodeHtml) {
       syntaxes.addAll(_htmlSyntaxes);
     }
   }
@@ -337,6 +337,8 @@ class InlineParser {
     pos += length;
     start = pos;
   }
+
+  bool get _encodeHtml => document.encodeHtml;
 }
 
 /// Represents one kind of Markdown tag that can be parsed.
@@ -486,7 +488,7 @@ class EmailAutolinkSyntax extends InlineSyntax {
   @override
   bool onMatch(InlineParser parser, Match match) {
     var url = match[1]!;
-    var text = parser.document.encodeHtml ? escapeHtml(url) : url;
+    var text = parser._encodeHtml ? escapeHtml(url) : url;
     var anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull('mailto:$url');
     parser.addNode(anchor);
@@ -502,7 +504,7 @@ class AutolinkSyntax extends InlineSyntax {
   @override
   bool onMatch(InlineParser parser, Match match) {
     var url = match[1]!;
-    var text = parser.document.encodeHtml ? escapeHtml(url) : url;
+    var text = parser._encodeHtml ? escapeHtml(url) : url;
     var anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull(url);
     parser.addNode(anchor);
@@ -619,7 +621,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       href = 'http://$href';
     }
 
-    final text = parser.document.encodeHtml ? escapeHtml(url) : url;
+    final text = parser._encodeHtml ? escapeHtml(url) : url;
     final anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull(href);
     parser.addNode(anchor);
@@ -1170,19 +1172,17 @@ class LinkSyntax extends TagSyntax {
       if (char == $backslash) {
         parser.advanceBy(1);
         var next = parser.charAt(parser.pos);
-        if (char == $space || char == $lf || char == $cr || char == $ff) {
-          // Not a link (no whitespace allowed within `<...>`).
-          return null;
-        }
         // TODO: Follow the backslash spec better here.
-        // http://spec.commonmark.org/0.28/#backslash-escapes
+        // http://spec.commonmark.org/0.29/#backslash-escapes
         if (next != $backslash && next != $gt) {
           buffer.writeCharCode(char);
         }
         buffer.writeCharCode(next);
-      } else if (char == $space || char == $lf || char == $cr || char == $ff) {
-        // Not a link (no whitespace allowed within `<...>`).
+      } else if (char == $lf || char == $cr || char == $ff) {
+        // Not a link (no line breaks allowed within `<...>`).
         return null;
+      } else if (char == $space) {
+        buffer.write('%20');
       } else if (char == $gt) {
         break;
       } else {
@@ -1419,7 +1419,7 @@ class CodeSyntax extends InlineSyntax {
   @override
   bool onMatch(InlineParser parser, Match match) {
     var code = match[2]!.trim().replaceAll('\n', ' ');
-    if (parser.document.encodeHtml) code = escapeHtml(code);
+    if (parser._encodeHtml) code = escapeHtml(code);
     parser.addNode(Element.text('code', code));
 
     return true;
