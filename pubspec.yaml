@@ -1,5 +1,5 @@
 name: markdown
-version: 4.0.0-dev
+version: 4.0.0-nullsafety.0
 
 description: A portable Markdown library written in Dart that can parse
  Markdown into HTML.
@@ -20,10 +20,10 @@ dev_dependencies:
   build_runner: ^1.0.0
   build_version: ^2.0.0
   build_web_compilers: '>=1.0.0 <3.0.0'
-  collection: ^1.2.0
+  collection: ^1.15.0-nullsafety.5
   html: '>=0.12.2 <0.15.0'
   io: ^0.3.2+1
-  js: ^0.6.1
+  js: ^0.6.3-nullsafety.3
   path: ^1.8.0-nullsafety.3
   pedantic: ^1.10.0-nullsafety.3
   test: ^1.16.0-nullsafety.13
