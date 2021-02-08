@@ -1,3 +1,8 @@
+## 4.0.0-dev
+
+* Update `args` dep to allow the latest stable, update all `-nullsafety`
+  pre-release deps to depend on stable versions.
+
 ## 4.0.0-nullsafety.0
 
 * Migrate package to Dart's null safety language feature, requiring Dart
