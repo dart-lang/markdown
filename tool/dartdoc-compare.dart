@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:convert' show jsonEncode, jsonDecode;
 import 'dart:io' show Directory, File, Platform, Process, exitCode;
 
@@ -49,7 +47,7 @@ void main(List<String> arguments) {
       absolute(options[_dartdocDir] as String, 'pubspec.yaml'),
       options[_sdk] as bool);
 
-  String path;
+  String? path;
   if (comparer.sdk) {
     if (options.rest.isNotEmpty) {
       path = options.rest.single;
@@ -77,7 +75,7 @@ class DartdocCompare {
   DartdocCompare(this.dartdocDir, this.markdownBefore, this.markdownAfter,
       this.dartdocBin, this.dartdocPubspecPath, this.sdk);
 
-  bool compare(String package) {
+  bool compare(String? package) {
     // Generate docs with Markdown "Before".
     var outBefore = _runDartdoc(markdownBefore, package);
 
@@ -93,7 +91,7 @@ class DartdocCompare {
     return result.exitCode == 0;
   }
 
-  String _runDartdoc(String markdownRef, String path) {
+  String _runDartdoc(String markdownRef, String? path) {
     print('==========================================================');
     print('Running dartdoc for $markdownRef...');
     print('==========================================================');
@@ -159,7 +157,7 @@ int _system(String cmd, List<String> args) {
   return result.exitCode;
 }
 
-T _doInPath<T>(String path, T Function() f) {
+T _doInPath<T>(String? path, T Function() f) {
   if (path == null) {
     return f();
   }
