@@ -1,7 +1,7 @@
-## 4.0.0-dev
+## 4.0.0
 
-* Update `args` dep to allow the latest stable, update all `-nullsafety`
-  pre-release deps to depend on stable versions.
+* Stable null safety release.
+* Require the latest `args`, update the markdown executable to be opted in.
 
 ## 4.0.0-nullsafety.0
 
