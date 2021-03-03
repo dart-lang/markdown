@@ -10,8 +10,8 @@ analyzer:
     unused_element: error
     unused_import: error
     unused_local_variable: error
-    # TODO(srawlins): Re-enable this once "unused" parameters are exempted.
-    #inference_failure_on_untyped_parameter: ignore
+    # The example app explicitly takes a String of user-generated HTML and
+    # inserts it straight into a <div> using innerHtml.
     unsafe_html: ignore
 linter:
   rules:
