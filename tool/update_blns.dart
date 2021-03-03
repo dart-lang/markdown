@@ -37,5 +37,5 @@ Future<Null> main() async {
     blnsContent.writeln("  '$escaped',");
   }
   blnsContent.writeln('];');
-  File(_blnsFilePath)..writeAsStringSync(blnsContent.toString());
+  File(_blnsFilePath).writeAsStringSync(blnsContent.toString());
 }
