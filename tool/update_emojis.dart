@@ -15,7 +15,8 @@ Future<void> main() async {
   var response = await request.close();
   var json = jsonDecode(
           await response.cast<List<int>>().transform(utf8.decoder).join(''))
-      .map((alias, info) => MapEntry(alias, info.cast<String, dynamic>()))
+      .map((String alias, dynamic info) =>
+          MapEntry(alias, info.cast<String, dynamic>()))
       .cast<String, Map<String, dynamic>>();
   var emojisContent = StringBuffer('''
 // GENERATED FILE. DO NOT EDIT.
@@ -37,7 +38,7 @@ Future<void> main() async {
     }
   });
   emojisContent.writeln('};');
-  File(_emojisFilePath)..writeAsStringSync(emojisContent.toString());
+  File(_emojisFilePath).writeAsStringSync(emojisContent.toString());
   print('Wrote data to $_emojisFilePath for $emojiCount emojis, '
       'ignoring ${ignored.length}: ${ignored.join(', ')}.');
   exit(0);
