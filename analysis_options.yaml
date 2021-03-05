@@ -1,4 +1,4 @@
-include: package:pedantic/analysis_options.1.9.0.yaml
+include: package:pedantic/analysis_options.1.11.0.yaml
 analyzer:
   language:
     strict-inference: true
@@ -10,11 +10,11 @@ analyzer:
     unused_element: error
     unused_import: error
     unused_local_variable: error
-    # TODO(srawlins): Re-enable this once "unused" parameters are exempted.
-    inference_failure_on_untyped_parameter: ignore
+    # The example app explicitly takes a String of user-generated HTML and
+    # inserts it straight into a <div> using innerHtml.
+    unsafe_html: ignore
 linter:
   rules:
-    - await_only_futures
     - camel_case_types
     # https://github.com/dart-lang/linter/issues/574
     #- comment_references
@@ -31,4 +31,3 @@ linter:
     - package_api_docs
     - test_types_in_equals
     - throw_in_finally
-    - unnecessary_brace_in_string_interps

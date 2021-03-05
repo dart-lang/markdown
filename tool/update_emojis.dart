@@ -2,17 +2,21 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+// TODO(srawlins): Switch to https://github.com/muan/unicode-emoji-json. This
+// is definitely a breaking change; the emoji names are not necessarily the
+// same.
 final _emojisJsonRawUrl =
-    'https://github.com/muan/emojilib/raw/master/emojis.json';
+    'https://raw.githubusercontent.com/muan/emojilib/v2.4.0/emojis.json';
 final _emojisFilePath = 'lib/src/emojis.dart';
 
-Future<Null> main() async {
+Future<void> main() async {
   var client = HttpClient();
   var request = await client.getUrl(Uri.parse(_emojisJsonRawUrl));
   var response = await request.close();
   var json = jsonDecode(
           await response.cast<List<int>>().transform(utf8.decoder).join(''))
-      .map((alias, info) => MapEntry(alias, info.cast<String, dynamic>()))
+      .map((String alias, dynamic info) =>
+          MapEntry(alias, info.cast<String, dynamic>()))
       .cast<String, Map<String, dynamic>>();
   var emojisContent = StringBuffer('''
 // GENERATED FILE. DO NOT EDIT.
@@ -34,7 +38,7 @@ Future<Null> main() async {
     }
   });
   emojisContent.writeln('};');
-  File(_emojisFilePath)..writeAsStringSync(emojisContent.toString());
+  File(_emojisFilePath).writeAsStringSync(emojisContent.toString());
   print('Wrote data to $_emojisFilePath for $emojiCount emojis, '
       'ignoring ${ignored.length}: ${ignored.join(', ')}.');
   exit(0);
