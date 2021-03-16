@@ -3,13 +3,13 @@ version: 4.0.1-dev
 
 description: A portable Markdown library written in Dart that can parse
  Markdown into HTML.
-homepage: https://github.com/dart-lang/markdown
+repository: https://github.com/dart-lang/markdown
 
 executables:
   markdown:
 
 environment:
-  sdk: '>=2.12.0-0 <3.0.0'
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   args: ^2.0.0
@@ -22,7 +22,7 @@ dev_dependencies:
   build_web_compilers: '>=1.0.0 <3.0.0'
   collection: ^1.15.0
   html: ^0.15.0-nullsafety
-  io: ^0.3.2+1
+  io: ^1.0.0
   js: ^0.6.3
   path: ^1.8.0
   pedantic: ^1.11.0
