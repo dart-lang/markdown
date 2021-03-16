@@ -1,6 +1,7 @@
 ## 4.0.1-dev
 
 * Enforce lint rules found in pedantic 1.11.0.
+* Enforce `avoid_dynamic_calls` lint rule.
 
 ## 4.0.0
 
