@@ -788,7 +788,7 @@ class DelimiterRun implements Delimiter {
     required bool isPrecededByPunctuation,
     required bool isFollowedByPunctuation,
     required this.allowIntraWord,
-  })   : canOpen = isLeftFlanking &&
+  })  : canOpen = isLeftFlanking &&
             (char == $asterisk ||
                 !isRightFlanking ||
                 allowIntraWord ||
