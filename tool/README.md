@@ -2,7 +2,7 @@
 
 This directory contains tools for developers of the Dart markdown package.
 
-## dartdoc-compare.dart
+## dartdoc_compare.dart
 
 When you make a change to the package that might have subtle consequences on
 how Markdown is parsed, it would be really great to see how your output compares
@@ -10,15 +10,15 @@ to the previous output, on a large collection of Markdown.
 
 One such collection is the Dartdoc comments of any Dart package, which [dartdoc]
 translates into HTML, with the help of this markdown package. You can use the
-`dartdoc-compare.dart` script to compare what changes your code will make to
+`dartdoc_compare.dart` script to compare what changes your code will make to
 dartdoc's output. Here's how it works:
 
 1. Clone the [dartdoc git repository].
 2. Get a copy of some Dart code that you would like to use for the comparison.
-3. Run the `dartdoc-compare.dart` script like so:
+3. Run the `dartdoc_compare.dart` script like so:
 
    ```
-   $ dart tool/dartdoc-compare.dart \
+   $ dart tool/dartdoc_compare.dart \
          --dartdoc-dir=<dartdoc repo> \
          --before=<git SHA of "previous" code> \
          <directory of dart code for comparison>

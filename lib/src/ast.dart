@@ -85,7 +85,7 @@ class UnparsedContent implements Node {
   UnparsedContent(this.textContent);
 
   @override
-  void accept(NodeVisitor visitor) => null;
+  void accept(NodeVisitor visitor) {}
 }
 
 /// Visitor pattern for the AST.
