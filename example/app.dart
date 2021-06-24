@@ -17,7 +17,7 @@ const typing = Duration(milliseconds: 150);
 final introText = r'''Markdown is the **best**!
 
 * It has lists.
-* It has [links](http://dart.dev).
+* It has [links](https://dart.dev).
 * It has _so much more_...''';
 
 // Flavor support.
@@ -67,7 +67,7 @@ void _renderMarkdown([Event? event]) {
 
   for (var block in htmlDiv.querySelectorAll('pre code')) {
     try {
-      highlightBlock(block);
+      highlightElement(block);
     } catch (e) {
       window.console.error('Error highlighting markdown:');
       window.console.error(e);

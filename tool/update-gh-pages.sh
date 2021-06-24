@@ -4,7 +4,7 @@ set +x
 # Fail fast if a command fails.
 set -e
 
-pub global activate peanut
+dart pub global activate peanut
 
 peanut -d example
 
