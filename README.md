@@ -27,7 +27,7 @@ specifying an Array of extension syntaxes in the `blockSyntaxes` or
 
 The currently supported inline extension syntaxes are:
 
-* `new InlineHtmlSyntax()` - approximately CommonMark's
+* `InlineHtmlSyntax()` - approximately CommonMark's
   [definition][commonmark-raw-html] of "Raw HTML".
 
 The currently supported block extension syntaxes are:
@@ -49,7 +49,7 @@ import 'package:markdown/markdown.dart';
 
 void main() {
   print(markdownToHtml('Hello <span class="green">Markdown</span>',
-      inlineSyntaxes: [new InlineHtmlSyntax()]));
+      inlineSyntaxes: [InlineHtmlSyntax()]));
   //=> <p>Hello <span class="green">Markdown</span></p>
 }
 ```
@@ -90,7 +90,7 @@ parameter. Currently, there are four pre-defined extension sets:
 * `ExtensionSet.gitHubWeb` includes eight extensions. The same set of parsers use
    in the `gitHubFlavored` extension set with the addition of the block syntax parsers,
    HeaderWithIdSyntax and SetextHeaderWithIdSyntax, which add `id` attributes to
-   headers and inline syntac parser, EmojiSyntax, for parsing GitHub style emoji
+   headers and inline syntax parser, EmojiSyntax, for parsing GitHub style emoji
    characters:
 
   * Block Syntax Parser
@@ -115,7 +115,7 @@ You can create and use your own syntaxes.
 import 'package:markdown/markdown.dart';
 
 void main() {
-  var syntaxes = [new TextSyntax('nyan', sub: '~=[,,_,,]:3')];
+  var syntaxes = [TextSyntax('nyan', sub: '~=[,,_,,]:3')];
   print(markdownToHtml('nyan', inlineSyntaxes: syntaxes));
   //=> <p>~=[,,_,,]:3</p>
 }
@@ -138,7 +138,7 @@ compliance with [CommonMark].
 #### Updating CommonMark stats when changing the implementation
 
  1. Update the library and test code, making sure that tests still pass.
- 2. Run `dart tool/stats.dart --update-files` to update the
+ 2. Run `dart run tool/stats.dart --update-files` to update the
     per-test results `tool/common_mark_stats.json` and the test summary
     `tool/common_mark_stats.txt`.
  3. Verify that more tests now pass – or at least, no more tests fail.
@@ -164,8 +164,8 @@ compliance with [CommonMark].
 [Perl Markdown]: https://daringfireball.net/projects/markdown/
 [CommonMark]: https://commonmark.org/
 [commonMark-raw-html]: https://spec.commonmark.org/0.28/#raw-html
-[CommonMark source]: https://github.com/jgm/CommonMark/
+[CommonMark source]: https://github.com/commonmark/commonmark-spec
 [GitHub Flavored]: https://github.github.com/gfm/
-[pandoc-auto_identifiers]: https://pandoc.org/README.html#extension-auto_identifiers
+[pandoc-auto_identifiers]: https://pandoc.org/MANUAL.html#extension-auto_identifiers
 ["Markdown's XSS Vulnerability (and how to mitigate it)"]: https://github.com/showdownjs/showdown/wiki/Markdown%27s-XSS-Vulnerability-(and-how-to-mitigate-it)
 [NodeValidator]: https://api.dart.dev/stable/dart-html/NodeValidator-class.html
