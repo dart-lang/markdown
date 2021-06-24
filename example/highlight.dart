@@ -8,4 +8,4 @@ library hljs;
 import 'package:js/js.dart';
 
 @JS()
-external void highlightBlock(Object block);
+external void highlightElement(Object block);
