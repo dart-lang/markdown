@@ -1,6 +1,9 @@
-## 4.0.1-dev
+## 4.0.1
 
-* Enforce lint rules found in pedantic 1.11.0.
+* Export `src/emojis.dart` in public API.
+* Update version of example page.
+* Internal: enforce lint rules found in the lints package.
+* Bump io dependency to `^1.0.0`.
 
 ## 4.0.0
 
