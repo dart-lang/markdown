@@ -1,0 +1,16 @@
+# Configuration for https://pub.dev/packages/peanut
+directories:
+- example
+
+builder-options:
+  build_web_compilers|dart2js_archive_extractor:
+    # Ensures --dump-info .dart.js.info.json file is preserved.
+    # Useful to track compiled size change
+    filter_outputs: false
+  build_web_compilers|entrypoint:
+    dart2js_args:
+    - --dump-info
+    - --minify
+    - --no-frequency-based-minification
+    - --no-source-maps
+    - -O4
