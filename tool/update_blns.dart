@@ -27,6 +27,8 @@ Future<void> main() async {
 // $_blnsJsonRawUrl
 // at ${DateTime.now()} by the script, tool/update_blns.dart.
 
+// ignore_for_file: text_direction_code_point_in_literal
+
 ''');
   blnsContent.writeln('const blns = <String>[');
   for (var str in json) {
