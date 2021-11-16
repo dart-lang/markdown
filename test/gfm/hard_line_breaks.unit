@@ -41,10 +41,10 @@ bar*
 <p><em>foo<br />
 bar</em></p>
 >>> Hard line breaks - 661
-`code 
+`code  
 span`
 <<<
-<p><code>code  span</code></p>
+<p><code>code   span</code></p>
 >>> Hard line breaks - 662
 `code\
 span`

@@ -5585,8 +5585,8 @@
     "markdown": "www.commonmark.org\n",
     "html": "<p><a href=\"http://www.commonmark.org\">www.commonmark.org</a></p>\n",
     "example": 621,
-    "start_line": 9214,
-    "end_line": 9218,
+    "start_line": 9216,
+    "end_line": 9220,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5596,8 +5596,8 @@
     "markdown": "Visit www.commonmark.org/help for more information.\n",
     "html": "<p>Visit <a href=\"http://www.commonmark.org/help\">www.commonmark.org/help</a> for more information.</p>\n",
     "example": 622,
-    "start_line": 9222,
-    "end_line": 9226,
+    "start_line": 9224,
+    "end_line": 9228,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5607,19 +5607,19 @@
     "markdown": "Visit www.commonmark.org.\n\nVisit www.commonmark.org/a.b.\n",
     "html": "<p>Visit <a href=\"http://www.commonmark.org\">www.commonmark.org</a>.</p>\n<p>Visit <a href=\"http://www.commonmark.org/a.b\">www.commonmark.org/a.b</a>.</p>\n",
     "example": 623,
-    "start_line": 9234,
-    "end_line": 9241,
+    "start_line": 9236,
+    "end_line": 9243,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
     ]
   },
   {
-    "markdown": "www.google.com/search?q=Markup+(business)\n\n(www.google.com/search?q=Markup+(business))\n",
-    "html": "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>\n",
+    "markdown": "www.google.com/search?q=Markup+(business)\n\nwww.google.com/search?q=Markup+(business)))\n\n(www.google.com/search?q=Markup+(business))\n\n(www.google.com/search?q=Markup+(business)\n",
+    "html": "<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n<p><a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>))</p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a>)</p>\n<p>(<a href=\"http://www.google.com/search?q=Markup+(business)\">www.google.com/search?q=Markup+(business)</a></p>\n",
     "example": 624,
-    "start_line": 9248,
-    "end_line": 9255,
+    "start_line": 9250,
+    "end_line": 9263,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5629,8 +5629,8 @@
     "markdown": "www.google.com/search?q=(business))+ok\n",
     "html": "<p><a href=\"http://www.google.com/search?q=(business))+ok\">www.google.com/search?q=(business))+ok</a></p>\n",
     "example": 625,
-    "start_line": 9261,
-    "end_line": 9265,
+    "start_line": 9269,
+    "end_line": 9273,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5640,8 +5640,8 @@
     "markdown": "www.google.com/search?q=commonmark&hl=en\n\nwww.google.com/search?q=commonmark&hl;\n",
     "html": "<p><a href=\"http://www.google.com/search?q=commonmark&amp;hl=en\">www.google.com/search?q=commonmark&amp;hl=en</a></p>\n<p><a href=\"http://www.google.com/search?q=commonmark\">www.google.com/search?q=commonmark</a>&amp;hl;</p>\n",
     "example": 626,
-    "start_line": 9272,
-    "end_line": 9279,
+    "start_line": 9280,
+    "end_line": 9287,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5651,8 +5651,8 @@
     "markdown": "www.commonmark.org/he<lp\n",
     "html": "<p><a href=\"http://www.commonmark.org/he\">www.commonmark.org/he</a>&lt;lp</p>\n",
     "example": 627,
-    "start_line": 9283,
-    "end_line": 9287,
+    "start_line": 9291,
+    "end_line": 9295,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5662,8 +5662,8 @@
     "markdown": "http://commonmark.org\n\n(Visit https://encrypted.google.com/search?q=Markup+(business))\n\nAnonymous FTP is available at ftp://foo.bar.baz.\n",
     "html": "<p><a href=\"http://commonmark.org\">http://commonmark.org</a></p>\n<p>(Visit <a href=\"https://encrypted.google.com/search?q=Markup+(business)\">https://encrypted.google.com/search?q=Markup+(business)</a>)</p>\n<p>Anonymous FTP is available at <a href=\"ftp://foo.bar.baz\">ftp://foo.bar.baz</a>.</p>\n",
     "example": 628,
-    "start_line": 9294,
-    "end_line": 9304,
+    "start_line": 9302,
+    "end_line": 9312,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5673,8 +5673,8 @@
     "markdown": "foo@bar.baz\n",
     "html": "<p><a href=\"mailto:foo@bar.baz\">foo@bar.baz</a></p>\n",
     "example": 629,
-    "start_line": 9320,
-    "end_line": 9324,
+    "start_line": 9328,
+    "end_line": 9332,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5684,8 +5684,8 @@
     "markdown": "hello@mail+xyz.example isn't valid, but hello+xyz@mail.example is.\n",
     "html": "<p>hello@mail+xyz.example isn't valid, but <a href=\"mailto:hello+xyz@mail.example\">hello+xyz@mail.example</a> is.</p>\n",
     "example": 630,
-    "start_line": 9328,
-    "end_line": 9332,
+    "start_line": 9336,
+    "end_line": 9340,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5695,8 +5695,8 @@
     "markdown": "a.b-c_d@a.b\n\na.b-c_d@a.b.\n\na.b-c_d@a.b-\n\na.b-c_d@a.b_\n",
     "html": "<p><a href=\"mailto:a.b-c_d@a.b\">a.b-c_d@a.b</a></p>\n<p><a href=\"mailto:a.b-c_d@a.b\">a.b-c_d@a.b</a>.</p>\n<p>a.b-c_d@a.b-</p>\n<p>a.b-c_d@a.b_</p>\n",
     "example": 631,
-    "start_line": 9338,
-    "end_line": 9351,
+    "start_line": 9346,
+    "end_line": 9359,
     "section": "Autolinks (extension)",
     "extensions": [
       "autolink"
@@ -5706,8 +5706,8 @@
     "markdown": "<a><bab><c2c>\n",
     "html": "<p><a><bab><c2c></p>\n",
     "example": 632,
-    "start_line": 9430,
-    "end_line": 9434,
+    "start_line": 9438,
+    "end_line": 9442,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5715,8 +5715,8 @@
     "markdown": "<a/><b2/>\n",
     "html": "<p><a/><b2/></p>\n",
     "example": 633,
-    "start_line": 9439,
-    "end_line": 9443,
+    "start_line": 9447,
+    "end_line": 9451,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5724,8 +5724,8 @@
     "markdown": "<a  /><b2\ndata=\"foo\" >\n",
     "html": "<p><a  /><b2\ndata=\"foo\" ></p>\n",
     "example": 634,
-    "start_line": 9448,
-    "end_line": 9454,
+    "start_line": 9456,
+    "end_line": 9462,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5733,8 +5733,8 @@
     "markdown": "<a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 />\n",
     "html": "<p><a foo=\"bar\" bam = 'baz <em>\"</em>'\n_boolean zoop:33=zoop:33 /></p>\n",
     "example": 635,
-    "start_line": 9459,
-    "end_line": 9465,
+    "start_line": 9467,
+    "end_line": 9473,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5742,8 +5742,8 @@
     "markdown": "Foo <responsive-image src=\"foo.jpg\" />\n",
     "html": "<p>Foo <responsive-image src=\"foo.jpg\" /></p>\n",
     "example": 636,
-    "start_line": 9470,
-    "end_line": 9474,
+    "start_line": 9478,
+    "end_line": 9482,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5751,8 +5751,8 @@
     "markdown": "<33> <__>\n",
     "html": "<p>&lt;33&gt; &lt;__&gt;</p>\n",
     "example": 637,
-    "start_line": 9479,
-    "end_line": 9483,
+    "start_line": 9487,
+    "end_line": 9491,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5760,8 +5760,8 @@
     "markdown": "<a h*#ref=\"hi\">\n",
     "html": "<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>\n",
     "example": 638,
-    "start_line": 9488,
-    "end_line": 9492,
+    "start_line": 9496,
+    "end_line": 9500,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5769,8 +5769,8 @@
     "markdown": "<a href=\"hi'> <a href=hi'>\n",
     "html": "<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>\n",
     "example": 639,
-    "start_line": 9497,
-    "end_line": 9501,
+    "start_line": 9505,
+    "end_line": 9509,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5778,8 +5778,8 @@
     "markdown": "< a><\nfoo><bar/ >\n<foo bar=baz\nbim!bop />\n",
     "html": "<p>&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;</p>\n",
     "example": 640,
-    "start_line": 9506,
-    "end_line": 9516,
+    "start_line": 9514,
+    "end_line": 9524,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5787,8 +5787,8 @@
     "markdown": "<a href='bar'title=title>\n",
     "html": "<p>&lt;a href='bar'title=title&gt;</p>\n",
     "example": 641,
-    "start_line": 9521,
-    "end_line": 9525,
+    "start_line": 9529,
+    "end_line": 9533,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5796,8 +5796,8 @@
     "markdown": "</a></foo >\n",
     "html": "<p></a></foo ></p>\n",
     "example": 642,
-    "start_line": 9530,
-    "end_line": 9534,
+    "start_line": 9538,
+    "end_line": 9542,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5805,8 +5805,8 @@
     "markdown": "</a href=\"foo\">\n",
     "html": "<p>&lt;/a href=&quot;foo&quot;&gt;</p>\n",
     "example": 643,
-    "start_line": 9539,
-    "end_line": 9543,
+    "start_line": 9547,
+    "end_line": 9551,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5814,8 +5814,8 @@
     "markdown": "foo <!-- this is a\ncomment - with hyphen -->\n",
     "html": "<p>foo <!-- this is a\ncomment - with hyphen --></p>\n",
     "example": 644,
-    "start_line": 9548,
-    "end_line": 9554,
+    "start_line": 9556,
+    "end_line": 9562,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5823,8 +5823,8 @@
     "markdown": "foo <!-- not a comment -- two hyphens -->\n",
     "html": "<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>\n",
     "example": 645,
-    "start_line": 9557,
-    "end_line": 9561,
+    "start_line": 9565,
+    "end_line": 9569,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5832,8 +5832,8 @@
     "markdown": "foo <!--> foo -->\n\nfoo <!-- foo--->\n",
     "html": "<p>foo &lt;!--&gt; foo --&gt;</p>\n<p>foo &lt;!-- foo---&gt;</p>\n",
     "example": 646,
-    "start_line": 9566,
-    "end_line": 9573,
+    "start_line": 9574,
+    "end_line": 9581,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5841,8 +5841,8 @@
     "markdown": "foo <?php echo $a; ?>\n",
     "html": "<p>foo <?php echo $a; ?></p>\n",
     "example": 647,
-    "start_line": 9578,
-    "end_line": 9582,
+    "start_line": 9586,
+    "end_line": 9590,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5850,8 +5850,8 @@
     "markdown": "foo <!ELEMENT br EMPTY>\n",
     "html": "<p>foo <!ELEMENT br EMPTY></p>\n",
     "example": 648,
-    "start_line": 9587,
-    "end_line": 9591,
+    "start_line": 9595,
+    "end_line": 9599,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5859,8 +5859,8 @@
     "markdown": "foo <![CDATA[>&<]]>\n",
     "html": "<p>foo <![CDATA[>&<]]></p>\n",
     "example": 649,
-    "start_line": 9596,
-    "end_line": 9600,
+    "start_line": 9604,
+    "end_line": 9608,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5868,8 +5868,8 @@
     "markdown": "foo <a href=\"&ouml;\">\n",
     "html": "<p>foo <a href=\"&ouml;\"></p>\n",
     "example": 650,
-    "start_line": 9606,
-    "end_line": 9610,
+    "start_line": 9614,
+    "end_line": 9618,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5877,8 +5877,8 @@
     "markdown": "foo <a href=\"\\*\">\n",
     "html": "<p>foo <a href=\"\\*\"></p>\n",
     "example": 651,
-    "start_line": 9615,
-    "end_line": 9619,
+    "start_line": 9623,
+    "end_line": 9627,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5886,8 +5886,8 @@
     "markdown": "<a href=\"\\\"\">\n",
     "html": "<p>&lt;a href=&quot;&quot;&quot;&gt;</p>\n",
     "example": 652,
-    "start_line": 9622,
-    "end_line": 9626,
+    "start_line": 9630,
+    "end_line": 9634,
     "section": "Raw HTML",
     "extensions": []
   },
@@ -5895,8 +5895,8 @@
     "markdown": "<strong> <title> <style> <em>\n\n<blockquote>\n  <xmp> is disallowed.  <XMP> is also disallowed.\n</blockquote>\n",
     "html": "<p><strong> &lt;title> &lt;style> <em></p>\n<blockquote>\n  &lt;xmp> is disallowed.  &lt;XMP> is also disallowed.\n</blockquote>\n",
     "example": 653,
-    "start_line": 9653,
-    "end_line": 9664,
+    "start_line": 9661,
+    "end_line": 9672,
     "section": "Disallowed Raw HTML (extension)",
     "extensions": [
       "tagfilter"
@@ -5906,8 +5906,8 @@
     "markdown": "foo  \nbaz\n",
     "html": "<p>foo<br />\nbaz</p>\n",
     "example": 654,
-    "start_line": 9675,
-    "end_line": 9681,
+    "start_line": 9683,
+    "end_line": 9689,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5915,8 +5915,8 @@
     "markdown": "foo\\\nbaz\n",
     "html": "<p>foo<br />\nbaz</p>\n",
     "example": 655,
-    "start_line": 9687,
-    "end_line": 9693,
+    "start_line": 9695,
+    "end_line": 9701,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5924,8 +5924,8 @@
     "markdown": "foo       \nbaz\n",
     "html": "<p>foo<br />\nbaz</p>\n",
     "example": 656,
-    "start_line": 9698,
-    "end_line": 9704,
+    "start_line": 9706,
+    "end_line": 9712,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5933,8 +5933,8 @@
     "markdown": "foo  \n     bar\n",
     "html": "<p>foo<br />\nbar</p>\n",
     "example": 657,
-    "start_line": 9709,
-    "end_line": 9715,
+    "start_line": 9717,
+    "end_line": 9723,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5942,8 +5942,8 @@
     "markdown": "foo\\\n     bar\n",
     "html": "<p>foo<br />\nbar</p>\n",
     "example": 658,
-    "start_line": 9718,
-    "end_line": 9724,
+    "start_line": 9726,
+    "end_line": 9732,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5951,8 +5951,8 @@
     "markdown": "*foo  \nbar*\n",
     "html": "<p><em>foo<br />\nbar</em></p>\n",
     "example": 659,
-    "start_line": 9730,
-    "end_line": 9736,
+    "start_line": 9738,
+    "end_line": 9744,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5960,17 +5960,17 @@
     "markdown": "*foo\\\nbar*\n",
     "html": "<p><em>foo<br />\nbar</em></p>\n",
     "example": 660,
-    "start_line": 9739,
-    "end_line": 9745,
+    "start_line": 9747,
+    "end_line": 9753,
     "section": "Hard line breaks",
     "extensions": []
   },
   {
-    "markdown": "`code \nspan`\n",
-    "html": "<p><code>code  span</code></p>\n",
+    "markdown": "`code  \nspan`\n",
+    "html": "<p><code>code   span</code></p>\n",
     "example": 661,
-    "start_line": 9750,
-    "end_line": 9755,
+    "start_line": 9758,
+    "end_line": 9763,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5978,8 +5978,8 @@
     "markdown": "`code\\\nspan`\n",
     "html": "<p><code>code\\ span</code></p>\n",
     "example": 662,
-    "start_line": 9758,
-    "end_line": 9763,
+    "start_line": 9766,
+    "end_line": 9771,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5987,8 +5987,8 @@
     "markdown": "<a href=\"foo  \nbar\">\n",
     "html": "<p><a href=\"foo  \nbar\"></p>\n",
     "example": 663,
-    "start_line": 9768,
-    "end_line": 9774,
+    "start_line": 9776,
+    "end_line": 9782,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -5996,8 +5996,8 @@
     "markdown": "<a href=\"foo\\\nbar\">\n",
     "html": "<p><a href=\"foo\\\nbar\"></p>\n",
     "example": 664,
-    "start_line": 9777,
-    "end_line": 9783,
+    "start_line": 9785,
+    "end_line": 9791,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -6005,8 +6005,8 @@
     "markdown": "foo\\\n",
     "html": "<p>foo\\</p>\n",
     "example": 665,
-    "start_line": 9790,
-    "end_line": 9794,
+    "start_line": 9798,
+    "end_line": 9802,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -6014,8 +6014,8 @@
     "markdown": "foo  \n",
     "html": "<p>foo</p>\n",
     "example": 666,
-    "start_line": 9797,
-    "end_line": 9801,
+    "start_line": 9805,
+    "end_line": 9809,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -6023,8 +6023,8 @@
     "markdown": "### foo\\\n",
     "html": "<h3>foo\\</h3>\n",
     "example": 667,
-    "start_line": 9804,
-    "end_line": 9808,
+    "start_line": 9812,
+    "end_line": 9816,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -6032,8 +6032,8 @@
     "markdown": "### foo  \n",
     "html": "<h3>foo</h3>\n",
     "example": 668,
-    "start_line": 9811,
-    "end_line": 9815,
+    "start_line": 9819,
+    "end_line": 9823,
     "section": "Hard line breaks",
     "extensions": []
   },
@@ -6041,8 +6041,8 @@
     "markdown": "foo\nbaz\n",
     "html": "<p>foo\nbaz</p>\n",
     "example": 669,
-    "start_line": 9826,
-    "end_line": 9832,
+    "start_line": 9834,
+    "end_line": 9840,
     "section": "Soft line breaks",
     "extensions": []
   },
@@ -6050,8 +6050,8 @@
     "markdown": "foo \n baz\n",
     "html": "<p>foo\nbaz</p>\n",
     "example": 670,
-    "start_line": 9838,
-    "end_line": 9844,
+    "start_line": 9846,
+    "end_line": 9852,
     "section": "Soft line breaks",
     "extensions": []
   },
@@ -6059,8 +6059,8 @@
     "markdown": "hello $.;'there\n",
     "html": "<p>hello $.;'there</p>\n",
     "example": 671,
-    "start_line": 9858,
-    "end_line": 9862,
+    "start_line": 9866,
+    "end_line": 9870,
     "section": "Textual content",
     "extensions": []
   },
@@ -6068,8 +6068,8 @@
     "markdown": "Foo \u03c7\u03c1\u1fc6\u03bd\n",
     "html": "<p>Foo \u03c7\u03c1\u1fc6\u03bd</p>\n",
     "example": 672,
-    "start_line": 9865,
-    "end_line": 9869,
+    "start_line": 9873,
+    "end_line": 9877,
     "section": "Textual content",
     "extensions": []
   },
@@ -6077,8 +6077,8 @@
     "markdown": "Multiple     spaces\n",
     "html": "<p>Multiple     spaces</p>\n",
     "example": 673,
-    "start_line": 9874,
-    "end_line": 9878,
+    "start_line": 9882,
+    "end_line": 9886,
     "section": "Textual content",
     "extensions": []
   }

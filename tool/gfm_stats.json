@@ -44,7 +44,7 @@
   "621": "strict",
   "622": "strict",
   "623": "strict",
-  "624": "loose",
+  "624": "fail",
   "625": "strict",
   "626": "loose",
   "627": "strict",

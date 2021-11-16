@@ -1,4 +1,4 @@
->>> Thematic breaks - 13
+>>> Thematic breaks - 43
 ***
 ---
 ___
@@ -6,15 +6,15 @@ ___
 <hr />
 <hr />
 <hr />
->>> Thematic breaks - 14
+>>> Thematic breaks - 44
 +++
 <<<
 <p>+++</p>
->>> Thematic breaks - 15
+>>> Thematic breaks - 45
 ===
 <<<
 <p>===</p>
->>> Thematic breaks - 16
+>>> Thematic breaks - 46
 --
 **
 __
@@ -22,7 +22,7 @@ __
 <p>--
 **
 __</p>
->>> Thematic breaks - 17
+>>> Thematic breaks - 47
  ***
   ***
    ***
@@ -30,38 +30,38 @@ __</p>
 <hr />
 <hr />
 <hr />
->>> Thematic breaks - 18
+>>> Thematic breaks - 48
     ***
 <<<
 <pre><code>***
 </code></pre>
->>> Thematic breaks - 19
+>>> Thematic breaks - 49
 Foo
     ***
 <<<
 <p>Foo
 ***</p>
->>> Thematic breaks - 20
+>>> Thematic breaks - 50
 _____________________________________
 <<<
 <hr />
->>> Thematic breaks - 21
+>>> Thematic breaks - 51
  - - -
 <<<
 <hr />
->>> Thematic breaks - 22
+>>> Thematic breaks - 52
  **  * ** * ** * **
 <<<
 <hr />
->>> Thematic breaks - 23
+>>> Thematic breaks - 53
 -     -      -      -
 <<<
 <hr />
->>> Thematic breaks - 24
+>>> Thematic breaks - 54
 - - - -    
 <<<
 <hr />
->>> Thematic breaks - 25
+>>> Thematic breaks - 55
 _ _ _ _ a
 
 a------
@@ -71,11 +71,11 @@ a------
 <p>_ _ _ _ a</p>
 <p>a------</p>
 <p>---a---</p>
->>> Thematic breaks - 26
+>>> Thematic breaks - 56
  *-*
 <<<
 <p><em>-</em></p>
->>> Thematic breaks - 27
+>>> Thematic breaks - 57
 - foo
 ***
 - bar
@@ -87,7 +87,7 @@ a------
 <ul>
 <li>bar</li>
 </ul>
->>> Thematic breaks - 28
+>>> Thematic breaks - 58
 Foo
 ***
 bar
@@ -95,14 +95,14 @@ bar
 <p>Foo</p>
 <hr />
 <p>bar</p>
->>> Thematic breaks - 29
+>>> Thematic breaks - 59
 Foo
 ---
 bar
 <<<
 <h2>Foo</h2>
 <p>bar</p>
->>> Thematic breaks - 30
+>>> Thematic breaks - 60
 * Foo
 * * *
 * Bar
@@ -114,7 +114,7 @@ bar
 <ul>
 <li>Bar</li>
 </ul>
->>> Thematic breaks - 31
+>>> Thematic breaks - 61
 - Foo
 - * * *
 <<<

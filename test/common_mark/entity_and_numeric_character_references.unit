@@ -1,4 +1,4 @@
->>> Entity and numeric character references - 311
+>>> Entity and numeric character references - 25
 &nbsp; &amp; &copy; &AElig; &Dcaron;
 &frac34; &HilbertSpace; &DifferentialD;
 &ClockwiseContourIntegral; &ngE;
@@ -6,69 +6,69 @@
 <p>&nbsp; &amp; &copy; &AElig; &Dcaron;
 &frac34; &HilbertSpace; &DifferentialD;
 &ClockwiseContourIntegral; &ngE;</p>
->>> Entity and numeric character references - 312
+>>> Entity and numeric character references - 26
 &#35; &#1234; &#992; &#0;
 <<<
 <p>&#35; &#1234; &#992; &#0;</p>
->>> Entity and numeric character references - 313
+>>> Entity and numeric character references - 27
 &#X22; &#XD06; &#xcab;
 <<<
 <p>&#X22; &#XD06; &#xcab;</p>
->>> Entity and numeric character references - 314
+>>> Entity and numeric character references - 28
 &nbsp &x; &#; &#x;
-&#987654321;
+&#87654321;
 &#abcdef0;
 &ThisIsNotDefined; &hi?;
 <<<
 <p>&amp;nbsp &x; &#; &#x;
-&#987654321;
+&#87654321;
 &#abcdef0;
 &ThisIsNotDefined; &amp;hi?;</p>
->>> Entity and numeric character references - 315
+>>> Entity and numeric character references - 29
 &copy
 <<<
 <p>&amp;copy</p>
->>> Entity and numeric character references - 316
+>>> Entity and numeric character references - 30
 &MadeUpEntity;
 <<<
 <p>&MadeUpEntity;</p>
->>> Entity and numeric character references - 317
+>>> Entity and numeric character references - 31
 <a href="&ouml;&ouml;.html">
 <<<
 <a href="&ouml;&ouml;.html">
->>> Entity and numeric character references - 318
+>>> Entity and numeric character references - 32
 [foo](/f&ouml;&ouml; "f&ouml;&ouml;")
 <<<
 <p><a href="/f&ouml;&ouml;" title="f&ouml;&ouml;">foo</a></p>
->>> Entity and numeric character references - 319
+>>> Entity and numeric character references - 33
 [foo]
 
 [foo]: /f&ouml;&ouml; "f&ouml;&ouml;"
 <<<
 <p><a href="/f&ouml;&ouml;" title="f&ouml;&ouml;">foo</a></p>
->>> Entity and numeric character references - 320
+>>> Entity and numeric character references - 34
 ``` f&ouml;&ouml;
 foo
 ```
 <<<
 <pre><code class="language-f&amp;ouml;&amp;ouml;">foo
 </code></pre>
->>> Entity and numeric character references - 321
+>>> Entity and numeric character references - 35
 `f&ouml;&ouml;`
 <<<
 <p><code>f&amp;ouml;&amp;ouml;</code></p>
->>> Entity and numeric character references - 322
+>>> Entity and numeric character references - 36
     f&ouml;f&ouml;
 <<<
 <pre><code>f&amp;ouml;f&amp;ouml;
 </code></pre>
->>> Entity and numeric character references - 323
+>>> Entity and numeric character references - 37
 &#42;foo&#42;
 *foo*
 <<<
 <p>&#42;foo&#42;
 <em>foo</em></p>
->>> Entity and numeric character references - 324
+>>> Entity and numeric character references - 38
 &#42; foo
 
 * foo
@@ -77,15 +77,15 @@ foo
 <ul>
 <li>foo</li>
 </ul>
->>> Entity and numeric character references - 325
+>>> Entity and numeric character references - 39
 foo&#10;&#10;bar
 <<<
 <p>foo&#10;&#10;bar</p>
->>> Entity and numeric character references - 326
+>>> Entity and numeric character references - 40
 &#9;foo
 <<<
 <p>&#9;foo</p>
->>> Entity and numeric character references - 327
+>>> Entity and numeric character references - 41
 [a](url &quot;tit&quot;)
 <<<
 <p>[a](url &quot;tit&quot;)</p>
