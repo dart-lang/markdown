@@ -1,4 +1,4 @@
->>> HTML blocks - 118
+>>> HTML blocks - 148
 <table><tr><td>
 <pre>
 **Hello**,
@@ -12,7 +12,7 @@ _world_.
 **Hello**,
 <p><em>world</em>.
 </pre></p></td></tr></table>
->>> HTML blocks - 119
+>>> HTML blocks - 149
 <table>
   <tr>
     <td>
@@ -31,7 +31,7 @@ okay.
   </tr>
 </table>
 <p>okay.</p>
->>> HTML blocks - 120
+>>> HTML blocks - 150
  <div>
   *hello*
          <foo><a>
@@ -39,13 +39,13 @@ okay.
  <div>
   *hello*
          <foo><a>
->>> HTML blocks - 121
+>>> HTML blocks - 151
 </div>
 *foo*
 <<<
 </div>
 *foo*
->>> HTML blocks - 122
+>>> HTML blocks - 152
 <DIV CLASS="foo">
 
 *Markdown*
@@ -54,7 +54,7 @@ okay.
 <<<
 <DIV CLASS="foo">
 <p><em>Markdown</em></p></DIV>
->>> HTML blocks - 123
+>>> HTML blocks - 153
 <div id="foo"
   class="bar">
 </div>
@@ -62,7 +62,7 @@ okay.
 <div id="foo"
   class="bar">
 </div>
->>> HTML blocks - 124
+>>> HTML blocks - 154
 <div id="foo" class="bar
   baz">
 </div>
@@ -70,7 +70,7 @@ okay.
 <div id="foo" class="bar
   baz">
 </div>
->>> HTML blocks - 125
+>>> HTML blocks - 155
 <div>
 *foo*
 
@@ -79,29 +79,29 @@ okay.
 <div>
 *foo*
 <p><em>bar</em></p>
->>> HTML blocks - 126
+>>> HTML blocks - 156
 <div id="foo"
 *hi*
 <<<
 <div id="foo"
 *hi*
->>> HTML blocks - 127
+>>> HTML blocks - 157
 <div class
 foo
 <<<
 <div class
 foo
->>> HTML blocks - 128
+>>> HTML blocks - 158
 <div *???-&&&-<---
 *foo*
 <<<
 <div *???-&&&-<---
 *foo*
->>> HTML blocks - 129
+>>> HTML blocks - 159
 <div><a href="bar">*foo*</a></div>
 <<<
 <div><a href="bar">*foo*</a></div>
->>> HTML blocks - 130
+>>> HTML blocks - 160
 <table><tr><td>
 foo
 </td></tr></table>
@@ -109,7 +109,7 @@ foo
 <table><tr><td>
 foo
 </td></tr></table>
->>> HTML blocks - 131
+>>> HTML blocks - 161
 <div></div>
 ``` c
 int x = 33;
@@ -119,7 +119,7 @@ int x = 33;
 ``` c
 int x = 33;
 ```
->>> HTML blocks - 132
+>>> HTML blocks - 162
 <a href="foo">
 *bar*
 </a>
@@ -127,7 +127,7 @@ int x = 33;
 <a href="foo">
 *bar*
 </a>
->>> HTML blocks - 133
+>>> HTML blocks - 163
 <Warning>
 *bar*
 </Warning>
@@ -135,7 +135,7 @@ int x = 33;
 <Warning>
 *bar*
 </Warning>
->>> HTML blocks - 134
+>>> HTML blocks - 164
 <i class="foo">
 *bar*
 </i>
@@ -143,13 +143,13 @@ int x = 33;
 <i class="foo">
 *bar*
 </i>
->>> HTML blocks - 135
+>>> HTML blocks - 165
 </ins>
 *bar*
 <<<
 </ins>
 *bar*
->>> HTML blocks - 136
+>>> HTML blocks - 166
 <del>
 *foo*
 </del>
@@ -157,7 +157,7 @@ int x = 33;
 <del>
 *foo*
 </del>
->>> HTML blocks - 137
+>>> HTML blocks - 167
 <del>
 
 *foo*
@@ -166,11 +166,11 @@ int x = 33;
 <<<
 <del>
 <p><em>foo</em></p></del>
->>> HTML blocks - 138
+>>> HTML blocks - 168
 <del>*foo*</del>
 <<<
 <p><del><em>foo</em></del></p>
->>> HTML blocks - 139
+>>> HTML blocks - 169
 <pre language="haskell"><code>
 import Text.HTML.TagSoup
 
@@ -186,7 +186,7 @@ main :: IO ()
 main = print $ parseTags tags
 </code></pre>
 <p>okay</p>
->>> HTML blocks - 140
+>>> HTML blocks - 170
 <script type="text/javascript">
 // JavaScript example
 
@@ -200,7 +200,19 @@ okay
 document.getElementById("demo").innerHTML = "Hello JavaScript!";
 </script>
 <p>okay</p>
->>> HTML blocks - 141
+>>> HTML blocks - 171
+<textarea>
+
+*foo*
+
+_bar_
+
+</textarea>
+<<<
+<textarea>
+<p><em>foo</em></p>
+<p><em>bar</em></p></textarea>
+>>> HTML blocks - 172
 <style
   type="text/css">
 h1 {color:red;}
@@ -216,7 +228,7 @@ h1 {color:red;}
 p {color:blue;}
 </style>
 <p>okay</p>
->>> HTML blocks - 142
+>>> HTML blocks - 173
 <style
   type="text/css">
 
@@ -226,7 +238,7 @@ foo
   type="text/css">
 
 foo
->>> HTML blocks - 143
+>>> HTML blocks - 174
 > <div>
 > foo
 
@@ -236,7 +248,7 @@ bar
 foo
 </blockquote>
 <p>bar</p>
->>> HTML blocks - 144
+>>> HTML blocks - 175
 - <div>
 - foo
 <<<
@@ -244,19 +256,19 @@ foo
 <li><div></li>
 <li>foo</li>
 </ul>
->>> HTML blocks - 145
+>>> HTML blocks - 176
 <style>p{color:red;}</style>
 *foo*
 <<<
 <style>p{color:red;}</style>
 <p><em>foo</em></p>
->>> HTML blocks - 146
+>>> HTML blocks - 177
 <!-- foo -->*bar*
 *baz*
 <<<
 <!-- foo -->*bar*
 <p><em>baz</em></p>
->>> HTML blocks - 147
+>>> HTML blocks - 178
 <script>
 foo
 </script>1. *bar*
@@ -264,7 +276,7 @@ foo
 <script>
 foo
 </script>1. *bar*
->>> HTML blocks - 148
+>>> HTML blocks - 179
 <!-- Foo
 
 bar
@@ -276,7 +288,7 @@ okay
 bar
    baz -->
 <p>okay</p>
->>> HTML blocks - 149
+>>> HTML blocks - 180
 <?php
 
   echo '>';
@@ -290,11 +302,11 @@ okay
 
 ?>
 <p>okay</p>
->>> HTML blocks - 150
+>>> HTML blocks - 181
 <!DOCTYPE html>
 <<<
 <!DOCTYPE html>
->>> HTML blocks - 151
+>>> HTML blocks - 182
 <![CDATA[
 function matchwo(a,b)
 {
@@ -322,7 +334,7 @@ function matchwo(a,b)
 }
 ]]>
 <p>okay</p>
->>> HTML blocks - 152
+>>> HTML blocks - 183
   <!-- foo -->
 
     <!-- foo -->
@@ -330,7 +342,7 @@ function matchwo(a,b)
   <!-- foo -->
 <pre><code>&lt;!-- foo --&gt;
 </code></pre>
->>> HTML blocks - 153
+>>> HTML blocks - 184
   <div>
 
     <div>
@@ -338,7 +350,7 @@ function matchwo(a,b)
   <div>
 <pre><code>&lt;div&gt;
 </code></pre>
->>> HTML blocks - 154
+>>> HTML blocks - 185
 Foo
 <div>
 bar
@@ -347,7 +359,7 @@ bar
 <p>Foo</p><div>
 bar
 </div>
->>> HTML blocks - 155
+>>> HTML blocks - 186
 <div>
 bar
 </div>
@@ -357,7 +369,7 @@ bar
 bar
 </div>
 *foo*
->>> HTML blocks - 156
+>>> HTML blocks - 187
 Foo
 <a href="bar">
 baz
@@ -365,7 +377,7 @@ baz
 <p>Foo
 <a href="bar">
 baz</p>
->>> HTML blocks - 157
+>>> HTML blocks - 188
 <div>
 
 *Emphasized* text.
@@ -374,7 +386,7 @@ baz</p>
 <<<
 <div>
 <p><em>Emphasized</em> text.</p></div>
->>> HTML blocks - 158
+>>> HTML blocks - 189
 <div>
 *Emphasized* text.
 </div>
@@ -382,7 +394,7 @@ baz</p>
 <div>
 *Emphasized* text.
 </div>
->>> HTML blocks - 159
+>>> HTML blocks - 190
 <table>
 
 <tr>
@@ -398,7 +410,7 @@ Hi
 <table><tr><td>
 Hi
 </td></tr></table>
->>> HTML blocks - 160
+>>> HTML blocks - 191
 <table>
 
   <tr>

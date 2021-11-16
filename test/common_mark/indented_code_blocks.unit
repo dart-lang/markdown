@@ -1,11 +1,11 @@
->>> Indented code blocks - 77
+>>> Indented code blocks - 107
     a simple
       indented code block
 <<<
 <pre><code>a simple
   indented code block
 </code></pre>
->>> Indented code blocks - 78
+>>> Indented code blocks - 108
   - foo
 
     bar
@@ -16,7 +16,7 @@
 <p>bar</p>
 </li>
 </ul>
->>> Indented code blocks - 79
+>>> Indented code blocks - 109
 1.  foo
 
     - bar
@@ -29,7 +29,7 @@
 </ul>
 </li>
 </ol>
->>> Indented code blocks - 80
+>>> Indented code blocks - 110
     <a/>
     *hi*
 
@@ -40,7 +40,7 @@
 
 - one
 </code></pre>
->>> Indented code blocks - 81
+>>> Indented code blocks - 111
     chunk1
 
     chunk2
@@ -55,7 +55,7 @@ chunk2
 </code></pre>
 <pre><code>chunk3
 </code></pre>
->>> Indented code blocks - 82
+>>> Indented code blocks - 112
     chunk1
       
       chunk2
@@ -64,21 +64,21 @@ chunk2
   
   chunk2
 </code></pre>
->>> Indented code blocks - 83
+>>> Indented code blocks - 113
 Foo
     bar
 
 <<<
 <p>Foo
 bar</p>
->>> Indented code blocks - 84
+>>> Indented code blocks - 114
     foo
 bar
 <<<
 <pre><code>foo
 </code></pre>
 <p>bar</p>
->>> Indented code blocks - 85
+>>> Indented code blocks - 115
 # Heading
     foo
 Heading
@@ -93,14 +93,14 @@ Heading
 <pre><code>foo
 </code></pre>
 <hr />
->>> Indented code blocks - 86
+>>> Indented code blocks - 116
         foo
     bar
 <<<
 <pre><code>    foo
 bar
 </code></pre>
->>> Indented code blocks - 87
+>>> Indented code blocks - 117
 
     
     foo
@@ -110,7 +110,7 @@ bar
 <pre><code>foo
 
 </code></pre>
->>> Indented code blocks - 88
+>>> Indented code blocks - 118
     foo  
 <<<
 <pre><code>foo  
