@@ -105,7 +105,7 @@ void main() {
         expect(
             nodes.single,
             const TypeMatcher<Text>().having(
-                  (e) => e.text,
+              (e) => e.text,
               'text',
               '>"< Hello',
             ));
