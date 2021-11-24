@@ -55,7 +55,8 @@ void main() {
         expect(result, '<p>\n</p><pre>\n A\n B\n</pre>');
       });
 
-      test('encode double quotes, greater than, and less than when escaped', () {
+      test('encode double quotes, greater than, and less than when escaped',
+          () {
         var contents = r'\>\"\< Hello';
         var document = Document(encodeHtml: true);
         var nodes = document.parseInline(contents);
