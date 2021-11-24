@@ -55,7 +55,7 @@ void main() {
         expect(result, '<p>\n</p><pre>\n A\n B\n</pre>');
       });
 
-      test('encode double quotes, grater than, and less than when escaped', () {
+      test('encode double quotes, greater than, and less than when escaped', () {
         var contents = r'\>\"\< Hello';
         var document = Document(encodeHtml: true);
         var nodes = document.parseInline(contents);
@@ -97,7 +97,7 @@ void main() {
             codeBlock.textContent, equals('<p>Hello <em>Markdown</em></p>\n'));
       });
 
-      test('leave double quotes, grater than, and less than when escaped', () {
+      test('leave double quotes, greater than, and less than when escaped', () {
         var contents = r'\>\"\< Hello';
         var document = Document(encodeHtml: false);
         var nodes = document.parseInline(contents);
