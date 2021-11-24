@@ -54,6 +54,21 @@ void main() {
         var result = HtmlRenderer().render(nodes);
         expect(result, '<p>\n</p><pre>\n A\n B\n</pre>');
       });
+
+      test('encode double quotes, greater than, and less than when escaped',
+          () {
+        var contents = r'\>\"\< Hello';
+        var document = Document(encodeHtml: true);
+        var nodes = document.parseInline(contents);
+        expect(nodes, hasLength(1));
+        expect(
+            nodes.single,
+            const TypeMatcher<Text>().having(
+              (e) => e.text,
+              'text',
+              '&gt;&quot;&lt; Hello',
+            ));
+      });
     });
 
     group('with encodeHtml disabled', () {
@@ -81,6 +96,20 @@ void main() {
         var codeBlock = result.single as Element;
         expect(
             codeBlock.textContent, equals('<p>Hello <em>Markdown</em></p>\n'));
+      });
+
+      test('leave double quotes, greater than, and less than when escaped', () {
+        var contents = r'\>\"\< Hello';
+        var document = Document(encodeHtml: false);
+        var nodes = document.parseInline(contents);
+        expect(nodes, hasLength(1));
+        expect(
+            nodes.single,
+            const TypeMatcher<Text>().having(
+              (e) => e.text,
+              'text',
+              '>"< Hello',
+            ));
       });
     });
   });
