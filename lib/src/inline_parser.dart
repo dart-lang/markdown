@@ -503,7 +503,7 @@ class EmailAutolinkSyntax extends InlineSyntax {
 
 /// Matches autolinks like `<http://foo.com>`.
 class AutolinkSyntax extends InlineSyntax {
-  AutolinkSyntax() : super(r'<(([a-zA-Z][a-zA-Z\-\+\.]+):(?://)?[^\s>]*)>');
+  AutolinkSyntax() : super(r'<(([a-zA-Z][a-zA-Z\-\+\.]+):(?:\/)?[^\s>]*)>');
 
   @override
   bool onMatch(InlineParser parser, Match match) {
