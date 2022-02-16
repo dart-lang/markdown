@@ -1,3 +1,8 @@
+## 5.0.0-dev
+
+* Breaking change: Change the type of `parseInline`'s parameter from `String?`
+  to `String`.
+
 ## 4.0.1
 
 * Export `src/emojis.dart` in public API.
