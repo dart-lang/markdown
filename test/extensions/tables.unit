@@ -27,6 +27,13 @@ more | cells
 
 <<<
 <table><thead><tr><th>head</th><th>cells</th></tr></thead><tbody><tr><td>body</td><td>cells</td></tr></tbody></table>
+>>> rows wrapped in pipes, tabs in whitespace
+|	head	|	cells	|
+|	--	|	---	|
+|	body	|	cells	|
+
+<<<
+<table><thead><tr><th>head</th><th>cells</th></tr></thead><tbody><tr><td>body</td><td>cells</td></tr></tbody></table>
 >>> cells with inline syntax
 head `code` | _cells_
 ------------|--------
@@ -91,3 +98,9 @@ too | many | cells | here
 
 <<<
 <table><thead><tr><th>Name</th><th>Character</th></tr></thead><tbody><tr><td>Pipe</td><td>| abcdef</td></tr></tbody></table>
+>>> trailing whitespace after final pipe
+| Name     | Character | 
+| ---      | ---       |	
+| Pipe     | abcdef    |
+<<<
+<table><thead><tr><th>Name</th><th>Character</th></tr></thead><tbody><tr><td>Pipe</td><td>abcdef</td></tr></tbody></table>

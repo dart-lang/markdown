@@ -2,6 +2,8 @@
 
 * Breaking change: Change the type of `parseInline`'s parameter from `String?`
   to `String`.
+* Fix table-rendering bug when table rows have trailing whitespace.
+  [#368](https://github.com/dart-lang/markdown/issues/368).
 
 ## 4.0.1
 
