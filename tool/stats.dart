@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
@@ -56,11 +54,11 @@ Future<void> main(List<String> args) async {
     return;
   }
 
-  var specifiedSection = options['section'] as String;
-  var raw = options['raw'] as bool /*!*/;
-  var verbose = options['verbose'] as bool /*!*/;
-  var verboseLooseMatch = options['verbose-loose'] as bool /*!*/;
-  var updateFiles = options['update-files'] as bool /*!*/;
+  var specifiedSection = options['section'] as String?;
+  var raw = options['raw'] as bool;
+  var verbose = options['verbose'] as bool;
+  var verboseLooseMatch = options['verbose-loose'] as bool;
+  var updateFiles = options['update-files'] as bool;
 
   if (updateFiles && (raw || verbose || (specifiedSection != null))) {
     stderr.writeln('The `update-files` flag must be used by itself');
@@ -69,7 +67,7 @@ Future<void> main(List<String> args) async {
     return;
   }
 
-  var testPrefix = options['flavor'] as String;
+  var testPrefix = options['flavor'] as String?;
   if (!updateFiles) {
     testPrefix = _configs.first.prefix;
   }
@@ -99,7 +97,7 @@ Future<void> _processConfig(
   bool raw,
   bool updateFiles,
   bool verbose,
-  String specifiedSection,
+  String? specifiedSection,
   bool verboseLooseMatch,
 ) async {
   final config = _configs.singleWhere((c) => c.prefix == testPrefix);
@@ -126,7 +124,7 @@ Future<void> _processConfig(
         expectedOutput:
             (_improveStrict && result.compareLevel == CompareLevel.loose)
                 ? result.testCase.html
-                : result.result,
+                : result.result!,
       ));
 
       var nestedMap = scores.putIfAbsent(
@@ -156,7 +154,7 @@ Future<void> _processConfig(
   }
 }
 
-Object _convert(Object obj) {
+Object? _convert(Object? obj) {
   if (obj is CompareLevel) {
     switch (obj) {
       case CompareLevel.strict:
@@ -172,7 +170,7 @@ Object _convert(Object obj) {
     }
   }
   if (obj is Map) {
-    var map = <String, Object>{};
+    var map = <String, Object?>{};
     obj.forEach((k, v) {
       var newKey = k.toString();
       map[newKey] = v;

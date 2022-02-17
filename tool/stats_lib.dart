@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:convert';
 import 'dart:io';
 import 'dart:mirrors';
@@ -20,7 +18,7 @@ import '../test/util.dart';
 String get toolDir =>
     p.dirname((reflect(loadCommonMarkSections) as ClosureMirror)
         .function
-        .location
+        .location!
         .sourceUri
         .path);
 
@@ -57,7 +55,7 @@ class Config {
 
   final String prefix;
   final String baseUrl;
-  final ExtensionSet extensionSet;
+  final ExtensionSet? extensionSet;
 
   Config._(this.prefix, this.baseUrl, this.extensionSet);
 }
@@ -92,7 +90,7 @@ enum CompareLevel { strict, loose, fail, error }
 class CompareResult {
   final CompareLevel compareLevel;
   final CommonMarkTestCase testCase;
-  final String result;
+  final String? result;
 
   CompareResult(this.testCase, this.result, this.compareLevel);
 }
