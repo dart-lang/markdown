@@ -46,7 +46,7 @@ class InlineParser {
   ]);
 
   /// The string of Markdown being parsed.
-  final String? source;
+  final String source;
 
   /// The Markdown document this parser is parsing.
   final Document document;
@@ -308,13 +308,13 @@ class InlineParser {
     }
   }
 
-  int charAt(int index) => source!.codeUnitAt(index);
+  int charAt(int index) => source.codeUnitAt(index);
 
   void writeText() {
     if (pos == start) {
       return;
     }
-    var text = source!.substring(start, pos);
+    var text = source.substring(start, pos);
     _tree.add(Text(text));
     start = pos;
   }
@@ -327,7 +327,7 @@ class InlineParser {
   /// Push [state] onto the stack of [TagState]s.
   void _pushDelimiter(Delimiter delimiter) => _delimiterStack.add(delimiter);
 
-  bool get isDone => pos == source!.length;
+  bool get isDone => pos == source.length;
 
   void advanceBy(int length) {
     pos += length;
@@ -368,11 +368,11 @@ abstract class InlineSyntax {
     // expensive on some platforms, check if even the first character matches
     // this syntax.
     if (_startCharacter != null &&
-        parser.source!.codeUnitAt(startMatchPos) != _startCharacter) {
+        parser.source.codeUnitAt(startMatchPos) != _startCharacter) {
       return false;
     }
 
-    final startMatch = pattern.matchAsPrefix(parser.source!, startMatchPos);
+    final startMatch = pattern.matchAsPrefix(parser.source, startMatchPos);
     if (startMatch == null) return false;
 
     // Write any existing plain text up to this point.
@@ -568,7 +568,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     }
 
     // Prevent accidental standard autolink matches
-    if (url.endsWith('>') && parser.source![parser.pos - 1] == '<') {
+    if (url.endsWith('>') && parser.source[parser.pos - 1] == '<') {
       return false;
     }
 
@@ -819,15 +819,15 @@ class DelimiterRun implements Delimiter {
       rightFlanking = false;
       preceding = '\n';
     } else {
-      preceding = parser.source!.substring(runStart - 1, runStart);
+      preceding = parser.source.substring(runStart - 1, runStart);
     }
     precededByPunctuation = punctuation.hasMatch(preceding);
 
-    if (runEnd == parser.source!.length) {
+    if (runEnd == parser.source.length) {
       leftFlanking = false;
       following = '\n';
     } else {
-      following = parser.source!.substring(runEnd, runEnd + 1);
+      following = parser.source.substring(runEnd, runEnd + 1);
     }
     followedByPunctuation = punctuation.hasMatch(following);
 
@@ -905,12 +905,12 @@ class TagSyntax extends InlineSyntax {
     var runLength = match.group(0)!.length;
     var matchStart = parser.pos;
     var matchEnd = parser.pos + runLength;
-    var text = Text(parser.source!.substring(matchStart, matchEnd));
+    var text = Text(parser.source.substring(matchStart, matchEnd));
     if (!requiresDelimiterRun) {
       parser._pushDelimiter(SimpleDelimiter(
           node: text,
           length: runLength,
-          char: parser.source!.codeUnitAt(matchStart),
+          char: parser.source.codeUnitAt(matchStart),
           canOpen: true,
           canClose: false,
           syntax: this,
@@ -976,11 +976,11 @@ class LinkSyntax extends TagSyntax {
   Node? close(
       InlineParser parser, covariant SimpleDelimiter opener, Delimiter? closer,
       {required List<Node> Function() getChildren}) {
-    var text = parser.source!.substring(opener.endPos, parser.pos);
+    var text = parser.source.substring(opener.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('
     // means a possible inline link; otherwise a possible reference link).
-    if (parser.pos + 1 >= parser.source!.length) {
+    if (parser.pos + 1 >= parser.source.length) {
       // The `]` is at the end of the document, but this may still be a valid
       // shortcut reference link.
       return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
@@ -1013,7 +1013,7 @@ class LinkSyntax extends TagSyntax {
       parser.advanceBy(1);
       // At this point, we've matched `[...][`. Maybe a *full* reference link,
       // like `[foo][bar]` or a *collapsed* reference link, like `[foo][]`.
-      if (parser.pos + 1 < parser.source!.length &&
+      if (parser.pos + 1 < parser.source.length &&
           parser.charAt(parser.pos + 1) == $rbracket) {
         // That opening `[` is not actually part of the link. Maybe a
         // *shortcut* reference link (followed by a `[`).
@@ -1411,7 +1411,7 @@ class CodeSyntax extends InlineSyntax {
       return false;
     }
 
-    var match = pattern.matchAsPrefix(parser.source!, parser.pos);
+    var match = pattern.matchAsPrefix(parser.source, parser.pos);
     if (match == null) {
       return false;
     }
