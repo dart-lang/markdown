@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'dart:isolate';
 
 import 'package:io/ansi.dart' as ansi;
@@ -12,8 +10,8 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import '../tool/expected_output.dart';
 
-/// Run tests defined in "*.unit" files inside directory [name].
-Future<void> testDirectory(String name, {ExtensionSet extensionSet}) async {
+/// Runs tests defined in "*.unit" files inside directory [name].
+Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
   await for (var dataCase in dataCasesUnder(testDirectory: name)) {
     var description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
@@ -28,12 +26,14 @@ Future<void> testDirectory(String name, {ExtensionSet extensionSet}) async {
 
 Future<String> get markdownPackageRoot async =>
     p.dirname(p.dirname((await Isolate.resolvePackageUri(
-            Uri.parse('package:markdown/markdown.dart')))
+            Uri.parse('package:markdown/markdown.dart')))!
         .path));
 
-void testFile(String file,
-    {Iterable<BlockSyntax> blockSyntaxes,
-    Iterable<InlineSyntax> inlineSyntaxes}) async {
+void testFile(
+  String file, {
+  Iterable<BlockSyntax> blockSyntaxes = const [],
+  Iterable<InlineSyntax> inlineSyntaxes = const [],
+}) async {
   var directory = p.join(await markdownPackageRoot, 'test');
   for (var dataCase in dataCasesInFile(path: p.join(directory, file))) {
     var description =
@@ -47,11 +47,11 @@ void validateCore(
   String description,
   String markdown,
   String html, {
-  Iterable<BlockSyntax> blockSyntaxes,
-  Iterable<InlineSyntax> inlineSyntaxes,
-  Resolver linkResolver,
-  Resolver imageLinkResolver,
-  ExtensionSet extensionSet,
+  Iterable<BlockSyntax> blockSyntaxes = const [],
+  Iterable<InlineSyntax> inlineSyntaxes = const [],
+  ExtensionSet? extensionSet,
+  Resolver? linkResolver,
+  Resolver? imageLinkResolver,
   bool inlineOnly = false,
 }) {
   test(description, () {
@@ -70,8 +70,8 @@ void validateCore(
 }
 
 String whitespaceColor(String input) => input
-    .replaceAll(' ', ansi.lightBlue.wrap('·'))
-    .replaceAll('\t', ansi.backgroundDarkGray.wrap('\t'));
+    .replaceAll(' ', ansi.lightBlue.wrap('·')!)
+    .replaceAll('\t', ansi.backgroundDarkGray.wrap('\t')!);
 
 void markdownPrintOnFailure(String markdown, String expected, String actual) {
   printOnFailure("""

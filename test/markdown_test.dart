@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// @dart=2.9
-
 import 'package:markdown/markdown.dart';
 import 'package:test/test.dart';
 
@@ -52,7 +50,7 @@ void main() async {
   });
 
   group('Resolver', () {
-    Node nyanResolver(String text, [_]) =>
+    Node? nyanResolver(String text, [_]) =>
         text.isEmpty ? null : Text('~=[,,_${text}_,,]:3');
     validateCore(
         'simple link resolver',
@@ -127,7 +125,7 @@ nyan''',
 
     validateCore('dart custom links', 'links [are<foo>] awesome',
         '<p>links <a>are&lt;foo></a> awesome</p>\n',
-        linkResolver: (String text, [String /*?*/ _]) =>
+        linkResolver: (String text, [String? _]) =>
             Element.text('a', text.replaceAll('<', '&lt;')));
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some
