@@ -60,10 +60,8 @@ class ExtensionSet {
     ),
   );
 
-  /// The [gitHubFlavored] extension set is close to compliance with the [GitHub
-  /// flavored Markdown spec].
-  ///
-  /// [GitHub flavored Markdown]: https://github.github.com/gfm/
+  /// The [gitHubFlavored] extension set is close to compliance with the
+  /// [GitHub flavored Markdown spec](https://github.github.com/gfm/).
   static final ExtensionSet gitHubFlavored = ExtensionSet(
     List<BlockSyntax>.unmodifiable(
       <BlockSyntax>[
