@@ -177,20 +177,6 @@ abstract class BlockSyntax {
 
   Node? parse(BlockParser parser);
 
-  List<String?> parseChildLines(BlockParser parser) {
-    // Grab all of the lines that form the block element.
-    var childLines = <String?>[];
-
-    while (!parser.isDone) {
-      var match = pattern.firstMatch(parser.current);
-      if (match == null) break;
-      childLines.add(match[1]);
-      parser.advance();
-    }
-
-    return childLines;
-  }
-
   /// Gets whether or not [parser]'s current line should end the previous block.
   static bool isAtBlockEnd(BlockParser parser) {
     if (parser.isDone) return true;
@@ -335,7 +321,6 @@ class BlockquoteSyntax extends BlockSyntax {
 
   const BlockquoteSyntax();
 
-  @override
   List<String> parseChildLines(BlockParser parser) {
     // Grab all of the lines that form the blockquote, stripping off the ">".
     var childLines = <String>[];
@@ -384,7 +369,6 @@ class CodeBlockSyntax extends BlockSyntax {
 
   const CodeBlockSyntax();
 
-  @override
   List<String?> parseChildLines(BlockParser parser) {
     var childLines = <String?>[];
 
@@ -450,7 +434,6 @@ class FencedCodeBlockSyntax extends BlockSyntax {
         !infoString!.codeUnits.contains($backquote));
   }
 
-  @override
   List<String> parseChildLines(BlockParser parser, [String? endBlock]) {
     endBlock ??= '';
 
