@@ -109,7 +109,7 @@ class InlineParser {
         continue;
       }
 
-      // See if the current text matches any defined markdown syntax.
+      // See if the current text matches any defined Markdown syntax.
       if (syntaxes.any((syntax) => syntax.tryMatch(this))) continue;
 
       // If we got here, it's just text.
@@ -319,12 +319,12 @@ class InlineParser {
     start = pos;
   }
 
-  /// Add [node] to the last [TagState] on the stack.
+  /// Add [node] to the current tree.
   void addNode(Node node) {
     _tree.add(node);
   }
 
-  /// Push [state] onto the stack of [TagState]s.
+  /// Push [delimiter] onto the stack of [Delimiter]s.
   void _pushDelimiter(Delimiter delimiter) => _delimiterStack.add(delimiter);
 
   bool get isDone => pos == source.length;
@@ -889,8 +889,7 @@ class TagSyntax extends InlineSyntax {
 
   /// Create a new [TagSyntax] which matches text on [pattern].
   ///
-  /// If [end] is passed, it is used as the pattern which denotes the end of
-  /// matching text. Otherwise, [pattern] is used. If [requiresDelimiterRun] is
+  /// The [pattern] is used to find the matching text. If [requiresDelimiterRun] is
   /// passed, this syntax parses according to the same nesting rules as
   /// emphasis delimiters.  If [startCharacter] is passed, it is used as a
   /// pre-matching check which is faster than matching against [pattern].
