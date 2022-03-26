@@ -309,7 +309,7 @@ bar>)</p>
 
 [ref[]: /uri
 <<<
-<p><a href="/uri">foo</a></p>
+<p>[foo][ref[]</p>
 >>> Links - 555
 [foo][ref[bar]]
 
