@@ -10,12 +10,22 @@ import 'inline_parser.dart';
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = <String, LinkReference>{};
-  final ExtensionSet extensionSet;
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;
   final bool encodeHtml;
+
+  /// Whether to have default block syntaxes.
+  final bool withDefaultBlockSyntaxes;
+
+  /// Whether to have default inline syntaxes.
+  ///
+  /// Need to set both [withDefaultInlineSyntaxes] and [encodeHtml] to
+  /// `false` to disable all inline syntaxes including html encoding syntaxes.
+  final bool withDefaultInlineSyntaxes;
+
   final _blockSyntaxes = <BlockSyntax>{};
   final _inlineSyntaxes = <InlineSyntax>{};
+  late final bool hasCustomInlineSyntaxes;
 
   Iterable<BlockSyntax> get blockSyntaxes => _blockSyntaxes;
 
@@ -28,13 +38,31 @@ class Document {
     this.linkResolver,
     this.imageLinkResolver,
     this.encodeHtml = true,
-  }) : extensionSet = extensionSet ?? ExtensionSet.commonMark {
-    _blockSyntaxes
-      ..addAll(blockSyntaxes ?? [])
-      ..addAll(this.extensionSet.blockSyntaxes);
-    _inlineSyntaxes
-      ..addAll(inlineSyntaxes ?? [])
-      ..addAll(this.extensionSet.inlineSyntaxes);
+    this.withDefaultBlockSyntaxes = true,
+    this.withDefaultInlineSyntaxes = true,
+  }) {
+    hasCustomInlineSyntaxes = inlineSyntaxes?.isNotEmpty == true ||
+        extensionSet?.inlineSyntaxes.isNotEmpty == true;
+
+    _blockSyntaxes.addAll(blockSyntaxes ?? []);
+    _inlineSyntaxes.addAll(inlineSyntaxes ?? []);
+
+    if (extensionSet == null) {
+      // Add blockSyntaxes of ExtensionSet.commonMark by default if
+      // withDefaultBlockSyntaxes is true
+      if (withDefaultBlockSyntaxes) {
+        _blockSyntaxes.addAll(ExtensionSet.commonMark.blockSyntaxes);
+      }
+
+      // Add inlineSyntaxes of ExtensionSet.commonMark by default if
+      // withDefaultInlineSyntaxes is true
+      if (withDefaultInlineSyntaxes) {
+        _inlineSyntaxes.addAll(ExtensionSet.commonMark.inlineSyntaxes);
+      }
+    } else {
+      _blockSyntaxes.addAll(extensionSet.blockSyntaxes);
+      _inlineSyntaxes.addAll(extensionSet.inlineSyntaxes);
+    }
   }
 
   /// Parses the given [lines] of Markdown to a series of AST nodes.
