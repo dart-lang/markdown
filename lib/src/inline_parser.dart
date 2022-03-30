@@ -1043,11 +1043,11 @@ class LinkSyntax extends TagSyntax {
   /// [label] does not need to be normalized.
   Node? _resolveReferenceLink(
       String label, Map<String, LinkReference> linkReferences,
-      {List<Node> Function()? getChildren}) {
+      {required List<Node> Function() getChildren}) {
     var linkReference = linkReferences[normalizeLinkLabel(label)];
     if (linkReference != null) {
       return _createNode(linkReference.destination, linkReference.title,
-          getChildren: getChildren!);
+          getChildren: getChildren);
     } else {
       // This link has no reference definition. But we allow users of the
       // library to specify a custom resolver function ([linkResolver]) that
@@ -1062,7 +1062,7 @@ class LinkSyntax extends TagSyntax {
           .replaceAll(r'\[', '[')
           .replaceAll(r'\]', ']'));
       if (resolved != null) {
-        getChildren!();
+        getChildren();
       }
       return resolved;
     }
