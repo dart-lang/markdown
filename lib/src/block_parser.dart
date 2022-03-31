@@ -355,7 +355,7 @@ class BlockquoteSyntax extends BlockSyntax {
       // as any other syntax except Paragraph, and it doesn't match the bar in
       // a Setext header.
       // Because indented code blocks cannot interrupt paragraphs, a line
-      // matched CodeBlockSyntx is also paragraph continuation text.
+      // matched CodeBlockSyntax is also paragraph continuation text.
       final otherMatched =
           parser.blockSyntaxes.firstWhere((s) => s.canParse(parser));
       if (otherMatched is ParagraphSyntax ||
