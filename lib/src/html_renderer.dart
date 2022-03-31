@@ -19,9 +19,9 @@ String markdownToHtml(
   Resolver? linkResolver,
   Resolver? imageLinkResolver,
   bool inlineOnly = false,
-  bool? encodeHtml,
-  bool? withDefaultBlockSyntaxes,
-  bool? withDefaultInlineSyntaxes,
+  bool encodeHtml = true,
+  bool withDefaultBlockSyntaxes = true,
+  bool withDefaultInlineSyntaxes = true,
 }) {
   var document = Document(
     blockSyntaxes: blockSyntaxes,
@@ -29,9 +29,9 @@ String markdownToHtml(
     extensionSet: extensionSet,
     linkResolver: linkResolver,
     imageLinkResolver: imageLinkResolver,
-    encodeHtml: encodeHtml ?? true,
-    withDefaultBlockSyntaxes: withDefaultBlockSyntaxes ?? true,
-    withDefaultInlineSyntaxes: withDefaultInlineSyntaxes ?? true,
+    encodeHtml: encodeHtml,
+    withDefaultBlockSyntaxes: withDefaultBlockSyntaxes,
+    withDefaultInlineSyntaxes: withDefaultInlineSyntaxes,
   );
 
   if (inlineOnly) return renderToHtml(document.parseInline(markdown));

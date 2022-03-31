@@ -14,10 +14,10 @@ class Document {
   final Resolver? imageLinkResolver;
   final bool encodeHtml;
 
-  /// Whether to have default block syntaxes.
+  /// Whether to use default block syntaxes.
   final bool withDefaultBlockSyntaxes;
 
-  /// Whether to have default inline syntaxes.
+  /// Whether to use default inline syntaxes.
   ///
   /// Need to set both [withDefaultInlineSyntaxes] and [encodeHtml] to
   /// `false` to disable all inline syntaxes including html encoding syntaxes.
@@ -25,7 +25,7 @@ class Document {
 
   final _blockSyntaxes = <BlockSyntax>{};
   final _inlineSyntaxes = <InlineSyntax>{};
-  late final bool hasCustomInlineSyntaxes;
+  final bool hasCustomInlineSyntaxes;
 
   Iterable<BlockSyntax> get blockSyntaxes => _blockSyntaxes;
 
@@ -40,22 +40,16 @@ class Document {
     this.encodeHtml = true,
     this.withDefaultBlockSyntaxes = true,
     this.withDefaultInlineSyntaxes = true,
-  }) {
-    hasCustomInlineSyntaxes = inlineSyntaxes?.isNotEmpty == true ||
-        extensionSet?.inlineSyntaxes.isNotEmpty == true;
-
+  }) : hasCustomInlineSyntaxes = (inlineSyntaxes?.isNotEmpty ?? false) ||
+            (extensionSet?.inlineSyntaxes.isNotEmpty ?? false) {
     _blockSyntaxes.addAll(blockSyntaxes ?? []);
     _inlineSyntaxes.addAll(inlineSyntaxes ?? []);
 
     if (extensionSet == null) {
-      // Add blockSyntaxes of ExtensionSet.commonMark by default if
-      // withDefaultBlockSyntaxes is true
       if (withDefaultBlockSyntaxes) {
         _blockSyntaxes.addAll(ExtensionSet.commonMark.blockSyntaxes);
       }
 
-      // Add inlineSyntaxes of ExtensionSet.commonMark by default if
-      // withDefaultInlineSyntaxes is true
       if (withDefaultInlineSyntaxes) {
         _inlineSyntaxes.addAll(ExtensionSet.commonMark.inlineSyntaxes);
       }

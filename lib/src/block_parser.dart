@@ -1233,7 +1233,7 @@ class ParagraphSyntax extends BlockSyntax {
   }
 }
 
-/// Walks the parser forward through the lines do not match any [BlockSyntax].
+/// Walks the parser forward through the lines does not match any [BlockSyntax].
 ///
 /// Returns a [UnparsedContent] with the unmatched lines as `textContent`.
 class DummyBlockSyntax extends BlockSyntax {
