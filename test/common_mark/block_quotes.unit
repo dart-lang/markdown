@@ -103,10 +103,9 @@ foo
     - bar
 <<<
 <blockquote>
-<p>foo</p>
+<p>foo
+- bar</p>
 </blockquote>
-<pre><code>- bar
-</code></pre>
 >>> Block quotes - 239
 >
 <<<

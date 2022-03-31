@@ -340,10 +340,13 @@ class BlockquoteSyntax extends BlockSyntax {
     // Grab all of the lines that form the blockquote, stripping off the ">".
     var childLines = <String>[];
 
+    bool encounteredCodeBlock = false;
     while (!parser.isDone) {
       var match = pattern.firstMatch(parser.current);
       if (match != null) {
-        childLines.add(match[1]!);
+        final line = match[1]!;
+        childLines.add(line);
+        encounteredCodeBlock = _indentPattern.hasMatch(line);
         parser.advance();
         continue;
       }
@@ -351,8 +354,12 @@ class BlockquoteSyntax extends BlockSyntax {
       // A paragraph continuation is OK. This is content that cannot be parsed
       // as any other syntax except Paragraph, and it doesn't match the bar in
       // a Setext header.
-      if (parser.blockSyntaxes.firstWhere((s) => s.canParse(parser))
-          is ParagraphSyntax) {
+      // Because indented code blocks cannot interrupt paragraphs, a line
+      // matched CodeBlockSyntax is also paragraph continuation text.
+      final otherMatched =
+          parser.blockSyntaxes.firstWhere((s) => s.canParse(parser));
+      if (otherMatched is ParagraphSyntax ||
+          (!encounteredCodeBlock && otherMatched is CodeBlockSyntax)) {
         childLines.add(parser.current);
         parser.advance();
       } else {

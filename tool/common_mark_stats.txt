@@ -2,7 +2,7 @@
   19 of   19 – 100.0%  Autolinks
   12 of   13 –  92.3%  Backslash escapes
    1 of    1 – 100.0%  Blank lines
-  22 of   25 –  88.0%  Block quotes
+  23 of   25 –  92.0%  Block quotes
   22 of   22 – 100.0%  Code spans
  130 of  131 –  99.2%  Emphasis and strong emphasis
   14 of   17 –  82.4%  Entity and numeric character references
@@ -24,5 +24,5 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 613 of  652 –  94.0%  TOTAL
- 546 of  613 –  89.1%  TOTAL Strict
+ 614 of  652 –  94.2%  TOTAL
+ 547 of  614 –  89.1%  TOTAL Strict
