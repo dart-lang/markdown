@@ -17,7 +17,6 @@ class InlineParser {
     EmailAutolinkSyntax(),
     AutolinkSyntax(),
     LineBreakSyntax(),
-    ImageSyntax(),
     // Allow any punctuation to be escaped.
     EscapeSyntax(),
     // "*" surrounded by spaces is left alone.
@@ -70,28 +69,27 @@ class InlineParser {
     // User specified syntaxes are the first syntaxes to be evaluated.
     syntaxes.addAll(document.inlineSyntaxes);
 
-    var hasCustomInlineSyntaxes = document.inlineSyntaxes
-        .any((s) => !document.extensionSet.inlineSyntaxes.contains(s));
-
     // This first RegExp matches plain text to accelerate parsing. It's written
     // so that it does not match any prefix of any following syntaxes. Most
     // Markdown is plain text, so it's faster to match one RegExp per 'word'
     // rather than fail to match all the following RegExps at each non-syntax
     // character position.
-    if (hasCustomInlineSyntaxes) {
+    if (document.hasCustomInlineSyntaxes) {
       // We should be less aggressive in blowing past "words".
       syntaxes.add(TextSyntax(r'[A-Za-z0-9]+(?=\s)'));
     } else {
       syntaxes.add(TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9](?=\s)'));
     }
 
-    // Custom link resolvers go after the generic text syntax.
-    syntaxes.addAll([
-      LinkSyntax(linkResolver: document.linkResolver),
-      ImageSyntax(linkResolver: document.imageLinkResolver)
-    ]);
+    if (document.withDefaultInlineSyntaxes) {
+      // Custom link resolvers go after the generic text syntax.
+      syntaxes.addAll([
+        LinkSyntax(linkResolver: document.linkResolver),
+        ImageSyntax(linkResolver: document.imageLinkResolver)
+      ]);
 
-    syntaxes.addAll(_defaultSyntaxes);
+      syntaxes.addAll(_defaultSyntaxes);
+    }
 
     if (_encodeHtml) {
       syntaxes.addAll(_htmlSyntaxes);
@@ -147,7 +145,7 @@ class InlineParser {
       return;
     }
     var syntax = delimiter.syntax;
-    if (syntax is LinkSyntax) {
+    if (syntax is LinkSyntax && syntaxes.any(((e) => e is LinkSyntax))) {
       var nodeIndex = _tree.lastIndexWhere((n) => n == delimiter.node);
       var linkNode = syntax.close(this, delimiter, null, getChildren: () {
         _processEmphasis(index);

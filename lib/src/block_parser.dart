@@ -104,7 +104,12 @@ class BlockParser {
 
   BlockParser(this.lines, this.document) {
     blockSyntaxes.addAll(document.blockSyntaxes);
-    blockSyntaxes.addAll(standardBlockSyntaxes);
+
+    if (document.withDefaultBlockSyntaxes) {
+      blockSyntaxes.addAll(standardBlockSyntaxes);
+    } else {
+      blockSyntaxes.add(const DummyBlockSyntax());
+    }
   }
 
   /// Gets the current line.
@@ -1271,5 +1276,33 @@ class ParagraphSyntax extends BlockSyntax {
     parser.document.linkReferences
         .putIfAbsent(label, () => LinkReference(label, destination, title));
     return true;
+  }
+}
+
+/// Walks the parser forward through the lines does not match any [BlockSyntax].
+///
+/// Returns a [UnparsedContent] with the unmatched lines as `textContent`.
+class DummyBlockSyntax extends BlockSyntax {
+  const DummyBlockSyntax();
+
+  @override
+  RegExp get pattern => _dummyPattern;
+
+  @override
+  bool canEndBlock(BlockParser parser) => false;
+
+  @override
+  bool canParse(BlockParser parser) => true;
+
+  @override
+  Node parse(BlockParser parser) {
+    final childLines = <String>[];
+
+    while (!BlockSyntax.isAtBlockEnd(parser)) {
+      childLines.add(parser.current);
+      parser.advance();
+    }
+
+    return UnparsedContent(childLines.join('\n'));
   }
 }
