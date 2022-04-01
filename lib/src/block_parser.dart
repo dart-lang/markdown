@@ -29,6 +29,9 @@ final _indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');
 /// Fenced code block.
 final _codeFencePattern = RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 
+/// Fenced blockquotes.
+final _blockquoteFencePattern = RegExp(r'^>{3}\s*$');
+
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
 /// SETEXT should win.
@@ -325,6 +328,42 @@ class HeaderWithIdSyntax extends HeaderSyntax {
     var element = super.parse(parser) as Element;
     element.generatedId = BlockSyntax.generateAnchorHash(element);
     return element;
+  }
+}
+
+/// Parses lines fenced by `>>>` to blockquotes
+class FencedBlockquoteSyntax extends BlockSyntax {
+  const FencedBlockquoteSyntax();
+
+  @override
+  RegExp get pattern => _blockquoteFencePattern;
+
+  @override
+  List<String> parseChildLines(BlockParser parser) {
+    final childLines = <String>[];
+    parser.advance();
+
+    while (!parser.isDone) {
+      final match = pattern.hasMatch(parser.current);
+      if (!match) {
+        childLines.add(parser.current);
+        parser.advance();
+      } else {
+        parser.advance();
+        break;
+      }
+    }
+
+    return childLines;
+  }
+
+  @override
+  Node? parse(BlockParser parser) {
+    final childLines = parseChildLines(parser);
+
+    // Recursively parse the contents of the blockquote.
+    final children = BlockParser(childLines, parser.document).parseLines();
+    return Element('blockquote', children);
   }
 }
 

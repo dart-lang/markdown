@@ -18,6 +18,8 @@ void main() async {
   testFile('extensions/setext_headers_with_ids.unit',
       blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
   testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
+  testFile('extensions/fenced_blockquotes.unit',
+      blockSyntaxes: [const FencedBlockquoteSyntax()]);
 
   // Inline syntax extensions
   testFile('extensions/emojis.unit', inlineSyntaxes: [EmojiSyntax()]);
