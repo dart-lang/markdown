@@ -1,9 +1,23 @@
-## 5.0.0-dev
+## 5.0.0
 
 * Breaking change: Change the type of `parseInline`'s parameter from `String?`
   to `String`.
 * Fix table-rendering bug when table rows have trailing whitespace.
   [#368](https://github.com/dart-lang/markdown/issues/368).
+* Do not allow reference link labels to contain left brackets. Thanks
+  @chenzhiguang.
+  [#335](https://github.com/dart-lang/markdown/issues/335).
+* Treat lines matching a code block syntax as continuations of paragraphs,
+  inside blockquotes. Thanks @chenzhiguang.
+  [#358](https://github.com/dart-lang/markdown/issues/358).
+* Add a syntax for GitLab-flavored fenced blockquotes. GitLab-flavored Markdown
+  will be evaluated into an ExtensionSet, in a future release. Thanks
+  @chenzhiguang.
+  [#359](https://github.com/dart-lang/markdown/issues/359).
+* Add `bool withDefaultInlineSyntaxes` and `bool withDefaultBlockSyntaxes`
+  parameters to `markdownToHtml` and `Document` to support the case of
+  specifying exactly the list of desired syntaxes. Thanks @chenzhiguang.
+  [#393](https://github.com/dart-lang/markdown/issues/393).
 
 ## 4.0.1
 
