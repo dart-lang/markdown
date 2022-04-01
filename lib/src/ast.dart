@@ -55,7 +55,7 @@ class Element implements Node {
 
   @override
   String get textContent {
-    return (children ?? []).map((Node? child) => child!.textContent).join('');
+    return (children ?? []).map((child) => child.textContent).join('');
   }
 }
 
