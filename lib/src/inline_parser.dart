@@ -1200,7 +1200,8 @@ class LinkSyntax extends TagSyntax {
     var char = parser.charAt(parser.pos);
     if (char == $space || char == $lf || char == $cr || char == $ff) {
       var title = _parseTitle(parser);
-      if (title == null && parser.charAt(parser.pos) != $rparen) {
+      if (title == null &&
+          (parser.isDone || parser.charAt(parser.pos) != $rparen)) {
         // This looked like an inline link, until we found this $space
         // followed by mystery characters; no longer a link.
         return null;

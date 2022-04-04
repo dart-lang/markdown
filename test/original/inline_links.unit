@@ -80,3 +80,8 @@ links [are *awesome*]
 [foo](link(1.png) (what?)
 <<<
 <p>[foo](link(1.png) (what?)</p>
+>>> not an inline link: the title's ending quote is escaped
+links [are](<http://example.com> "title\") awesome
+
+<<<
+<p>links [are](<a href="http://example.com">http://example.com</a> "title&quot;) awesome</p>
