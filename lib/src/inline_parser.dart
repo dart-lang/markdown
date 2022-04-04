@@ -116,7 +116,7 @@ class InlineParser {
 
     // Write any trailing text content to a Text node.
     writeText();
-    _processEmphasis(-1);
+    _processDelimiterRun(-1);
     _combineAdjacentText(_tree);
     return _tree;
   }
@@ -148,7 +148,7 @@ class InlineParser {
     if (syntax is LinkSyntax && syntaxes.any(((e) => e is LinkSyntax))) {
       var nodeIndex = _tree.lastIndexWhere((n) => n == delimiter.node);
       var linkNode = syntax.close(this, delimiter, null, getChildren: () {
-        _processEmphasis(index);
+        _processDelimiterRun(index);
         // All of the nodes which lie past [index] are children of this
         // link/image.
         var children = _tree.sublist(nodeIndex + 1, _tree.length);
@@ -187,12 +187,11 @@ class InlineParser {
     }
   }
 
-  /// Processes emphasis (and other [TagSyntax] delimiters) from [bottomIndex]
-  /// and up.
+  /// Processes [DelimiterRun] type delimiters from [bottomIndex] and up.
   ///
-  /// This is the "process emphasis" routine according to the CommonMark spec:
-  /// https://spec.commonmark.org/0.29/#-process-emphasis-.
-  void _processEmphasis(int bottomIndex) {
+  /// This is the same strategy as "process emphasis" routine according to the
+  /// CommonMark spec: https://spec.commonmark.org/0.30/#phase-2-inline-structure.
+  void _processDelimiterRun(int bottomIndex) {
     var currentIndex = bottomIndex + 1;
     // Track the lowest index where we might find an open delimiter given a
     // closing delimiter length modulo 3.
@@ -202,11 +201,7 @@ class InlineParser {
     var openersBottom = <int, List<int>>{};
     while (currentIndex < _delimiterStack.length) {
       var closer = _delimiterStack[currentIndex];
-      if (!closer.canClose) {
-        currentIndex++;
-        continue;
-      }
-      if (closer.char == $lbracket || closer.char == $exclamation) {
+      if (!closer.canClose || closer is! DelimiterRun) {
         currentIndex++;
         continue;
       }
@@ -241,8 +236,7 @@ class InlineParser {
 
         // Remove delimiter characters, possibly removing nodes from the tree
         // and Delimiters from the delimiter stack.
-        if ((strong && openerTextNode.text.length == 2) ||
-            (!strong && openerTextNode.text.length == 1)) {
+        if ((strong && opener.length == 2) || (!strong && opener.length == 1)) {
           _tree.removeAt(openerTextNodeIndex);
           _delimiterStack.removeAt(openerIndex);
           // Slide [currentIndex] and [closerTextNodeIndex] back accordingly.
@@ -255,8 +249,7 @@ class InlineParser {
           opener.node = newOpenerTextNode;
         }
 
-        if ((strong && closerTextNode.text.length == 2) ||
-            (!strong && closerTextNode.text.length == 1)) {
+        if ((strong && closer.length == 2) || (!strong && closer.length == 1)) {
           _tree.removeAt(closerTextNodeIndex);
           _delimiterStack.removeAt(currentIndex);
           // [currentIndex] has just moved to point at the next delimiter;
