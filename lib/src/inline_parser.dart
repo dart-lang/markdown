@@ -24,9 +24,9 @@ class InlineParser {
     // "_" surrounded by spaces is left alone.
     TextSyntax(r' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
-    TagSyntax(r'\*+', requiresDelimiterRun: true),
+    DelimiterSyntax(r'\*+', requiresDelimiterRun: true),
     // Parse "__strong__" and "_emphasis_" tags.
-    TagSyntax(r'_+', requiresDelimiterRun: true),
+    DelimiterSyntax(r'_+', requiresDelimiterRun: true),
     CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
@@ -59,7 +59,7 @@ class InlineParser {
   int start = 0;
 
   /// The delimiter stack tracking possible opening delimiters and closing
-  /// delimiters for [TagSyntax] nodes.
+  /// delimiters for [DelimiterSyntax] nodes.
   final _delimiterStack = <Delimiter>[];
 
   /// The tree of parsed HTML nodes.
@@ -637,7 +637,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
 }
 
 /// A delimiter indicating the possible "open" or possible "close" of a tag for
-/// a [TagSyntax].
+/// a [DelimiterSyntax].
 abstract class Delimiter {
   /// The [Text] node representing the plain text representing this delimiter.
   abstract Text node;
@@ -670,7 +670,7 @@ abstract class Delimiter {
   bool get canClose;
 
   /// The syntax which uses this delimiter to parse a tag.
-  TagSyntax get syntax;
+  DelimiterSyntax get syntax;
 }
 
 /// A simple delimiter implements the [Delimiter] interface with basic fields,
@@ -695,7 +695,7 @@ class SimpleDelimiter implements Delimiter {
   final bool canClose;
 
   @override
-  final TagSyntax syntax;
+  final DelimiterSyntax syntax;
 
   final int endPos;
 
@@ -714,7 +714,7 @@ class SimpleDelimiter implements Delimiter {
 /// "right-flanking" to determine the values of [canOpen] and [canClose].
 ///
 /// This is primarily used when parsing emphasis and strong emphasis, but can
-/// also be used by other extensions of [TagSyntax].
+/// also be used by other extensions of [DelimiterSyntax].
 class DelimiterRun implements Delimiter {
   /// According to
   /// [CommonMark](https://spec.commonmark.org/0.29/#punctuation-character):
@@ -764,7 +764,7 @@ class DelimiterRun implements Delimiter {
   bool isActive;
 
   @override
-  final TagSyntax syntax;
+  final DelimiterSyntax syntax;
 
   final bool allowIntraWord;
 
@@ -798,7 +798,7 @@ class DelimiterRun implements Delimiter {
   /// Tries to parse a delimiter run from [runStart] (inclusive) to [runEnd]
   /// (exclusive).
   static DelimiterRun? tryParse(InlineParser parser, int runStart, int runEnd,
-      {required TagSyntax syntax,
+      {required DelimiterSyntax syntax,
       required Text node,
       bool allowIntraWord = false}) {
     bool leftFlanking,
@@ -866,7 +866,7 @@ class DelimiterRun implements Delimiter {
 
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
 /// `<em>`. Allows nested tags.
-class TagSyntax extends InlineSyntax {
+class DelimiterSyntax extends InlineSyntax {
   /// Whether this is parsed according to the same nesting rules as [emphasis
   /// delimiters][].
   ///
@@ -878,13 +878,13 @@ class TagSyntax extends InlineSyntax {
   /// it on strikethrough.
   final bool allowIntraWord;
 
-  /// Create a new [TagSyntax] which matches text on [pattern].
+  /// Create a new [DelimiterSyntax] which matches text on [pattern].
   ///
   /// The [pattern] is used to find the matching text. If [requiresDelimiterRun] is
   /// passed, this syntax parses according to the same nesting rules as
   /// emphasis delimiters.  If [startCharacter] is passed, it is used as a
   /// pre-matching check which is faster than matching against [pattern].
-  TagSyntax(String pattern,
+  DelimiterSyntax(String pattern,
       {this.requiresDelimiterRun = false,
       int? startCharacter,
       this.allowIntraWord = false})
@@ -938,7 +938,7 @@ class TagSyntax extends InlineSyntax {
 }
 
 /// Matches strikethrough syntax according to the GFM spec.
-class StrikethroughSyntax extends TagSyntax {
+class StrikethroughSyntax extends DelimiterSyntax {
   StrikethroughSyntax()
       : super('~+', requiresDelimiterRun: true, allowIntraWord: true);
 
@@ -949,8 +949,14 @@ class StrikethroughSyntax extends TagSyntax {
   }
 }
 
+@Deprecated('Use DelimiterSyntax instead')
+class TagSyntax extends DelimiterSyntax {
+  TagSyntax(String pattern, {bool requiresDelimiterRun = false})
+      : super(pattern, requiresDelimiterRun: requiresDelimiterRun);
+}
+
 /// Matches links like `[blah][label]` and `[blah](url)`.
-class LinkSyntax extends TagSyntax {
+class LinkSyntax extends DelimiterSyntax {
   static final _entirelyWhitespacePattern = RegExp(r'^\s*$');
 
   final Resolver linkResolver;
