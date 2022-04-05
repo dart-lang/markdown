@@ -987,6 +987,15 @@ class EmphasisSyntax extends DelimiterSyntax {
             tags: [DelimiterTag('em', 1), DelimiterTag('strong', 2)]);
 }
 
+/// Parses `==mark==` to `<mark>mark</mark>`.
+class HighlightSyntax extends DelimiterSyntax {
+  HighlightSyntax()
+      : super('=+',
+            requiresDelimiterRun: true,
+            allowIntraWord: true,
+            tags: [DelimiterTag('mark', 2)]);
+}
+
 @Deprecated('Use DelimiterSyntax instead')
 class TagSyntax extends DelimiterSyntax {
   TagSyntax(String pattern, {bool requiresDelimiterRun = false})

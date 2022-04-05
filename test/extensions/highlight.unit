@@ -1,0 +1,20 @@
+>>> simple highlight
+Foo ==bar== baz
+<<<
+<p>Foo <mark>bar</mark> baz</p>
+>>> left- and right-flanking has differnt ammount of indicators
+Foo ===bar== baz
+<<<
+<p>Foo =<mark>bar</mark> baz</p>
+>>> Intraword highlight
+==foo==bar
+<<<
+<p><mark>foo</mark>bar</p>
+>>> with emphasis tags nested
+==***foo***==bar
+<<<
+<p><mark><em><strong>foo</strong></em></mark>bar</p>
+>>> not a highlight, invalid right-flanking
+Foo ==bar == baz
+<<<
+<p>Foo ==bar == baz</p>

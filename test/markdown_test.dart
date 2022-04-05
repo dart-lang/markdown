@@ -26,6 +26,8 @@ void main() async {
   testFile('extensions/inline_html.unit', inlineSyntaxes: [InlineHtmlSyntax()]);
   testFile('extensions/strikethrough.unit',
       inlineSyntaxes: [StrikethroughSyntax()]);
+  testFile('extensions/highlight.unit',
+      inlineSyntaxes: [HighlightSyntax()]);
 
   await testDirectory('common_mark');
   await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
