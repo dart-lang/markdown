@@ -216,15 +216,20 @@ class InlineParser {
           currentIndex++;
           continue;
         }
-        var delimiterTag = opener.tags.firstWhere((e) =>
+        var matchedTagIndex = opener.tags.lastIndexWhere((e) =>
             opener.length >= e.indicators && closer.length >= e.indicators);
-        var indicatorLength = delimiterTag.indicators;
+        if (matchedTagIndex == -1) {
+          currentIndex++;
+          continue;
+        }
+        var matchedTag = opener.tags[matchedTagIndex];
+        var indicatorLength = matchedTag.indicators;
         var openerTextNode = opener.node;
         var openerTextNodeIndex = _tree.indexOf(openerTextNode);
         var closerTextNode = closer.node;
         var closerTextNodeIndex = _tree.indexOf(closerTextNode);
         var node = opener.syntax.close(this, opener, closer,
-            tag: delimiterTag.tag,
+            tag: matchedTag.tag,
             getChildren: () =>
                 _tree.sublist(openerTextNodeIndex + 1, closerTextNodeIndex));
         // Replace all of the nodes between the opener and the closer (which
@@ -855,7 +860,7 @@ class DelimiterRun implements Delimiter {
       return null;
     }
 
-    tags.sort((a, b) => b.indicators.compareTo(a.indicators));
+    tags.sort((a, b) => a.indicators.compareTo(b.indicators));
 
     return DelimiterRun._(
       node: node,
@@ -972,9 +977,9 @@ class StrikethroughSyntax extends DelimiterSyntax {
             tags: [DelimiterTag('del', 2)]);
 }
 
-/// Parses `*emphasis*` and `_emphasis_` to  emphasis.
+/// Parses `*emphasis*` and `_emphasis_` to  `<em>emphasis</em>`.
 ///
-/// Parses `**strong**` and `__strong__` to strong emphasis.
+/// Parses `**strong**` and `__strong__` to `<strong>emphasis</strong>`.
 class EmphasisSyntax extends DelimiterSyntax {
   EmphasisSyntax()
       : super(r'(?:\*+)|(?:_+)',
