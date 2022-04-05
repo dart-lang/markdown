@@ -24,9 +24,15 @@ class InlineParser {
     // "_" surrounded by spaces is left alone.
     TextSyntax(r' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
-    DelimiterSyntax(r'\*+', requiresDelimiterRun: true),
+    DelimiterSyntax(r'\*+', requiresDelimiterRun: true, tags: [
+      DelimiterTag('em', 1),
+      DelimiterTag('strong', 2),
+    ]),
     // Parse "__strong__" and "_emphasis_" tags.
-    DelimiterSyntax(r'_+', requiresDelimiterRun: true),
+    DelimiterSyntax('_+', requiresDelimiterRun: true, tags: [
+      DelimiterTag('em', 1),
+      DelimiterTag('strong', 2),
+    ]),
     CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
@@ -215,12 +221,19 @@ class InlineParser {
       if (openerIndex > bottomIndex && openerIndex > openerBottom) {
         // Found an opener for [closer].
         var opener = _delimiterStack[openerIndex];
-        var strong = opener.length >= 2 && closer.length >= 2;
+        if (opener is! DelimiterRun) {
+          currentIndex++;
+          continue;
+        }
+        var delimiterTag = opener.tags.firstWhere((e) =>
+            opener.length >= e.indicators && closer.length >= e.indicators);
+        var indicatorLength = delimiterTag.indicators;
         var openerTextNode = opener.node;
         var openerTextNodeIndex = _tree.indexOf(openerTextNode);
         var closerTextNode = closer.node;
         var closerTextNodeIndex = _tree.indexOf(closerTextNode);
         var node = opener.syntax.close(this, opener, closer,
+            tag: delimiterTag.tag,
             getChildren: () =>
                 _tree.sublist(openerTextNodeIndex + 1, closerTextNodeIndex));
         // Replace all of the nodes between the opener and the closer (which
@@ -236,7 +249,7 @@ class InlineParser {
 
         // Remove delimiter characters, possibly removing nodes from the tree
         // and Delimiters from the delimiter stack.
-        if ((strong && opener.length == 2) || (!strong && opener.length == 1)) {
+        if (opener.length == indicatorLength) {
           _tree.removeAt(openerTextNodeIndex);
           _delimiterStack.removeAt(openerIndex);
           // Slide [currentIndex] and [closerTextNodeIndex] back accordingly.
@@ -244,19 +257,19 @@ class InlineParser {
           closerTextNodeIndex--;
         } else {
           var newOpenerTextNode =
-              Text(openerTextNode.text.substring(strong ? 2 : 1));
+              Text(openerTextNode.text.substring(indicatorLength));
           _tree[openerTextNodeIndex] = newOpenerTextNode;
           opener.node = newOpenerTextNode;
         }
 
-        if ((strong && closer.length == 2) || (!strong && closer.length == 1)) {
+        if (closer.length == indicatorLength) {
           _tree.removeAt(closerTextNodeIndex);
           _delimiterStack.removeAt(currentIndex);
           // [currentIndex] has just moved to point at the next delimiter;
           // leave it.
         } else {
           var newCloserTextNode =
-              Text(closerTextNode.text.substring(strong ? 2 : 1));
+              Text(closerTextNode.text.substring(indicatorLength));
           _tree[closerTextNodeIndex] = newCloserTextNode;
           closer.node = newCloserTextNode;
           // [currentIndex] needs to be considered again; leave it.
@@ -774,10 +787,13 @@ class DelimiterRun implements Delimiter {
   @override
   final bool canClose;
 
+  final List<DelimiterTag> tags;
+
   DelimiterRun._({
     required this.node,
     required this.char,
     required this.syntax,
+    required this.tags,
     required bool isLeftFlanking,
     required bool isRightFlanking,
     required bool isPrecededByPunctuation,
@@ -799,6 +815,7 @@ class DelimiterRun implements Delimiter {
   /// (exclusive).
   static DelimiterRun? tryParse(InlineParser parser, int runStart, int runEnd,
       {required DelimiterSyntax syntax,
+      required List<DelimiterTag> tags,
       required Text node,
       bool allowIntraWord = false}) {
     bool leftFlanking,
@@ -847,10 +864,13 @@ class DelimiterRun implements Delimiter {
       return null;
     }
 
+    tags.sort((a, b) => b.indicators.compareTo(a.indicators));
+
     return DelimiterRun._(
       node: node,
       char: parser.charAt(runStart),
       syntax: syntax,
+      tags: tags,
       isLeftFlanking: leftFlanking,
       isRightFlanking: rightFlanking,
       isPrecededByPunctuation: precededByPunctuation,
@@ -862,6 +882,16 @@ class DelimiterRun implements Delimiter {
   @override
   String toString() => '<char: $char, length: $length, canOpen: $canOpen, '
       'canClose: $canClose>';
+}
+
+class DelimiterTag {
+  DelimiterTag(this.tag, this.indicators);
+
+  // Tag name of AST Element
+  final String tag;
+
+  /// The length of [indicators]
+  final int indicators;
 }
 
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
@@ -878,16 +908,19 @@ class DelimiterSyntax extends InlineSyntax {
   /// it on strikethrough.
   final bool allowIntraWord;
 
+  final List<DelimiterTag>? tags;
+
   /// Create a new [DelimiterSyntax] which matches text on [pattern].
   ///
-  /// The [pattern] is used to find the matching text. If [requiresDelimiterRun] is
-  /// passed, this syntax parses according to the same nesting rules as
+  /// The [pattern] is used to find the matching text. If [requiresDelimiterRun]
+  /// is passed, this syntax parses according to the same nesting rules as
   /// emphasis delimiters.  If [startCharacter] is passed, it is used as a
   /// pre-matching check which is faster than matching against [pattern].
   DelimiterSyntax(String pattern,
       {this.requiresDelimiterRun = false,
       int? startCharacter,
-      this.allowIntraWord = false})
+      this.allowIntraWord = false,
+      this.tags})
       : super(pattern, startCharacter: startCharacter);
 
   @override
@@ -910,7 +943,10 @@ class DelimiterSyntax extends InlineSyntax {
     }
 
     var delimiterRun = DelimiterRun.tryParse(parser, matchStart, matchEnd,
-        syntax: this, node: text, allowIntraWord: allowIntraWord);
+        syntax: this,
+        node: text,
+        allowIntraWord: allowIntraWord,
+        tags: tags ?? []);
     if (delimiterRun != null) {
       parser._pushDelimiter(delimiterRun);
       parser.addNode(text);
@@ -931,22 +967,18 @@ class DelimiterSyntax extends InlineSyntax {
   /// [getChildren], in which [parser] parses any nested text into child nodes.
   /// The returned [Node] incorpororates these child nodes.
   Node? close(InlineParser parser, Delimiter opener, Delimiter closer,
-      {required List<Node> Function() getChildren}) {
-    var strong = opener.length >= 2 && closer.length >= 2;
-    return Element(strong ? 'strong' : 'em', getChildren());
+      {required String tag, required List<Node> Function() getChildren}) {
+    return Element(tag, getChildren());
   }
 }
 
 /// Matches strikethrough syntax according to the GFM spec.
 class StrikethroughSyntax extends DelimiterSyntax {
   StrikethroughSyntax()
-      : super('~+', requiresDelimiterRun: true, allowIntraWord: true);
-
-  @override
-  Node close(InlineParser parser, Delimiter opener, Delimiter closer,
-      {required List<Node> Function() getChildren}) {
-    return Element('del', getChildren());
-  }
+      : super('~+',
+            requiresDelimiterRun: true,
+            allowIntraWord: true,
+            tags: [DelimiterTag('del', 2)]);
 }
 
 @Deprecated('Use DelimiterSyntax instead')
@@ -971,7 +1003,7 @@ class LinkSyntax extends DelimiterSyntax {
   @override
   Node? close(
       InlineParser parser, covariant SimpleDelimiter opener, Delimiter? closer,
-      {required List<Node> Function() getChildren}) {
+      {String? tag, required List<Node> Function() getChildren}) {
     var text = parser.source.substring(opener.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('
