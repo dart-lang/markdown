@@ -23,16 +23,7 @@ class InlineParser {
     TextSyntax(r' \* ', startCharacter: $space),
     // "_" surrounded by spaces is left alone.
     TextSyntax(r' _ ', startCharacter: $space),
-    // Parse "**strong**" and "*emphasis*" tags.
-    DelimiterSyntax(r'\*+', requiresDelimiterRun: true, tags: [
-      DelimiterTag('em', 1),
-      DelimiterTag('strong', 2),
-    ]),
-    // Parse "__strong__" and "_emphasis_" tags.
-    DelimiterSyntax('_+', requiresDelimiterRun: true, tags: [
-      DelimiterTag('em', 1),
-      DelimiterTag('strong', 2),
-    ]),
+    EmphasisSyntax(),
     CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
@@ -979,6 +970,16 @@ class StrikethroughSyntax extends DelimiterSyntax {
             requiresDelimiterRun: true,
             allowIntraWord: true,
             tags: [DelimiterTag('del', 2)]);
+}
+
+/// Parses `*emphasis*` and `_emphasis_` to  emphasis.
+///
+/// Parses `**strong**` and `__strong__` to strong emphasis.
+class EmphasisSyntax extends DelimiterSyntax {
+  EmphasisSyntax()
+      : super(r'(?:\*+)|(?:_+)',
+            requiresDelimiterRun: true,
+            tags: [DelimiterTag('em', 1), DelimiterTag('strong', 2)]);
 }
 
 @Deprecated('Use DelimiterSyntax instead')
