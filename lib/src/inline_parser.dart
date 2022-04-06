@@ -24,19 +24,9 @@ class InlineParser {
     // "_" surrounded by spaces is left alone.
     TextSyntax(r' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
-    DelimiterSyntax(
-      r'\*+',
-      requiresDelimiterRun: true,
-      allowIntraWord: true,
-      tags: [DelimiterTag('em', 1), DelimiterTag('strong', 2)],
-    ),
+    EmphasisSyntax(EmphasisIndicator.asterisk),
     // Parse "__strong__" and "_emphasis_" tags.
-    DelimiterSyntax(
-      r'_+',
-      requiresDelimiterRun: true,
-      allowIntraWord: false,
-      tags: [DelimiterTag('em', 1), DelimiterTag('strong', 2)],
-    ),
+    EmphasisSyntax(EmphasisIndicator.underscore),
     CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
@@ -971,6 +961,23 @@ class DelimiterSyntax extends InlineSyntax {
       {required String tag, required List<Node> Function() getChildren}) {
     return Element(tag, getChildren());
   }
+}
+
+enum EmphasisIndicator { asterisk, underscore }
+
+/// Parses `**strong**` and `*emphasis*` if [indicator] is
+/// `EmphasisIndicator.asterisk`.
+///
+/// Parses `__strong__` and `_emphasis_` if [indicator] is
+/// `EmphasisIndicator.underscore`.
+class EmphasisSyntax extends DelimiterSyntax {
+  EmphasisSyntax(EmphasisIndicator indicator)
+      : super(
+          '\\${indicator == EmphasisIndicator.asterisk ? '*' : '_'}+',
+          requiresDelimiterRun: true,
+          allowIntraWord: indicator == EmphasisIndicator.asterisk,
+          tags: [DelimiterTag('em', 1), DelimiterTag('strong', 2)],
+        );
 }
 
 /// Matches strikethrough syntax according to the GFM spec.

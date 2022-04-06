@@ -27,12 +27,7 @@ void main() {
         encodeHtml: false,
         blockSyntaxes: [const HorizontalRuleSyntax()],
         inlineSyntaxes: [
-          DelimiterSyntax(
-            r'\*+',
-            requiresDelimiterRun: true,
-            allowIntraWord: true,
-            tags: [DelimiterTag('strong', 2)],
-          ),
+          EmphasisSyntax(EmphasisIndicator.asterisk),
         ],
       );
 
