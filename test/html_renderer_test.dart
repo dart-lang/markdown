@@ -26,7 +26,13 @@ void main() {
         withDefaultInlineSyntaxes: false,
         encodeHtml: false,
         blockSyntaxes: [const HorizontalRuleSyntax()],
-        inlineSyntaxes: [EmphasisSyntax()],
+        inlineSyntaxes: [
+          DelimiterSyntax(
+            r'\*+',
+            requiresDelimiterRun: true,
+            tags: [DelimiterTag('strong', 2)],
+          ),
+        ],
       );
 
       expect(
