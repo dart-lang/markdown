@@ -18,3 +18,7 @@ word~~ past~~ word
 word ~~past ~~word
 <<<
 <p>word ~~past ~~word</p>
+>>> mixed with emphasis and order changes
+**~~first~~** ~~**second**~~
+<<<
+<p><strong><del>first</del></strong> <del><strong>second</strong></del></p>

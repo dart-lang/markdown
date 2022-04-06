@@ -30,6 +30,7 @@ void main() {
           DelimiterSyntax(
             r'\*+',
             requiresDelimiterRun: true,
+            allowIntraWord: true,
             tags: [DelimiterTag('strong', 2)],
           ),
         ],

@@ -10,10 +10,14 @@ Foo ===bar== baz
 ==foo==bar
 <<<
 <p><mark>foo</mark>bar</p>
->>> with emphasis tags nested
+>>> with emphasis
+==**foo**==
+<<<
+<p><mark><strong>foo</strong></mark></p>
+>>> not a highlight, ending == is preceded by punctuation and followed by an alphanumeric
 ==***foo***==bar
 <<<
-<p><mark><em><strong>foo</strong></em></mark>bar</p>
+<p>==<em><strong>foo</strong></em>==bar</p>
 >>> not a highlight, invalid right-flanking
 Foo ==bar == baz
 <<<

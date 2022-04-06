@@ -27,12 +27,14 @@ class InlineParser {
     DelimiterSyntax(
       r'\*+',
       requiresDelimiterRun: true,
+      allowIntraWord: true,
       tags: [DelimiterTag('em', 1), DelimiterTag('strong', 2)],
     ),
     // Parse "__strong__" and "_emphasis_" tags.
     DelimiterSyntax(
       r'_+',
       requiresDelimiterRun: true,
+      allowIntraWord: false,
       tags: [DelimiterTag('em', 1), DelimiterTag('strong', 2)],
     ),
     CodeSyntax(),
@@ -807,15 +809,9 @@ class DelimiterRun implements Delimiter {
     required bool isFollowedByPunctuation,
     required this.allowIntraWord,
   })  : canOpen = isLeftFlanking &&
-            (char == $asterisk ||
-                !isRightFlanking ||
-                allowIntraWord ||
-                isPrecededByPunctuation),
+            (!isRightFlanking || allowIntraWord || isPrecededByPunctuation),
         canClose = isRightFlanking &&
-            (char == $asterisk ||
-                !isLeftFlanking ||
-                allowIntraWord ||
-                isFollowedByPunctuation),
+            (!isLeftFlanking || allowIntraWord || isFollowedByPunctuation),
         isActive = true;
 
   /// Tries to parse a delimiter run from [runStart] (inclusive) to [runEnd]
@@ -846,24 +842,22 @@ class DelimiterRun implements Delimiter {
     }
     followedByPunctuation = punctuation.hasMatch(following);
 
-    // http://spec.commonmark.org/0.28/#left-flanking-delimiter-run
+    // http://spec.commonmark.org/0.30/#left-flanking-delimiter-run
     if (whitespace.contains(following)) {
       leftFlanking = false;
     } else {
       leftFlanking = !followedByPunctuation ||
           whitespace.contains(preceding) ||
-          precededByPunctuation ||
-          allowIntraWord;
+          precededByPunctuation;
     }
 
-    // http://spec.commonmark.org/0.28/#right-flanking-delimiter-run
+    // http://spec.commonmark.org/0.30/#right-flanking-delimiter-run
     if (whitespace.contains(preceding)) {
       rightFlanking = false;
     } else {
       rightFlanking = !precededByPunctuation ||
           whitespace.contains(following) ||
-          followedByPunctuation ||
-          allowIntraWord;
+          followedByPunctuation;
     }
 
     if (!leftFlanking && !rightFlanking) {
