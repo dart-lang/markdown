@@ -27,7 +27,7 @@ void main() {
         encodeHtml: false,
         blockSyntaxes: [const HorizontalRuleSyntax()],
         inlineSyntaxes: [
-          EmphasisSyntax(EmphasisIndicator.asterisk),
+          EmphasisSyntax.asterisk(),
         ],
       );
 
