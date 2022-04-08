@@ -220,13 +220,14 @@ class InlineParser {
           continue;
         }
         var matchedTagIndex = opener.tags.lastIndexWhere((e) =>
-            opener.length >= e.indicators && closer.length >= e.indicators);
+            opener.length >= e.indicatorLength &&
+            closer.length >= e.indicatorLength);
         if (matchedTagIndex == -1) {
           currentIndex++;
           continue;
         }
         var matchedTag = opener.tags[matchedTagIndex];
-        var indicatorLength = matchedTag.indicators;
+        var indicatorLength = matchedTag.indicatorLength;
         var openerTextNode = opener.node;
         var openerTextNodeIndex = _tree.indexOf(openerTextNode);
         var closerTextNode = closer.node;
@@ -855,7 +856,7 @@ class DelimiterRun implements Delimiter {
       return null;
     }
 
-    tags.sort((a, b) => a.indicators.compareTo(b.indicators));
+    tags.sort((a, b) => a.indicatorLength.compareTo(b.indicatorLength));
 
     return DelimiterRun._(
       node: node,
@@ -876,13 +877,12 @@ class DelimiterRun implements Delimiter {
 }
 
 class DelimiterTag {
-  DelimiterTag(this.tag, this.indicators);
+  DelimiterTag(this.tag, this.indicatorLength);
 
-  // Tag name of AST Element
+  // Tag name of the HTML element.
   final String tag;
 
-  /// The length of [indicators]
-  final int indicators;
+  final int indicatorLength;
 }
 
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
@@ -901,7 +901,7 @@ class DelimiterSyntax extends InlineSyntax {
 
   final List<DelimiterTag>? tags;
 
-  /// Create a new [DelimiterSyntax] which matches text on [pattern].
+  /// Creates a new [DelimiterSyntax] which matches text on [pattern].
   ///
   /// The [pattern] is used to find the matching text. If [requiresDelimiterRun]
   /// is passed, this syntax parses according to the same nesting rules as
@@ -957,8 +957,13 @@ class DelimiterSyntax extends InlineSyntax {
   /// If a tag can be closed at the current position, then this method calls
   /// [getChildren], in which [parser] parses any nested text into child nodes.
   /// The returned [Node] incorpororates these child nodes.
-  Node? close(InlineParser parser, Delimiter opener, Delimiter closer,
-      {required String tag, required List<Node> Function() getChildren}) {
+  Node? close(
+    InlineParser parser,
+    Delimiter opener,
+    Delimiter closer, {
+    required String tag,
+    required List<Node> Function() getChildren,
+  }) {
     return Element(tag, getChildren());
   }
 }
@@ -1015,8 +1020,12 @@ class LinkSyntax extends DelimiterSyntax {
 
   @override
   Node? close(
-      InlineParser parser, covariant SimpleDelimiter opener, Delimiter? closer,
-      {String? tag, required List<Node> Function() getChildren}) {
+    InlineParser parser,
+    covariant SimpleDelimiter opener,
+    Delimiter? closer, {
+    String? tag,
+    required List<Node> Function() getChildren,
+  }) {
     var text = parser.source.substring(opener.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('
