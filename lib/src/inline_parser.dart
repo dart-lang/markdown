@@ -991,6 +991,9 @@ class StrikethroughSyntax extends DelimiterSyntax {
 }
 
 /// Parses `==mark==` to `<mark>mark</mark>`.
+//
+// This syntax uses the same spec as the double asterisks(*) form strong
+// emphasis: https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis
 class HighlightSyntax extends DelimiterSyntax {
   HighlightSyntax()
       : super('=+',
