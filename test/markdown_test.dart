@@ -116,7 +116,7 @@ resolve [[]] thing
   });
 
   group('Custom inline syntax', () {
-    var nyanSyntax = <InlineSyntax>[TextSyntax('nyan', sub: '~=[,,_,,]:3')];
+    final nyanSyntax = <InlineSyntax>[TextSyntax('nyan', sub: '~=[,,_,,]:3')];
     validateCore(
         'simple inline syntax',
         '''

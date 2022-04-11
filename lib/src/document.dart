@@ -61,7 +61,7 @@ class Document {
 
   /// Parses the given [lines] of Markdown to a series of AST nodes.
   List<Node> parseLines(List<String> lines) {
-    var nodes = BlockParser(lines, this).parseLines();
+    final nodes = BlockParser(lines, this).parseLines();
     _parseInlineContent(nodes);
     return nodes;
   }
@@ -71,9 +71,9 @@ class Document {
 
   void _parseInlineContent(List<Node> nodes) {
     for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
+      final node = nodes[i];
       if (node is UnparsedContent) {
-        var inlineNodes = parseInline(node.textContent);
+        final inlineNodes = parseInline(node.textContent);
         nodes.removeAt(i);
         nodes.insertAll(i, inlineNodes);
         i += inlineNodes.length - 1;
