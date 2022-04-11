@@ -4,6 +4,7 @@
 
 import 'ast.dart';
 import 'block_parser.dart';
+import 'block_syntaxes/block_syntax.dart';
 import 'extension_set.dart';
 import 'inline_parser.dart';
 

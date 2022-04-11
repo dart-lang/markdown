@@ -1,4 +1,8 @@
-import 'block_parser.dart';
+import 'block_syntaxes/block_syntax.dart';
+import 'block_syntaxes/fenced_code_block_syntax.dart';
+import 'block_syntaxes/header_with_id_syntax.dart';
+import 'block_syntaxes/setext_header_with_id_syntax.dart';
+import 'block_syntaxes/table_syntax.dart';
 import 'inline_parser.dart';
 
 /// ExtensionSets provide a simple grouping mechanism for common Markdown
