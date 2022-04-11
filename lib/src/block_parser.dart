@@ -53,7 +53,8 @@ final _olPattern =
 
 /// A line of hyphens separated by at least one pipe.
 final _tablePattern = RegExp(
-    r'^[ ]{0,3}\|?([ \t]*:?\-+:?[ \t]*\|)+([ \t]|[ \t]*:?\-+:?[ \t]*)?$');
+  r'^[ ]{0,3}\|?([ \t]*:?\-+:?[ \t]*\|)+([ \t]|[ \t]*:?\-+:?[ \t]*)?$',
+);
 
 /// A pattern which should never be used. It just satisfies non-nullability of
 /// pattern fields.
@@ -202,8 +203,9 @@ abstract class BlockSyntax {
   /// Gets whether or not [parser]'s current line should end the previous block.
   static bool isAtBlockEnd(BlockParser parser) {
     if (parser.isDone) return true;
-    return parser.blockSyntaxes
-        .any((s) => s.canParse(parser) && s.canEndBlock(parser));
+    return parser.blockSyntaxes.any(
+      (s) => s.canParse(parser) && s.canEndBlock(parser),
+    );
   }
 
   /// Generates a valid HTML anchor from the inner text of [element].
@@ -591,13 +593,14 @@ abstract class BlockHtmlSyntax extends BlockSyntax {
 
 class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
   static final _pattern = RegExp(
-      r'^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
-      r'caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|'
-      r'figcaption|figure|footer|form|frame|frameset|h1|head|header|hr|html|'
-      r'iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|'
-      r'option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|'
-      r'title|tr|track|ul)'
-      r'(?:\s|>|/>|$)');
+    r'^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
+    r'caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|'
+    r'figcaption|figure|footer|form|frame|frameset|h1|head|header|hr|html|'
+    r'iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|'
+    r'option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|'
+    r'title|tr|track|ul)'
+    r'(?:\s|>|/>|$)',
+  );
 
   /// The [_pattern] regular expression above is very expensive, even on
   /// paragraphs of Markdown with no HTML. This regular expression can be used
@@ -1007,7 +1010,10 @@ class TableSyntax extends BlockSyntax {
   /// [alignments] is used to annotate an alignment on each cell, and
   /// [cellType] is used to declare either "td" or "th" cells.
   Element _parseRow(
-      BlockParser parser, List<String?> alignments, String cellType) {
+    BlockParser parser,
+    List<String?> alignments,
+    String cellType,
+  ) {
     final line = parser.current;
     final cells = <String>[];
     var index = _walkPastOpeningPipe(line);
@@ -1152,7 +1158,9 @@ class ParagraphSyntax extends BlockSyntax {
   /// Extract reference link definitions from the front of the paragraph, and
   /// return the remaining paragraph lines.
   List<String>? _extractReflinkDefinitions(
-      BlockParser parser, List<String> lines) {
+    BlockParser parser,
+    List<String> lines,
+  ) {
     bool lineStartsReflinkDefinition(int i) =>
         lines[i].startsWith(_reflinkDefinitionStart);
 
@@ -1237,13 +1245,14 @@ class ParagraphSyntax extends BlockSyntax {
   // Returns whether [contents] could be parsed as a reference link definition.
   bool _parseReflinkDefinition(BlockParser parser, String contents) {
     final pattern = RegExp(
-        // Leading indentation.
-        r'''^[ ]{0,3}'''
-        // Reference id in brackets, and URL.
-        r'''\[((?:\\\]|[^\]])+)\]:\s*(?:<(\S+)>|(\S+))\s*'''
-        // Title in double or single quotes, or parens.
-        r'''("[^"]+"|'[^']+'|\([^)]+\)|)\s*$''',
-        multiLine: true);
+      // Leading indentation.
+      r'''^[ ]{0,3}'''
+      // Reference id in brackets, and URL.
+      r'''\[((?:\\\]|[^\]])+)\]:\s*(?:<(\S+)>|(\S+))\s*'''
+      // Title in double or single quotes, or parens.
+      r'''("[^"]+"|'[^']+'|\([^)]+\)|)\s*$''',
+      multiLine: true,
+    );
     final match = pattern.firstMatch(contents);
     if (match == null) {
       // Not a reference link definition.
@@ -1274,8 +1283,10 @@ class ParagraphSyntax extends BlockSyntax {
     // References are case-insensitive, and internal whitespace is compressed.
     label = normalizeLinkLabel(label);
 
-    parser.document.linkReferences
-        .putIfAbsent(label, () => LinkReference(label, destination, title));
+    parser.document.linkReferences.putIfAbsent(
+      label,
+      () => LinkReference(label, destination, title),
+    );
     return true;
   }
 }

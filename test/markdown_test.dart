@@ -11,125 +11,157 @@ void main() async {
   await testDirectory('original');
 
   // Block syntax extensions
-  testFile('extensions/fenced_code_blocks.unit',
-      blockSyntaxes: [const FencedCodeBlockSyntax()]);
-  testFile('extensions/headers_with_ids.unit',
-      blockSyntaxes: [const HeaderWithIdSyntax()]);
-  testFile('extensions/setext_headers_with_ids.unit',
-      blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
+  testFile(
+    'extensions/fenced_code_blocks.unit',
+    blockSyntaxes: [const FencedCodeBlockSyntax()],
+  );
+  testFile(
+    'extensions/headers_with_ids.unit',
+    blockSyntaxes: [const HeaderWithIdSyntax()],
+  );
+  testFile(
+    'extensions/setext_headers_with_ids.unit',
+    blockSyntaxes: [const SetextHeaderWithIdSyntax()],
+  );
   testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
-  testFile('extensions/fenced_blockquotes.unit',
-      blockSyntaxes: [const FencedBlockquoteSyntax()]);
+  testFile(
+    'extensions/fenced_blockquotes.unit',
+    blockSyntaxes: [const FencedBlockquoteSyntax()],
+  );
 
   // Inline syntax extensions
   testFile('extensions/emojis.unit', inlineSyntaxes: [EmojiSyntax()]);
   testFile('extensions/inline_html.unit', inlineSyntaxes: [InlineHtmlSyntax()]);
-  testFile('extensions/strikethrough.unit',
-      inlineSyntaxes: [StrikethroughSyntax()]);
+  testFile(
+    'extensions/strikethrough.unit',
+    inlineSyntaxes: [StrikethroughSyntax()],
+  );
   testFile('extensions/highlight.unit', inlineSyntaxes: [HighlightSyntax()]);
 
   await testDirectory('common_mark');
   await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
 
   group('Corner cases', () {
-    validateCore('Incorrect Links', '''
+    validateCore(
+      'Incorrect Links',
+      '''
 5 Ethernet ([Music](
-''', '''
+''',
+      '''
 <p>5 Ethernet ([Music](</p>
-''');
+''',
+    );
 
-    validateCore('Escaping code block language', '''
+    validateCore(
+      'Escaping code block language',
+      '''
 ```"/><a/href="url">arbitrary_html</a>
 ```
-''', '''
+''',
+      '''
 <pre><code class="language-&quot;/&gt;&lt;a/href=&quot;url&quot;&gt;arbitrary_html&lt;/a&gt;"></code></pre>
-''');
+''',
+    );
 
-    validateCore('Unicode ellipsis as punctuation', '''
+    validateCore(
+      'Unicode ellipsis as punctuation',
+      '''
 "Connecting dot **A** to **B.**…"
-''', '''
+''',
+      '''
 <p>"Connecting dot <strong>A</strong> to <strong>B.</strong>…"</p>
-''');
+''',
+    );
   });
 
   group('Resolver', () {
     Node? nyanResolver(String text, [_]) =>
         text.isEmpty ? null : Text('~=[,,_${text}_,,]:3');
     validateCore(
-        'simple link resolver',
-        '''
+      'simple link resolver',
+      '''
 resolve [this] thing
 ''',
-        '''
+      '''
 <p>resolve ~=[,,_this_,,]:3 thing</p>
 ''',
-        linkResolver: nyanResolver);
+      linkResolver: nyanResolver,
+    );
 
     validateCore(
-        'simple image resolver',
-        '''
+      'simple image resolver',
+      '''
 resolve ![this] thing
 ''',
-        '''
+      '''
 <p>resolve ~=[,,_this_,,]:3 thing</p>
 ''',
-        imageLinkResolver: nyanResolver);
+      imageLinkResolver: nyanResolver,
+    );
 
     validateCore(
-        'can resolve link containing inline tags',
-        '''
+      'can resolve link containing inline tags',
+      '''
 resolve [*star* _underline_] thing
 ''',
-        '''
+      '''
 <p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>
 ''',
-        linkResolver: nyanResolver);
+      linkResolver: nyanResolver,
+    );
 
     validateCore(
-        'link resolver uses un-normalized link label',
-        '''
+      'link resolver uses un-normalized link label',
+      '''
 resolve [TH  IS] thing
 ''',
-        '''
+      '''
 <p>resolve ~=[,,_TH  IS_,,]:3 thing</p>
 ''',
-        linkResolver: nyanResolver);
+      linkResolver: nyanResolver,
+    );
 
     validateCore(
-        'can resolve escaped brackets',
-        r'''
+      'can resolve escaped brackets',
+      r'''
 resolve [\[\]] thing
 ''',
-        '''
+      '''
 <p>resolve ~=[,,_[]_,,]:3 thing</p>
 ''',
-        linkResolver: nyanResolver);
+      linkResolver: nyanResolver,
+    );
 
     validateCore(
-        'can choose to _not_ resolve something, like an empty link',
-        r'''
+      'can choose to _not_ resolve something, like an empty link',
+      r'''
 resolve [[]] thing
 ''',
-        '''
+      '''
 <p>resolve ~=[,,_[]_,,]:3 thing</p>
 ''',
-        linkResolver: nyanResolver);
+      linkResolver: nyanResolver,
+    );
   });
 
   group('Custom inline syntax', () {
     final nyanSyntax = <InlineSyntax>[TextSyntax('nyan', sub: '~=[,,_,,]:3')];
     validateCore(
-        'simple inline syntax',
-        '''
+      'simple inline syntax',
+      '''
 nyan''',
-        '''<p>~=[,,_,,]:3</p>
+      '''<p>~=[,,_,,]:3</p>
 ''',
-        inlineSyntaxes: nyanSyntax);
+      inlineSyntaxes: nyanSyntax,
+    );
 
-    validateCore('dart custom links', 'links [are<foo>] awesome',
-        '<p>links <a>are&lt;foo></a> awesome</p>\n',
-        linkResolver: (String text, [String? _]) =>
-            Element.text('a', text.replaceAll('<', '&lt;')));
+    validateCore(
+      'dart custom links',
+      'links [are<foo>] awesome',
+      '<p>links <a>are&lt;foo></a> awesome</p>\n',
+      linkResolver: (String text, [String? _]) =>
+          Element.text('a', text.replaceAll('<', '&lt;')),
+    );
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some
     // things are not quite working properly. The regexps are sometime a little
@@ -138,69 +170,76 @@ nyan''',
 
   group('Inline only', () {
     validateCore(
-        'simple line',
-        '''
+      'simple line',
+      '''
         This would normally create a paragraph.
         ''',
-        '''
+      '''
         This would normally create a paragraph.
         ''',
-        inlineOnly: true);
+      inlineOnly: true,
+    );
     validateCore(
-        'strong and em',
-        '''
+      'strong and em',
+      '''
         This would _normally_ create a **paragraph**.
         ''',
-        '''
+      '''
         This would <em>normally</em> create a <strong>paragraph</strong>.
         ''',
-        inlineOnly: true);
+      inlineOnly: true,
+    );
     validateCore(
-        'link',
-        '''
+      'link',
+      '''
         This [link](http://www.example.com/) will work normally.
         ''',
-        '''
+      '''
         This <a href="http://www.example.com/">link</a> will work normally.
         ''',
-        inlineOnly: true);
+      inlineOnly: true,
+    );
     validateCore(
-        'references do not work',
-        '''
+      'references do not work',
+      '''
         [This][] shouldn't work, though.
         ''',
-        '''
+      '''
         [This][] shouldn't work, though.
         ''',
-        inlineOnly: true);
+      inlineOnly: true,
+    );
     validateCore(
-        'less than and ampersand are escaped',
-        '''
+      'less than and ampersand are escaped',
+      '''
         < &
         ''',
-        '''
+      '''
         &lt; &amp;
         ''',
-        inlineOnly: true);
+      inlineOnly: true,
+    );
     validateCore(
-        'keeps newlines',
-        '''
+      'keeps newlines',
+      '''
         This paragraph
         continues after a newline.
         ''',
-        '''
+      '''
         This paragraph
         continues after a newline.
         ''',
-        inlineOnly: true);
+      inlineOnly: true,
+    );
     validateCore(
-        'ignores block-level markdown syntax',
-        '''
+      'ignores block-level markdown syntax',
+      '''
         1. This will not be an <ol>.
         ''',
-        '''
+      '''
         1. This will not be an <ol>.
         ''',
-        inlineOnly: true);
+      inlineOnly: true,
+    );
   });
 }
