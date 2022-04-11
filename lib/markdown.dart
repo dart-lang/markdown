@@ -59,11 +59,27 @@ export 'src/block_syntaxes/setext_header_syntax.dart';
 export 'src/block_syntaxes/setext_header_with_id_syntax.dart';
 export 'src/block_syntaxes/table_syntax.dart';
 export 'src/block_syntaxes/unordered_list_syntax.dart';
-
 export 'src/document.dart';
 export 'src/emojis.dart';
 export 'src/extension_set.dart';
 export 'src/html_renderer.dart';
 export 'src/inline_parser.dart';
+export 'src/inline_syntaxes/autolink_extension_syntax.dart';
+export 'src/inline_syntaxes/autolink_syntax.dart';
+export 'src/inline_syntaxes/code_syntax.dart';
+export 'src/inline_syntaxes/delimiter_syntax.dart';
+export 'src/inline_syntaxes/email_autolink_syntax.dart';
+export 'src/inline_syntaxes/emoji_syntax.dart';
+export 'src/inline_syntaxes/emphasis_syntax.dart';
+export 'src/inline_syntaxes/escape_syntax.dart';
+export 'src/inline_syntaxes/highlight_syntax.dart';
+export 'src/inline_syntaxes/image_syntax.dart';
+export 'src/inline_syntaxes/inline_html_syntax.dart';
+export 'src/inline_syntaxes/inline_syntax.dart';
+export 'src/inline_syntaxes/line_break_syntax.dart';
+export 'src/inline_syntaxes/link_syntax.dart';
+export 'src/inline_syntaxes/strikethrough_syntax.dart';
+export 'src/inline_syntaxes/tag_syntax.dart';
+export 'src/inline_syntaxes/text_syntax.dart';
 
 const version = packageVersion;
