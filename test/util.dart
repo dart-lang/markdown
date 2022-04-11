@@ -24,10 +24,14 @@ Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
   }
 }
 
-Future<String> get markdownPackageRoot async =>
-    p.dirname(p.dirname((await Isolate.resolvePackageUri(
-            Uri.parse('package:markdown/markdown.dart')))!
-        .toFilePath()));
+Future<String> get markdownPackageRoot async => p.dirname(
+      p.dirname(
+        (await Isolate.resolvePackageUri(
+          Uri.parse('package:markdown/markdown.dart'),
+        ))!
+            .toFilePath(),
+      ),
+    );
 
 void testFile(
   String file, {
@@ -38,8 +42,13 @@ void testFile(
   for (var dataCase in dataCasesInFile(path: p.join(directory, file))) {
     final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
-    validateCore(description, dataCase.input, dataCase.expectedOutput,
-        blockSyntaxes: blockSyntaxes, inlineSyntaxes: inlineSyntaxes);
+    validateCore(
+      description,
+      dataCase.input,
+      dataCase.expectedOutput,
+      blockSyntaxes: blockSyntaxes,
+      inlineSyntaxes: inlineSyntaxes,
+    );
   }
 }
 
@@ -55,13 +64,15 @@ void validateCore(
   bool inlineOnly = false,
 }) {
   test(description, () {
-    final result = markdownToHtml(markdown,
-        blockSyntaxes: blockSyntaxes,
-        inlineSyntaxes: inlineSyntaxes,
-        extensionSet: extensionSet,
-        linkResolver: linkResolver,
-        imageLinkResolver: imageLinkResolver,
-        inlineOnly: inlineOnly);
+    final result = markdownToHtml(
+      markdown,
+      blockSyntaxes: blockSyntaxes,
+      inlineSyntaxes: inlineSyntaxes,
+      extensionSet: extensionSet,
+      linkResolver: linkResolver,
+      imageLinkResolver: imageLinkResolver,
+      inlineOnly: inlineOnly,
+    );
 
     markdownPrintOnFailure(markdown, html, result);
 
@@ -74,7 +85,8 @@ String whitespaceColor(String input) => input
     .replaceAll('\t', ansi.backgroundDarkGray.wrap('\t')!);
 
 void markdownPrintOnFailure(String markdown, String expected, String actual) {
-  printOnFailure("""
+  printOnFailure(
+    """
 INPUT:
 '''r
 ${whitespaceColor(markdown)}'''            
@@ -86,5 +98,6 @@ ${whitespaceColor(expected)}'''
 GOT:
 '''r
 ${whitespaceColor(actual)}'''
-""");
+""",
+  );
 }
