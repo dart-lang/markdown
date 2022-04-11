@@ -140,16 +140,6 @@ Stream<DataCase> dataCasesUnder({
 /// All of the data pertaining to a particular test case, namely the [input] and
 /// [expectedOutput].
 class DataCase {
-  final String directory;
-  final String file;
-
-  // ignore: non_constant_identifier_names
-  final String front_matter;
-  final String description;
-  final bool skip;
-  final String input;
-  final String expectedOutput;
-
   DataCase({
     this.directory = '',
     this.file = '',
@@ -160,6 +150,16 @@ class DataCase {
     required this.input,
     required this.expectedOutput,
   });
+
+  final String directory;
+  final String file;
+
+  // ignore: non_constant_identifier_names
+  final String front_matter;
+  final String description;
+  final bool skip;
+  final String input;
+  final String expectedOutput;
 
   /// A good standard description for `test()`, derived from the data directory,
   /// the particular data file, and the test case description.

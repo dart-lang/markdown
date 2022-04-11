@@ -80,13 +80,13 @@ const _blockTags = [
 
 /// Translates a parsed AST to HTML.
 class HtmlRenderer implements NodeVisitor {
+  HtmlRenderer();
+
   late StringBuffer buffer;
   late Set<String> uniqueIds;
 
   final _elementStack = <Element>[];
   String? _lastVisitedTag;
-
-  HtmlRenderer();
 
   String render(List<Node> nodes) {
     buffer = StringBuffer();
