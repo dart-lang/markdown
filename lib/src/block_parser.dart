@@ -782,7 +782,7 @@ abstract class ListSyntax extends BlockSyntax {
           //
           // If the list item starts with a blank line, the final piece of the
           // indentation is just a single space.
-          indent = precedingWhitespace + markerAsSpaces + ' ';
+          indent = '$precedingWhitespace$markerAsSpaces ';
         } else if (restWhitespace.length >= 4) {
           // See http://spec.commonmark.org/0.28/#list-items under "2. Item
           // starting with indented code."
@@ -1181,7 +1181,7 @@ class ParagraphSyntax extends BlockSyntax {
             break;
           }
         } else {
-          contents = contents + '\n' + lines[j];
+          contents = '$contents\n${lines[j]}';
           j++;
         }
       }
