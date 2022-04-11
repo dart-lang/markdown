@@ -63,6 +63,16 @@ final _dummyPattern = RegExp('');
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
 class BlockParser {
+  BlockParser(this.lines, this.document) {
+    blockSyntaxes.addAll(document.blockSyntaxes);
+
+    if (document.withDefaultBlockSyntaxes) {
+      blockSyntaxes.addAll(standardBlockSyntaxes);
+    } else {
+      blockSyntaxes.add(const DummyBlockSyntax());
+    }
+  }
+
   final List<String> lines;
 
   /// The Markdown document this parser is parsing.
@@ -102,16 +112,6 @@ class BlockParser {
     const OrderedListSyntax(),
     const ParagraphSyntax()
   ];
-
-  BlockParser(this.lines, this.document) {
-    blockSyntaxes.addAll(document.blockSyntaxes);
-
-    if (document.withDefaultBlockSyntaxes) {
-      blockSyntaxes.addAll(standardBlockSyntaxes);
-    } else {
-      blockSyntaxes.add(const DummyBlockSyntax());
-    }
-  }
 
   /// Gets the current line.
   String get current => lines[_pos];
@@ -217,10 +217,10 @@ abstract class BlockSyntax {
 }
 
 class EmptyBlockSyntax extends BlockSyntax {
+  const EmptyBlockSyntax();
+
   @override
   RegExp get pattern => _emptyPattern;
-
-  const EmptyBlockSyntax();
 
   @override
   Node? parse(BlockParser parser) {
@@ -234,10 +234,10 @@ class EmptyBlockSyntax extends BlockSyntax {
 
 /// Parses setext-style headers.
 class SetextHeaderSyntax extends BlockSyntax {
+  const SetextHeaderSyntax();
+
   @override
   RegExp get pattern => _dummyPattern;
-
-  const SetextHeaderSyntax();
 
   @override
   bool canParse(BlockParser parser) {
@@ -310,10 +310,10 @@ class SetextHeaderWithIdSyntax extends SetextHeaderSyntax {
 
 /// Parses atx-style headers: `## Header ##`.
 class HeaderSyntax extends BlockSyntax {
+  const HeaderSyntax();
+
   @override
   RegExp get pattern => _headerPattern;
-
-  const HeaderSyntax();
 
   @override
   Node parse(BlockParser parser) {
@@ -375,10 +375,10 @@ class FencedBlockquoteSyntax extends BlockSyntax {
 
 /// Parses email-style blockquotes: `> quote`.
 class BlockquoteSyntax extends BlockSyntax {
+  const BlockquoteSyntax();
+
   @override
   RegExp get pattern => _blockquotePattern;
-
-  const BlockquoteSyntax();
 
   @override
   List<String> parseChildLines(BlockParser parser) {
@@ -428,13 +428,13 @@ class BlockquoteSyntax extends BlockSyntax {
 
 /// Parses preformatted code blocks that are indented four spaces.
 class CodeBlockSyntax extends BlockSyntax {
+  const CodeBlockSyntax();
+
   @override
   RegExp get pattern => _indentPattern;
 
   @override
   bool canEndBlock(BlockParser parser) => false;
-
-  const CodeBlockSyntax();
 
   @override
   List<String?> parseChildLines(BlockParser parser) {
@@ -483,10 +483,10 @@ class CodeBlockSyntax extends BlockSyntax {
 ///
 /// See the CommonMark spec: https://spec.commonmark.org/0.29/#fenced-code-blocks
 class FencedCodeBlockSyntax extends BlockSyntax {
+  const FencedCodeBlockSyntax();
+
   @override
   RegExp get pattern => _codeFencePattern;
-
-  const FencedCodeBlockSyntax();
 
   @override
   bool canParse(BlockParser parser) {
@@ -565,10 +565,10 @@ class FencedCodeBlockSyntax extends BlockSyntax {
 
 /// Parses horizontal rules like `---`, `_ _ _`, `*  *  *`, etc.
 class HorizontalRuleSyntax extends BlockSyntax {
+  const HorizontalRuleSyntax();
+
   @override
   RegExp get pattern => _hrPattern;
-
-  const HorizontalRuleSyntax();
 
   @override
   Node parse(BlockParser parser) {
@@ -584,13 +584,15 @@ class HorizontalRuleSyntax extends BlockSyntax {
 /// 2.  Essentially no HTML parsing or validation is done. We're a Markdown
 ///     parser, not an HTML parser!
 abstract class BlockHtmlSyntax extends BlockSyntax {
+  const BlockHtmlSyntax();
+
   @override
   bool canEndBlock(BlockParser parser) => true;
-
-  const BlockHtmlSyntax();
 }
 
 class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
+  const BlockTagBlockHtmlSyntax();
+
   static final _pattern = RegExp(
     '^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
     'caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|'
@@ -609,8 +611,6 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
 
   @override
   RegExp get pattern => _pattern;
-
-  const BlockTagBlockHtmlSyntax();
 
   @override
   bool canParse(BlockParser parser) {
@@ -633,6 +633,8 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
 }
 
 class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
+  const OtherTagBlockHtmlSyntax();
+
   @override
   bool canEndBlock(BlockParser parser) => false;
 
@@ -647,8 +649,6 @@ class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
   // * possible whitespace and the end of the line.
   @override
   RegExp get pattern => RegExp(r'^ {0,3}</?\w+(?:>|\s+[^>]*>)\s*$');
-
-  const OtherTagBlockHtmlSyntax();
 }
 
 /// A BlockHtmlSyntax that has a specific `endPattern`.
@@ -656,13 +656,13 @@ class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
 /// In practice this means that the syntax dominates; it is allowed to eat
 /// many lines, including blank lines, before matching its `endPattern`.
 class LongBlockHtmlSyntax extends BlockHtmlSyntax {
-  @override
-  final RegExp pattern;
-  final RegExp _endPattern;
-
   LongBlockHtmlSyntax(String pattern, String endPattern)
       : pattern = RegExp(pattern),
         _endPattern = RegExp(endPattern);
+
+  @override
+  final RegExp pattern;
+  final RegExp _endPattern;
 
   @override
   Node parse(BlockParser parser) {
@@ -680,14 +680,16 @@ class LongBlockHtmlSyntax extends BlockHtmlSyntax {
 }
 
 class ListItem {
+  ListItem(this.lines);
+
   bool forceBlock = false;
   final List<String> lines;
-
-  ListItem(this.lines);
 }
 
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
+  const ListSyntax();
+
   @override
   bool canEndBlock(BlockParser parser) {
     // An empty list cannot interrupt a paragraph. See
@@ -702,8 +704,6 @@ abstract class ListSyntax extends BlockSyntax {
   }
 
   String get listTag;
-
-  const ListSyntax();
 
   /// A list of patterns that can start a valid block within a list item.
   static final blocksInList = [
@@ -895,35 +895,35 @@ abstract class ListSyntax extends BlockSyntax {
 
 /// Parses unordered lists.
 class UnorderedListSyntax extends ListSyntax {
+  const UnorderedListSyntax();
+
   @override
   RegExp get pattern => _ulPattern;
 
   @override
   String get listTag => 'ul';
-
-  const UnorderedListSyntax();
 }
 
 /// Parses ordered lists.
 class OrderedListSyntax extends ListSyntax {
+  const OrderedListSyntax();
+
   @override
   RegExp get pattern => _olPattern;
 
   @override
   String get listTag => 'ol';
-
-  const OrderedListSyntax();
 }
 
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
+  const TableSyntax();
+
   @override
   bool canEndBlock(BlockParser parser) => false;
 
   @override
   RegExp get pattern => _dummyPattern;
-
-  const TableSyntax();
 
   @override
   bool canParse(BlockParser parser) {
@@ -1119,6 +1119,8 @@ class TableSyntax extends BlockSyntax {
 
 /// Parses paragraphs of regular text.
 class ParagraphSyntax extends BlockSyntax {
+  const ParagraphSyntax();
+
   static final _reflinkDefinitionStart = RegExp(r'[ ]{0,3}\[');
 
   static final _whitespacePattern = RegExp(r'^\s*$');
@@ -1128,8 +1130,6 @@ class ParagraphSyntax extends BlockSyntax {
 
   @override
   bool canEndBlock(BlockParser parser) => false;
-
-  const ParagraphSyntax();
 
   @override
   bool canParse(BlockParser parser) => true;

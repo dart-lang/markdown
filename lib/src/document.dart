@@ -9,28 +9,6 @@ import 'inline_parser.dart';
 
 /// Maintains the context needed to parse a Markdown document.
 class Document {
-  final Map<String, LinkReference> linkReferences = <String, LinkReference>{};
-  final Resolver? linkResolver;
-  final Resolver? imageLinkResolver;
-  final bool encodeHtml;
-
-  /// Whether to use default block syntaxes.
-  final bool withDefaultBlockSyntaxes;
-
-  /// Whether to use default inline syntaxes.
-  ///
-  /// Need to set both [withDefaultInlineSyntaxes] and [encodeHtml] to
-  /// `false` to disable all inline syntaxes including html encoding syntaxes.
-  final bool withDefaultInlineSyntaxes;
-
-  final _blockSyntaxes = <BlockSyntax>{};
-  final _inlineSyntaxes = <InlineSyntax>{};
-  final bool hasCustomInlineSyntaxes;
-
-  Iterable<BlockSyntax> get blockSyntaxes => _blockSyntaxes;
-
-  Iterable<InlineSyntax> get inlineSyntaxes => _inlineSyntaxes;
-
   Document({
     Iterable<BlockSyntax>? blockSyntaxes,
     Iterable<InlineSyntax>? inlineSyntaxes,
@@ -58,6 +36,28 @@ class Document {
       _inlineSyntaxes.addAll(extensionSet.inlineSyntaxes);
     }
   }
+
+  final Map<String, LinkReference> linkReferences = <String, LinkReference>{};
+  final Resolver? linkResolver;
+  final Resolver? imageLinkResolver;
+  final bool encodeHtml;
+
+  /// Whether to use default block syntaxes.
+  final bool withDefaultBlockSyntaxes;
+
+  /// Whether to use default inline syntaxes.
+  ///
+  /// Need to set both [withDefaultInlineSyntaxes] and [encodeHtml] to
+  /// `false` to disable all inline syntaxes including html encoding syntaxes.
+  final bool withDefaultInlineSyntaxes;
+
+  final _blockSyntaxes = <BlockSyntax>{};
+  final _inlineSyntaxes = <InlineSyntax>{};
+  final bool hasCustomInlineSyntaxes;
+
+  Iterable<BlockSyntax> get blockSyntaxes => _blockSyntaxes;
+
+  Iterable<InlineSyntax> get inlineSyntaxes => _inlineSyntaxes;
 
   /// Parses the given [lines] of Markdown to a series of AST nodes.
   List<Node> parseLines(List<String> lines) {
@@ -87,6 +87,12 @@ class Document {
 /// A [link reference
 /// definition](http://spec.commonmark.org/0.28/#link-reference-definitions).
 class LinkReference {
+  /// Construct a new [LinkReference], with all necessary fields.
+  ///
+  /// If the parsed link reference definition does not include a title, use
+  /// `null` for the [title] parameter.
+  LinkReference(this.label, this.destination, this.title);
+
   /// The [link label](http://spec.commonmark.org/0.28/#link-label).
   ///
   /// Temporarily, this class is also being used to represent the link data for
@@ -99,10 +105,4 @@ class LinkReference {
 
   /// The [link title](http://spec.commonmark.org/0.28/#link-title).
   final String? title;
-
-  /// Construct a new [LinkReference], with all necessary fields.
-  ///
-  /// If the parsed link reference definition does not include a title, use
-  /// `null` for the [title] parameter.
-  LinkReference(this.label, this.destination, this.title);
 }

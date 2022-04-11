@@ -7,6 +7,8 @@ import 'inline_parser.dart';
 /// For example, the [gitHubFlavored] set of syntax extensions allows users to
 /// output HTML from their Markdown in a similar fashion to GitHub's parsing.
 class ExtensionSet {
+  ExtensionSet(this.blockSyntaxes, this.inlineSyntaxes);
+
   /// The [ExtensionSet.none] extension set renders Markdown similar to
   /// [Markdown.pl].
   ///
@@ -80,6 +82,4 @@ class ExtensionSet {
 
   final List<BlockSyntax> blockSyntaxes;
   final List<InlineSyntax> inlineSyntaxes;
-
-  ExtensionSet(this.blockSyntaxes, this.inlineSyntaxes);
 }

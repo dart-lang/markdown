@@ -12,6 +12,37 @@ import 'util.dart';
 /// Maintains the internal state needed to parse inline span elements in
 /// Markdown.
 class InlineParser {
+  InlineParser(this.source, this.document) {
+    // User specified syntaxes are the first syntaxes to be evaluated.
+    syntaxes.addAll(document.inlineSyntaxes);
+
+    // This first RegExp matches plain text to accelerate parsing. It's written
+    // so that it does not match any prefix of any following syntaxes. Most
+    // Markdown is plain text, so it's faster to match one RegExp per 'word'
+    // rather than fail to match all the following RegExps at each non-syntax
+    // character position.
+    if (document.hasCustomInlineSyntaxes) {
+      // We should be less aggressive in blowing past "words".
+      syntaxes.add(TextSyntax(r'[A-Za-z0-9]+(?=\s)'));
+    } else {
+      syntaxes.add(TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9](?=\s)'));
+    }
+
+    if (document.withDefaultInlineSyntaxes) {
+      // Custom link resolvers go after the generic text syntax.
+      syntaxes.addAll([
+        LinkSyntax(linkResolver: document.linkResolver),
+        ImageSyntax(linkResolver: document.imageLinkResolver)
+      ]);
+
+      syntaxes.addAll(_defaultSyntaxes);
+    }
+
+    if (_encodeHtml) {
+      syntaxes.addAll(_htmlSyntaxes);
+    }
+  }
+
   static final List<InlineSyntax> _defaultSyntaxes =
       List<InlineSyntax>.unmodifiable(<InlineSyntax>[
     EmailAutolinkSyntax(),
@@ -64,37 +95,6 @@ class InlineParser {
 
   /// The tree of parsed HTML nodes.
   final _tree = <Node>[];
-
-  InlineParser(this.source, this.document) {
-    // User specified syntaxes are the first syntaxes to be evaluated.
-    syntaxes.addAll(document.inlineSyntaxes);
-
-    // This first RegExp matches plain text to accelerate parsing. It's written
-    // so that it does not match any prefix of any following syntaxes. Most
-    // Markdown is plain text, so it's faster to match one RegExp per 'word'
-    // rather than fail to match all the following RegExps at each non-syntax
-    // character position.
-    if (document.hasCustomInlineSyntaxes) {
-      // We should be less aggressive in blowing past "words".
-      syntaxes.add(TextSyntax(r'[A-Za-z0-9]+(?=\s)'));
-    } else {
-      syntaxes.add(TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9](?=\s)'));
-    }
-
-    if (document.withDefaultInlineSyntaxes) {
-      // Custom link resolvers go after the generic text syntax.
-      syntaxes.addAll([
-        LinkSyntax(linkResolver: document.linkResolver),
-        ImageSyntax(linkResolver: document.imageLinkResolver)
-      ]);
-
-      syntaxes.addAll(_defaultSyntaxes);
-    }
-
-    if (_encodeHtml) {
-      syntaxes.addAll(_htmlSyntaxes);
-    }
-  }
 
   List<Node> parse() {
     while (!isDone) {
@@ -358,12 +358,6 @@ class InlineParser {
 
 /// Represents one kind of Markdown tag that can be parsed.
 abstract class InlineSyntax {
-  final RegExp pattern;
-
-  /// The first character of [pattern], to be used as an efficient first check
-  /// that this syntax matches the current parser position.
-  final int? _startCharacter;
-
   /// Create a new [InlineSyntax] which matches text on [pattern].
   ///
   /// If [startCharacter] is passed, it is used as a pre-matching check which
@@ -371,6 +365,12 @@ abstract class InlineSyntax {
   InlineSyntax(String pattern, {int? startCharacter})
       : pattern = RegExp(pattern, multiLine: true),
         _startCharacter = startCharacter;
+
+  final RegExp pattern;
+
+  /// The first character of [pattern], to be used as an efficient first check
+  /// that this syntax matches the current parser position.
+  final int? _startCharacter;
 
   /// Tries to match at the parser's current position.
   ///
@@ -418,8 +418,6 @@ class LineBreakSyntax extends InlineSyntax {
 
 /// Matches stuff that should just be passed through as straight text.
 class TextSyntax extends InlineSyntax {
-  final String substitute;
-
   /// Create a new [TextSyntax] which matches text on [pattern].
   ///
   /// If [sub] is passed, it is used as a simple replacement for [pattern]. If
@@ -428,6 +426,8 @@ class TextSyntax extends InlineSyntax {
   TextSyntax(String pattern, {String sub = '', int? startCharacter})
       : substitute = sub,
         super(pattern, startCharacter: startCharacter);
+
+  final String substitute;
 
   /// Adds a [Text] node to [parser] and returns `true` if there is a
   /// [substitute], as long as the preceding character (if any) is not a `/`.
@@ -500,11 +500,11 @@ class InlineHtmlSyntax extends TextSyntax {
 ///
 /// See <http://spec.commonmark.org/0.28/#email-address>.
 class EmailAutolinkSyntax extends InlineSyntax {
+  EmailAutolinkSyntax() : super('<($_email)>', startCharacter: $lt);
+
   static final _email =
       r'''[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}'''
       r'''[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*''';
-
-  EmailAutolinkSyntax() : super('<($_email)>', startCharacter: $lt);
 
   @override
   bool onMatch(InlineParser parser, Match match) {
@@ -536,6 +536,8 @@ class AutolinkSyntax extends InlineSyntax {
 
 /// Matches autolinks like `http://foo.com`.
 class AutolinkExtensionSyntax extends InlineSyntax {
+  AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
+
   /// Broken up parts of the autolink regex for reusability and readability
 
   // Autolinks can only come at the beginning of a line, after whitespace, or
@@ -563,8 +565,6 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   static final regExpTrailingPunc = RegExp('$truncatingPunctuationPositive*\$');
   static final regExpEndsWithColon = RegExp(r'\&[a-zA-Z0-9]+;$');
   static final regExpWhiteSpace = RegExp(r'\s');
-
-  AutolinkExtensionSyntax() : super('$start(($scheme)($domain)($path))');
 
   @override
   bool tryMatch(InlineParser parser, [int? startMatchPos]) {
@@ -702,6 +702,16 @@ abstract class Delimiter {
 /// A simple delimiter implements the [Delimiter] interface with basic fields,
 /// and does not have the concept of "left-flanking" or "right-flanking".
 class SimpleDelimiter implements Delimiter {
+  SimpleDelimiter({
+    required this.node,
+    required this.char,
+    required this.length,
+    required this.canOpen,
+    required this.canClose,
+    required this.syntax,
+    required this.endPos,
+  }) : isActive = true;
+
   @override
   Text node;
 
@@ -724,16 +734,6 @@ class SimpleDelimiter implements Delimiter {
   final TagSyntax syntax;
 
   final int endPos;
-
-  SimpleDelimiter({
-    required this.node,
-    required this.char,
-    required this.length,
-    required this.canOpen,
-    required this.canClose,
-    required this.syntax,
-    required this.endPos,
-  }) : isActive = true;
 }
 
 /// An implementation of [Delimiter] which uses concepts of "left-flanking" and
@@ -742,6 +742,27 @@ class SimpleDelimiter implements Delimiter {
 /// This is primarily used when parsing emphasis and strong emphasis, but can
 /// also be used by other extensions of [TagSyntax].
 class DelimiterRun implements Delimiter {
+  DelimiterRun._({
+    required this.node,
+    required this.char,
+    required this.syntax,
+    required bool isLeftFlanking,
+    required bool isRightFlanking,
+    required bool isPrecededByPunctuation,
+    required bool isFollowedByPunctuation,
+    required this.allowIntraWord,
+  })  : canOpen = isLeftFlanking &&
+            (char == $asterisk ||
+                !isRightFlanking ||
+                allowIntraWord ||
+                isPrecededByPunctuation),
+        canClose = isRightFlanking &&
+            (char == $asterisk ||
+                !isLeftFlanking ||
+                allowIntraWord ||
+                isFollowedByPunctuation),
+        isActive = true;
+
   /// According to
   /// [CommonMark](https://spec.commonmark.org/0.29/#punctuation-character):
   ///
@@ -801,27 +822,6 @@ class DelimiterRun implements Delimiter {
 
   @override
   final bool canClose;
-
-  DelimiterRun._({
-    required this.node,
-    required this.char,
-    required this.syntax,
-    required bool isLeftFlanking,
-    required bool isRightFlanking,
-    required bool isPrecededByPunctuation,
-    required bool isFollowedByPunctuation,
-    required this.allowIntraWord,
-  })  : canOpen = isLeftFlanking &&
-            (char == $asterisk ||
-                !isRightFlanking ||
-                allowIntraWord ||
-                isPrecededByPunctuation),
-        canClose = isRightFlanking &&
-            (char == $asterisk ||
-                !isLeftFlanking ||
-                allowIntraWord ||
-                isFollowedByPunctuation),
-        isActive = true;
 
   /// Tries to parse a delimiter run from [runStart] (inclusive) to [runEnd]
   /// (exclusive).
@@ -899,17 +899,6 @@ class DelimiterRun implements Delimiter {
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
 /// `<em>`. Allows nested tags.
 class TagSyntax extends InlineSyntax {
-  /// Whether this is parsed according to the same nesting rules as [emphasis
-  /// delimiters][].
-  ///
-  /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
-  final bool requiresDelimiterRun;
-
-  /// Whether to allow intra-word delimiter runs. CommonMark emphasis and
-  /// strong emphasis does not allow this, but GitHub-Flavored Markdown allows
-  /// it on strikethrough.
-  final bool allowIntraWord;
-
   /// Create a new [TagSyntax] which matches text on [pattern].
   ///
   /// The [pattern] is used to find the matching text. If [requiresDelimiterRun] is
@@ -922,6 +911,17 @@ class TagSyntax extends InlineSyntax {
     int? startCharacter,
     this.allowIntraWord = false,
   }) : super(pattern, startCharacter: startCharacter);
+
+  /// Whether this is parsed according to the same nesting rules as [emphasis
+  /// delimiters][].
+  ///
+  /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
+  final bool requiresDelimiterRun;
+
+  /// Whether to allow intra-word delimiter runs. CommonMark emphasis and
+  /// strong emphasis does not allow this, but GitHub-Flavored Markdown allows
+  /// it on strikethrough.
+  final bool allowIntraWord;
 
   @override
   bool onMatch(InlineParser parser, Match match) {
@@ -1001,16 +1001,16 @@ class StrikethroughSyntax extends TagSyntax {
 
 /// Matches links like `[blah][label]` and `[blah](url)`.
 class LinkSyntax extends TagSyntax {
-  static final _entirelyWhitespacePattern = RegExp(r'^\s*$');
-
-  final Resolver linkResolver;
-
   LinkSyntax({
     Resolver? linkResolver,
     String pattern = r'\[',
     int startCharacter = $lbracket,
   })  : linkResolver = (linkResolver ?? ((String _, [String? __]) => null)),
         super(pattern, startCharacter: startCharacter);
+
+  static final _entirelyWhitespacePattern = RegExp(r'^\s*$');
+
+  final Resolver linkResolver;
 
   @override
   Node? close(
@@ -1458,6 +1458,8 @@ class ImageSyntax extends LinkSyntax {
 
 /// Matches backtick-enclosed inline code blocks.
 class CodeSyntax extends InlineSyntax {
+  CodeSyntax() : super(_pattern);
+
   // This pattern matches:
   //
   // * a string of backticks (not followed by any more), followed by
@@ -1469,8 +1471,6 @@ class CodeSyntax extends InlineSyntax {
   // This conforms to the delimiters of inline code, both in Markdown.pl, and
   // CommonMark.
   static final String _pattern = r'(`+(?!`))((?:.|\n)*?[^`])\1(?!`)';
-
-  CodeSyntax() : super(_pattern);
 
   @override
   bool tryMatch(InlineParser parser, [int? startMatchPos]) {
@@ -1527,8 +1527,8 @@ class EmojiSyntax extends InlineSyntax {
 }
 
 class InlineLink {
+  InlineLink(this.destination, {this.title});
+
   final String destination;
   final String? title;
-
-  InlineLink(this.destination, {this.title});
 }

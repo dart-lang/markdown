@@ -73,14 +73,6 @@ void main(List<String> arguments) {
 }
 
 class DartdocCompare {
-  final String dartdocDir;
-  final String markdownBefore;
-  final String markdownAfter;
-  final String dartdocBin;
-  final String dartdocPubspecPath;
-  final bool sdk;
-  final String markdownPath = File(Platform.script.path).parent.parent.path;
-
   DartdocCompare(
     this.dartdocDir,
     this.markdownBefore,
@@ -89,6 +81,14 @@ class DartdocCompare {
     this.dartdocPubspecPath,
     this.sdk,
   );
+
+  final String dartdocDir;
+  final String markdownBefore;
+  final String markdownAfter;
+  final String dartdocBin;
+  final String dartdocPubspecPath;
+  final bool sdk;
+  final String markdownPath = File(Platform.script.path).parent.parent.path;
 
   bool compare(String? package) {
     // Generate docs with Markdown "Before".
