@@ -213,7 +213,7 @@ abstract class BlockSyntax {
       element.children!.first.textContent
           .toLowerCase()
           .trim()
-          .replaceAll(RegExp(r'[^a-z0-9 _-]'), '')
+          .replaceAll(RegExp('[^a-z0-9 _-]'), '')
           .replaceAll(RegExp(r'\s'), '-');
 }
 
@@ -593,12 +593,12 @@ abstract class BlockHtmlSyntax extends BlockSyntax {
 
 class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
   static final _pattern = RegExp(
-    r'^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
-    r'caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|'
-    r'figcaption|figure|footer|form|frame|frameset|h1|head|header|hr|html|'
-    r'iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|'
-    r'option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|'
-    r'title|tr|track|ul)'
+    '^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
+    'caption|center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|'
+    'figcaption|figure|footer|form|frame|frameset|h1|head|header|hr|html|'
+    'iframe|legend|li|link|main|menu|menuitem|meta|nav|noframes|ol|optgroup|'
+    'option|p|param|section|source|summary|table|tbody|td|tfoot|th|thead|'
+    'title|tr|track|ul)'
     r'(?:\s|>|/>|$)',
   );
 
@@ -606,7 +606,7 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
   /// paragraphs of Markdown with no HTML. This regular expression can be used
   /// first as a basic check that the input might possibly be an HTML block
   /// tag, which occur very rarely in typical Markdown.
-  static final _openBracketPattern = RegExp(r'^ {0,3}<');
+  static final _openBracketPattern = RegExp('^ {0,3}<');
 
   @override
   RegExp get pattern => _pattern;
@@ -1246,7 +1246,7 @@ class ParagraphSyntax extends BlockSyntax {
   bool _parseReflinkDefinition(BlockParser parser, String contents) {
     final pattern = RegExp(
       // Leading indentation.
-      r'''^[ ]{0,3}'''
+      '''^[ ]{0,3}'''
       // Reference id in brackets, and URL.
       r'''\[((?:\\\]|[^\]])+)\]:\s*(?:<(\S+)>|(\S+))\s*'''
       // Title in double or single quotes, or parens.
