@@ -13,7 +13,7 @@ void main() {
       final result = markdownToHtml(
         text,
         inlineOnly: true,
-        inlineSyntaxes: [BreakSyntax(true)],
+        inlineSyntaxes: [_BreakSyntax(true)],
       );
 
       expect(result, equals('one BREAK two'));
@@ -23,7 +23,7 @@ void main() {
       final result = markdownToHtml(
         text,
         inlineOnly: true,
-        inlineSyntaxes: [BreakSyntax(false)],
+        inlineSyntaxes: [_BreakSyntax(false)],
       );
 
       expect(result, equals('one <break /> two'));
@@ -31,8 +31,8 @@ void main() {
   });
 }
 
-class BreakSyntax extends InlineSyntax {
-  BreakSyntax(bool caseSensitive)
+class _BreakSyntax extends InlineSyntax {
+  _BreakSyntax(bool caseSensitive)
       : super('break', caseSensitive: caseSensitive);
 
   @override
