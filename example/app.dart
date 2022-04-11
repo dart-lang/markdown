@@ -14,7 +14,7 @@ final versionSpan = querySelector('.version') as SpanElement;
 
 final nullSanitizer = NullTreeSanitizer();
 const typing = Duration(milliseconds: 150);
-final introText = r'''Markdown is the **best**!
+final introText = '''Markdown is the **best**!
 
 * It has lists.
 * It has [links](https://dart.dev).

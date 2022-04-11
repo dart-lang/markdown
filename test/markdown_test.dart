@@ -133,7 +133,7 @@ resolve [\[\]] thing
 
     validateCore(
       'can choose to _not_ resolve something, like an empty link',
-      r'''
+      '''
 resolve [[]] thing
 ''',
       '''
