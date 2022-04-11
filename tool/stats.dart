@@ -99,7 +99,7 @@ Future<void> main(List<String> args) async {
   }
 }
 
-final _sectionNameReplace = RegExp('[ \\)\\(]+');
+final _sectionNameReplace = RegExp(r'[ \)\(]+');
 
 String _unitOutput(Iterable<DataCase> cases) => cases
     .map(
