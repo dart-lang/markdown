@@ -27,7 +27,7 @@ Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
 Future<String> get markdownPackageRoot async =>
     p.dirname(p.dirname((await Isolate.resolvePackageUri(
             Uri.parse('package:markdown/markdown.dart')))!
-        .path));
+        .toFilePath()));
 
 void testFile(
   String file, {

@@ -3,7 +3,7 @@
    7 of   11 –  63.6%  Autolinks (extension)
   12 of   13 –  92.3%  Backslash escapes
    1 of    1 – 100.0%  Blank lines
-  22 of   25 –  88.0%  Block quotes
+  23 of   25 –  92.0%  Block quotes
   22 of   22 – 100.0%  Code spans
    0 of    1 –   0.0%  Disallowed Raw HTML (extension)
  130 of  131 –  99.2%  Emphasis and strong emphasis
@@ -28,5 +28,5 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 625 of  671 –  93.1%  TOTAL
- 550 of  625 –  88.0%  TOTAL Strict
+ 626 of  671 –  93.3%  TOTAL
+ 551 of  626 –  88.0%  TOTAL Strict

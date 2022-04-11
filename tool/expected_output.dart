@@ -119,7 +119,7 @@ Stream<DataCase> dataCasesUnder({
 }) async* {
   var markdownLibRoot = p.dirname((await Isolate.resolvePackageUri(
           Uri.parse('package:markdown/markdown.dart')))!
-      .path);
+      .toFilePath());
   var directory =
       p.joinAll([p.dirname(markdownLibRoot), 'test', testDirectory]);
   for (var dataCase in _dataCases(

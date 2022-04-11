@@ -17,7 +17,6 @@ class InlineParser {
     EmailAutolinkSyntax(),
     AutolinkSyntax(),
     LineBreakSyntax(),
-    ImageSyntax(),
     // Allow any punctuation to be escaped.
     EscapeSyntax(),
     // "*" surrounded by spaces is left alone.
@@ -70,28 +69,27 @@ class InlineParser {
     // User specified syntaxes are the first syntaxes to be evaluated.
     syntaxes.addAll(document.inlineSyntaxes);
 
-    var hasCustomInlineSyntaxes = document.inlineSyntaxes
-        .any((s) => !document.extensionSet.inlineSyntaxes.contains(s));
-
     // This first RegExp matches plain text to accelerate parsing. It's written
     // so that it does not match any prefix of any following syntaxes. Most
     // Markdown is plain text, so it's faster to match one RegExp per 'word'
     // rather than fail to match all the following RegExps at each non-syntax
     // character position.
-    if (hasCustomInlineSyntaxes) {
+    if (document.hasCustomInlineSyntaxes) {
       // We should be less aggressive in blowing past "words".
       syntaxes.add(TextSyntax(r'[A-Za-z0-9]+(?=\s)'));
     } else {
       syntaxes.add(TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9](?=\s)'));
     }
 
-    // Custom link resolvers go after the generic text syntax.
-    syntaxes.addAll([
-      LinkSyntax(linkResolver: document.linkResolver),
-      ImageSyntax(linkResolver: document.imageLinkResolver)
-    ]);
+    if (document.withDefaultInlineSyntaxes) {
+      // Custom link resolvers go after the generic text syntax.
+      syntaxes.addAll([
+        LinkSyntax(linkResolver: document.linkResolver),
+        ImageSyntax(linkResolver: document.imageLinkResolver)
+      ]);
 
-    syntaxes.addAll(_defaultSyntaxes);
+      syntaxes.addAll(_defaultSyntaxes);
+    }
 
     if (_encodeHtml) {
       syntaxes.addAll(_htmlSyntaxes);
@@ -147,7 +145,7 @@ class InlineParser {
       return;
     }
     var syntax = delimiter.syntax;
-    if (syntax is LinkSyntax) {
+    if (syntax is LinkSyntax && syntaxes.any(((e) => e is LinkSyntax))) {
       var nodeIndex = _tree.lastIndexWhere((n) => n == delimiter.node);
       var linkNode = syntax.close(this, delimiter, null, getChildren: () {
         _processEmphasis(index);
@@ -287,7 +285,7 @@ class InlineParser {
 
   // Combine any remaining adjacent Text nodes. This is important to produce
   // correct output across newlines, where whitespace is sometimes compressed.
-  void _combineAdjacentText(List<Node?> nodes) {
+  void _combineAdjacentText(List<Node> nodes) {
     for (var i = 0; i < nodes.length - 1; i++) {
       var node = nodes[i];
       if (node is Element && node.children != null) {
@@ -296,10 +294,10 @@ class InlineParser {
       }
       if (node is Text && nodes[i + 1] is Text) {
         var buffer =
-            StringBuffer('${node.textContent}${nodes[i + 1]!.textContent}');
+            StringBuffer('${node.textContent}${nodes[i + 1].textContent}');
         var j = i + 2;
         while (j < nodes.length && nodes[j] is Text) {
-          buffer.write(nodes[j]!.textContent);
+          buffer.write(nodes[j].textContent);
           j++;
         }
         nodes[i] = Text(buffer.toString());
@@ -1047,11 +1045,11 @@ class LinkSyntax extends TagSyntax {
   /// [label] does not need to be normalized.
   Node? _resolveReferenceLink(
       String label, Map<String, LinkReference> linkReferences,
-      {List<Node> Function()? getChildren}) {
+      {required List<Node> Function() getChildren}) {
     var linkReference = linkReferences[normalizeLinkLabel(label)];
     if (linkReference != null) {
       return _createNode(linkReference.destination, linkReference.title,
-          getChildren: getChildren!);
+          getChildren: getChildren);
     } else {
       // This link has no reference definition. But we allow users of the
       // library to specify a custom resolver function ([linkResolver]) that
@@ -1066,7 +1064,7 @@ class LinkSyntax extends TagSyntax {
           .replaceAll(r'\[', '[')
           .replaceAll(r'\]', ']'));
       if (resolved != null) {
-        getChildren!();
+        getChildren();
       }
       return resolved;
     }
@@ -1122,6 +1120,8 @@ class LinkSyntax extends TagSyntax {
           buffer.writeCharCode(char);
         }
         buffer.writeCharCode(next);
+      } else if (char == $lbracket) {
+        return null;
       } else if (char == $rbracket) {
         break;
       } else {
@@ -1204,7 +1204,8 @@ class LinkSyntax extends TagSyntax {
     var char = parser.charAt(parser.pos);
     if (char == $space || char == $lf || char == $cr || char == $ff) {
       var title = _parseTitle(parser);
-      if (title == null && parser.charAt(parser.pos) != $rparen) {
+      if (title == null &&
+          (parser.isDone || parser.charAt(parser.pos) != $rparen)) {
         // This looked like an inline link, until we found this $space
         // followed by mystery characters; no longer a link.
         return null;

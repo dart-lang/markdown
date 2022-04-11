@@ -29,6 +29,9 @@ final _indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');
 /// Fenced code block.
 final _codeFencePattern = RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 
+/// Fenced blockquotes.
+final _blockquoteFencePattern = RegExp(r'^>{3}\s*$');
+
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
 /// SETEXT should win.
@@ -101,7 +104,12 @@ class BlockParser {
 
   BlockParser(this.lines, this.document) {
     blockSyntaxes.addAll(document.blockSyntaxes);
-    blockSyntaxes.addAll(standardBlockSyntaxes);
+
+    if (document.withDefaultBlockSyntaxes) {
+      blockSyntaxes.addAll(standardBlockSyntaxes);
+    } else {
+      blockSyntaxes.add(const DummyBlockSyntax());
+    }
   }
 
   /// Gets the current line.
@@ -328,6 +336,42 @@ class HeaderWithIdSyntax extends HeaderSyntax {
   }
 }
 
+/// Parses lines fenced by `>>>` to blockquotes
+class FencedBlockquoteSyntax extends BlockSyntax {
+  const FencedBlockquoteSyntax();
+
+  @override
+  RegExp get pattern => _blockquoteFencePattern;
+
+  @override
+  List<String> parseChildLines(BlockParser parser) {
+    final childLines = <String>[];
+    parser.advance();
+
+    while (!parser.isDone) {
+      final match = pattern.hasMatch(parser.current);
+      if (!match) {
+        childLines.add(parser.current);
+        parser.advance();
+      } else {
+        parser.advance();
+        break;
+      }
+    }
+
+    return childLines;
+  }
+
+  @override
+  Node? parse(BlockParser parser) {
+    final childLines = parseChildLines(parser);
+
+    // Recursively parse the contents of the blockquote.
+    final children = BlockParser(childLines, parser.document).parseLines();
+    return Element('blockquote', children);
+  }
+}
+
 /// Parses email-style blockquotes: `> quote`.
 class BlockquoteSyntax extends BlockSyntax {
   @override
@@ -340,10 +384,13 @@ class BlockquoteSyntax extends BlockSyntax {
     // Grab all of the lines that form the blockquote, stripping off the ">".
     var childLines = <String>[];
 
+    bool encounteredCodeBlock = false;
     while (!parser.isDone) {
       var match = pattern.firstMatch(parser.current);
       if (match != null) {
-        childLines.add(match[1]!);
+        final line = match[1]!;
+        childLines.add(line);
+        encounteredCodeBlock = _indentPattern.hasMatch(line);
         parser.advance();
         continue;
       }
@@ -351,8 +398,12 @@ class BlockquoteSyntax extends BlockSyntax {
       // A paragraph continuation is OK. This is content that cannot be parsed
       // as any other syntax except Paragraph, and it doesn't match the bar in
       // a Setext header.
-      if (parser.blockSyntaxes.firstWhere((s) => s.canParse(parser))
-          is ParagraphSyntax) {
+      // Because indented code blocks cannot interrupt paragraphs, a line
+      // matched CodeBlockSyntax is also paragraph continuation text.
+      final otherMatched =
+          parser.blockSyntaxes.firstWhere((s) => s.canParse(parser));
+      if (otherMatched is ParagraphSyntax ||
+          (!encounteredCodeBlock && otherMatched is CodeBlockSyntax)) {
         childLines.add(parser.current);
         parser.advance();
       } else {
@@ -1225,5 +1276,33 @@ class ParagraphSyntax extends BlockSyntax {
     parser.document.linkReferences
         .putIfAbsent(label, () => LinkReference(label, destination, title));
     return true;
+  }
+}
+
+/// Walks the parser forward through the lines does not match any [BlockSyntax].
+///
+/// Returns a [UnparsedContent] with the unmatched lines as `textContent`.
+class DummyBlockSyntax extends BlockSyntax {
+  const DummyBlockSyntax();
+
+  @override
+  RegExp get pattern => _dummyPattern;
+
+  @override
+  bool canEndBlock(BlockParser parser) => false;
+
+  @override
+  bool canParse(BlockParser parser) => true;
+
+  @override
+  Node parse(BlockParser parser) {
+    final childLines = <String>[];
+
+    while (!BlockSyntax.isAtBlockEnd(parser)) {
+      childLines.add(parser.current);
+      parser.advance();
+    }
+
+    return UnparsedContent(childLines.join('\n'));
   }
 }
