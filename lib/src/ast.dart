@@ -71,33 +71,26 @@ class Element implements Node {
 
 class Helper implements Node {
   /// Instantiates a marker [tag] Helper.
-  Helper.marker(String name, String marker)
+  Helper.marker(String marker)
       : tag = 'marker',
-        textContent = marker,
-        attributes = {
-          'name': name,
-        };
+        textContent = marker;
 
   /// Instantiates a whitespace [tag] Helper.
   Helper.whitespace(String whitespace)
       : tag = 'whitespace',
-        textContent = whitespace,
-        attributes = {};
+        textContent = whitespace;
 
   /// Instantiates an empty line [tag] Helper
   Helper.emptyLine(String? content)
       : tag = 'emptyline',
-        textContent = content ?? '',
-        attributes = {};
+        textContent = content ?? '';
 
   /// Instantiates an new line [tag] Helper
   Helper.newLine()
       : tag = 'newline',
-        textContent = '\n',
-        attributes = {};
+        textContent = '\n';
 
   final String tag;
-  final Map<String, String> attributes;
 
   @override
   void accept(NodeVisitor visitor) => visitor.visitHelper(this);
