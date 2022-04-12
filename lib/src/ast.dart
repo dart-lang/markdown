@@ -55,8 +55,55 @@ class Element implements Node {
 
   @override
   String get textContent {
-    return (children ?? []).map((child) => child.textContent).join('');
+    return (children ?? [])
+        .map((child) => child is Helper ? '' : child.textContent)
+        .join('');
   }
+
+  /// If an Element has children other than Helpers.
+  bool hasContent() {
+    if (children == null || children!.isEmpty) {
+      return false;
+    }
+    return children!.whereType<Helper>().length != children!.length;
+  }
+}
+
+class Helper implements Node {
+  /// Instantiates a marker [tag] Helper.
+  Helper.marker(String name, String marker)
+      : tag = 'marker',
+        textContent = marker,
+        attributes = {
+          'name': name,
+        };
+
+  /// Instantiates a whitespace [tag] Helper.
+  Helper.whitespace(String whitespace)
+      : tag = 'whitespace',
+        textContent = whitespace,
+        attributes = {};
+
+  /// Instantiates an empty line [tag] Helper
+  Helper.emptyLine(String? content)
+      : tag = 'emptyline',
+        textContent = content ?? '',
+        attributes = {};
+
+  /// Instantiates an new line [tag] Helper
+  Helper.newLine()
+      : tag = 'newline',
+        textContent = '\n',
+        attributes = {};
+
+  final String tag;
+  final Map<String, String> attributes;
+
+  @override
+  void accept(NodeVisitor visitor) => visitor.visitHelper(this);
+
+  @override
+  final String textContent;
 }
 
 /// A plain text element.
@@ -94,6 +141,9 @@ class UnparsedContent implements Node {
 abstract class NodeVisitor {
   /// Called when a Text node has been reached.
   void visitText(Text text);
+
+  /// Called when a Helper node has been reached.
+  void visitHelper(Helper helper);
 
   /// Called when an Element has been reached, before its children have been
   /// visited.
