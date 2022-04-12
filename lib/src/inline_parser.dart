@@ -351,8 +351,12 @@ abstract class InlineSyntax {
   ///
   /// If [startCharacter] is passed, it is used as a pre-matching check which
   /// is faster than matching against [pattern].
-  InlineSyntax(String pattern, {int? startCharacter})
-      : pattern = RegExp(pattern, multiLine: true),
+  ///
+  /// If [caseSensitive] is disabled, then case is ignored when matching
+  /// the [pattern].
+  InlineSyntax(String pattern, {int? startCharacter, bool caseSensitive = true})
+      : pattern =
+            RegExp(pattern, multiLine: true, caseSensitive: caseSensitive),
         _startCharacter = startCharacter;
 
   /// Tries to match at the parser's current position.

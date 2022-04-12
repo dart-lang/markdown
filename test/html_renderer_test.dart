@@ -77,4 +77,39 @@ void main() {
       );
     });
   });
+
+  group('test InlineSyntax caseSensitive parameter', () {
+    const text = 'one BREAK two';
+
+    test('with caseSensitive enabled', () {
+      final result = markdownToHtml(
+        text,
+        inlineOnly: true,
+        inlineSyntaxes: [_BreakSyntax(true)],
+      );
+
+      expect(result, equals('one BREAK two'));
+    });
+
+    test('with caseSensitive disabled', () {
+      final result = markdownToHtml(
+        text,
+        inlineOnly: true,
+        inlineSyntaxes: [_BreakSyntax(false)],
+      );
+
+      expect(result, equals('one <break /> two'));
+    });
+  });
+}
+
+class _BreakSyntax extends InlineSyntax {
+  _BreakSyntax(bool caseSensitive)
+      : super('break', caseSensitive: caseSensitive);
+
+  @override
+  bool onMatch(InlineParser parser, Match match) {
+    parser.addNode(Element.empty('break'));
+    return true;
+  }
 }
