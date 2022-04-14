@@ -24,9 +24,9 @@ class InlineParser {
     // "_" surrounded by spaces is left alone.
     TextSyntax(r' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
-    TagSyntax(r'\*+', requiresDelimiterRun: true),
+    EmphasisSyntax.asterisk(),
     // Parse "__strong__" and "_emphasis_" tags.
-    TagSyntax(r'_+', requiresDelimiterRun: true),
+    EmphasisSyntax.underscore(),
     CodeSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
@@ -59,7 +59,7 @@ class InlineParser {
   int start = 0;
 
   /// The delimiter stack tracking possible opening delimiters and closing
-  /// delimiters for [TagSyntax] nodes.
+  /// delimiters for [DelimiterSyntax] nodes.
   final _delimiterStack = <Delimiter>[];
 
   /// The tree of parsed HTML nodes.
@@ -116,7 +116,7 @@ class InlineParser {
 
     // Write any trailing text content to a Text node.
     writeText();
-    _processEmphasis(-1);
+    _processDelimiterRun(-1);
     _combineAdjacentText(_tree);
     return _tree;
   }
@@ -148,7 +148,7 @@ class InlineParser {
     if (syntax is LinkSyntax && syntaxes.any(((e) => e is LinkSyntax))) {
       var nodeIndex = _tree.lastIndexWhere((n) => n == delimiter.node);
       var linkNode = syntax.close(this, delimiter, null, getChildren: () {
-        _processEmphasis(index);
+        _processDelimiterRun(index);
         // All of the nodes which lie past [index] are children of this
         // link/image.
         var children = _tree.sublist(nodeIndex + 1, _tree.length);
@@ -187,12 +187,11 @@ class InlineParser {
     }
   }
 
-  /// Processes emphasis (and other [TagSyntax] delimiters) from [bottomIndex]
-  /// and up.
+  /// Processes [DelimiterRun] type delimiters from [bottomIndex] and up.
   ///
-  /// This is the "process emphasis" routine according to the CommonMark spec:
-  /// https://spec.commonmark.org/0.29/#-process-emphasis-.
-  void _processEmphasis(int bottomIndex) {
+  /// This is the same strategy as "process emphasis" routine according to the
+  /// CommonMark spec: https://spec.commonmark.org/0.30/#phase-2-inline-structure.
+  void _processDelimiterRun(int bottomIndex) {
     var currentIndex = bottomIndex + 1;
     // Track the lowest index where we might find an open delimiter given a
     // closing delimiter length modulo 3.
@@ -202,11 +201,7 @@ class InlineParser {
     var openersBottom = <int, List<int>>{};
     while (currentIndex < _delimiterStack.length) {
       var closer = _delimiterStack[currentIndex];
-      if (!closer.canClose) {
-        currentIndex++;
-        continue;
-      }
-      if (closer.char == $lbracket || closer.char == $exclamation) {
+      if (!closer.canClose || closer is! DelimiterRun) {
         currentIndex++;
         continue;
       }
@@ -220,12 +215,25 @@ class InlineParser {
       if (openerIndex > bottomIndex && openerIndex > openerBottom) {
         // Found an opener for [closer].
         var opener = _delimiterStack[openerIndex];
-        var strong = opener.length >= 2 && closer.length >= 2;
+        if (opener is! DelimiterRun) {
+          currentIndex++;
+          continue;
+        }
+        var matchedTagIndex = opener.tags.lastIndexWhere((e) =>
+            opener.length >= e.indicatorLength &&
+            closer.length >= e.indicatorLength);
+        if (matchedTagIndex == -1) {
+          currentIndex++;
+          continue;
+        }
+        var matchedTag = opener.tags[matchedTagIndex];
+        var indicatorLength = matchedTag.indicatorLength;
         var openerTextNode = opener.node;
         var openerTextNodeIndex = _tree.indexOf(openerTextNode);
         var closerTextNode = closer.node;
         var closerTextNodeIndex = _tree.indexOf(closerTextNode);
         var node = opener.syntax.close(this, opener, closer,
+            tag: matchedTag.tag,
             getChildren: () =>
                 _tree.sublist(openerTextNodeIndex + 1, closerTextNodeIndex));
         // Replace all of the nodes between the opener and the closer (which
@@ -241,8 +249,7 @@ class InlineParser {
 
         // Remove delimiter characters, possibly removing nodes from the tree
         // and Delimiters from the delimiter stack.
-        if ((strong && openerTextNode.text.length == 2) ||
-            (!strong && openerTextNode.text.length == 1)) {
+        if (opener.length == indicatorLength) {
           _tree.removeAt(openerTextNodeIndex);
           _delimiterStack.removeAt(openerIndex);
           // Slide [currentIndex] and [closerTextNodeIndex] back accordingly.
@@ -250,20 +257,19 @@ class InlineParser {
           closerTextNodeIndex--;
         } else {
           var newOpenerTextNode =
-              Text(openerTextNode.text.substring(strong ? 2 : 1));
+              Text(openerTextNode.text.substring(indicatorLength));
           _tree[openerTextNodeIndex] = newOpenerTextNode;
           opener.node = newOpenerTextNode;
         }
 
-        if ((strong && closerTextNode.text.length == 2) ||
-            (!strong && closerTextNode.text.length == 1)) {
+        if (closer.length == indicatorLength) {
           _tree.removeAt(closerTextNodeIndex);
           _delimiterStack.removeAt(currentIndex);
           // [currentIndex] has just moved to point at the next delimiter;
           // leave it.
         } else {
           var newCloserTextNode =
-              Text(closerTextNode.text.substring(strong ? 2 : 1));
+              Text(closerTextNode.text.substring(indicatorLength));
           _tree[closerTextNodeIndex] = newCloserTextNode;
           closer.node = newCloserTextNode;
           // [currentIndex] needs to be considered again; leave it.
@@ -648,7 +654,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
 }
 
 /// A delimiter indicating the possible "open" or possible "close" of a tag for
-/// a [TagSyntax].
+/// a [DelimiterSyntax].
 abstract class Delimiter {
   /// The [Text] node representing the plain text representing this delimiter.
   abstract Text node;
@@ -681,7 +687,7 @@ abstract class Delimiter {
   bool get canClose;
 
   /// The syntax which uses this delimiter to parse a tag.
-  TagSyntax get syntax;
+  DelimiterSyntax get syntax;
 }
 
 /// A simple delimiter implements the [Delimiter] interface with basic fields,
@@ -706,7 +712,7 @@ class SimpleDelimiter implements Delimiter {
   final bool canClose;
 
   @override
-  final TagSyntax syntax;
+  final DelimiterSyntax syntax;
 
   final int endPos;
 
@@ -725,7 +731,7 @@ class SimpleDelimiter implements Delimiter {
 /// "right-flanking" to determine the values of [canOpen] and [canClose].
 ///
 /// This is primarily used when parsing emphasis and strong emphasis, but can
-/// also be used by other extensions of [TagSyntax].
+/// also be used by other extensions of [DelimiterSyntax].
 class DelimiterRun implements Delimiter {
   /// According to
   /// [CommonMark](https://spec.commonmark.org/0.29/#punctuation-character):
@@ -775,7 +781,7 @@ class DelimiterRun implements Delimiter {
   bool isActive;
 
   @override
-  final TagSyntax syntax;
+  final DelimiterSyntax syntax;
 
   final bool allowIntraWord;
 
@@ -785,31 +791,29 @@ class DelimiterRun implements Delimiter {
   @override
   final bool canClose;
 
+  final List<DelimiterTag> tags;
+
   DelimiterRun._({
     required this.node,
     required this.char,
     required this.syntax,
+    required this.tags,
     required bool isLeftFlanking,
     required bool isRightFlanking,
     required bool isPrecededByPunctuation,
     required bool isFollowedByPunctuation,
     required this.allowIntraWord,
   })  : canOpen = isLeftFlanking &&
-            (char == $asterisk ||
-                !isRightFlanking ||
-                allowIntraWord ||
-                isPrecededByPunctuation),
+            (!isRightFlanking || allowIntraWord || isPrecededByPunctuation),
         canClose = isRightFlanking &&
-            (char == $asterisk ||
-                !isLeftFlanking ||
-                allowIntraWord ||
-                isFollowedByPunctuation),
+            (!isLeftFlanking || allowIntraWord || isFollowedByPunctuation),
         isActive = true;
 
   /// Tries to parse a delimiter run from [runStart] (inclusive) to [runEnd]
   /// (exclusive).
   static DelimiterRun? tryParse(InlineParser parser, int runStart, int runEnd,
-      {required TagSyntax syntax,
+      {required DelimiterSyntax syntax,
+      required List<DelimiterTag> tags,
       required Text node,
       bool allowIntraWord = false}) {
     bool leftFlanking,
@@ -833,24 +837,22 @@ class DelimiterRun implements Delimiter {
     }
     followedByPunctuation = punctuation.hasMatch(following);
 
-    // http://spec.commonmark.org/0.28/#left-flanking-delimiter-run
+    // http://spec.commonmark.org/0.30/#left-flanking-delimiter-run
     if (whitespace.contains(following)) {
       leftFlanking = false;
     } else {
       leftFlanking = !followedByPunctuation ||
           whitespace.contains(preceding) ||
-          precededByPunctuation ||
-          allowIntraWord;
+          precededByPunctuation;
     }
 
-    // http://spec.commonmark.org/0.28/#right-flanking-delimiter-run
+    // http://spec.commonmark.org/0.30/#right-flanking-delimiter-run
     if (whitespace.contains(preceding)) {
       rightFlanking = false;
     } else {
       rightFlanking = !precededByPunctuation ||
           whitespace.contains(following) ||
-          followedByPunctuation ||
-          allowIntraWord;
+          followedByPunctuation;
     }
 
     if (!leftFlanking && !rightFlanking) {
@@ -858,10 +860,13 @@ class DelimiterRun implements Delimiter {
       return null;
     }
 
+    tags.sort((a, b) => a.indicatorLength.compareTo(b.indicatorLength));
+
     return DelimiterRun._(
       node: node,
       char: parser.charAt(runStart),
       syntax: syntax,
+      tags: tags,
       isLeftFlanking: leftFlanking,
       isRightFlanking: rightFlanking,
       isPrecededByPunctuation: precededByPunctuation,
@@ -875,9 +880,18 @@ class DelimiterRun implements Delimiter {
       'canClose: $canClose>';
 }
 
+class DelimiterTag {
+  DelimiterTag(this.tag, this.indicatorLength);
+
+  // Tag name of the HTML element.
+  final String tag;
+
+  final int indicatorLength;
+}
+
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
 /// `<em>`. Allows nested tags.
-class TagSyntax extends InlineSyntax {
+class DelimiterSyntax extends InlineSyntax {
   /// Whether this is parsed according to the same nesting rules as [emphasis
   /// delimiters][].
   ///
@@ -889,16 +903,19 @@ class TagSyntax extends InlineSyntax {
   /// it on strikethrough.
   final bool allowIntraWord;
 
-  /// Create a new [TagSyntax] which matches text on [pattern].
+  final List<DelimiterTag>? tags;
+
+  /// Creates a new [DelimiterSyntax] which matches text on [pattern].
   ///
-  /// The [pattern] is used to find the matching text. If [requiresDelimiterRun] is
-  /// passed, this syntax parses according to the same nesting rules as
+  /// The [pattern] is used to find the matching text. If [requiresDelimiterRun]
+  /// is passed, this syntax parses according to the same nesting rules as
   /// emphasis delimiters.  If [startCharacter] is passed, it is used as a
   /// pre-matching check which is faster than matching against [pattern].
-  TagSyntax(String pattern,
+  DelimiterSyntax(String pattern,
       {this.requiresDelimiterRun = false,
       int? startCharacter,
-      this.allowIntraWord = false})
+      this.allowIntraWord = false,
+      this.tags})
       : super(pattern, startCharacter: startCharacter);
 
   @override
@@ -921,7 +938,10 @@ class TagSyntax extends InlineSyntax {
     }
 
     var delimiterRun = DelimiterRun.tryParse(parser, matchStart, matchEnd,
-        syntax: this, node: text, allowIntraWord: allowIntraWord);
+        syntax: this,
+        node: text,
+        allowIntraWord: allowIntraWord,
+        tags: tags ?? []);
     if (delimiterRun != null) {
       parser._pushDelimiter(delimiterRun);
       parser.addNode(text);
@@ -941,27 +961,47 @@ class TagSyntax extends InlineSyntax {
   /// If a tag can be closed at the current position, then this method calls
   /// [getChildren], in which [parser] parses any nested text into child nodes.
   /// The returned [Node] incorpororates these child nodes.
-  Node? close(InlineParser parser, Delimiter opener, Delimiter closer,
-      {required List<Node> Function() getChildren}) {
-    var strong = opener.length >= 2 && closer.length >= 2;
-    return Element(strong ? 'strong' : 'em', getChildren());
+  Node? close(
+    InlineParser parser,
+    Delimiter opener,
+    Delimiter closer, {
+    required String tag,
+    required List<Node> Function() getChildren,
+  }) {
+    return Element(tag, getChildren());
   }
+}
+
+class EmphasisSyntax extends DelimiterSyntax {
+  /// Parses `__strong__` and `_emphasis_`.
+  EmphasisSyntax.underscore()
+      : super('_+', requiresDelimiterRun: true, tags: _tags);
+
+  /// Parses `**strong**` and `*emphasis*`.
+  EmphasisSyntax.asterisk()
+      : super(r'\*+',
+            requiresDelimiterRun: true, allowIntraWord: true, tags: _tags);
+
+  static final _tags = [DelimiterTag('em', 1), DelimiterTag('strong', 2)];
 }
 
 /// Matches strikethrough syntax according to the GFM spec.
-class StrikethroughSyntax extends TagSyntax {
+class StrikethroughSyntax extends DelimiterSyntax {
   StrikethroughSyntax()
-      : super('~+', requiresDelimiterRun: true, allowIntraWord: true);
+      : super('~+',
+            requiresDelimiterRun: true,
+            allowIntraWord: true,
+            tags: [DelimiterTag('del', 2)]);
+}
 
-  @override
-  Node close(InlineParser parser, Delimiter opener, Delimiter closer,
-      {required List<Node> Function() getChildren}) {
-    return Element('del', getChildren());
-  }
+@Deprecated('Use DelimiterSyntax instead')
+class TagSyntax extends DelimiterSyntax {
+  TagSyntax(String pattern, {bool requiresDelimiterRun = false})
+      : super(pattern, requiresDelimiterRun: requiresDelimiterRun);
 }
 
 /// Matches links like `[blah][label]` and `[blah](url)`.
-class LinkSyntax extends TagSyntax {
+class LinkSyntax extends DelimiterSyntax {
   static final _entirelyWhitespacePattern = RegExp(r'^\s*$');
 
   final Resolver linkResolver;
@@ -975,8 +1015,12 @@ class LinkSyntax extends TagSyntax {
 
   @override
   Node? close(
-      InlineParser parser, covariant SimpleDelimiter opener, Delimiter? closer,
-      {required List<Node> Function() getChildren}) {
+    InlineParser parser,
+    covariant SimpleDelimiter opener,
+    Delimiter? closer, {
+    String? tag,
+    required List<Node> Function() getChildren,
+  }) {
     var text = parser.source.substring(opener.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('

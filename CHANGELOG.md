@@ -1,3 +1,14 @@
+## 6.0.0-dev
+
+* **Breaking change**: The `TagSyntax` is _deprecated_.
+* Add new syntax `DelimiterSyntax`.
+* **Breaking change**: `StrikethroughSyntax` now extends `DelimiterSyntax`
+  instead of `TagSyntax`.
+* **Breaking change**: `LinkSyntax` now extends `DelimiterSyntax`
+  instead of `TagSyntax`.
+* Add two new emphasis syntaxes `EmphasisSyntax.underscore` and 
+  `EmphasisSyntax.asterisk`.
+
 ## 5.0.0
 
 * Breaking change: Change the type of `parseInline`'s parameter from `String?`
