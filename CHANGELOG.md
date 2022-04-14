@@ -6,7 +6,6 @@
   instead of `TagSyntax`.
 * **Breaking change**: `LinkSyntax` now extends `DelimiterSyntax`
   instead of `TagSyntax`.
-* Add new syntax `HighlightSyntax`.
 * Add two new emphasis syntaxes `EmphasisSyntax.underscore` and 
   `EmphasisSyntax.asterisk`.
 
