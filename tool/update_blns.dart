@@ -7,11 +7,11 @@ final _blnsJsonRawUrl =
 final _blnsFilePath = 'test/blns.dart';
 
 Future<void> main() async {
-  var client = HttpClient();
+  final client = HttpClient();
   List<String> json;
   try {
-    var request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
-    var response = await request.close();
+    final request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
+    final response = await request.close();
     json = (jsonDecode(await response
             .cast<List<int>>()
             .transform(utf8.decoder)
@@ -20,7 +20,7 @@ Future<void> main() async {
   } finally {
     client.close();
   }
-  var blnsContent = StringBuffer('''
+  final blnsContent = StringBuffer('''
 // GENERATED FILE. DO NOT EDIT.
 //
 // This file was generated from big-list-of-naughty-strings's JSON file:
@@ -31,8 +31,8 @@ Future<void> main() async {
 
 ''');
   blnsContent.writeln('const blns = <String>[');
-  for (var str in json) {
-    var escaped = str
+  for (final str in json) {
+    final escaped = str
         .replaceAll(r'\', r'\\')
         .replaceAll("'", r"\'")
         .replaceAll(r'$', r'\$');

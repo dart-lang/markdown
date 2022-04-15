@@ -10,13 +10,13 @@ import 'package:path/path.dart' as p;
 /// Parse and yield data cases (each a [DataCase]) from [path].
 Iterable<DataCase> dataCasesInFile(
     {required String path, String? baseDir}) sync* {
-  var file = p.basename(path).replaceFirst(RegExp(r'\..+$'), '');
+  final file = p.basename(path).replaceFirst(RegExp(r'\..+$'), '');
   baseDir ??= p.relative(p.dirname(path), from: p.dirname(p.dirname(path)));
 
   // Explicitly create a File, in case the entry is a Link.
-  var lines = File(path).readAsLinesSync();
+  final lines = File(path).readAsLinesSync();
 
-  var frontMatter = StringBuffer();
+  final frontMatter = StringBuffer();
 
   var i = 0;
 
@@ -26,7 +26,7 @@ Iterable<DataCase> dataCasesInFile(
 
   while (i < lines.length) {
     var description = lines[i++].replaceFirst(RegExp(r'>>>\s*'), '').trim();
-    var skip = description.startsWith('skip:');
+    final skip = description.startsWith('skip:');
     if (description == '') {
       description = 'line ${i + 1}';
     } else {
@@ -43,7 +43,7 @@ Iterable<DataCase> dataCasesInFile(
       expectedOutput += lines[i] + '\n';
     }
 
-    var dataCase = DataCase(
+    final dataCase = DataCase(
         directory: baseDir,
         file: file,
         front_matter: frontMatter.toString(),
@@ -65,15 +65,15 @@ Iterable<DataCase> _dataCases({
   String extension = 'unit',
   bool recursive = true,
 }) {
-  var entries =
+  final entries =
       Directory(directory).listSync(recursive: recursive, followLinks: false);
-  var results = <DataCase>[];
-  for (var entry in entries) {
+  final results = <DataCase>[];
+  for (final entry in entries) {
     if (!entry.path.endsWith(extension)) {
       continue;
     }
 
-    var relativeDir =
+    final relativeDir =
         p.relative(p.dirname(entry.path), from: p.dirname(directory));
 
     results.addAll(dataCasesInFile(path: entry.path, baseDir: relativeDir));
@@ -82,7 +82,7 @@ Iterable<DataCase> _dataCases({
   // The API makes no guarantees on order. This is just here for stability in
   // tests.
   results.sort((a, b) {
-    var compare = a.directory.compareTo(b.directory);
+    final compare = a.directory.compareTo(b.directory);
     if (compare != 0) return compare;
 
     return a.file.compareTo(b.file);
@@ -107,7 +107,8 @@ Iterable<DataCase> _dataCases({
 /// import 'package:test/test.dart';
 ///
 /// void main() {
-///   for (var dataCase in dataCasesUnder(library: #my_package.test.this_test)) {
+///   for (final dataCase
+///       in dataCasesUnder(library: #my_package.test.this_test)) {
 ///     // ...
 ///   }
 /// }
@@ -117,12 +118,12 @@ Stream<DataCase> dataCasesUnder({
   String extension = 'unit',
   bool recursive = true,
 }) async* {
-  var markdownLibRoot = p.dirname((await Isolate.resolvePackageUri(
+  final markdownLibRoot = p.dirname((await Isolate.resolvePackageUri(
           Uri.parse('package:markdown/markdown.dart')))!
       .toFilePath());
-  var directory =
+  final directory =
       p.joinAll([p.dirname(markdownLibRoot), 'test', testDirectory]);
-  for (var dataCase in _dataCases(
+  for (final dataCase in _dataCases(
       directory: directory, extension: extension, recursive: recursive)) {
     yield dataCase;
   }

@@ -16,7 +16,7 @@ final extensionSets = <String, ExtensionSet>{
 };
 
 Future<void> main(List<String> args) async {
-  var parser = ArgParser()
+  final parser = ArgParser()
     ..addFlag('help', negatable: false, help: 'Print help text and exit')
     ..addFlag('version', negatable: false, help: 'Print version and exit')
     ..addOption('extension-set',
@@ -29,7 +29,7 @@ Future<void> main(List<String> args) async {
           'GitHubFlavored': 'Parse like GitHub Flavored Markdown',
           'GitHubWeb': 'Parse like GitHub\'s Markdown-enabled web input fields',
         });
-  var results = parser.parse(args);
+  final results = parser.parse(args);
 
   if (results['help'] as bool) {
     printUsage(parser);
@@ -41,7 +41,7 @@ Future<void> main(List<String> args) async {
     return;
   }
 
-  var extensionSet = extensionSets[results['extension-set']];
+  final extensionSet = extensionSets[results['extension-set']];
 
   if (results.rest.length > 1) {
     printUsage(parser);
@@ -51,13 +51,13 @@ Future<void> main(List<String> args) async {
 
   if (results.rest.length == 1) {
     // Read argument as a file path.
-    var input = File(results.rest.first).readAsStringSync();
+    final input = File(results.rest.first).readAsStringSync();
     print(markdownToHtml(input, extensionSet: extensionSet));
     return;
   }
 
   // Read from stdin.
-  var buffer = StringBuffer();
+  final buffer = StringBuffer();
   String? line;
   while ((line = stdin.readLineSync()) != null) {
     buffer.writeln(line);

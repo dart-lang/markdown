@@ -12,20 +12,20 @@ import 'util.dart';
 
 void main() {
   test('check versions', () async {
-    var packageRoot = await markdownPackageRoot;
-    var binary = p.normalize(p.join(packageRoot, 'bin', 'markdown.dart'));
-    var dartBin = Platform.executable;
-    var result = Process.runSync(dartBin, [binary, '--version']);
+    final packageRoot = await markdownPackageRoot;
+    final binary = p.normalize(p.join(packageRoot, 'bin', 'markdown.dart'));
+    final dartBin = Platform.executable;
+    final result = Process.runSync(dartBin, [binary, '--version']);
     expect(result.exitCode, 0,
         reason: 'Exit code expected: 0; actual: ${result.exitCode}\n\n'
             'stdout: ${result.stdout}\n\n'
             'stderr: ${result.stderr}');
 
-    var binVersion = (result.stdout as String).trim();
+    final binVersion = (result.stdout as String).trim();
 
-    var pubspecFile = p.normalize(p.join(packageRoot, 'pubspec.yaml'));
+    final pubspecFile = p.normalize(p.join(packageRoot, 'pubspec.yaml'));
 
-    var pubspecContent =
+    final pubspecContent =
         loadYaml(File(pubspecFile).readAsStringSync()) as YamlMap;
 
     expect(binVersion, pubspecContent['version'],
