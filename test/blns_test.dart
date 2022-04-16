@@ -20,18 +20,18 @@ void main() {
   });
 
   var index = 0;
-  for (var str in blns) {
+  for (final str in blns) {
     test('blns string $index', () {
-      var result = markdownToHtml(str);
+      final result = markdownToHtml(str);
       expect(result, const TypeMatcher<String>());
     });
     index++;
   }
 
   index = 0;
-  for (var str in blns) {
+  for (final str in blns) {
     test('blns string $index w/ gitHubWeb', () {
-      var result = markdownToHtml(str, extensionSet: ExtensionSet.gitHubWeb);
+      final result = markdownToHtml(str, extensionSet: ExtensionSet.gitHubWeb);
       expect(result, const TypeMatcher<String>());
     });
     index++;

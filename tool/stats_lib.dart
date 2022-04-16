@@ -27,18 +27,18 @@ File getStatsFile(String prefix) =>
 
 Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
     String testPrefix) {
-  var testFile = File(p.join(toolDir, '${testPrefix}_tests.json'));
-  var testsJson = testFile.readAsStringSync();
+  final testFile = File(p.join(toolDir, '${testPrefix}_tests.json'));
+  final testsJson = testFile.readAsStringSync();
 
-  var testArray = jsonDecode(testsJson) as List;
+  final testArray = jsonDecode(testsJson) as List;
 
-  var sections = <String, List<CommonMarkTestCase>>{};
+  final sections = <String, List<CommonMarkTestCase>>{};
 
-  for (var exampleMap in testArray) {
-    var exampleTest =
+  for (final exampleMap in testArray) {
+    final exampleTest =
         CommonMarkTestCase.fromJson(exampleMap as Map<String, dynamic>);
 
-    var sectionList =
+    final sectionList =
         sections.putIfAbsent(exampleTest.section, () => <CommonMarkTestCase>[]);
 
     sectionList.add(exampleTest);
@@ -119,10 +119,10 @@ CompareResult compareResult(Config config, CommonMarkTestCase testCase,
     return CompareResult(testCase, output, CompareLevel.strict);
   }
 
-  var expectedParsed = parseFragment(testCase.html);
-  var actual = parseFragment(output);
+  final expectedParsed = parseFragment(testCase.html);
+  final actual = parseFragment(output);
 
-  var looseMatch = _compareHtml(expectedParsed.children, actual.children);
+  final looseMatch = _compareHtml(expectedParsed.children, actual.children);
 
   if (!looseMatch && verboseFail) {
     _printVerboseFailure(config.baseUrl, 'FAIL', testCase, output);
@@ -160,8 +160,8 @@ bool _compareHtml(
   }
 
   for (var childNum = 0; childNum < expectedElements.length; childNum++) {
-    var expected = expectedElements[childNum];
-    var actual = actualElements[childNum];
+    final expected = expectedElements[childNum];
+    final actual = actualElements[childNum];
 
     if (expected.runtimeType != actual.runtimeType) {
       return false;
@@ -175,15 +175,15 @@ bool _compareHtml(
       return false;
     }
 
-    var expectedAttrKeys = expected.attributes.keys.toList();
+    final expectedAttrKeys = expected.attributes.keys.toList();
     expectedAttrKeys.sort();
 
-    var actualAttrKeys = actual.attributes.keys.toList();
+    final actualAttrKeys = actual.attributes.keys.toList();
     actualAttrKeys.sort();
 
     for (var attrNum = 0; attrNum < actualAttrKeys.length; attrNum++) {
-      var expectedAttrKey = expectedAttrKeys[attrNum];
-      var actualAttrKey = actualAttrKeys[attrNum];
+      final expectedAttrKey = expectedAttrKeys[attrNum];
+      final actualAttrKey = actualAttrKeys[attrNum];
 
       if (expectedAttrKey != actualAttrKey) {
         return false;
@@ -195,7 +195,7 @@ bool _compareHtml(
       }
     }
 
-    var childrenEqual = _compareHtml(expected.children, actual.children);
+    final childrenEqual = _compareHtml(expected.children, actual.children);
 
     if (!childrenEqual) {
       return false;

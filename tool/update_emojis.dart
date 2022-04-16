@@ -10,15 +10,15 @@ final _emojisJsonRawUrl =
 final _emojisFilePath = 'lib/src/emojis.dart';
 
 Future<void> main() async {
-  var client = HttpClient();
-  var request = await client.getUrl(Uri.parse(_emojisJsonRawUrl));
-  var response = await request.close();
-  var json = jsonDecode(
+  final client = HttpClient();
+  final request = await client.getUrl(Uri.parse(_emojisJsonRawUrl));
+  final response = await request.close();
+  final json = jsonDecode(
           await response.cast<List<int>>().transform(utf8.decoder).join(''))
       .map((String alias, dynamic info) =>
           MapEntry(alias, info.cast<String, dynamic>()))
       .cast<String, Map<String, dynamic>>();
-  var emojisContent = StringBuffer('''
+  final emojisContent = StringBuffer('''
 // GENERATED FILE. DO NOT EDIT.
 //
 // This file was generated from emojilib's emoji data file:
@@ -28,7 +28,7 @@ Future<void> main() async {
 ''');
   emojisContent.writeln('const emojis = <String, String>{');
   var emojiCount = 0;
-  var ignored = <String>[];
+  final ignored = <String>[];
   json.forEach((String alias, Map<String, dynamic> info) {
     if (info['char'] != null) {
       emojisContent.writeln("  '$alias': '${info['char']}',");

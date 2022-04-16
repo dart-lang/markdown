@@ -12,8 +12,8 @@ import '../tool/expected_output.dart';
 
 /// Runs tests defined in "*.unit" files inside directory [name].
 Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
-  await for (var dataCase in dataCasesUnder(testDirectory: name)) {
-    var description =
+  await for (final dataCase in dataCasesUnder(testDirectory: name)) {
+    final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
     validateCore(
       description,
@@ -34,9 +34,9 @@ void testFile(
   Iterable<BlockSyntax> blockSyntaxes = const [],
   Iterable<InlineSyntax> inlineSyntaxes = const [],
 }) async {
-  var directory = p.join(await markdownPackageRoot, 'test');
-  for (var dataCase in dataCasesInFile(path: p.join(directory, file))) {
-    var description =
+  final directory = p.join(await markdownPackageRoot, 'test');
+  for (final dataCase in dataCasesInFile(path: p.join(directory, file))) {
+    final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
     validateCore(description, dataCase.input, dataCase.expectedOutput,
         blockSyntaxes: blockSyntaxes, inlineSyntaxes: inlineSyntaxes);
@@ -55,7 +55,7 @@ void validateCore(
   bool inlineOnly = false,
 }) {
   test(description, () {
-    var result = markdownToHtml(markdown,
+    final result = markdownToHtml(markdown,
         blockSyntaxes: blockSyntaxes,
         inlineSyntaxes: inlineSyntaxes,
         extensionSet: extensionSet,

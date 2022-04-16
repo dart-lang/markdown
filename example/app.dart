@@ -36,7 +36,7 @@ void main() {
   versionSpan.text = 'v${md.version}';
   markdownInput.onKeyUp.listen(_renderMarkdown);
 
-  var savedMarkdown = window.localStorage['markdown'];
+  final savedMarkdown = window.localStorage['markdown'];
 
   if (savedMarkdown != null &&
       savedMarkdown.isNotEmpty &&
@@ -60,12 +60,12 @@ void main() {
 }
 
 void _renderMarkdown([Event? event]) {
-  var markdown = markdownInput.value!;
+  final markdown = markdownInput.value!;
 
   htmlDiv.setInnerHtml(md.markdownToHtml(markdown, extensionSet: extensionSet),
       treeSanitizer: nullSanitizer);
 
-  for (var block in htmlDiv.querySelectorAll('pre code')) {
+  for (final block in htmlDiv.querySelectorAll('pre code')) {
     try {
       highlightElement(block);
     } catch (e) {
@@ -100,7 +100,7 @@ void _typeItOut(String msg, int pos) {
 }
 
 void _switchFlavor(Event e) {
-  var target = e.currentTarget as HtmlElement;
+  final target = e.currentTarget as HtmlElement;
   if (!target.attributes.containsKey('checked')) {
     if (basicRadio != target) {
       basicRadio.attributes.remove('checked');

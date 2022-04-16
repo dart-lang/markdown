@@ -23,7 +23,7 @@ String markdownToHtml(
   bool withDefaultBlockSyntaxes = true,
   bool withDefaultInlineSyntaxes = true,
 }) {
-  var document = Document(
+  final document = Document(
     blockSyntaxes: blockSyntaxes,
     inlineSyntaxes: inlineSyntaxes,
     extensionSet: extensionSet,
@@ -37,7 +37,7 @@ String markdownToHtml(
   if (inlineOnly) return renderToHtml(document.parseInline(markdown));
 
   // Replace windows line endings with unix line endings, and split.
-  var lines = markdown.replaceAll('\r\n', '\n').split('\n');
+  final lines = markdown.replaceAll('\r\n', '\n').split('\n');
 
   return renderToHtml(document.parseLines(lines)) + '\n';
 }
@@ -103,7 +103,7 @@ class HtmlRenderer implements NodeVisitor {
   void visitText(Text text) {
     var content = text.text;
     if (const ['br', 'p', 'li'].contains(_lastVisitedTag)) {
-      var lines = LineSplitter.split(content);
+      final lines = LineSplitter.split(content);
       content = content.contains('<pre>')
           ? lines.join('\n')
           : lines.map((line) => line.trimLeft()).join('\n');
@@ -125,11 +125,11 @@ class HtmlRenderer implements NodeVisitor {
 
     buffer.write('<${element.tag}');
 
-    for (var entry in element.attributes.entries) {
+    for (final entry in element.attributes.entries) {
       buffer.write(' ${entry.key}="${entry.value}"');
     }
 
-    var generatedId = element.generatedId;
+    final generatedId = element.generatedId;
 
     // attach header anchor ids generated from text
     if (generatedId != null) {
