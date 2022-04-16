@@ -33,3 +33,4 @@ linter:
     - throw_in_finally
     - prefer_final_locals
     - use_raw_strings
+    - unnecessary_raw_strings

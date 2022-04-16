@@ -22,7 +22,7 @@ class InlineParser {
     // "*" surrounded by spaces is left alone.
     TextSyntax(r' \* ', startCharacter: $space),
     // "_" surrounded by spaces is left alone.
-    TextSyntax(r' _ ', startCharacter: $space),
+    TextSyntax(' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
     EmphasisSyntax.asterisk(),
     // Parse "__strong__" and "_emphasis_" tags.
@@ -35,13 +35,13 @@ class InlineParser {
       List<InlineSyntax>.unmodifiable(<InlineSyntax>[
     // Leave already-encoded HTML entities alone. Ensures we don't turn
     // "&amp;" into "&amp;amp;"
-    TextSyntax(r'&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
+    TextSyntax('&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
     // Encode "&".
-    TextSyntax(r'&', sub: '&amp;', startCharacter: $ampersand),
+    TextSyntax('&', sub: '&amp;', startCharacter: $ampersand),
     // Encode "<".
-    TextSyntax(r'<', sub: '&lt;', startCharacter: $lt),
+    TextSyntax('<', sub: '&lt;', startCharacter: $lt),
     // Encode ">".
-    TextSyntax(r'>', sub: '&gt;', startCharacter: $gt),
+    TextSyntax('>', sub: '&gt;', startCharacter: $gt),
   ]);
 
   /// The string of Markdown being parsed.
@@ -549,7 +549,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
 
   // Trailing punctuation (specifically, ?, !, ., ,, :, *, _, and ~) will not
   // be considered part of the autolink
-  static const truncatingPunctuationPositive = r'[?!.,:*_~]';
+  static const truncatingPunctuationPositive = '[?!.,:*_~]';
 
   static final regExpTrailingPunc = RegExp('$truncatingPunctuationPositive*\$');
   static final regExpEndsWithColon = RegExp(r'\&[a-zA-Z0-9]+;$');
@@ -742,7 +742,7 @@ class DelimiterRun implements Delimiter {
   // This RegExp is inspired by
   // https://github.com/commonmark/commonmark.js/blob/1f7d09099c20d7861a674674a5a88733f55ff729/lib/inlines.js#L39.
   // I don't know if there is any way to simplify it or maintain it.
-  static final RegExp punctuation = RegExp(r'['
+  static final RegExp punctuation = RegExp('['
       r'''!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~'''
       r'\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE'
       r'\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E'
