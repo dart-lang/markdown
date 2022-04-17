@@ -56,8 +56,10 @@ String _loadFile(String name) {
 }
 
 void _printResult(String label, double time) {
-  print('$label: ${_padLeft(time.toStringAsFixed(2), 4)}ms '
-      "${'=' * ((time * 20).toInt())}");
+  print(
+    '$label: ${_padLeft(time.toStringAsFixed(2), 4)}ms '
+    "${'=' * ((time * 20).toInt())}",
+  );
 }
 
 String _padLeft(String input, int length) {

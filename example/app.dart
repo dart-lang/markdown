@@ -62,8 +62,10 @@ void main() {
 void _renderMarkdown([Event? event]) {
   final markdown = markdownInput.value!;
 
-  htmlDiv.setInnerHtml(md.markdownToHtml(markdown, extensionSet: extensionSet),
-      treeSanitizer: nullSanitizer);
+  htmlDiv.setInnerHtml(
+    md.markdownToHtml(markdown, extensionSet: extensionSet),
+    treeSanitizer: nullSanitizer,
+  );
 
   for (final block in htmlDiv.querySelectorAll('pre code')) {
     try {

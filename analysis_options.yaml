@@ -36,3 +36,4 @@ linter:
     - use_raw_strings
     - unnecessary_raw_strings
     - prefer_interpolation_to_compose_strings
+    - require_trailing_commas

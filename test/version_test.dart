@@ -16,10 +16,13 @@ void main() {
     final binary = p.normalize(p.join(packageRoot, 'bin', 'markdown.dart'));
     final dartBin = Platform.executable;
     final result = Process.runSync(dartBin, [binary, '--version']);
-    expect(result.exitCode, 0,
-        reason: 'Exit code expected: 0; actual: ${result.exitCode}\n\n'
-            'stdout: ${result.stdout}\n\n'
-            'stderr: ${result.stderr}');
+    expect(
+      result.exitCode,
+      0,
+      reason: 'Exit code expected: 0; actual: ${result.exitCode}\n\n'
+          'stdout: ${result.stdout}\n\n'
+          'stderr: ${result.stderr}',
+    );
 
     final binVersion = (result.stdout as String).trim();
 
@@ -28,8 +31,11 @@ void main() {
     final pubspecContent =
         loadYaml(File(pubspecFile).readAsStringSync()) as YamlMap;
 
-    expect(binVersion, pubspecContent['version'],
-        reason: 'The version reported by bin/markdown.dart should match the '
-            'version in pubspec. Run `pub run build_runner build` to update.');
+    expect(
+      binVersion,
+      pubspecContent['version'],
+      reason: 'The version reported by bin/markdown.dart should match the '
+          'version in pubspec. Run `pub run build_runner build` to update.',
+    );
   });
 }

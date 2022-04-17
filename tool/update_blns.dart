@@ -12,15 +12,15 @@ Future<void> main() async {
   try {
     final request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
     final response = await request.close();
-    json = (jsonDecode(await response
-            .cast<List<int>>()
-            .transform(utf8.decoder)
-            .join('')) as List)
+    json = (jsonDecode(
+      await response.cast<List<int>>().transform(utf8.decoder).join(''),
+    ) as List)
         .cast<String>();
   } finally {
     client.close();
   }
-  final blnsContent = StringBuffer('''
+  final blnsContent = StringBuffer(
+    '''
 // GENERATED FILE. DO NOT EDIT.
 //
 // This file was generated from big-list-of-naughty-strings's JSON file:
@@ -29,7 +29,8 @@ Future<void> main() async {
 
 // ignore_for_file: text_direction_code_point_in_literal, use_raw_strings
 
-''');
+''',
+  );
   blnsContent.writeln('const blns = <String>[');
   for (final str in json) {
     final escaped = str

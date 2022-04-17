@@ -14,9 +14,9 @@ void main() {
       final result = document.parseInline('< &');
       expect(result, hasLength(1));
       expect(
-          result[0],
-          const TypeMatcher<Text>()
-              .having((e) => e.text, 'text', equals('< &')));
+        result[0],
+        const TypeMatcher<Text>().having((e) => e.text, 'text', equals('< &')),
+      );
     });
 
     group('with encodeHtml enabled', () {
@@ -26,24 +26,30 @@ void main() {
         final result =
             document.parseInline('``<p>Hello <em>Markdown</em></p>``');
         final codeSnippet = result.single as Element;
-        expect(codeSnippet.textContent,
-            equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;'));
+        expect(
+          codeSnippet.textContent,
+          equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;'),
+        );
       });
 
       test('encodes HTML in a fenced code block', () {
         final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.split('\n');
         final result = document.parseLines(lines);
         final codeBlock = result.single as Element;
-        expect(codeBlock.textContent,
-            equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n'));
+        expect(
+          codeBlock.textContent,
+          equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n'),
+        );
       });
 
       test('encodes HTML in an indented code block', () {
         final lines = '    <p>Hello <em>Markdown</em></p>\n'.split('\n');
         final result = document.parseLines(lines);
         final codeBlock = result.single as Element;
-        expect(codeBlock.textContent,
-            equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n'));
+        expect(
+          codeBlock.textContent,
+          equals('&lt;p&gt;Hello &lt;em&gt;Markdown&lt;/em&gt;&lt;/p&gt;\n'),
+        );
       });
 
       test('encodeHtml spaces are preserved in text', () {
@@ -63,12 +69,13 @@ void main() {
         final nodes = document.parseInline(contents);
         expect(nodes, hasLength(1));
         expect(
-            nodes.single,
-            const TypeMatcher<Text>().having(
-              (e) => e.text,
-              'text',
-              '&gt;&quot;&lt; Hello',
-            ));
+          nodes.single,
+          const TypeMatcher<Text>().having(
+            (e) => e.text,
+            'text',
+            '&gt;&quot;&lt; Hello',
+          ),
+        );
       });
     });
 
@@ -80,7 +87,9 @@ void main() {
             document.parseInline('```<p>Hello <em>Markdown</em></p>```');
         final codeSnippet = result.single as Element;
         expect(
-            codeSnippet.textContent, equals('<p>Hello <em>Markdown</em></p>'));
+          codeSnippet.textContent,
+          equals('<p>Hello <em>Markdown</em></p>'),
+        );
       });
 
       test('leaves HTML alone, in a fenced code block', () {
@@ -88,7 +97,9 @@ void main() {
         final result = document.parseLines(lines);
         final codeBlock = result.single as Element;
         expect(
-            codeBlock.textContent, equals('<p>Hello <em>Markdown</em></p>\n'));
+          codeBlock.textContent,
+          equals('<p>Hello <em>Markdown</em></p>\n'),
+        );
       });
 
       test('leaves HTML alone, in an indented code block', () {
@@ -96,7 +107,9 @@ void main() {
         final result = document.parseLines(lines);
         final codeBlock = result.single as Element;
         expect(
-            codeBlock.textContent, equals('<p>Hello <em>Markdown</em></p>\n'));
+          codeBlock.textContent,
+          equals('<p>Hello <em>Markdown</em></p>\n'),
+        );
       });
 
       test('leave double quotes, greater than, and less than when escaped', () {
@@ -105,12 +118,9 @@ void main() {
         final nodes = document.parseInline(contents);
         expect(nodes, hasLength(1));
         expect(
-            nodes.single,
-            const TypeMatcher<Text>().having(
-              (e) => e.text,
-              'text',
-              '>"< Hello',
-            ));
+          nodes.single,
+          const TypeMatcher<Text>().having((e) => e.text, 'text', '>"< Hello'),
+        );
       });
     });
   });

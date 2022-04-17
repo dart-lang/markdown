@@ -15,18 +15,20 @@ import '../test/util.dart';
 
 // Locate the "tool" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
-String get toolDir =>
-    p.dirname((reflect(loadCommonMarkSections) as ClosureMirror)
-        .function
-        .location!
-        .sourceUri
-        .path);
+String get toolDir => p.dirname(
+      (reflect(loadCommonMarkSections) as ClosureMirror)
+          .function
+          .location!
+          .sourceUri
+          .path,
+    );
 
 File getStatsFile(String prefix) =>
     File(p.join(toolDir, '${prefix}_stats.json'));
 
 Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
-    String testPrefix) {
+  String testPrefix,
+) {
   final testFile = File(p.join(toolDir, '${testPrefix}_tests.json'));
   final testsJson = testFile.readAsStringSync();
 
@@ -48,10 +50,16 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
 }
 
 class Config {
-  static final Config commonMarkConfig =
-      Config._('common_mark', 'http://spec.commonmark.org/0.28/', null);
+  static final Config commonMarkConfig = Config._(
+    'common_mark',
+    'http://spec.commonmark.org/0.28/',
+    null,
+  );
   static final Config gfmConfig = Config._(
-      'gfm', 'https://github.github.com/gfm/', ExtensionSet.gitHubFlavored);
+    'gfm',
+    'https://github.github.com/gfm/',
+    ExtensionSet.gitHubFlavored,
+  );
 
   final String prefix;
   final String baseUrl;
@@ -68,17 +76,24 @@ class CommonMarkTestCase {
   final int startLine;
   final int endLine;
 
-  CommonMarkTestCase(this.example, this.section, this.startLine, this.endLine,
-      this.markdown, this.html);
+  CommonMarkTestCase(
+    this.example,
+    this.section,
+    this.startLine,
+    this.endLine,
+    this.markdown,
+    this.html,
+  );
 
   factory CommonMarkTestCase.fromJson(Map<String, dynamic> json) {
     return CommonMarkTestCase(
-        json['example'] as int,
-        json['section'] as String /*!*/,
-        json['start_line'] as int,
-        json['end_line'] as int,
-        json['markdown'] as String /*!*/,
-        json['html'] as String);
+      json['example'] as int,
+      json['section'] as String /*!*/,
+      json['start_line'] as int,
+      json['end_line'] as int,
+      json['markdown'] as String /*!*/,
+      json['html'] as String,
+    );
   }
 
   @override
@@ -95,21 +110,30 @@ class CompareResult {
   CompareResult(this.testCase, this.result, this.compareLevel);
 }
 
-CompareResult compareResult(Config config, CommonMarkTestCase testCase,
-    {bool throwOnError = false,
-    bool verboseFail = false,
-    bool verboseLooseMatch = false}) {
+CompareResult compareResult(
+  Config config,
+  CommonMarkTestCase testCase, {
+  bool throwOnError = false,
+  bool verboseFail = false,
+  bool verboseLooseMatch = false,
+}) {
   String output;
   try {
-    output =
-        markdownToHtml(testCase.markdown, extensionSet: config.extensionSet);
+    output = markdownToHtml(
+      testCase.markdown,
+      extensionSet: config.extensionSet,
+    );
   } catch (err, stackTrace) {
     if (throwOnError) {
       rethrow;
     }
     if (verboseFail) {
       _printVerboseFailure(
-          config.baseUrl, 'ERROR', testCase, 'Thrown: $err\n$stackTrace');
+        config.baseUrl,
+        'ERROR',
+        testCase,
+        'Thrown: $err\n$stackTrace',
+      );
     }
 
     return CompareResult(testCase, null, CompareLevel.error);
@@ -133,16 +157,25 @@ CompareResult compareResult(Config config, CommonMarkTestCase testCase,
   }
 
   return CompareResult(
-      testCase, output, looseMatch ? CompareLevel.loose : CompareLevel.fail);
+    testCase,
+    output,
+    looseMatch ? CompareLevel.loose : CompareLevel.fail,
+  );
 }
 
 String _indent(String s) =>
     s.splitMapJoin('\n', onNonMatch: (n) => '    ${whitespaceColor(n)}');
 
-void _printVerboseFailure(String baseUrl, String message,
-    CommonMarkTestCase testCase, String actual) {
-  print('$message: $baseUrl#example-${testCase.example} '
-      '@ ${testCase.section}');
+void _printVerboseFailure(
+  String baseUrl,
+  String message,
+  CommonMarkTestCase testCase,
+  String actual,
+) {
+  print(
+    '$message: $baseUrl#example-${testCase.example} '
+    '@ ${testCase.section}',
+  );
   print('input:');
   print(_indent(testCase.markdown));
   print('expected:');
@@ -154,7 +187,9 @@ void _printVerboseFailure(String baseUrl, String message,
 
 /// Compare two DOM trees for equality.
 bool _compareHtml(
-    List<Element> expectedElements, List<Element> actualElements) {
+  List<Element> expectedElements,
+  List<Element> actualElements,
+) {
   if (expectedElements.length != actualElements.length) {
     return false;
   }

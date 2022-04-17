@@ -14,18 +14,25 @@ Future<void> main() async {
   final request = await client.getUrl(Uri.parse(_emojisJsonRawUrl));
   final response = await request.close();
   final json = jsonDecode(
-          await response.cast<List<int>>().transform(utf8.decoder).join(''))
-      .map((String alias, dynamic info) =>
-          MapEntry(alias, info.cast<String, dynamic>()))
+    await response.cast<List<int>>().transform(utf8.decoder).join(''),
+  )
+      .map(
+        (String alias, dynamic info) => MapEntry(
+          alias,
+          info.cast<String, dynamic>(),
+        ),
+      )
       .cast<String, Map<String, dynamic>>();
-  final emojisContent = StringBuffer('''
+  final emojisContent = StringBuffer(
+    '''
 // GENERATED FILE. DO NOT EDIT.
 //
 // This file was generated from emojilib's emoji data file:
 // $_emojisJsonRawUrl
 // at ${DateTime.now()} by the script, tool/update_emojis.dart.
 
-''');
+''',
+  );
   emojisContent.writeln('const emojis = <String, String>{');
   var emojiCount = 0;
   final ignored = <String>[];
@@ -39,7 +46,9 @@ Future<void> main() async {
   });
   emojisContent.writeln('};');
   File(_emojisFilePath).writeAsStringSync(emojisContent.toString());
-  print('Wrote data to $_emojisFilePath for $emojiCount emojis, '
-      'ignoring ${ignored.length}: ${ignored.join(', ')}.');
+  print(
+    'Wrote data to $_emojisFilePath for $emojiCount emojis, '
+    'ignoring ${ignored.length}: ${ignored.join(', ')}.',
+  );
   exit(0);
 }
