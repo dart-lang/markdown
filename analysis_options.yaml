@@ -33,4 +33,6 @@ linter:
     - throw_in_finally
     - prefer_final_locals
     - use_if_null_to_convert_nulls_to_bools
+    - use_raw_strings
+    - unnecessary_raw_strings
     - prefer_interpolation_to_compose_strings
