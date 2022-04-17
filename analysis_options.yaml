@@ -34,3 +34,4 @@ linter:
     - prefer_final_locals
     - use_raw_strings
     - unnecessary_raw_strings
+    - prefer_interpolation_to_compose_strings
