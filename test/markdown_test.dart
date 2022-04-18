@@ -46,6 +46,13 @@ void main() async {
     inlineSyntaxes: [StrikethroughSyntax()],
   );
 
+  // TODO(Zhiguang): enable it
+  // testFile(
+  //   'common_mark/atx_headings.unit',
+  //   inputAsOutput: true,
+  //   blockSyntaxes: [const HeaderSyntax()],
+  // );
+
   await testDirectory('common_mark');
   await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
 

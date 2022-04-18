@@ -91,3 +91,7 @@ extension MatchExtensions on Match {
   /// Returns the whole match String
   String get match => this[0]!;
 }
+
+// Replace windows line endings with unix line endings, and split.
+List<String> splitLines(String text) =>
+    text.replaceAll('\r\n', '\n').split('\n');

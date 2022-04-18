@@ -6,6 +6,7 @@ import 'dart:isolate';
 
 import 'package:io/ansi.dart' as ansi;
 import 'package:markdown/markdown.dart';
+import 'package:markdown/src/reverse_renderer.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import '../tool/expected_output.dart';
@@ -20,6 +21,7 @@ Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
       dataCase.input,
       dataCase.expectedOutput,
       extensionSet: extensionSet,
+      inputAsOutput: inputAsOutput,
     );
   }
 }
@@ -34,6 +36,7 @@ void testFile(
   String file, {
   Iterable<BlockSyntax> blockSyntaxes = const [],
   Iterable<InlineSyntax> inlineSyntaxes = const [],
+  bool inputAsOutput = false,
 }) async {
   final directory = p.join(await markdownPackageRoot, 'test');
   for (final dataCase in dataCasesInFile(path: p.join(directory, file))) {
@@ -59,6 +62,7 @@ void validateCore(
   Resolver? linkResolver,
   Resolver? imageLinkResolver,
   bool inlineOnly = false,
+  bool inputAsOutput = false,
 }) {
   test(description, () {
     final result = markdownToHtml(
@@ -71,9 +75,9 @@ void validateCore(
       inlineOnly: inlineOnly,
     );
 
-    markdownPrintOnFailure(markdown, html, result);
+    markdownPrintOnFailure(markdown, expected, result);
 
-    expect(result, html);
+    expect(result, expected);
   });
 }
 
