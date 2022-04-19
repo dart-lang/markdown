@@ -51,6 +51,8 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
 }
 
 class Config {
+  Config._(this.prefix, this.baseUrl, this.extensionSet);
+
   static final Config commonMarkConfig = Config._(
     'common_mark',
     'http://spec.commonmark.org/0.28/',
@@ -65,18 +67,9 @@ class Config {
   final String prefix;
   final String baseUrl;
   final ExtensionSet? extensionSet;
-
-  Config._(this.prefix, this.baseUrl, this.extensionSet);
 }
 
 class CommonMarkTestCase {
-  final String markdown;
-  final String section;
-  final int example;
-  final String html;
-  final int startLine;
-  final int endLine;
-
   CommonMarkTestCase(
     this.example,
     this.section,
@@ -97,6 +90,13 @@ class CommonMarkTestCase {
     );
   }
 
+  final String markdown;
+  final String section;
+  final int example;
+  final String html;
+  final int startLine;
+  final int endLine;
+
   @override
   String toString() => '$section - $example';
 }
@@ -104,11 +104,11 @@ class CommonMarkTestCase {
 enum CompareLevel { strict, loose, fail, error }
 
 class CompareResult {
+  CompareResult(this.testCase, this.result, this.compareLevel);
+
   final CompareLevel compareLevel;
   final CommonMarkTestCase testCase;
   final String? result;
-
-  CompareResult(this.testCase, this.result, this.compareLevel);
 }
 
 CompareResult compareResult(

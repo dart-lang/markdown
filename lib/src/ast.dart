@@ -15,11 +15,6 @@ abstract class Node {
 
 /// A named tag that can contain other nodes.
 class Element implements Node {
-  final String tag;
-  final List<Node>? children;
-  final Map<String, String> attributes;
-  String? generatedId;
-
   /// Instantiates a [tag] Element with [children].
   Element(this.tag, this.children) : attributes = <String, String>{};
 
@@ -37,6 +32,11 @@ class Element implements Node {
   Element.text(this.tag, String text)
       : children = [Text(text)],
         attributes = {};
+
+  final String tag;
+  final List<Node>? children;
+  final Map<String, String> attributes;
+  String? generatedId;
 
   /// Whether this element is self-closing.
   bool get isEmpty => children == null;
@@ -61,9 +61,9 @@ class Element implements Node {
 
 /// A plain text element.
 class Text implements Node {
-  final String text;
-
   Text(this.text);
+
+  final String text;
 
   @override
   void accept(NodeVisitor visitor) => visitor.visitText(this);
@@ -79,10 +79,10 @@ class Text implements Node {
 /// of a document are still being parsed, in order to gather all reference link
 /// definitions.
 class UnparsedContent implements Node {
+  UnparsedContent(this.textContent);
+
   @override
   final String textContent;
-
-  UnparsedContent(this.textContent);
 
   @override
   void accept(NodeVisitor visitor) {}
