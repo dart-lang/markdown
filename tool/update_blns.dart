@@ -12,11 +12,9 @@ Future<void> main() async {
   try {
     final request = await client.getUrl(Uri.parse(_blnsJsonRawUrl));
     final response = await request.close();
-    json = (jsonDecode(await response
-            .cast<List<int>>()
-            .transform(utf8.decoder)
-            .join('')) as List)
-        .cast<String>();
+    final source =
+        await response.cast<List<int>>().transform(utf8.decoder).join('');
+    json = (jsonDecode(source) as List).cast<String>();
   } finally {
     client.close();
   }

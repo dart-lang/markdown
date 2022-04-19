@@ -20,10 +20,17 @@ void main(List<String> arguments) {
     ..addSeparator('Usage: dartdoc-compare.dart [OPTIONS] <dart-package>')
     ..addOption(_dartdocDir, help: 'Directory of the dartdoc package')
     ..addOption(_markdownBefore, help: "Markdown package 'before' ref")
-    ..addOption(_markdownAfter,
-        defaultsTo: 'HEAD', help: "Markdown package 'after' ref (or 'local')")
-    ..addFlag(_sdk,
-        defaultsTo: false, negatable: false, help: 'Is the package the SDK?')
+    ..addOption(
+      _markdownAfter,
+      defaultsTo: 'HEAD',
+      help: "Markdown package 'after' ref (or 'local')",
+    )
+    ..addFlag(
+      _sdk,
+      defaultsTo: false,
+      negatable: false,
+      help: 'Is the package the SDK?',
+    )
     ..addFlag(_help, abbr: 'h', hide: true);
 
   final options = parser.parse(arguments);
@@ -40,12 +47,13 @@ void main(List<String> arguments) {
     return;
   }
   final comparer = DartdocCompare(
-      options[_dartdocDir] as String,
-      options[_markdownBefore] as String,
-      options[_markdownAfter] as String,
-      absolute(options[_dartdocDir] as String, 'bin/dartdoc.dart'),
-      absolute(options[_dartdocDir] as String, 'pubspec.yaml'),
-      options[_sdk] as bool);
+    options[_dartdocDir] as String,
+    options[_markdownBefore] as String,
+    options[_markdownAfter] as String,
+    absolute(options[_dartdocDir] as String, 'bin/dartdoc.dart'),
+    absolute(options[_dartdocDir] as String, 'pubspec.yaml'),
+    options[_sdk] as bool,
+  );
 
   String? path;
   if (comparer.sdk) {
@@ -72,8 +80,14 @@ class DartdocCompare {
   final bool sdk;
   final String markdownPath = File(Platform.script.path).parent.parent.path;
 
-  DartdocCompare(this.dartdocDir, this.markdownBefore, this.markdownAfter,
-      this.dartdocBin, this.dartdocPubspecPath, this.sdk);
+  DartdocCompare(
+    this.dartdocDir,
+    this.markdownBefore,
+    this.markdownAfter,
+    this.dartdocBin,
+    this.dartdocPubspecPath,
+    this.sdk,
+  );
 
   bool compare(String? package) {
     // Generate docs with Markdown "Before".

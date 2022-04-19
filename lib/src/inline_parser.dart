@@ -232,14 +232,23 @@ class InlineParser {
         final openerTextNodeIndex = _tree.indexOf(openerTextNode);
         final closerTextNode = closer.node;
         var closerTextNodeIndex = _tree.indexOf(closerTextNode);
-        final node = opener.syntax.close(this, opener, closer,
-            tag: matchedTag.tag,
-            getChildren: () =>
-                _tree.sublist(openerTextNodeIndex + 1, closerTextNodeIndex));
+        final node = opener.syntax.close(
+          this,
+          opener,
+          closer,
+          tag: matchedTag.tag,
+          getChildren: () => _tree.sublist(
+            openerTextNodeIndex + 1,
+            closerTextNodeIndex,
+          ),
+        );
         // Replace all of the nodes between the opener and the closer (which
         // are now the new emphasis node's children) with the emphasis node.
         _tree.replaceRange(
-            openerTextNodeIndex + 1, closerTextNodeIndex, [node!]);
+          openerTextNodeIndex + 1,
+          closerTextNodeIndex,
+          [node!],
+        );
         // Slide [closerTextNodeIndex] back accordingly.
         closerTextNodeIndex = openerTextNodeIndex + 2;
 
@@ -483,8 +492,10 @@ class EscapeSyntax extends InlineSyntax {
 /// Markdown benchmarking is more mature.
 class InlineHtmlSyntax extends TextSyntax {
   InlineHtmlSyntax()
-      : super(r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?:\s[^>]*)?>',
-            startCharacter: $lt);
+      : super(
+          r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?:\s[^>]*)?>',
+          startCharacter: $lt,
+        );
 }
 
 /// Matches autolinks like `<foo@bar.example.com>`.
@@ -716,15 +727,15 @@ class SimpleDelimiter implements Delimiter {
 
   final int endPos;
 
-  SimpleDelimiter(
-      {required this.node,
-      required this.char,
-      required this.length,
-      required this.canOpen,
-      required this.canClose,
-      required this.syntax,
-      required this.endPos})
-      : isActive = true;
+  SimpleDelimiter({
+    required this.node,
+    required this.char,
+    required this.length,
+    required this.canOpen,
+    required this.canClose,
+    required this.syntax,
+    required this.endPos,
+  }) : isActive = true;
 }
 
 /// An implementation of [Delimiter] which uses concepts of "left-flanking" and
@@ -811,11 +822,15 @@ class DelimiterRun implements Delimiter {
 
   /// Tries to parse a delimiter run from [runStart] (inclusive) to [runEnd]
   /// (exclusive).
-  static DelimiterRun? tryParse(InlineParser parser, int runStart, int runEnd,
-      {required DelimiterSyntax syntax,
-      required List<DelimiterTag> tags,
-      required Text node,
-      bool allowIntraWord = false}) {
+  static DelimiterRun? tryParse(
+    InlineParser parser,
+    int runStart,
+    int runEnd, {
+    required DelimiterSyntax syntax,
+    required List<DelimiterTag> tags,
+    required Text node,
+    bool allowIntraWord = false,
+  }) {
     bool leftFlanking,
         rightFlanking,
         precededByPunctuation,
@@ -911,12 +926,13 @@ class DelimiterSyntax extends InlineSyntax {
   /// is passed, this syntax parses according to the same nesting rules as
   /// emphasis delimiters.  If [startCharacter] is passed, it is used as a
   /// pre-matching check which is faster than matching against [pattern].
-  DelimiterSyntax(String pattern,
-      {this.requiresDelimiterRun = false,
-      int? startCharacter,
-      this.allowIntraWord = false,
-      this.tags})
-      : super(pattern, startCharacter: startCharacter);
+  DelimiterSyntax(
+    String pattern, {
+    this.requiresDelimiterRun = false,
+    int? startCharacter,
+    this.allowIntraWord = false,
+    this.tags,
+  }) : super(pattern, startCharacter: startCharacter);
 
   @override
   bool onMatch(InlineParser parser, Match match) {
@@ -926,22 +942,27 @@ class DelimiterSyntax extends InlineSyntax {
     final text = Text(parser.source.substring(matchStart, matchEnd));
     if (!requiresDelimiterRun) {
       parser._pushDelimiter(SimpleDelimiter(
-          node: text,
-          length: runLength,
-          char: parser.source.codeUnitAt(matchStart),
-          canOpen: true,
-          canClose: false,
-          syntax: this,
-          endPos: matchEnd));
+        node: text,
+        length: runLength,
+        char: parser.source.codeUnitAt(matchStart),
+        canOpen: true,
+        canClose: false,
+        syntax: this,
+        endPos: matchEnd,
+      ));
       parser.addNode(text);
       return true;
     }
 
-    final delimiterRun = DelimiterRun.tryParse(parser, matchStart, matchEnd,
-        syntax: this,
-        node: text,
-        allowIntraWord: allowIntraWord,
-        tags: tags ?? []);
+    final delimiterRun = DelimiterRun.tryParse(
+      parser,
+      matchStart,
+      matchEnd,
+      syntax: this,
+      node: text,
+      allowIntraWord: allowIntraWord,
+      tags: tags ?? [],
+    );
     if (delimiterRun != null) {
       parser._pushDelimiter(delimiterRun);
       parser.addNode(text);
@@ -979,8 +1000,12 @@ class EmphasisSyntax extends DelimiterSyntax {
 
   /// Parses `**strong**` and `*emphasis*`.
   EmphasisSyntax.asterisk()
-      : super(r'\*+',
-            requiresDelimiterRun: true, allowIntraWord: true, tags: _tags);
+      : super(
+          r'\*+',
+          requiresDelimiterRun: true,
+          allowIntraWord: true,
+          tags: _tags,
+        );
 
   static final _tags = [DelimiterTag('em', 1), DelimiterTag('strong', 2)];
 }
@@ -988,10 +1013,12 @@ class EmphasisSyntax extends DelimiterSyntax {
 /// Matches strikethrough syntax according to the GFM spec.
 class StrikethroughSyntax extends DelimiterSyntax {
   StrikethroughSyntax()
-      : super('~+',
-            requiresDelimiterRun: true,
-            allowIntraWord: true,
-            tags: [DelimiterTag('del', 2)]);
+      : super(
+          '~+',
+          requiresDelimiterRun: true,
+          allowIntraWord: true,
+          tags: [DelimiterTag('del', 2)],
+        );
 }
 
 @Deprecated('Use DelimiterSyntax instead')
@@ -1006,11 +1033,11 @@ class LinkSyntax extends DelimiterSyntax {
 
   final Resolver linkResolver;
 
-  LinkSyntax(
-      {Resolver? linkResolver,
-      String pattern = r'\[',
-      int startCharacter = $lbracket})
-      : linkResolver = (linkResolver ?? ((String _, [String? __]) => null)),
+  LinkSyntax({
+    Resolver? linkResolver,
+    String pattern = r'\[',
+    int startCharacter = $lbracket,
+  })  : linkResolver = (linkResolver ?? ((String _, [String? __]) => null)),
         super(pattern, startCharacter: startCharacter);
 
   @override
@@ -1041,8 +1068,11 @@ class LinkSyntax extends DelimiterSyntax {
       final leftParenIndex = parser.pos;
       final inlineLink = _parseInlineLink(parser);
       if (inlineLink != null) {
-        return _tryCreateInlineLink(parser, inlineLink,
-            getChildren: getChildren);
+        return _tryCreateInlineLink(
+          parser,
+          inlineLink,
+          getChildren: getChildren,
+        );
       }
       // At this point, we've matched `[...](`, but that `(` did not pan out to
       // be an inline link. We must now check if `[...]` is simply a shortcut
@@ -1088,12 +1118,17 @@ class LinkSyntax extends DelimiterSyntax {
   ///
   /// [label] does not need to be normalized.
   Node? _resolveReferenceLink(
-      String label, Map<String, LinkReference> linkReferences,
-      {required List<Node> Function() getChildren}) {
+    String label,
+    Map<String, LinkReference> linkReferences, {
+    required List<Node> Function() getChildren,
+  }) {
     final linkReference = linkReferences[normalizeLinkLabel(label)];
     if (linkReference != null) {
-      return _createNode(linkReference.destination, linkReference.title,
-          getChildren: getChildren);
+      return _createNode(
+        linkReference.destination,
+        linkReference.title,
+        getChildren: getChildren,
+      );
     } else {
       // This link has no reference definition. But we allow users of the
       // library to specify a custom resolver function ([linkResolver]) that
@@ -1115,8 +1150,11 @@ class LinkSyntax extends DelimiterSyntax {
   }
 
   /// Create the node represented by a Markdown link.
-  Node _createNode(String destination, String? title,
-      {required List<Node> Function() getChildren}) {
+  Node _createNode(
+    String destination,
+    String? title, {
+    required List<Node> Function() getChildren,
+  }) {
     final children = getChildren();
     final element = Element('a', children);
     element.attributes['href'] = escapeAttribute(destination);
@@ -1129,17 +1167,26 @@ class LinkSyntax extends DelimiterSyntax {
   /// Tries to create a reference link node.
   ///
   /// Returns the link if it was successfully created, `null` otherwise.
-  Node? _tryCreateReferenceLink(InlineParser parser, String label,
-      {required List<Node> Function() getChildren}) {
-    return _resolveReferenceLink(label, parser.document.linkReferences,
-        getChildren: getChildren);
+  Node? _tryCreateReferenceLink(
+    InlineParser parser,
+    String label, {
+    required List<Node> Function() getChildren,
+  }) {
+    return _resolveReferenceLink(
+      label,
+      parser.document.linkReferences,
+      getChildren: getChildren,
+    );
   }
 
   // Tries to create an inline link node.
   //
   /// Returns the link if it was successfully created, `null` otherwise.
-  Node _tryCreateInlineLink(InlineParser parser, InlineLink link,
-      {required List<Node> Function() getChildren}) {
+  Node _tryCreateInlineLink(
+    InlineParser parser,
+    InlineLink link, {
+    required List<Node> Function() getChildren,
+  }) {
     return _createNode(link.destination, link.title, getChildren: getChildren);
   }
 
@@ -1413,13 +1460,17 @@ class LinkSyntax extends DelimiterSyntax {
 class ImageSyntax extends LinkSyntax {
   ImageSyntax({Resolver? linkResolver})
       : super(
-            linkResolver: linkResolver,
-            pattern: r'!\[',
-            startCharacter: $exclamation);
+          linkResolver: linkResolver,
+          pattern: r'!\[',
+          startCharacter: $exclamation,
+        );
 
   @override
-  Element _createNode(String destination, String? title,
-      {required List<Node> Function() getChildren}) {
+  Element _createNode(
+    String destination,
+    String? title, {
+    required List<Node> Function() getChildren,
+  }) {
     final element = Element.empty('img');
     final children = getChildren();
     element.attributes['src'] = destination;

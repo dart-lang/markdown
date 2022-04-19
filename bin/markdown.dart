@@ -19,16 +19,18 @@ Future<void> main(List<String> args) async {
   final parser = ArgParser()
     ..addFlag('help', negatable: false, help: 'Print help text and exit')
     ..addFlag('version', negatable: false, help: 'Print version and exit')
-    ..addOption('extension-set',
-        allowed: ['none', 'CommonMark', 'GitHubFlavored', 'GitHubWeb'],
-        defaultsTo: 'CommonMark',
-        help: 'Specify a set of extensions',
-        allowedHelp: {
-          'none': 'No extensions; similar to Markdown.pl',
-          'CommonMark': 'Parse like CommonMark Markdown (default)',
-          'GitHubFlavored': 'Parse like GitHub Flavored Markdown',
-          'GitHubWeb': 'Parse like GitHub\'s Markdown-enabled web input fields',
-        });
+    ..addOption(
+      'extension-set',
+      allowed: ['none', 'CommonMark', 'GitHubFlavored', 'GitHubWeb'],
+      defaultsTo: 'CommonMark',
+      help: 'Specify a set of extensions',
+      allowedHelp: {
+        'none': 'No extensions; similar to Markdown.pl',
+        'CommonMark': 'Parse like CommonMark Markdown (default)',
+        'GitHubFlavored': 'Parse like GitHub Flavored Markdown',
+        'GitHubWeb': 'Parse like GitHub\'s Markdown-enabled web input fields',
+      },
+    );
   final results = parser.parse(args);
 
   if (results['help'] as bool) {
