@@ -121,9 +121,9 @@ Stream<DataCase> dataCasesUnder({
   String extension = 'unit',
   bool recursive = true,
 }) async* {
-  final markdownLibRoot = p.dirname((await Isolate.resolvePackageUri(
-          Uri.parse('package:markdown/markdown.dart')))!
-      .toFilePath());
+  final packageUri = Uri.parse('package:markdown/markdown.dart');
+  final isolateUri = await Isolate.resolvePackageUri(packageUri);
+  final markdownLibRoot = p.dirname(isolateUri!.toFilePath());
   final directory =
       p.joinAll([p.dirname(markdownLibRoot), 'test', testDirectory]);
   for (final dataCase in _dataCases(

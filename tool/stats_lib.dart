@@ -15,12 +15,15 @@ import '../test/util.dart';
 
 // Locate the "tool" directory. Use mirrors so that this works with the test
 // package, which loads this suite into an isolate.
-String get toolDir =>
-    p.dirname((reflect(loadCommonMarkSections) as ClosureMirror)
-        .function
-        .location!
-        .sourceUri
-        .path);
+String get toolDir {
+  final path = (reflect(loadCommonMarkSections) as ClosureMirror)
+      .function
+      .location!
+      .sourceUri
+      .path;
+
+  return p.dirname(path);
+}
 
 File getStatsFile(String prefix) =>
     File(p.join(toolDir, '${prefix}_stats.json'));

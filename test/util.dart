@@ -24,10 +24,11 @@ Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
   }
 }
 
-Future<String> get markdownPackageRoot async =>
-    p.dirname(p.dirname((await Isolate.resolvePackageUri(
-            Uri.parse('package:markdown/markdown.dart')))!
-        .toFilePath()));
+Future<String> get markdownPackageRoot async {
+  final packageUri = Uri.parse('package:markdown/markdown.dart');
+  final isolateUri = await Isolate.resolvePackageUri(packageUri);
+  return p.dirname(p.dirname(isolateUri!.toFilePath()));
+}
 
 void testFile(
   String file, {
