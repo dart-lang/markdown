@@ -5,7 +5,7 @@
 import 'dart:convert';
 
 import 'ast.dart';
-import 'block_parser.dart';
+import 'block_syntaxes/block_syntax.dart';
 import 'document.dart';
 import 'extension_set.dart';
 import 'inline_parser.dart';
