@@ -11,21 +11,40 @@ void main() async {
   await testDirectory('original');
 
   // Block syntax extensions
-  testFile('extensions/fenced_code_blocks.unit',
-      blockSyntaxes: [const FencedCodeBlockSyntax()]);
-  testFile('extensions/headers_with_ids.unit',
-      blockSyntaxes: [const HeaderWithIdSyntax()]);
-  testFile('extensions/setext_headers_with_ids.unit',
-      blockSyntaxes: [const SetextHeaderWithIdSyntax()]);
-  testFile('extensions/tables.unit', blockSyntaxes: [const TableSyntax()]);
-  testFile('extensions/fenced_blockquotes.unit',
-      blockSyntaxes: [const FencedBlockquoteSyntax()]);
+  testFile(
+    'extensions/fenced_code_blocks.unit',
+    blockSyntaxes: [const FencedCodeBlockSyntax()],
+  );
+  testFile(
+    'extensions/headers_with_ids.unit',
+    blockSyntaxes: [const HeaderWithIdSyntax()],
+  );
+  testFile(
+    'extensions/setext_headers_with_ids.unit',
+    blockSyntaxes: [const SetextHeaderWithIdSyntax()],
+  );
+  testFile(
+    'extensions/tables.unit',
+    blockSyntaxes: [const TableSyntax()],
+  );
+  testFile(
+    'extensions/fenced_blockquotes.unit',
+    blockSyntaxes: [const FencedBlockquoteSyntax()],
+  );
 
   // Inline syntax extensions
-  testFile('extensions/emojis.unit', inlineSyntaxes: [EmojiSyntax()]);
-  testFile('extensions/inline_html.unit', inlineSyntaxes: [InlineHtmlSyntax()]);
-  testFile('extensions/strikethrough.unit',
-      inlineSyntaxes: [StrikethroughSyntax()]);
+  testFile(
+    'extensions/emojis.unit',
+    inlineSyntaxes: [EmojiSyntax()],
+  );
+  testFile(
+    'extensions/inline_html.unit',
+    inlineSyntaxes: [InlineHtmlSyntax()],
+  );
+  testFile(
+    'extensions/strikethrough.unit',
+    inlineSyntaxes: [StrikethroughSyntax()],
+  );
 
   await testDirectory('common_mark');
   await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
@@ -125,10 +144,15 @@ nyan''',
 ''',
         inlineSyntaxes: nyanSyntax);
 
-    validateCore('dart custom links', 'links [are<foo>] awesome',
-        '<p>links <a>are&lt;foo></a> awesome</p>\n',
-        linkResolver: (String text, [String? _]) =>
-            Element.text('a', text.replaceAll('<', '&lt;')));
+    validateCore(
+      'dart custom links',
+      'links [are<foo>] awesome',
+      '<p>links <a>are&lt;foo></a> awesome</p>\n',
+      linkResolver: (String text, [String? _]) => Element.text(
+        'a',
+        text.replaceAll('<', '&lt;'),
+      ),
+    );
 
     // TODO(amouravski): need more tests here for custom syntaxes, as some
     // things are not quite working properly. The regexps are sometime a little

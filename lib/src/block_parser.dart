@@ -1007,7 +1007,10 @@ class TableSyntax extends BlockSyntax {
   /// [alignments] is used to annotate an alignment on each cell, and
   /// [cellType] is used to declare either "td" or "th" cells.
   Element _parseRow(
-      BlockParser parser, List<String?> alignments, String cellType) {
+    BlockParser parser,
+    List<String?> alignments,
+    String cellType,
+  ) {
     final line = parser.current;
     final cells = <String>[];
     var index = _walkPastOpeningPipe(line);
@@ -1152,7 +1155,9 @@ class ParagraphSyntax extends BlockSyntax {
   /// Extract reference link definitions from the front of the paragraph, and
   /// return the remaining paragraph lines.
   List<String>? _extractReflinkDefinitions(
-      BlockParser parser, List<String> lines) {
+    BlockParser parser,
+    List<String> lines,
+  ) {
     bool lineStartsReflinkDefinition(int i) =>
         lines[i].startsWith(_reflinkDefinitionStart);
 
@@ -1237,13 +1242,14 @@ class ParagraphSyntax extends BlockSyntax {
   // Returns whether [contents] could be parsed as a reference link definition.
   bool _parseReflinkDefinition(BlockParser parser, String contents) {
     final pattern = RegExp(
-        // Leading indentation.
-        '''^[ ]{0,3}'''
-        // Reference id in brackets, and URL.
-        r'''\[((?:\\\]|[^\]])+)\]:\s*(?:<(\S+)>|(\S+))\s*'''
-        // Title in double or single quotes, or parens.
-        r'''("[^"]+"|'[^']+'|\([^)]+\)|)\s*$''',
-        multiLine: true);
+      // Leading indentation.
+      '''^[ ]{0,3}'''
+      // Reference id in brackets, and URL.
+      r'''\[((?:\\\]|[^\]])+)\]:\s*(?:<(\S+)>|(\S+))\s*'''
+      // Title in double or single quotes, or parens.
+      r'''("[^"]+"|'[^']+'|\([^)]+\)|)\s*$''',
+      multiLine: true,
+    );
     final match = pattern.firstMatch(contents);
     if (match == null) {
       // Not a reference link definition.

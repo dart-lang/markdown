@@ -8,8 +8,10 @@ import 'dart:isolate';
 import 'package:path/path.dart' as p;
 
 /// Parse and yield data cases (each a [DataCase]) from [path].
-Iterable<DataCase> dataCasesInFile(
-    {required String path, String? baseDir}) sync* {
+Iterable<DataCase> dataCasesInFile({
+  required String path,
+  String? baseDir,
+}) sync* {
   final file = p.basename(path).replaceFirst(RegExp(r'\..+$'), '');
   baseDir ??= p.relative(p.dirname(path), from: p.dirname(p.dirname(path)));
 
@@ -44,13 +46,14 @@ Iterable<DataCase> dataCasesInFile(
     }
 
     final dataCase = DataCase(
-        directory: baseDir,
-        file: file,
-        front_matter: frontMatter.toString(),
-        description: description,
-        skip: skip,
-        input: input,
-        expectedOutput: expectedOutput);
+      directory: baseDir,
+      file: file,
+      front_matter: frontMatter.toString(),
+      description: description,
+      skip: skip,
+      input: input,
+      expectedOutput: expectedOutput,
+    );
     yield dataCase;
   }
 }
@@ -124,7 +127,10 @@ Stream<DataCase> dataCasesUnder({
   final directory =
       p.joinAll([p.dirname(markdownLibRoot), 'test', testDirectory]);
   for (final dataCase in _dataCases(
-      directory: directory, extension: extension, recursive: recursive)) {
+    directory: directory,
+    extension: extension,
+    recursive: recursive,
+  )) {
     yield dataCase;
   }
 }

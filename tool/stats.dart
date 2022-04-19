@@ -14,27 +14,41 @@ import 'package:path/path.dart' as p;
 import '../tool/expected_output.dart';
 import 'stats_lib.dart';
 
-final _configs =
-    List<Config>.unmodifiable([Config.commonMarkConfig, Config.gfmConfig]);
+final _configs = List<Config>.unmodifiable([
+  Config.commonMarkConfig,
+  Config.gfmConfig,
+]);
 
 Future<void> main(List<String> args) async {
   final parser = ArgParser()
-    ..addOption('section',
-        help: 'Restrict tests to one section, provided after the option.')
-    ..addFlag('raw',
-        defaultsTo: false, help: 'raw JSON format', negatable: false)
-    ..addFlag('update-files',
-        defaultsTo: false,
-        help: 'Update stats files in $toolDir',
-        negatable: false)
-    ..addFlag('verbose',
-        defaultsTo: false,
-        help: 'Print details for failures and errors.',
-        negatable: false)
-    ..addFlag('verbose-loose',
-        defaultsTo: false,
-        help: 'Print details for "loose" matches.',
-        negatable: false)
+    ..addOption(
+      'section',
+      help: 'Restrict tests to one section, provided after the option.',
+    )
+    ..addFlag(
+      'raw',
+      defaultsTo: false,
+      help: 'raw JSON format',
+      negatable: false,
+    )
+    ..addFlag(
+      'update-files',
+      defaultsTo: false,
+      help: 'Update stats files in $toolDir',
+      negatable: false,
+    )
+    ..addFlag(
+      'verbose',
+      defaultsTo: false,
+      help: 'Print details for failures and errors.',
+      negatable: false,
+    )
+    ..addFlag(
+      'verbose-loose',
+      defaultsTo: false,
+      help: 'Print details for "loose" matches.',
+      negatable: false,
+    )
     ..addOption('flavor', allowed: _configs.map((c) => c.prefix))
     ..addFlag('help', defaultsTo: false, negatable: false);
 
@@ -76,8 +90,14 @@ Future<void> main(List<String> args) async {
       testPrefix == null ? _configs.map((c) => c.prefix) : <String>[testPrefix];
 
   for (final testPrefix in testPrefixes) {
-    await _processConfig(testPrefix, raw, updateFiles, verbose,
-        specifiedSection, verboseLooseMatch);
+    await _processConfig(
+      testPrefix,
+      raw,
+      updateFiles,
+      verbose,
+      specifiedSection,
+      verboseLooseMatch,
+    );
   }
 }
 
@@ -115,8 +135,12 @@ Future<void> _processConfig(
     final units = <DataCase>[];
 
     for (final e in entry.value) {
-      final result = compareResult(config, e,
-          verboseFail: verbose, verboseLooseMatch: verboseLooseMatch);
+      final result = compareResult(
+        config,
+        e,
+        verboseFail: verbose,
+        verboseLooseMatch: verboseLooseMatch,
+      );
 
       units.add(DataCase(
         front_matter: result.testCase.toString(),
@@ -128,7 +152,9 @@ Future<void> _processConfig(
       ));
 
       final nestedMap = scores.putIfAbsent(
-          entry.key, () => SplayTreeMap<int, CompareLevel>());
+        entry.key,
+        () => SplayTreeMap<int, CompareLevel>(),
+      );
       nestedMap[e.example] = result.compareLevel;
     }
 
@@ -180,8 +206,11 @@ Object? _convert(Object? obj) {
   return obj;
 }
 
-Future<void> _printRaw(String testPrefix,
-    Map<String, Map<int, CompareLevel>> scores, bool updateFiles) async {
+Future<void> _printRaw(
+  String testPrefix,
+  Map<String, Map<int, CompareLevel>> scores,
+  bool updateFiles,
+) async {
   IOSink sink;
   if (updateFiles) {
     final file = getStatsFile(testPrefix);
@@ -210,9 +239,10 @@ String _pct(int value, int total, String section) =>
     '– ${(100 * value / total).toStringAsFixed(1).padLeft(5)}%  $section';
 
 Future<void> _printFriendly(
-    String testPrefix,
-    SplayTreeMap<String, SplayTreeMap<int, CompareLevel>> scores,
-    bool updateFiles) async {
+  String testPrefix,
+  SplayTreeMap<String, SplayTreeMap<int, CompareLevel>> scores,
+  bool updateFiles,
+) async {
   var totalValid = 0;
   var totalStrict = 0;
   var totalExamples = 0;
