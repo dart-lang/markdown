@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:charcode/charcode.dart';
+import 'charcode.dart';
 
 String escapeHtml(String html) =>
     const HtmlEscape(HtmlEscapeMode.element).convert(html);

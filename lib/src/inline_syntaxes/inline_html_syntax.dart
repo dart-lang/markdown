@@ -2,9 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:charcode/charcode.dart';
-
 import '../../markdown.dart';
+import '../charcode.dart';
 
 /// Leave inline HTML tags alone, from
 /// [CommonMark 0.28](http://spec.commonmark.org/0.28/#raw-html).

@@ -13,7 +13,6 @@ environment:
 
 dependencies:
   args: ^2.0.0
-  charcode: ^1.2.0
   meta: ^1.3.0
 
 dev_dependencies:
