@@ -94,10 +94,7 @@ void validateCore(
           inlineOnly: inlineOnly);
     }
 
-    markdownPrintOnFailure(markdown, html, result);
     markdownPrintOnFailure(markdown, expected, result);
-
-    expect(result, html);
     expect(result, expected);
   });
 }
