@@ -3,10 +3,10 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'ast.dart';
-import 'block_parser.dart';
+import 'block_syntaxes/block_syntax.dart';
 import 'document.dart';
 import 'extension_set.dart';
-import 'inline_parser.dart';
+import 'inline_syntaxes/inline_syntax.dart';
 import 'util.dart';
 
 /// Converts the given string to AST and render AST to given string itself

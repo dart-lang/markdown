@@ -12,7 +12,11 @@ import 'package:test/test.dart';
 import '../tool/expected_output.dart';
 
 /// Runs tests defined in "*.unit" files inside directory [name].
-Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
+Future<void> testDirectory(
+  String name, {
+  ExtensionSet? extensionSet,
+  bool inputAsOutput = false,
+}) async {
   await for (final dataCase in dataCasesUnder(testDirectory: name)) {
     final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
@@ -65,18 +69,35 @@ void validateCore(
   bool inputAsOutput = false,
 }) {
   test(description, () {
-    final result = markdownToHtml(
-      markdown,
-      blockSyntaxes: blockSyntaxes,
-      inlineSyntaxes: inlineSyntaxes,
-      extensionSet: extensionSet,
-      linkResolver: linkResolver,
-      imageLinkResolver: imageLinkResolver,
-      inlineOnly: inlineOnly,
-    );
+    String result;
+    String expected;
+    if (!inputAsOutput) {
+      expected = html;
+      result = markdownToHtml(markdown,
+          blockSyntaxes: blockSyntaxes,
+          inlineSyntaxes: inlineSyntaxes,
+          extensionSet: extensionSet,
+          linkResolver: linkResolver,
+          imageLinkResolver: imageLinkResolver,
+          inlineOnly: inlineOnly);
+    } else {
+      expected = markdown;
+      result = markdownToMarkdown(markdown,
+          blockSyntaxes: blockSyntaxes,
+          inlineSyntaxes: inlineSyntaxes,
+          extensionSet: extensionSet,
+          linkResolver: linkResolver,
+          imageLinkResolver: imageLinkResolver,
+          // TODO(Zhiguang) Enable default syntaxes when all syntaxes are ready
+          withDefaultBlockSyntaxes: false,
+          withDefaultInlineSyntaxes: false,
+          inlineOnly: inlineOnly);
+    }
 
+    markdownPrintOnFailure(markdown, html, result);
     markdownPrintOnFailure(markdown, expected, result);
 
+    expect(result, html);
     expect(result, expected);
   });
 }

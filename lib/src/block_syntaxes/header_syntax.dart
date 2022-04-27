@@ -18,8 +18,19 @@ class HeaderSyntax extends BlockSyntax {
   Node parse(BlockParser parser) {
     final match = pattern.firstMatch(parser.current)!;
     parser.advance();
-    final level = match[1]!.length;
-    final contents = UnparsedContent(match[2]!.trim());
-    return Element('h$level', [contents]);
+
+    final marker = match[2]!;
+    final level = marker.length;
+    final contents = UnparsedContent(match[4]!);
+
+    return Element('h$level', [
+      if (match[1]!.isNotEmpty) Helper.whitespace(match[1]!),
+      Helper.marker(marker),
+      if (match[3]!.isNotEmpty) Helper.whitespace(match[3]!),
+      contents,
+      if (match[5]!.isNotEmpty) Helper.whitespace(match[5]!),
+      if (match[6]!.isNotEmpty) Helper.marker(match[6]!),
+      if (!parser.isDone) Helper.newLine(),
+    ]);
   }
 }
