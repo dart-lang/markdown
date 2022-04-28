@@ -140,7 +140,7 @@ class HtmlRenderer implements NodeVisitor {
 
     _lastVisitedTag = element.tag;
 
-    if (element.isEmpty) {
+    if (element.selfClosing) {
       // Empty element like <hr/>.
       buffer.write(' />');
 
@@ -160,8 +160,8 @@ class HtmlRenderer implements NodeVisitor {
   void visitElementAfter(Element element) {
     assert(identical(_elementStack.last, element));
 
-    if (element.children != null &&
-        element.children!.isNotEmpty &&
+    if (!element.selfClosing &&
+        element.children.isNotEmpty &&
         _blockTags.contains(_lastVisitedTag) &&
         _blockTags.contains(element.tag)) {
       buffer.writeln();

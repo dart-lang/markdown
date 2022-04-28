@@ -87,7 +87,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       code.attributes['class'] = 'language-$infoString';
     }
 
-    final element = Element('pre', [code]);
+    final element = Element('pre', children: [code]);
 
     return element;
   }

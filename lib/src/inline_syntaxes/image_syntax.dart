@@ -23,7 +23,7 @@ class ImageSyntax extends LinkSyntax {
     String? title, {
     required List<Node> Function() getChildren,
   }) {
-    final element = Element.empty('img');
+    final element = Element('img', selfClosing: true);
     final children = getChildren();
     element.attributes['src'] = destination;
     element.attributes['alt'] = children.map((node) => node.textContent).join();

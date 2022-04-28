@@ -20,6 +20,6 @@ class HeaderSyntax extends BlockSyntax {
     parser.advance();
     final level = match[1]!.length;
     final contents = UnparsedContent(match[2]!.trim());
-    return Element('h$level', [contents]);
+    return Element('h$level', children: [contents]);
   }
 }

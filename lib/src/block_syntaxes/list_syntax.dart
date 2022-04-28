@@ -156,7 +156,7 @@ abstract class ListSyntax extends BlockSyntax {
     for (final item in items) {
       final itemParser = BlockParser(item.lines, parser.document);
       final children = itemParser.parseLines();
-      itemNodes.add(Element('li', children));
+      itemNodes.add(Element('li', children: children));
       anyEmptyLinesBetweenBlocks =
           anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
@@ -170,22 +170,21 @@ abstract class ListSyntax extends BlockSyntax {
       // elements to just text elements.
       for (final item in itemNodes) {
         final children = item.children;
-        if (children != null) {
-          for (var i = 0; i < children.length; i++) {
-            final child = children[i];
-            if (child is Element && child.tag == 'p') {
-              children.removeAt(i);
-              children.insertAll(i, child.children!);
-            }
+        for (var i = 0; i < children.length; i++) {
+          final child = children[i];
+          if (child is Element && child.tag == 'p') {
+            children.removeAt(i);
+            children.insertAll(i, child.children);
           }
         }
       }
     }
 
     if (listTag == 'ol' && startNumber != 1) {
-      return Element(listTag, itemNodes)..attributes['start'] = '$startNumber';
+      return Element(listTag, children: itemNodes)
+        ..attributes['start'] = '$startNumber';
     } else {
-      return Element(listTag, itemNodes);
+      return Element(listTag, children: itemNodes);
     }
   }
 

@@ -58,6 +58,6 @@ class BlockquoteSyntax extends BlockSyntax {
     // Recursively parse the contents of the blockquote.
     final children = BlockParser(childLines, parser.document).parseLines();
 
-    return Element('blockquote', children);
+    return Element('blockquote', children: children);
   }
 }

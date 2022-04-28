@@ -138,7 +138,7 @@ class LinkSyntax extends DelimiterSyntax {
     required List<Node> Function() getChildren,
   }) {
     final children = getChildren();
-    final element = Element('a', children);
+    final element = Element('a', children: children);
     element.attributes['href'] = escapeAttribute(destination);
     if (title != null && title.isNotEmpty) {
       element.attributes['title'] = escapeAttribute(title);

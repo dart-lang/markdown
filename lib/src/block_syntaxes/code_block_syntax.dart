@@ -57,6 +57,6 @@ class CodeBlockSyntax extends BlockSyntax {
       content = escapeHtml(content);
     }
 
-    return Element('pre', [Element.text('code', content)]);
+    return Element('pre', children: [Element.text('code', content)]);
   }
 }

@@ -42,7 +42,7 @@ class ParagraphSyntax extends BlockSyntax {
       return Text('');
     } else {
       final contents = UnparsedContent(paragraphLines.join('\n').trimRight());
-      return Element('p', [contents]);
+      return Element('p', children: [contents]);
     }
   }
 

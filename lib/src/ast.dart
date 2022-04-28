@@ -16,38 +16,38 @@ abstract class Node {
 /// A named tag that can contain other nodes.
 class Element implements Node {
   final String tag;
-  final List<Node>? children;
+  final List<Node> children;
   final Map<String, String> attributes;
+
+  /// Whether this element is self-closing.
+  final bool selfClosing;
+
   String? generatedId;
-
-  /// Instantiates a [tag] Element with [children].
-  Element(this.tag, this.children) : attributes = <String, String>{};
-
-  /// Instantiates an empty, self-closing [tag] Element.
-  Element.empty(this.tag)
-      : children = null,
-        attributes = {};
 
   /// Instantiates a [tag] Element with no [children].
   Element.withTag(this.tag)
       : children = [],
+        selfClosing = false,
         attributes = {};
+
+  /// Instantiates a [tag] Element with [children].
+  Element(
+    this.tag, {
+    this.children = const [],
+    this.selfClosing = false,
+  }) : attributes = <String, String>{};
 
   /// Instantiates a [tag] Element with a single Text child.
   Element.text(this.tag, String text)
       : children = [Text(text)],
+        selfClosing = false,
         attributes = {};
-
-  /// Whether this element is self-closing.
-  bool get isEmpty => children == null;
 
   @override
   void accept(NodeVisitor visitor) {
     if (visitor.visitElementBefore(this)) {
-      if (children != null) {
-        for (var child in children!) {
-          child.accept(visitor);
-        }
+      for (var child in children) {
+        child.accept(visitor);
       }
       visitor.visitElementAfter(this);
     }
@@ -55,7 +55,7 @@ class Element implements Node {
 
   @override
   String get textContent {
-    return (children ?? []).map((child) => child.textContent).join('');
+    return children.map((child) => child.textContent).join('');
   }
 }
 

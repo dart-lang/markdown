@@ -111,7 +111,7 @@ class _BreakSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    parser.addNode(Element.empty('break'));
+    parser.addNode(Element('break', selfClosing: true));
     return true;
   }
 }

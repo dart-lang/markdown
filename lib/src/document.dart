@@ -79,8 +79,8 @@ class Document {
         nodes.removeAt(i);
         nodes.insertAll(i, inlineNodes);
         i += inlineNodes.length - 1;
-      } else if (node is Element && node.children != null) {
-        _parseInlineContent(node.children!);
+      } else if (node is Element && !node.selfClosing) {
+        _parseInlineContent(node.children);
       }
     }
   }

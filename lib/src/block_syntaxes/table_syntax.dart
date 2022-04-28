@@ -35,10 +35,10 @@ class TableSyntax extends BlockSyntax {
     final alignments = _parseAlignments(parser.next!);
     final columnCount = alignments.length;
     final headRow = _parseRow(parser, alignments, 'th');
-    if (headRow.children!.length != columnCount) {
+    if (headRow.children.length != columnCount) {
       return null;
     }
-    final head = Element('thead', [headRow]);
+    final head = Element('thead', children: [headRow]);
 
     // Advance past the divider of hyphens.
     parser.advance();
@@ -47,26 +47,24 @@ class TableSyntax extends BlockSyntax {
     while (!parser.isDone && !BlockSyntax.isAtBlockEnd(parser)) {
       final row = _parseRow(parser, alignments, 'td');
       final children = row.children;
-      if (children != null) {
-        while (children.length < columnCount) {
-          // Insert synthetic empty cells.
-          children.add(Element.empty('td'));
-        }
-        while (children.length > columnCount) {
-          children.removeLast();
-        }
+      while (children.length < columnCount) {
+        // Insert synthetic empty cells.
+        children.add(Element('td', selfClosing: true));
       }
-      while (row.children!.length > columnCount) {
-        row.children!.removeLast();
+      while (children.length > columnCount) {
+        children.removeLast();
+      }
+      while (row.children.length > columnCount) {
+        row.children.removeLast();
       }
       rows.add(row);
     }
     if (rows.isEmpty) {
-      return Element('table', [head]);
+      return Element('table', children: [head]);
     } else {
-      final body = Element('tbody', rows);
+      final body = Element('tbody', children: rows);
 
-      return Element('table', [head, body]);
+      return Element('table', children: [head, body]);
     }
   }
 
@@ -161,7 +159,8 @@ class TableSyntax extends BlockSyntax {
     }
     parser.advance();
     final row = [
-      for (final cell in cells) Element(cellType, [UnparsedContent(cell)])
+      for (final cell in cells)
+        Element(cellType, children: [UnparsedContent(cell)])
     ];
 
     for (var i = 0; i < row.length && i < alignments.length; i++) {
@@ -169,7 +168,7 @@ class TableSyntax extends BlockSyntax {
       row[i].attributes['style'] = 'text-align: ${alignments[i]};';
     }
 
-    return Element('tr', row);
+    return Element('tr', children: row);
   }
 
   /// Walks past whitespace in [line] starting at [index].

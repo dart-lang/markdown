@@ -56,7 +56,7 @@ class SetextHeaderSyntax extends BlockSyntax {
 
     final contents = UnparsedContent(lines.join('\n').trimRight());
 
-    return Element(tag!, [contents]);
+    return Element(tag!, children: [contents]);
   }
 
   bool _interperableAsParagraph(String line) =>

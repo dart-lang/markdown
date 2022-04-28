@@ -311,8 +311,8 @@ class InlineParser {
   void _combineAdjacentText(List<Node> nodes) {
     for (var i = 0; i < nodes.length - 1; i++) {
       final node = nodes[i];
-      if (node is Element && node.children != null) {
-        _combineAdjacentText(node.children!);
+      if (node is Element && !node.selfClosing) {
+        _combineAdjacentText(node.children);
         continue;
       }
       if (node is Text && nodes[i + 1] is Text) {

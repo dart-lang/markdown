@@ -91,7 +91,7 @@ class DelimiterSyntax extends InlineSyntax {
     required String tag,
     required List<Node> Function() getChildren,
   }) {
-    return Element(tag, getChildren());
+    return Element(tag, children: getChildren());
   }
 }
 
