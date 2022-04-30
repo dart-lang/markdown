@@ -12,25 +12,37 @@ class HeaderSyntax extends BlockSyntax {
   @override
   RegExp get pattern => headerPattern;
 
+  @override
+  RegExp get patternWithHelper => headerPatternWithHelper;
+
   const HeaderSyntax();
 
   @override
   Node parse(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current)!;
+    final match = parser.matches(parser.current, this)!;
     parser.advance();
 
-    final marker = match[2]!;
+    final marker = match.namedGroup('marker')!;
     final level = marker.length;
-    final contents = UnparsedContent(match[4]!);
+    final text = match.namedGroup('text')!;
+    final children = <Node>[];
 
-    return Element('h$level', [
-      if (match[1]!.isNotEmpty) Helper.whitespace(match[1]!),
-      Helper.marker(marker),
-      if (match[3]!.isNotEmpty) Helper.whitespace(match[3]!),
-      contents,
-      if (match[5]!.isNotEmpty) Helper.whitespace(match[5]!),
-      if (match[6]!.isNotEmpty) Helper.marker(match[6]!),
-      if (!parser.isDone) Helper.newLine(),
-    ]);
+    if (!parser.isHelperPatternActive(this)) {
+      children.addAll([
+        UnparsedContent(text.trim()),
+      ]);
+    } else {
+      children.addAll([
+        if (match[1]!.isNotEmpty) Helper.whitespace(match[1]!),
+        Helper.marker(marker),
+        if (match[3]!.isNotEmpty) Helper.whitespace(match[3]!),
+        UnparsedContent(text),
+        if (match[5]!.isNotEmpty) Helper.whitespace(match[5]!),
+        if (match[6]!.isNotEmpty) Helper.marker(match[6]!),
+        if (!parser.isDone) Helper.newLine(),
+      ]);
+    }
+
+    return Element('h$level', children);
   }
 }

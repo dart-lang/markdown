@@ -39,7 +39,7 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
     final childLines = <String>[];
 
     // Eat until we hit a blank line.
-    while (!parser.isDone && !parser.matches(emptyPattern)) {
+    while (!parser.isDone && !parser.matchesCurrent(emptyPattern)) {
       childLines.add(parser.current);
       parser.advance();
     }

@@ -11,10 +11,12 @@ abstract class BlockSyntax {
   /// Gets the regex used to identify the beginning of this block, if any.
   RegExp get pattern;
 
+  RegExp? get patternWithHelper => null;
+
   bool canEndBlock(BlockParser parser) => true;
 
   bool canParse(BlockParser parser) {
-    return pattern.hasMatch(parser.current);
+    return parser.canMatch(parser.current, this);
   }
 
   Node? parse(BlockParser parser);

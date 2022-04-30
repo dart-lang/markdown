@@ -104,7 +104,7 @@ class BlockParser {
   bool get isDone => _pos >= lines.length;
 
   /// Gets whether or not the current line matches the given pattern.
-  bool matches(RegExp regex) {
+  bool matchesCurrent(RegExp regex) {
     if (isDone) return false;
     return regex.hasMatch(current);
   }
@@ -128,5 +128,25 @@ class BlockParser {
     }
 
     return blocks;
+  }
+
+  /// Whether has a match in the string [input] with the currrent [syntax].
+  bool canMatch(String input, BlockSyntax syntax) =>
+      syntax.pattern.hasMatch(input);
+
+  /// Whether `patternWithHelper` of current [syntax] is being used.
+  ///
+  /// Returns `true` if `patternWithHelper` of [syntax] is not `null` and
+  /// `withHelper` of [document] is true.
+  bool isHelperPatternActive(BlockSyntax syntax) =>
+      document.withHelper && syntax.patternWithHelper != null;
+
+  /// Tries to match the string [input] with the active pattern of [syntax].
+  RegExpMatch? matches(String input, BlockSyntax syntax) {
+    final pattern = !isHelperPatternActive(syntax)
+        ? syntax.pattern
+        : syntax.patternWithHelper!;
+
+    return pattern.firstMatch(input);
   }
 }

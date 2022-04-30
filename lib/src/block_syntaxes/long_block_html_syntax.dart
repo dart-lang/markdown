@@ -25,7 +25,7 @@ class LongBlockHtmlSyntax extends BlockHtmlSyntax {
     // Eat until we hit [endPattern].
     while (!parser.isDone) {
       childLines.add(parser.current);
-      if (parser.matches(_endPattern)) break;
+      if (parser.matchesCurrent(_endPattern)) break;
       parser.advance();
     }
 

@@ -13,7 +13,10 @@ final setextPattern = RegExp(r'^[ ]{0,3}(=+|-+)\s*$');
 /// Starts with 1-6 unescaped `#` characters which must not be followed by a
 /// non-space character. Line may end with any number of `#` characters,.
 final headerPattern =
-    RegExp(r'^( {0,3})(#{1,6})([ \x09\x0b\x0c]+)(.*?)(\s*)(#*)$');
+    RegExp(r'^ {0,3}(?<marker>#{1,6})[ \x09\x0b\x0c](?<text>.*?)#*$');
+
+final headerPatternWithHelper = RegExp(
+    r'^( {0,3})(?<marker>#{1,6})([ \x09\x0b\x0c]+)(?<text>.*?)(\s*)(#*)$');
 
 /// The line starts with `>` with one optional space after.
 final blockquotePattern = RegExp(r'^[ ]{0,3}>[ ]?(.*)$');

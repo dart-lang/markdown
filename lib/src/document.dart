@@ -25,6 +25,10 @@ class Document {
   /// `false` to disable all inline syntaxes including html encoding syntaxes.
   final bool withDefaultInlineSyntaxes;
 
+  /// Whether to parse helper information such as markers and whitespaces as
+  /// AST nodes.
+  final bool withHelper;
+
   final _blockSyntaxes = <BlockSyntax>{};
   final _inlineSyntaxes = <InlineSyntax>{};
   final bool hasCustomInlineSyntaxes;
@@ -42,6 +46,7 @@ class Document {
     this.encodeHtml = true,
     this.withDefaultBlockSyntaxes = true,
     this.withDefaultInlineSyntaxes = true,
+    this.withHelper = false,
   }) : hasCustomInlineSyntaxes = (inlineSyntaxes?.isNotEmpty ?? false) ||
             (extensionSet?.inlineSyntaxes.isNotEmpty ?? false) {
     _blockSyntaxes.addAll(blockSyntaxes ?? []);
