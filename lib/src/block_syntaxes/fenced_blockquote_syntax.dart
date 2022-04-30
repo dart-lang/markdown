@@ -14,7 +14,6 @@ class FencedBlockquoteSyntax extends BlockSyntax {
   @override
   RegExp get pattern => blockquoteFencePattern;
 
-  @override
   List<String> parseChildLines(BlockParser parser) {
     final childLines = <String>[];
     parser.advance();

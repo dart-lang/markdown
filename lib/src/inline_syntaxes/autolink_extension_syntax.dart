@@ -115,7 +115,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       href = 'http://$href';
     }
 
-    final text = parser.encodeHtml ? escapeHtml(url) : url;
+    final text = parser.document.encodeHtml ? escapeHtml(url) : url;
     final anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull(href);
     parser.addNode(anchor);

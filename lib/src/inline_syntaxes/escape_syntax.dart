@@ -20,7 +20,7 @@ class EscapeSyntax extends InlineSyntax {
     // their equivalent HTML entity referenced appears to be missing from the
     // CommonMark spec, but is very present in all of the examples.
     // https://talk.commonmark.org/t/entity-ification-of-quotes-and-brackets-missing-from-spec/3207
-    if (parser.encodeHtml) {
+    if (parser.document.encodeHtml) {
       if (char == $double_quote) {
         parser.addNode(Text('&quot;'));
       } else if (char == $lt) {

@@ -19,20 +19,6 @@ abstract class BlockSyntax {
 
   Node? parse(BlockParser parser);
 
-  List<String?> parseChildLines(BlockParser parser) {
-    // Grab all of the lines that form the block element.
-    final childLines = <String?>[];
-
-    while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
-      if (match == null) break;
-      childLines.add(match[1]);
-      parser.advance();
-    }
-
-    return childLines;
-  }
-
   /// Gets whether or not [parser]'s current line should end the previous block.
   static bool isAtBlockEnd(BlockParser parser) {
     if (parser.isDone) return true;

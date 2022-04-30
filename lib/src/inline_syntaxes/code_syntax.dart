@@ -47,7 +47,7 @@ class CodeSyntax extends InlineSyntax {
   @override
   bool onMatch(InlineParser parser, Match match) {
     var code = match[2]!.trim().replaceAll('\n', ' ');
-    if (parser.encodeHtml) code = escapeHtml(code);
+    if (parser.document.encodeHtml) code = escapeHtml(code);
     parser.addNode(Element.text('code', code));
 
     return true;

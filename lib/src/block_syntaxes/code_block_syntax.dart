@@ -18,7 +18,6 @@ class CodeBlockSyntax extends BlockSyntax {
 
   const CodeBlockSyntax();
 
-  @override
   List<String?> parseChildLines(BlockParser parser) {
     final childLines = <String?>[];
 

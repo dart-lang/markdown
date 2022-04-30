@@ -14,7 +14,7 @@ class AutolinkSyntax extends InlineSyntax {
   @override
   bool onMatch(InlineParser parser, Match match) {
     final url = match[1]!;
-    final text = parser.encodeHtml ? escapeHtml(url) : url;
+    final text = parser.document.encodeHtml ? escapeHtml(url) : url;
     final anchor = Element.text('a', text);
     anchor.attributes['href'] = Uri.encodeFull(url);
     parser.addNode(anchor);

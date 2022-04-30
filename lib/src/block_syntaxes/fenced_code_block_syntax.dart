@@ -32,7 +32,6 @@ class FencedCodeBlockSyntax extends BlockSyntax {
         !infoString!.codeUnits.contains($backquote));
   }
 
-  @override
   List<String> parseChildLines(BlockParser parser, [String? endBlock]) {
     endBlock ??= '';
 

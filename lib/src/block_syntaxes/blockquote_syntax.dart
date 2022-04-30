@@ -16,7 +16,6 @@ class BlockquoteSyntax extends BlockSyntax {
 
   const BlockquoteSyntax();
 
-  @override
   List<String> parseChildLines(BlockParser parser) {
     // Grab all of the lines that form the blockquote, stripping off the ">".
     final childLines = <String>[];

@@ -99,7 +99,7 @@ class InlineParser {
       syntaxes.addAll(_defaultSyntaxes);
     }
 
-    if (encodeHtml) {
+    if (document.encodeHtml) {
       syntaxes.addAll(_htmlSyntaxes);
     }
   }
@@ -358,6 +358,4 @@ class InlineParser {
     pos += length;
     start = pos;
   }
-
-  bool get encodeHtml => document.encodeHtml;
 }
