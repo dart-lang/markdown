@@ -1,5 +1,6 @@
 ## 6.0.0-dev
 
+* Change emoji list do be derived from the github api. The only two emojis that visually change are `:cricket:` and `:beetle:`. There are alternate emojis `:cricket_game:` and `:lady_beetle:` which can be used to access the previous emoji.  `update_github_emoji.dart` now pulls all emoji info directly from github api and as a result we have now support the entire github emoji set (excluding the 19 custom github specific emojis which have no Unicode support).
 * **Breaking change**: The `TagSyntax` is _deprecated_.
 * Add new syntax `DelimiterSyntax`.
 * **Breaking change**: `StrikethroughSyntax` now extends `DelimiterSyntax`

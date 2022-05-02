@@ -11,7 +11,7 @@ import 'dart:io';
 // same.
 final _emojisJsonRawUrl =
     'https://raw.githubusercontent.com/muan/emojilib/v2.4.0/emojis.json';
-final _emojisFilePath = 'lib/src/emojis.dart';
+final _emojisFilePath = 'lib/src/legacy_emojis.dart';
 
 Future<void> main() async {
   final client = HttpClient();
@@ -33,16 +33,21 @@ Future<void> main() async {
   emojisContent.writeln('const emojis = <String, String>{');
   var emojiCount = 0;
   final ignored = <String>[];
-  json.forEach((String alias, Map<String, dynamic> info) {
+  // Dump in sorted order now to facilitate comparison with new github emojis.
+  final sortedKeys = json.keys.toList()..sort();
+  for (final String alias in sortedKeys) {
+    final Map<String, dynamic> info = json[alias] as Map<String, dynamic>;
     if (info['char'] != null) {
       emojisContent.writeln("  '$alias': '${info['char']}',");
       emojiCount++;
     } else {
       ignored.add(alias);
     }
-  });
+  }
   emojisContent.writeln('};');
   File(_emojisFilePath).writeAsStringSync(emojisContent.toString());
+  print('WARNING: This updates only the LEGACY emojis - to update the active\n'
+      'emojis used within markdown execute `update_github_emojis.dart`.\n' );
   print('Wrote data to $_emojisFilePath for $emojiCount emojis, '
       'ignoring ${ignored.length}: ${ignored.join(', ')}.');
   exit(0);
