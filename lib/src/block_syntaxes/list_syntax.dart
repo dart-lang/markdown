@@ -14,6 +14,14 @@ class ListItem {
   final List<String> lines;
 }
 
+/// Invisible string used to placehold for a *Unchecked* CheckBox ('CB').
+/// The character is unicode ZERO WIDTH SPACE (U+200B).
+const invisibleIndicatorForUncheckedCB = '\u{200B}';
+
+/// Invisible string used to placehold for a *Checked* CheckBox ('CB').
+/// This is 2 unicode ZERO WIDTH SPACE (U+200B) characters.
+const invisibleIndicatorForCheckedCB = '\u{200B}\u{200B}';
+
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
   @override
@@ -49,6 +57,8 @@ abstract class ListSyntax extends BlockSyntax {
   Node parse(BlockParser parser) {
     final items = <ListItem>[];
     var childLines = <String>[];
+    final bool isCheckboxListSubclass =
+        (listTag == 'ol_with_checkbox' || listTag == 'ul_with_checkbox');
 
     void endItem() {
       if (childLines.isNotEmpty) {
@@ -89,16 +99,41 @@ abstract class ListSyntax extends BlockSyntax {
       } else if (tryMatch(hrPattern)) {
         // Horizontal rule takes precedence to a new list item.
         break;
-      } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
+      } else if ((isCheckboxListSubclass &&
+              (tryMatch(ulWithCheckBoxPattern) ||
+                  tryMatch(olWithCheckBoxPattern))) ||
+          tryMatch(ulPattern) ||
+          tryMatch(olPattern)) {
+        // The checkbox subclasse's patterns ([ulWithCheckBoxPattern] and
+        // [olWithCheckBoxPattern]) have 2 extra capturing groups at the 5
+        // position to capture the checkbox. This shift the other groups
+        // forward by 2 slots.
+        final cbGroupOffset = isCheckboxListSubclass ? 2 : 0;
         final precedingWhitespace = match![1]!;
         final digits = match![2] ?? '';
         if (startNumber == null && digits.isNotEmpty) {
           startNumber = int.parse(digits);
         }
         final marker = match![3]!;
-        final firstWhitespace = match![5] ?? '';
-        final restWhitespace = match![6] ?? '';
-        final content = match![7] ?? '';
+        // [checkBoxIndicatorPrefix] is always empty unless a checkbox is found
+        String checkBoxIndicatorPrefix = '';
+        if (isCheckboxListSubclass) {
+          // Look at checkbox capture group and get checkbox state.
+          // If we find a checked or unchecked checkbox then we will
+          // set [checkBoxIndicatorPrefix] to one of our invisible
+          // codes that we can later detect to know if we need to insert
+          // a check or unchecked checkbox when we are inserting the
+          // listitem li node.
+          final String checkboxGroup = match![5]!.toLowerCase();
+          if (checkboxGroup == '[ ]') {
+            checkBoxIndicatorPrefix = invisibleIndicatorForUncheckedCB;
+          } else if (checkboxGroup == '[x]') {
+            checkBoxIndicatorPrefix = invisibleIndicatorForCheckedCB;
+          }
+        }
+        final firstWhitespace = match![5 + cbGroupOffset] ?? '';
+        final restWhitespace = match![6 + cbGroupOffset] ?? '';
+        final content = match![7 + cbGroupOffset] ?? '';
         final isBlank = content.isEmpty;
         if (listMarker != null && listMarker != marker) {
           // Changing the bullet or ordered list delimiter starts a new list.
@@ -128,7 +163,7 @@ abstract class ListSyntax extends BlockSyntax {
         }
         // End the current list item and start a new one.
         endItem();
-        childLines.add(restWhitespace + content);
+        childLines.add('$checkBoxIndicatorPrefix$restWhitespace$content');
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
@@ -156,7 +191,30 @@ abstract class ListSyntax extends BlockSyntax {
     for (final item in items) {
       final itemParser = BlockParser(item.lines, parser.document);
       final children = itemParser.parseLines();
-      itemNodes.add(Element('li', children));
+      // If this is a checkbox sublass of ListSyntax then we must check
+      // for possible invisible checkbox placeholder characters at
+      // the start of first node's text to see if we need to insert a checkbox.
+      Element? checkboxToInsert;
+      if (isCheckboxListSubclass) {
+        if (children.isNotEmpty) {
+          if (children.first.textContent
+              .startsWith(invisibleIndicatorForCheckedCB)) {
+            checkboxToInsert = Element.withTag('input')
+              ..attributes['type'] = 'checkbox'
+              ..attributes['checked'] = 'true';
+          } else if (children.first.textContent
+              .startsWith(invisibleIndicatorForUncheckedCB)) {
+            checkboxToInsert = Element.withTag('input')
+              ..attributes['type'] = 'checkbox';
+          }
+        }
+      }
+      if (checkboxToInsert != null) {
+        itemNodes.add(Element('li', [checkboxToInsert, ...children])
+          ..attributes['class'] = 'task-list-item');
+      } else {
+        itemNodes.add(Element('li', children));
+      }
       anyEmptyLinesBetweenBlocks =
           anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
@@ -182,7 +240,17 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
 
-    if (listTag == 'ol' && startNumber != 1) {
+    if (listTag == 'ol_with_checkbox') {
+      final olWithCheckbox = Element('ol', itemNodes)
+        ..attributes['class'] = 'contains-task-list';
+      if (startNumber != 1) {
+        olWithCheckbox.attributes['start'] = '$startNumber';
+      }
+      return olWithCheckbox;
+    } else if (listTag == 'ul_with_checkbox') {
+      return Element('ul', itemNodes)
+        ..attributes['class'] = 'contains-task-list';
+    } else if (listTag == 'ol' && startNumber != 1) {
       return Element(listTag, itemNodes)..attributes['start'] = '$startNumber';
     } else {
       return Element(listTag, itemNodes);

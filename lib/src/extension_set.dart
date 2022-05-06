@@ -1,9 +1,13 @@
+import 'package:markdown/src/block_syntaxes/ordered_list_with_checkbox_syntax.dart';
+import 'package:markdown/src/block_syntaxes/unordered_list_with_checkbox_syntax.dart';
+
 import 'block_syntaxes/block_syntax.dart';
 import 'block_syntaxes/fenced_code_block_syntax.dart';
 import 'block_syntaxes/header_with_id_syntax.dart';
 import 'block_syntaxes/setext_header_with_id_syntax.dart';
 import 'block_syntaxes/table_syntax.dart';
 import 'inline_syntaxes/autolink_extension_syntax.dart';
+import 'inline_syntaxes/color_syntax.dart';
 import 'inline_syntaxes/emoji_syntax.dart';
 import 'inline_syntaxes/inline_html_syntax.dart';
 import 'inline_syntaxes/inline_syntax.dart';
@@ -56,12 +60,15 @@ class ExtensionSet {
         const HeaderWithIdSyntax(),
         const SetextHeaderWithIdSyntax(),
         const TableSyntax(),
+        const UnorderedListWithCheckBoxSyntax(),
+        const OrderedListWithCheckBoxSyntax(),
       ],
     ),
     List<InlineSyntax>.unmodifiable(
       <InlineSyntax>[
         InlineHtmlSyntax(),
         StrikethroughSyntax(),
+        ColorSyntax(),
         EmojiSyntax(),
         AutolinkExtensionSyntax()
       ],
