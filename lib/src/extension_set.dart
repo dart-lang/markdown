@@ -69,6 +69,7 @@ class ExtensionSet {
         InlineHtmlSyntax(),
         StrikethroughSyntax(),
         EmojiSyntax(),
+        ColorSwatchSyntax(),
         AutolinkExtensionSyntax()
       ],
     ),
@@ -89,7 +90,6 @@ class ExtensionSet {
       <InlineSyntax>[
         InlineHtmlSyntax(),
         StrikethroughSyntax(),
-        ColorSwatchSyntax(),
         AutolinkExtensionSyntax()
       ],
     ),
