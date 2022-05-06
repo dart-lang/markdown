@@ -68,8 +68,6 @@ class ExtensionSet {
       <InlineSyntax>[
         InlineHtmlSyntax(),
         StrikethroughSyntax(),
-        ColorSyntax(),
-        EmojiSyntax(),
         AutolinkExtensionSyntax()
       ],
     ),
@@ -82,12 +80,15 @@ class ExtensionSet {
       <BlockSyntax>[
         const FencedCodeBlockSyntax(),
         const TableSyntax(),
+        const UnorderedListWithCheckBoxSyntax(),
+        const OrderedListWithCheckBoxSyntax(),
       ],
     ),
     List<InlineSyntax>.unmodifiable(
       <InlineSyntax>[
         InlineHtmlSyntax(),
         StrikethroughSyntax(),
+        ColorSyntax(),
         AutolinkExtensionSyntax()
       ],
     ),
