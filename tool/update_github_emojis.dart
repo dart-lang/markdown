@@ -211,12 +211,12 @@ Future<void> main(List<String> args) async {
     results = parser.parse(args);
   } catch (e) {
     printUsage(parser);
-    return;
+    exit(0);
   }
 
   if (results['help'] as bool) {
     printUsage(parser);
-    return;
+    exit(0);
   }
 
   int totalEmojisWithDifferentUnicodeSequences = 0;
