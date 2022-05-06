@@ -9,7 +9,7 @@ import '../util.dart';
 import 'inline_syntax.dart';
 
 /// Matches code blocks containing a subset of css color syntax.
-class ColorSyntax extends InlineSyntax {
+class ColorSwatchSyntax extends InlineSyntax {
   // This pattern matches:
   // * Github Flavored Markup supports fewer of these options, GitLab Flavored
   //   Markup supports all of these. Presumably Github will be more complete at
@@ -40,7 +40,7 @@ class ColorSyntax extends InlineSyntax {
       r'([Rr][Gg][Bb][Aa]?\((\d+[%]?),(\d+[%]?),(\d+[%]?),?(\d+\.?\d+[%]?)?\))|'
       r'([Hh][Ss][Ll][Aa]?\((\d+[%]?),(\d+[%]?),(\d+[%]?),?(\d+\.?\d+[%]?)?\)))`';
 
-  ColorSyntax() : super(_pattern);
+  ColorSwatchSyntax() : super(_pattern);
 
   @override
   bool tryMatch(InlineParser parser, [int? startMatchPos]) {

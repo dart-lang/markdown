@@ -7,7 +7,7 @@ import 'block_syntaxes/header_with_id_syntax.dart';
 import 'block_syntaxes/setext_header_with_id_syntax.dart';
 import 'block_syntaxes/table_syntax.dart';
 import 'inline_syntaxes/autolink_extension_syntax.dart';
-import 'inline_syntaxes/color_syntax.dart';
+import 'inline_syntaxes/color_swatch_syntax.dart';
 import 'inline_syntaxes/emoji_syntax.dart';
 import 'inline_syntaxes/inline_html_syntax.dart';
 import 'inline_syntaxes/inline_syntax.dart';
@@ -68,6 +68,7 @@ class ExtensionSet {
       <InlineSyntax>[
         InlineHtmlSyntax(),
         StrikethroughSyntax(),
+        EmojiSyntax(),
         AutolinkExtensionSyntax()
       ],
     ),
@@ -88,7 +89,7 @@ class ExtensionSet {
       <InlineSyntax>[
         InlineHtmlSyntax(),
         StrikethroughSyntax(),
-        ColorSyntax(),
+        ColorSwatchSyntax(),
         AutolinkExtensionSyntax()
       ],
     ),
