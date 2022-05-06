@@ -195,12 +195,18 @@ Future<void> main(List<String> args) async {
         abbr: 'v',
         negatable: false,
         help: 'Visualize any unicode sequence differences.')
-    ..addFlag('dumpMarkdownShortCodes',
+    ..addOption('dumpMarkdownShortCodes',
         abbr: 's',
-        negatable: false,
-        help: 'Outputs all emoji shortcodes to stdout which can be used in markdown to show and tests all emojis.');
+        defaultsTo: 'missing',
+        allowed: ['plain', 'tooltip'],
+        allowedHelp: {
+          'plain': 'just shortcode',
+          'tooltip': '(shortcode with link to provide emoji name in tooltip)',
+        },
+        help:
+            'Outputs all emoji shortcodes to stdout which can be used in markdown to show and tests all emojis.');
   late final ArgResults results;
-  
+
   try {
     results = parser.parse(args);
   } catch (e) {
@@ -219,7 +225,9 @@ Future<void> main(List<String> args) async {
   final bool visualizeUnicodeDiffs =
       results['visualizeDifferentUnicodes'] as bool;
   final bool dumpMarkdownShortCodes =
-      results['dumpMarkdownShortCodes'] as bool;
+      (results['dumpMarkdownShortCodes'].toLowerCase() == 'plain');
+  final bool dumpMarkdownToolTipShortCodes =
+      (results['dumpMarkdownShortCodes'].toLowerCase() == 'tooltip');
 
   if (!useLegacyUnicodeSequences) {
     // issue warning
@@ -279,8 +287,10 @@ Future<void> main(List<String> args) async {
     }
     if (emojiUnicode != errorSpecialReplacement && emojiUnicode.isNotEmpty) {
       emojisContent.writeln("  '$shortCodeAlias': '$emojiUnicode',");
-      if(dumpMarkdownShortCodes) {
+      if (dumpMarkdownShortCodes) {
         print(':$shortCodeAlias:');
+      } else if (dumpMarkdownToolTipShortCodes) {
+        print('[:$shortCodeAlias:](## "&colon;$shortCodeAlias&colon; emoji")');
       }
       emojiCount++;
     } else {
@@ -294,10 +304,10 @@ Future<void> main(List<String> args) async {
   emojisContent.writeln('};');
   File(_emojisFilePath).writeAsStringSync(emojisContent.toString());
 
-  if(dumpMarkdownShortCodes) {
-      // No report so we don't put junk in our markdown we have
-      // been outputing.
-      exit(0);
+  if (dumpMarkdownShortCodes) {
+    // No report so we don't put junk in our markdown we have
+    // been outputing.
+    exit(0);
   }
 
   print('''Wrote data to $_emojisFilePath for $emojiCount emojis,
