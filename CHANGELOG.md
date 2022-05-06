@@ -1,7 +1,7 @@
 ## 6.0.0-dev
 
 * Add support to GFM extension for github task lists (aka checkboxes).  These are only active in the gitHubFlavored and gitHubWeb extension sets.
-* Add support for `#ff0000ff` color swatch tags.
+* Add support for `#ff0000` color swatches.
 * **Breaking change**: The `TagSyntax` is _deprecated_.
 * Add new syntax `DelimiterSyntax`.
 * **Breaking change**: `StrikethroughSyntax` now extends `DelimiterSyntax`
