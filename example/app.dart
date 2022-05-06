@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:html';
 import 'package:markdown/markdown.dart' as md;
-
+import 'package:mermaid/mermaid.dart';
 import 'highlight.dart';
 
 final markdownInput = querySelector('#markdown') as TextAreaElement;
@@ -33,6 +33,17 @@ final extensionSets = {
 };
 
 void main() {
+    MermaidApi.initialize(Config(
+    securityLevel: SecurityLevel.Strict,
+    theme: Theme.Forest,
+    logLevel: LogLevel.Error,
+    startOnLoad: false,
+    arrowMarkerAbsolute: true,
+    flowchart: FlowChartConfig(htmlLabels: true),
+    sequence: SequenceDiagramConfig(),
+    gnatt: GnattConfig(),
+  ));
+
   versionSpan.text = 'v${md.version}';
   markdownInput.onKeyUp.listen(_renderMarkdown);
 
@@ -75,6 +86,9 @@ void _renderMarkdown([Event? event]) {
       window.console.error(e);
     }
   }
+
+  // render mermaid diagrams
+  mermaidRender('code.language-mermaid');
 
   if (event != null) {
     // Not simulated typing. Store it.
