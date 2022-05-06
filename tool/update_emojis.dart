@@ -6,9 +6,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-// TODO(srawlins): Switch to https://github.com/muan/unicode-emoji-json. This
-// is definitely a breaking change; the emoji names are not necessarily the
-// same.
+// update_github_emojis.dart now generates the emoji list using the github api
+// to retrieve the emoji list.  It uses this emoji source as a source to keep
+// binary compatibility with the unicode sequences for each emoji found here.
 final _emojisJsonRawUrl =
     'https://raw.githubusercontent.com/muan/emojilib/v2.4.0/emojis.json';
 final _emojisFilePath = 'lib/src/legacy_emojis.dart';
