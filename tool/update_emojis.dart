@@ -47,7 +47,7 @@ Future<void> main() async {
   emojisContent.writeln('};');
   File(_emojisFilePath).writeAsStringSync(emojisContent.toString());
   print('WARNING: This updates only the LEGACY emojis - to update the active\n'
-      'emojis used within markdown execute `update_github_emojis.dart`.\n' );
+      'emojis used within markdown execute `update_github_emojis.dart`.\n');
   print('Wrote data to $_emojisFilePath for $emojiCount emojis, '
       'ignoring ${ignored.length}: ${ignored.join(', ')}.');
   exit(0);
