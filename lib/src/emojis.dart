@@ -2,7 +2,7 @@
 //
 // This file was generated from Githubs api emoji list end point:
 // https://api.github.com/emojis
-// at 2022-05-02 10:19:11.569511 by the script, tool/update_github_emojis.dart.
+// at 2022-05-03 01:45:16.587812 by the script, tool/update_github_emojis.dart.
 
 const emojis = <String, String>{
   '+1': '👍',
