@@ -16,7 +16,7 @@ abstract class CodeBlockTransformer {
     return handledCodeBlockTypes.contains(blockType.toLowerCase());
   }
 
-  Element? transformCodeBlock(String rawCodeBlock);
+  Node? transformCodeBlock(String rawCodeBlock);
 
   CodeBlockTransformer();
 }

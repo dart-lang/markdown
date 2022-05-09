@@ -5,7 +5,7 @@
 import '../ast.dart';
 import '../block_parser.dart';
 import '../charcode.dart';
-import '../code_block_processor.dart';
+import '../code_block_transformer.dart';
 import '../patterns.dart';
 import '../util.dart';
 import 'block_syntax.dart';

@@ -32,6 +32,20 @@ final extensionSets = {
   'gfm-radio': md.ExtensionSet.gitHubWeb,
 };
 
+class DiagramTransfomer extends md.CodeBlockTransformer {
+  List<String> handledCodeBlockTypes = ['mermaid', 'wavedrom']; 
+
+
+  md.Node? transformCodeBlock(String rawCodeBlock) {
+    return md.Text('TRANSFORMED');
+  }
+
+  DiagramTransfomer();
+
+}
+
+var diagramTransformingFencedCodeBlock = md.TransformableFencedCodeBlockSyntax([DiagramTransfomer()]);
+
 void main() {
   versionSpan.text = 'v${md.version}';
   markdownInput.onKeyUp.listen(_renderMarkdown);
@@ -63,7 +77,7 @@ void _renderMarkdown([Event? event]) {
   final markdown = markdownInput.value!;
 
   htmlDiv.setInnerHtml(
-    md.markdownToHtml(markdown, extensionSet: extensionSet),
+    md.markdownToHtml(markdown, blockSyntaxes:[diagramTransformingFencedCodeBlock], extensionSet: extensionSet),
     treeSanitizer: nullSanitizer,
   );
 
