@@ -30,6 +30,6 @@ class LongBlockHtmlSyntax extends BlockHtmlSyntax {
     }
 
     parser.advance();
-    return Text(childLines.join('\n').trimRight());
+    return Text.todo(childLines.join('\n').trimRight());
   }
 }

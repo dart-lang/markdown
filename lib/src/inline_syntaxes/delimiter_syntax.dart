@@ -41,7 +41,7 @@ class DelimiterSyntax extends InlineSyntax {
     final runLength = match.group(0)!.length;
     final matchStart = parser.pos;
     final matchEnd = parser.pos + runLength;
-    final text = Text(parser.source.substring(matchStart, matchEnd));
+    final text = Text.todo(parser.source.substring(matchStart, matchEnd));
     if (!requiresDelimiterRun) {
       parser.pushDelimiter(SimpleDelimiter(
         node: text,
@@ -88,19 +88,17 @@ class DelimiterSyntax extends InlineSyntax {
     InlineParser parser,
     Delimiter opener,
     Delimiter closer, {
-    required String tag,
+    required String type,
     required List<Node> Function() getChildren,
   }) {
-    return Element(tag, getChildren());
+    return Element.todo(type, children: getChildren());
   }
 }
 
 class DelimiterTag {
-  DelimiterTag(this.tag, this.indicatorLength);
+  DelimiterTag(this.type, this.indicatorLength);
 
-  // Tag name of the HTML element.
-  final String tag;
-
+  final String type;
   final int indicatorLength;
 }
 
@@ -226,7 +224,7 @@ class DelimiterRun implements Delimiter {
   final int char;
 
   @override
-  int get length => node.text.length;
+  int get length => node.length;
 
   @override
   bool isActive;

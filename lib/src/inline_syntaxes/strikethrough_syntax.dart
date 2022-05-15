@@ -11,6 +11,6 @@ class StrikethroughSyntax extends DelimiterSyntax {
           '~+',
           requiresDelimiterRun: true,
           allowIntraWord: true,
-          tags: [DelimiterTag('del', 2)],
+          tags: [DelimiterTag('strikethrough', 2)],
         );
 }

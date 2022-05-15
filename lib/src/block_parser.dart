@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import 'ast.dart';
 import 'block_syntaxes/block_syntax.dart';
 import 'block_syntaxes/block_tag_block_html_syntax.dart';
@@ -35,6 +37,11 @@ class BlockParser {
 
   /// Index of the current line.
   int _pos = 0;
+
+  int get line => _pos;
+
+  // Offset of current line
+  int startOffset = 0;
 
   /// Whether the parser has encountered a blank line between two block-level
   /// elements.
@@ -75,6 +82,18 @@ class BlockParser {
   /// Gets the current line.
   String get current => lines[_pos];
 
+  SourceLocation get startLocation => SourceLocation(
+        startOffset,
+        line: line,
+        column: 0,
+      );
+
+  SourceLocation get endLocation => SourceLocation(
+        startOffset + current.length,
+        line: line,
+        column: current.length,
+      );
+
   /// Gets the line after the current one or `null` if there is none.
   String? get next {
     // Don't read past the end.
@@ -99,6 +118,10 @@ class BlockParser {
 
   void advance() {
     _pos++;
+
+    if (!isDone) {
+      startOffset += current.length + 1;
+    }
   }
 
   bool get isDone => _pos >= lines.length;

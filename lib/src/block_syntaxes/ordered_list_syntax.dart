@@ -11,7 +11,7 @@ class OrderedListSyntax extends ListSyntax {
   RegExp get pattern => olPattern;
 
   @override
-  String get listTag => 'ol';
+  bool get ordered => true;
 
   const OrderedListSyntax();
 }

@@ -20,7 +20,7 @@ class TextSyntax extends InlineSyntax {
       : substitute = sub,
         super(pattern, startCharacter: startCharacter);
 
-  /// Adds a [Text] node to [parser] and returns `true` if there is a
+  /// Adds a [HtmlText] node to [parser] and returns `true` if there is a
   /// [substitute], as long as the preceding character (if any) is not a `/`.
   ///
   /// Otherwise, the parser is advanced by the length of [match] and `false` is
@@ -36,7 +36,7 @@ class TextSyntax extends InlineSyntax {
     }
 
     // Insert the substitution.
-    parser.addNode(Text(substitute));
+    parser.addNode(Text.todo(substitute));
     return true;
   }
 }

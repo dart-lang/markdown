@@ -27,46 +27,44 @@ class TableSyntax extends BlockSyntax {
 
   /// Parses a table into its three parts:
   ///
-  /// * a head row of head cells (`<th>` cells)
+  /// * a head row of head cells
   /// * a divider of hyphens and pipes (not rendered)
-  /// * many body rows of body cells (`<td>` cells)
+  /// * many body rows of body cells
   @override
   Node? parse(BlockParser parser) {
     final alignments = _parseAlignments(parser.next!);
     final columnCount = alignments.length;
-    final headRow = _parseRow(parser, alignments, 'th');
-    if (headRow.children!.length != columnCount) {
+    final headRow = _parseRow(parser, alignments, 'tableHeadCell');
+    if (headRow.children.length != columnCount) {
       return null;
     }
-    final head = Element('thead', [headRow]);
+    final head = Element.todo('tableHead', children: [headRow]);
 
     // Advance past the divider of hyphens.
     parser.advance();
 
     final rows = <Element>[];
     while (!parser.isDone && !BlockSyntax.isAtBlockEnd(parser)) {
-      final row = _parseRow(parser, alignments, 'td');
+      final row = _parseRow(parser, alignments, 'tableBodyCell');
       final children = row.children;
-      if (children != null) {
-        while (children.length < columnCount) {
-          // Insert synthetic empty cells.
-          children.add(Element.empty('td'));
-        }
-        while (children.length > columnCount) {
-          children.removeLast();
-        }
+      while (children.length < columnCount) {
+        // Insert synthetic empty cells.
+        children.add(Element.todo('tableBodyCell'));
       }
-      while (row.children!.length > columnCount) {
-        row.children!.removeLast();
+      while (children.length > columnCount) {
+        children.removeLast();
+      }
+      while (row.children.length > columnCount) {
+        row.children.removeLast();
       }
       rows.add(row);
     }
     if (rows.isEmpty) {
-      return Element('table', [head]);
+      return Element.todo('table', children: [head]);
     } else {
-      final body = Element('tbody', rows);
+      final body = Element.todo('tableBody', children: rows);
 
-      return Element('table', [head, body]);
+      return Element.todo('table', children: [head, body]);
     }
   }
 
@@ -100,7 +98,8 @@ class TableSyntax extends BlockSyntax {
   /// parsed table cells.
   ///
   /// [alignments] is used to annotate an alignment on each cell, and
-  /// [cellType] is used to declare either "td" or "th" cells.
+  /// [cellType] is used to declare either "tableBodyCell" or "tableHeadCell"
+  /// cells.
   Element _parseRow(
     BlockParser parser,
     List<String?> alignments,
@@ -160,16 +159,36 @@ class TableSyntax extends BlockSyntax {
       }
     }
     parser.advance();
+
+    final row = <Element>[];
+    for (var i = 0; i < cells.length; i++) {
+      String? textAlign;
+      if (i < alignments.length && alignments[i] != null) {
+        textAlign = '${alignments[i]}';
+      }
+
+      row.add(Element.todo(
+        cellType,
+        children: [UnparsedContent.todo(cells[i])],
+        attributes: textAlign == null ? {} : {'textAlign': textAlign},
+      ));
+    }
+    /*
     final row = [
-      for (final cell in cells) Element(cellType, [UnparsedContent(cell)])
+      for (final cell in cells)
+        Element.todo(
+          cellType,
+          children: [UnparsedContent.todo(cell)],
+        )
     ];
 
     for (var i = 0; i < row.length && i < alignments.length; i++) {
       if (alignments[i] == null) continue;
-      row[i].attributes['style'] = 'text-align: ${alignments[i]};';
+      row[i].attributes['textAlign'] = '${alignments[i]}';
     }
+    */
 
-    return Element('tr', row);
+    return Element.todo('tableRow', children: row);
   }
 
   /// Walks past whitespace in [line] starting at [index].

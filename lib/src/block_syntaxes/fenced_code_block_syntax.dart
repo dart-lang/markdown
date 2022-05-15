@@ -69,14 +69,15 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     if (parser.document.encodeHtml) {
       text = escapeHtml(text);
     }
-    final code = Element.text('code', text);
+    final code = Text.todo(text);
+    final Map<String, String> attributes = {};
 
     // the info-string should be trimmed
-    // http://spec.commonmark.org/0.22/#example-100
+    // https://spec.commonmark.org/0.30/#info-string
     infoString = infoString.trim();
     if (infoString.isNotEmpty) {
       // only use the first word in the syntax
-      // http://spec.commonmark.org/0.22/#example-100
+      // https://spec.commonmark.org/0.30/#example-143
       final firstSpace = infoString.indexOf(' ');
       if (firstSpace >= 0) {
         infoString = infoString.substring(0, firstSpace);
@@ -84,10 +85,15 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       if (parser.document.encodeHtml) {
         infoString = escapeHtmlAttribute(infoString);
       }
-      code.attributes['class'] = 'language-$infoString';
+
+      attributes['infoString'] = infoString;
     }
 
-    final element = Element('pre', [code]);
+    final element = Element.todo(
+      'fencedCodeBlock',
+      children: [code],
+      attributes: attributes,
+    );
 
     return element;
   }

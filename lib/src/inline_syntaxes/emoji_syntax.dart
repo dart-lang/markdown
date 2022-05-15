@@ -25,7 +25,7 @@ class EmojiSyntax extends InlineSyntax {
       parser.advanceBy(1);
       return false;
     }
-    parser.addNode(Text(emoji));
+    parser.addNode(Text.todo(emoji));
 
     return true;
   }

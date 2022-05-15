@@ -18,5 +18,8 @@ class EmphasisSyntax extends DelimiterSyntax {
           tags: _tags,
         );
 
-  static final _tags = [DelimiterTag('em', 1), DelimiterTag('strong', 2)];
+  static final _tags = [
+    DelimiterTag('emphasis', 1),
+    DelimiterTag('strongEmphasis', 2),
+  ];
 }

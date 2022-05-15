@@ -139,7 +139,7 @@ class InlineParser {
         .lastIndexWhere((d) => d.char == $lbracket || d.char == $exclamation);
     if (index == -1) {
       // Never found a possible open bracket. This is just a literal "]".
-      addNode(Text(']'));
+      addNode(Text.todo(']'));
       advanceBy(1);
       start = pos;
       return;
@@ -147,7 +147,7 @@ class InlineParser {
     final delimiter = _delimiterStack[index] as SimpleDelimiter;
     if (!delimiter.isActive) {
       _delimiterStack.removeAt(index);
-      addNode(Text(']'));
+      addNode(Text.todo(']'));
       advanceBy(1);
       start = pos;
       return;
@@ -244,7 +244,7 @@ class InlineParser {
           this,
           opener,
           closer,
-          tag: matchedTag.tag,
+          type: matchedTag.type,
           getChildren: () => _tree.sublist(
             openerTextNodeIndex + 1,
             closerTextNodeIndex,
@@ -274,7 +274,7 @@ class InlineParser {
           closerTextNodeIndex--;
         } else {
           final newOpenerTextNode =
-              Text(openerTextNode.text.substring(indicatorLength));
+              Text.todo(openerTextNode.text.substring(indicatorLength));
           _tree[openerTextNodeIndex] = newOpenerTextNode;
           opener.node = newOpenerTextNode;
         }
@@ -286,7 +286,7 @@ class InlineParser {
           // leave it.
         } else {
           final newCloserTextNode =
-              Text(closerTextNode.text.substring(indicatorLength));
+              Text.todo(closerTextNode.text.substring(indicatorLength));
           _tree[closerTextNodeIndex] = newCloserTextNode;
           closer.node = newCloserTextNode;
           // [currentIndex] needs to be considered again; leave it.
@@ -311,8 +311,8 @@ class InlineParser {
   void _combineAdjacentText(List<Node> nodes) {
     for (var i = 0; i < nodes.length - 1; i++) {
       final node = nodes[i];
-      if (node is Element && node.children != null) {
-        _combineAdjacentText(node.children!);
+      if (node is Element) {
+        _combineAdjacentText(node.children);
         continue;
       }
       if (node is Text && nodes[i + 1] is Text) {
@@ -323,7 +323,7 @@ class InlineParser {
           buffer.write(nodes[j].textContent);
           j++;
         }
-        nodes[i] = Text(buffer.toString());
+        nodes[i] = Text.todo(buffer.toString());
         nodes.removeRange(i + 1, j);
       }
     }
@@ -336,7 +336,7 @@ class InlineParser {
       return;
     }
     final text = source.substring(start, pos);
-    _tree.add(Text(text));
+    _tree.add(Text.todo(text));
     start = pos;
   }
 

@@ -22,16 +22,16 @@ class EscapeSyntax extends InlineSyntax {
     // https://talk.commonmark.org/t/entity-ification-of-quotes-and-brackets-missing-from-spec/3207
     if (parser.encodeHtml) {
       if (char == $double_quote) {
-        parser.addNode(Text('&quot;'));
+        parser.addNode(Text.todo('&quot;'));
       } else if (char == $lt) {
-        parser.addNode(Text('&lt;'));
+        parser.addNode(Text.todo('&lt;'));
       } else if (char == $gt) {
-        parser.addNode(Text('&gt;'));
+        parser.addNode(Text.todo('&gt;'));
       } else {
-        parser.addNode(Text(chars[1]));
+        parser.addNode(Text.todo(chars[1]));
       }
     } else {
-      parser.addNode(Text(chars[1]));
+      parser.addNode(Text.todo(chars[1]));
     }
     return true;
   }

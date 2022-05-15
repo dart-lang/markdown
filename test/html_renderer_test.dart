@@ -100,7 +100,7 @@ void main() {
         inlineSyntaxes: [_BreakSyntax(false)],
       );
 
-      expect(result, equals('one <break /> two'));
+      expect(result, equals('one <break></break> two'));
     });
   });
 }
@@ -111,7 +111,7 @@ class _BreakSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    parser.addNode(Element.empty('break'));
+    parser.addNode(Element.todo('break'));
     return true;
   }
 }

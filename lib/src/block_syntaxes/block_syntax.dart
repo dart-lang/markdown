@@ -11,6 +11,39 @@ abstract class BlockSyntax {
   /// Gets the regex used to identify the beginning of this block, if any.
   RegExp get pattern;
 
+  List<Token> tokenize(BlockParser parser) {
+    final match = pattern.firstMatch(parser.current)!;
+    final groupCount = match.groupCount;
+    final List<String> keys = [];
+
+    if (groupCount == 1) {
+      keys.add(parser.current);
+    } else {
+      for (var i = 0; i < groupCount; i++) {
+        keys.add(match[i + 1]!);
+      }
+    }
+
+    final List<Token> tokens = [];
+    for (final key in keys) {
+      var indexStart = 0;
+      final lastToken = tokens.isEmpty ? null : tokens.last;
+      if (lastToken != null) {
+        indexStart = lastToken.end.offset - parser.startOffset;
+      }
+
+      tokens.add(Token.create(
+        key,
+        line: parser.line,
+        offset: parser.startOffset,
+        context: parser.current,
+        indexStart: indexStart,
+      ));
+    }
+
+    return tokens;
+  }
+
   bool canEndBlock(BlockParser parser) => true;
 
   bool canParse(BlockParser parser) {
@@ -42,7 +75,7 @@ abstract class BlockSyntax {
 
   /// Generates a valid HTML anchor from the inner text of [element].
   static String generateAnchorHash(Element element) =>
-      element.children!.first.textContent
+      element.children.first.textContent
           .toLowerCase()
           .trim()
           .replaceAll(RegExp('[^a-z0-9 _-]'), '')

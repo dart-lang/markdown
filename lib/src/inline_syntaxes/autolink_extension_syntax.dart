@@ -116,8 +116,11 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     }
 
     final text = parser.encodeHtml ? escapeHtml(url) : url;
-    final anchor = Element.text('a', text);
-    anchor.attributes['href'] = Uri.encodeFull(href);
+    final anchor = Element.todo(
+      'extendedAutolink',
+      children: [Text.todo(text)],
+      attributes: {'uri': href},
+    );
     parser.addNode(anchor);
 
     parser.consume(matchLength);

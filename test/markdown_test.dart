@@ -72,7 +72,7 @@ void main() async {
 
   group('Resolver', () {
     Node? nyanResolver(String text, [_]) =>
-        text.isEmpty ? null : Text('~=[,,_${text}_,,]:3');
+        text.isEmpty ? null : Text.todo('~=[,,_${text}_,,]:3');
     validateCore(
         'simple link resolver',
         '''
@@ -148,9 +148,9 @@ nyan''',
       'dart custom links',
       'links [are<foo>] awesome',
       '<p>links <a>are&lt;foo></a> awesome</p>\n',
-      linkResolver: (String text, [String? _]) => Element.text(
-        'a',
-        text.replaceAll('<', '&lt;'),
+      linkResolver: (String text, [String? _]) => Element.todo(
+        'link',
+        children: [Text.todo(text.replaceAll('<', '&lt;'))],
       ),
     );
 

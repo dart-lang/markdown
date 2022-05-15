@@ -17,6 +17,6 @@ class HorizontalRuleSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     parser.advance();
-    return Element.empty('hr');
+    return Element.todo('thematicBreak');
   }
 }

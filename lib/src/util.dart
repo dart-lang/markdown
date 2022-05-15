@@ -91,3 +91,6 @@ extension MatchExtensions on Match {
   /// Returns the whole match String
   String get match => this[0]!;
 }
+
+String mapToPrettyString(Map<String, dynamic> map) =>
+    JsonEncoder.withIndent("    ").convert(map);

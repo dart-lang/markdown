@@ -58,8 +58,9 @@ void main() {
         final document = Document(encodeHtml: true);
         final lines = LineSplitter.split(contents).toList();
         final nodes = BlockParser(lines, document).parseLines();
-        final result = HtmlRenderer().render(nodes);
-        expect(result, '<p>\n</p><pre>\n A\n B\n</pre>');
+        final htmlNodes = HtmlTransformer().transform(nodes);
+        final result = HtmlRenderer().render(htmlNodes);
+        expect(result, '<p></p><pre>\n A\n B\n</pre>');
       });
 
       test('encode double quotes, greater than, and less than when escaped',

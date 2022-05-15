@@ -4,7 +4,6 @@
 
 import '../ast.dart';
 import '../charcode.dart';
-import '../util.dart';
 import 'link_syntax.dart';
 
 /// Matches images like `![alternate text](url "optional title")` and
@@ -23,14 +22,16 @@ class ImageSyntax extends LinkSyntax {
     String? title, {
     required List<Node> Function() getChildren,
   }) {
-    final element = Element.empty('img');
     final children = getChildren();
-    element.attributes['src'] = destination;
-    element.attributes['alt'] = children.map((node) => node.textContent).join();
+    final attributes = {
+      'uri': destination,
+      'description': children.map((node) => node.textContent).join(),
+    };
+
     if (title != null && title.isNotEmpty) {
-      element.attributes['title'] =
-          escapeAttribute(title.replaceAll('&', '&amp;'));
+      attributes['title'] = title.replaceAll('&', '&amp;');
     }
-    return element;
+
+    return Element.todo('image', attributes: attributes);
   }
 }

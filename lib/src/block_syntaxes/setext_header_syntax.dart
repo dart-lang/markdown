@@ -38,7 +38,7 @@ class SetextHeaderSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     final lines = <String>[];
-    String? tag;
+    String? level;
     while (!parser.isDone) {
       final match = setextPattern.firstMatch(parser.current);
       if (match == null) {
@@ -48,15 +48,19 @@ class SetextHeaderSyntax extends BlockSyntax {
         continue;
       } else {
         // The underline.
-        tag = (match[1]![0] == '=') ? 'h1' : 'h2';
+        level = (match[1]![0] == '=') ? '1' : '2';
         parser.advance();
         break;
       }
     }
 
-    final contents = UnparsedContent(lines.join('\n').trimRight());
+    final contents = UnparsedContent.todo(lines.join('\n').trimRight());
 
-    return Element(tag!, [contents]);
+    return Element.todo(
+      'setextHeading',
+      children: [contents],
+      attributes: {'level': level!},
+    );
   }
 
   bool _interperableAsParagraph(String line) =>

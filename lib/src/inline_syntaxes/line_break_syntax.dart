@@ -13,7 +13,7 @@ class LineBreakSyntax extends InlineSyntax {
   /// Create a void <br> element.
   @override
   bool onMatch(InlineParser parser, Match match) {
-    parser.addNode(Element.empty('br'));
+    parser.addNode(Element.todo('hardLineBreak'));
     return true;
   }
 }

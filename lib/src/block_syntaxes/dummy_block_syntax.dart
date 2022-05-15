@@ -31,6 +31,6 @@ class DummyBlockSyntax extends BlockSyntax {
       parser.advance();
     }
 
-    return UnparsedContent(childLines.join('\n'));
+    return UnparsedContent.todo(childLines.join('\n'));
   }
 }

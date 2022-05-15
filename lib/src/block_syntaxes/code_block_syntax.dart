@@ -57,6 +57,8 @@ class CodeBlockSyntax extends BlockSyntax {
       content = escapeHtml(content);
     }
 
-    return Element('pre', [Element.text('code', content)]);
+    return Element.todo('indentedCodeBlock', children: [
+      Text.todo(content),
+    ]);
   }
 }

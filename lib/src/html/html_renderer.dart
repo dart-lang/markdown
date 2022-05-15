@@ -4,11 +4,13 @@
 
 import 'dart:convert';
 
-import 'ast.dart';
-import 'block_syntaxes/block_syntax.dart';
-import 'document.dart';
-import 'extension_set.dart';
-import 'inline_syntaxes/inline_syntax.dart';
+import '../ast.dart';
+import '../block_syntaxes/block_syntax.dart';
+import '../document.dart';
+import '../extension_set.dart';
+import '../inline_syntaxes/inline_syntax.dart';
+import 'html_ast.dart';
+import 'html_transformer.dart';
 
 /// Converts the given string of Markdown to HTML.
 String markdownToHtml(
@@ -34,18 +36,22 @@ String markdownToHtml(
     withDefaultInlineSyntaxes: withDefaultInlineSyntaxes,
   );
 
-  if (inlineOnly) return renderToHtml(document.parseInline(markdown));
+  if (inlineOnly) {
+    return renderToHtml(
+      HtmlTransformer().transform(document.parseInline(markdown)),
+    );
+  }
 
   // Replace windows line endings with unix line endings, and split.
   final lines = markdown.replaceAll('\r\n', '\n').split('\n');
 
-  final nodes = document.parseLines(lines);
+  final nodes = HtmlTransformer().transform(document.parseLines(lines));
 
   return '${renderToHtml(nodes)}\n';
 }
 
 /// Renders [nodes] to HTML.
-String renderToHtml(List<Node> nodes) => HtmlRenderer().render(nodes);
+String renderToHtml(List<HtmlNode> nodes) => HtmlRenderer().render(nodes);
 
 const _blockTags = [
   'blockquote',
@@ -81,16 +87,16 @@ const _blockTags = [
 ];
 
 /// Translates a parsed AST to HTML.
-class HtmlRenderer implements NodeVisitor {
+class HtmlRenderer implements HtmlNodeVisitor {
   late StringBuffer buffer;
   late Set<String> uniqueIds;
 
-  final _elementStack = <Element>[];
+  final _elementStack = <HtmlElement>[];
   String? _lastVisitedTag;
 
   HtmlRenderer();
 
-  String render(List<Node> nodes) {
+  String render(List<HtmlNode> nodes) {
     buffer = StringBuffer();
     uniqueIds = <String>{};
 
@@ -102,7 +108,7 @@ class HtmlRenderer implements NodeVisitor {
   }
 
   @override
-  void visitText(Text text) {
+  void visitText(HtmlText text) {
     var content = text.text;
     if (const ['br', 'p', 'li'].contains(_lastVisitedTag)) {
       final lines = LineSplitter.split(content);
@@ -119,7 +125,7 @@ class HtmlRenderer implements NodeVisitor {
   }
 
   @override
-  bool visitElementBefore(Element element) {
+  bool visitElementBefore(HtmlElement element) {
     // Hackish. Separate block-level elements with newlines.
     if (buffer.isNotEmpty && _blockTags.contains(element.tag)) {
       buffer.writeln();
@@ -157,7 +163,7 @@ class HtmlRenderer implements NodeVisitor {
   }
 
   @override
-  void visitElementAfter(Element element) {
+  void visitElementAfter(HtmlElement element) {
     assert(identical(_elementStack.last, element));
 
     if (element.children != null &&

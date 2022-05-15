@@ -15,7 +15,7 @@ class SetextHeaderWithIdSyntax extends SetextHeaderSyntax {
   @override
   Node parse(BlockParser parser) {
     final element = super.parse(parser) as Element;
-    element.generatedId = BlockSyntax.generateAnchorHash(element);
+    element.attributes['generatedId'] = BlockSyntax.generateAnchorHash(element);
     return element;
   }
 }

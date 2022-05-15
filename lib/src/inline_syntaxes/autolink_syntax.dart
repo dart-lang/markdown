@@ -7,16 +7,19 @@ import '../inline_parser.dart';
 import '../util.dart';
 import 'inline_syntax.dart';
 
-/// Matches autolinks like `<http://foo.com>`.
+/// Matches autolinks like `<http://foo.com>` or `<mailto:foo@bar.baz>`.
 class AutolinkSyntax extends InlineSyntax {
   AutolinkSyntax() : super(r'<(([a-zA-Z][a-zA-Z\-\+\.]+):(?://)?[^\s>]*)>');
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    final url = match[1]!;
-    final text = parser.encodeHtml ? escapeHtml(url) : url;
-    final anchor = Element.text('a', text);
-    anchor.attributes['href'] = Uri.encodeFull(url);
+    final uri = match[1]!;
+    final text = parser.encodeHtml ? escapeHtml(uri) : uri;
+    final anchor = Element.todo(
+      'autolink',
+      children: [Text.todo(text)],
+      attributes: {'uri': uri},
+    );
     parser.addNode(anchor);
 
     return true;

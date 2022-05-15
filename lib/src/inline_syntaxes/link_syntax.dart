@@ -27,7 +27,7 @@ class LinkSyntax extends DelimiterSyntax {
     InlineParser parser,
     covariant SimpleDelimiter opener,
     Delimiter? closer, {
-    String? tag,
+    String? type,
     required List<Node> Function() getChildren,
   }) {
     final text = parser.source.substring(opener.endPos, parser.pos);
@@ -138,12 +138,19 @@ class LinkSyntax extends DelimiterSyntax {
     required List<Node> Function() getChildren,
   }) {
     final children = getChildren();
-    final element = Element('a', children);
-    element.attributes['href'] = escapeAttribute(destination);
+    final attributes = {
+      'uri': destination,
+    };
+
     if (title != null && title.isNotEmpty) {
-      element.attributes['title'] = escapeAttribute(title);
+      attributes['title'] = title;
     }
-    return element;
+
+    return Element.todo(
+      'link',
+      children: children,
+      attributes: attributes,
+    );
   }
 
   /// Tries to create a reference link node.

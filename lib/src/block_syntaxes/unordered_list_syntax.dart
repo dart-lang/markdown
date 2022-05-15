@@ -11,7 +11,7 @@ class UnorderedListSyntax extends ListSyntax {
   RegExp get pattern => ulPattern;
 
   @override
-  String get listTag => 'ul';
+  bool get ordered => false;
 
   const UnorderedListSyntax();
 }

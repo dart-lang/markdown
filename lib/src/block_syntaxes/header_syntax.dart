@@ -16,10 +16,28 @@ class HeaderSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current)!;
+    final start = parser.startLocation;
+    final end = parser.endLocation;
+    final tokens = tokenize(parser);
+
     parser.advance();
-    final level = match[1]!.length;
-    final contents = UnparsedContent(match[2]!.trim());
-    return Element('h$level', [contents]);
+
+    final text = tokens[1];
+    final level = tokens[0].length;
+    final contents = UnparsedContent.todo(
+      text.text.trim(),
+    );
+
+    return Element(
+      'atxHeading',
+      markers: [
+        tokens[0],
+        if (tokens.length == 3) tokens[2],
+      ],
+      children: [contents],
+      start: start,
+      end: end,
+      attributes: {'level': '$level'},
+    );
   }
 }

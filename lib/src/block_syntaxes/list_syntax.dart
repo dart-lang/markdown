@@ -29,7 +29,7 @@ abstract class ListSyntax extends BlockSyntax {
     return match[7]?.isNotEmpty ?? false;
   }
 
-  String get listTag;
+  bool get ordered;
 
   const ListSyntax();
 
@@ -156,7 +156,7 @@ abstract class ListSyntax extends BlockSyntax {
     for (final item in items) {
       final itemParser = BlockParser(item.lines, parser.document);
       final children = itemParser.parseLines();
-      itemNodes.add(Element('li', children));
+      itemNodes.add(Element.todo('listItem', children: children));
       anyEmptyLinesBetweenBlocks =
           anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
@@ -170,22 +170,24 @@ abstract class ListSyntax extends BlockSyntax {
       // elements to just text elements.
       for (final item in itemNodes) {
         final children = item.children;
-        if (children != null) {
-          for (var i = 0; i < children.length; i++) {
-            final child = children[i];
-            if (child is Element && child.tag == 'p') {
-              children.removeAt(i);
-              children.insertAll(i, child.children!);
-            }
+        for (var i = 0; i < children.length; i++) {
+          final child = children[i];
+          if (child is Element && child.type == 'paragraph') {
+            children.removeAt(i);
+            children.insertAll(i, child.children);
           }
         }
       }
     }
 
-    if (listTag == 'ol' && startNumber != 1) {
-      return Element(listTag, itemNodes)..attributes['start'] = '$startNumber';
+    final listType = ordered ? 'orderedList' : 'bulletList';
+
+    if (ordered && startNumber != 1) {
+      return Element.todo(listType, children: itemNodes, attributes: {
+        'start': '$startNumber',
+      });
     } else {
-      return Element(listTag, itemNodes);
+      return Element.todo(listType, children: itemNodes);
     }
   }
 

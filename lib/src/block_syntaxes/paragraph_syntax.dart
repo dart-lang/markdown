@@ -39,10 +39,11 @@ class ParagraphSyntax extends BlockSyntax {
     final paragraphLines = _extractReflinkDefinitions(parser, childLines);
     if (paragraphLines == null) {
       // Paragraph consisted solely of reference link definitions.
-      return Text('');
+      return Text.todo('');
     } else {
-      final contents = UnparsedContent(paragraphLines.join('\n').trimRight());
-      return Element('p', [contents]);
+      final contents =
+          UnparsedContent.todo(paragraphLines.join('\n').trimRight());
+      return Element.todo('paragraph', children: [contents]);
     }
   }
 
