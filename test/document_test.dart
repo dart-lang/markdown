@@ -2,6 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// TODO(Zhiguang): Update this test or removed if it is not needed
+// Document is not the right place to test `encodeHtml` as this option will be
+// removed from Document
+void main() {}
+
+/*
 import 'dart:convert';
 
 import 'package:markdown/markdown.dart';
@@ -126,3 +132,4 @@ void main() {
     });
   });
 }
+*/
