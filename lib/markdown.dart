@@ -37,6 +37,8 @@ library markdown;
 import 'src/version.dart';
 
 export 'src/ast.dart';
+export 'src/async_html_renderer.dart';
+export 'src/async_transforms.dart';
 export 'src/block_parser.dart';
 export 'src/block_syntaxes/block_html_syntax.dart';
 export 'src/block_syntaxes/block_syntax.dart';

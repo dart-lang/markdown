@@ -3,12 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'ast.dart';
+import 'block_parser.dart';
 
 abstract class CodeBlockTransformer {
   /// override this with list of code block types the CodeBlockProcessor
   /// handles.  The list of strings should be all lower-case as it will be
   /// checked with lower cased strings so that it is case insensitive.
-  List<String> handledCodeBlockTypes = []; 
+  List<String> handledCodeBlockTypes = [];
 
   bool expectsEncodedHtml = false;
 
@@ -16,7 +17,8 @@ abstract class CodeBlockTransformer {
     return handledCodeBlockTypes.contains(blockType.toLowerCase());
   }
 
-  Node? transformCodeBlock(String rawCodeBlock);
+  Node? transformCodeBlock(
+      String codeBlockType, String rawCodeBlock, BlockParser parser);
 
   CodeBlockTransformer();
 }

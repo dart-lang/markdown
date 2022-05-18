@@ -33,7 +33,7 @@ class TransformableFencedCodeBlockSyntax extends BlockSyntax {
 
   Iterable<CodeBlockTransformer> codeBlockTransformers;
 
-  TransformableFencedCodeBlockSyntax(Iterable<CodeBlockTransformer> this.codeBlockTransformers);
+  TransformableFencedCodeBlockSyntax(this.codeBlockTransformers);
 
   @override
   bool canParse(BlockParser parser) {
@@ -83,7 +83,7 @@ class TransformableFencedCodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     var text = childLines.join('\n');
-    String? encodedHtmlText; 
+    String? encodedHtmlText;
 
     // The info-string should be trimmed.
     // http://spec.commonmark.org/0.22/#example-100
@@ -104,10 +104,11 @@ class TransformableFencedCodeBlockSyntax extends BlockSyntax {
     // can be transformed.
     for (final transformer in codeBlockTransformers) {
       if (transformer.canTransformCodeBlockType(infoString)) {
-        final codeblock = transformer.expectsEncodedHtml ? 
-                    (encodedHtmlText ?? (encodedHtmlText=escapeHtml(text))) :
-                    text;
-        final transformedBlock = transformer.transformCodeBlock(codeblock);
+        final codeblock = transformer.expectsEncodedHtml
+            ? (encodedHtmlText ?? (encodedHtmlText = escapeHtml(text)))
+            : text;
+        final transformedBlock =
+            transformer.transformCodeBlock(infoString, codeblock, parser);
         if (transformedBlock != null) return transformedBlock;
       }
     }
