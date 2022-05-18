@@ -29,10 +29,11 @@ class AsyncText extends Text {
 
   bool isComplete = false;
 
-  AsyncText(this.parser,
-      {String initialPendingTextMessage = 'uncompleted future'})
-      : super(initialPendingTextMessage) {
+  AsyncText(Future<String> theFuture, this.parser,
+      {String uncompletedFutureTextValue = 'uncompleted future'})
+      : super(uncompletedFutureTextValue) {
     parentDoc = parser.document as AsyncDocument;
+    asyncFutureText = theFuture;
   }
 
 //KLUDGE just here to shut up warning of not using _asyncFutureText
@@ -43,8 +44,7 @@ class AsyncText extends Text {
   set asyncFutureText(Future<String> theFuture) {
     _asyncFutureText = theFuture;
     parentDoc.asyncTransformManager.asyncTextNodes.add(theFuture);
-    parentDoc.asyncTransformManager.nodesWithUncompletedAsyncTransforms
-        .add(this);
+
 
     theFuture.then((val) {
       asyncTextVal = val;
@@ -70,50 +70,10 @@ class AsyncText extends Text {
 }
 
 class AsyncTranformManager {
-  // By default wait a maximum of 60 seconds for all transforms to complete.
-  static const int defaultTimeoutInSeconds = 60;
-  bool uncompletedAsyncTransforms = false;
-
   final List<Future<String>> asyncTextNodes = [];
-  final List<Node> nodesWithUncompletedAsyncTransforms = [];
 
-  bool get waitingOnUncompletedNodes =>
-      nodesWithUncompletedAsyncTransforms.isNotEmpty;
-
-  void trackNodeWaitingOnAsyncTransform(Node nodeWaitingOnTransform) {
-    if (!nodesWithUncompletedAsyncTransforms.contains(nodeWaitingOnTransform)) {
-      nodesWithUncompletedAsyncTransforms.add(nodeWaitingOnTransform);
-    }
-  }
-
-  void nodeCompleted(Node completedNode) {
-    nodesWithUncompletedAsyncTransforms.remove(completedNode);
-  }
-
-  Future<List<String>> waitForCompletion(
-      /*uration? maximumTimeToWaitForCompletion*/) {
+  Future<List<String>> waitForCompletion() {
+    print('Here in waitForCompletion() about to WAIT asyncTextNodes.length=${asyncTextNodes.length}');
     return Future.wait(asyncTextNodes);
-
-    // bool timeHasRunnout = false;
-
-    // Timer(maximumTimeToWaitForCompletion ?? Duration(seconds:defaultTimeoutInSeconds),
-    //  () => timeHasRunnout=true );
-
-    // while(!timeHasRunnout) {
-    //   Timer.sleep(Duration(milliseconds:100));
-    // }
-
-    // checkOnCompletion() {
-    // print('Checking bookmarks');
-    // if(checkAllBookmarks()) {
-    //   print('Done -fixing up');
-    //   bookmarkedHtml = DumpBookmarks(bookmarkedHtml);
-    //   htmlDiv.setInnerHtml(
-    //     bookmarkedHtml,
-    //     treeSanitizer: nullSanitizer,
-    //   );
-    // } else {
-    //   Timer(Duration(milliseconds:250),CheckAndFileBookmarks);
-    // }
   }
 }

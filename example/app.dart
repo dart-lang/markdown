@@ -59,7 +59,7 @@ String dumpBookmarks(String bookmarkedHtml) {
     print(
         "Bookmark $k = ${v == null ? 'UNRESOLVED' : '${v.substring(0, 10)}...'}");
     if (v != null) {
-      bookmarkedHtml = bookmarkedHtml.replaceFirst(k, v);
+    //  bookmarkedHtml = bookmarkedHtml.replaceFirst(k, v);
     }
   });
   return bookmarkedHtml;
@@ -112,7 +112,7 @@ class Kroki {
   static const String _krokiApiUrl = 'https://kroki.io/';
 
 /*
-Diagram Type	png	svg	jpeg	pdf	base64
+Diagram Type
 BlockDiag️
 BPMN️
 Bytefield️
@@ -202,14 +202,14 @@ WaveDrom
       final gzipBytes = ZLibEncoder().encode(stringBytes, level: 9);
       final compressedString = base64Url.encode(gzipBytes);
 
-      print(compressedString);
+      window.console.log(compressedString);
 
       //final encoded =Uri.encodeFull(compressedString);
 
       final theuri = Uri.parse('$_krokiApiUrl/$endpoint/svg/$compressedString');
       //theuri = Uri.parse('https://kroki.io/mermaid/svg/eNpljzFuwzAMRXefgtlrZzcKBymCtMjQoTegZdYiwoqqTLfw7SMrSDKEi4j_H6nPaqLfmYKjA-OY8KeCXBGTseOIwWAv7OhJfdO-aMWtu5P60MIHiSis_Qt4_QdMBIvOu0KKaswEinnnyZ2LuNbK3zYcefQGOCKHycAvUZ3XMCTGglMYyvupRpAKq99wHf1CYw0oYF7n7Ezw2qdtFxP9IUvTNNX9s7orsVt4T4S2eRhdPiufsUbvdbZH-KzXt4wnFVlgVB021QUIImOl');
 
-      print('the url we made is $theuri');
+      window.console.log('the url we made is $theuri');
 
       final response = await _client.get(theuri);
 
@@ -221,7 +221,7 @@ WaveDrom
         throw Exception('status code ${response.statusCode} error unknown');
       }
 
-      print("GOT SVG = ``${response.body.substring(0, 20)}``");
+      window.console.log("GOT SVG = ``${response.body.substring(0, 20)}``");
       return response.body;
     } catch (e) {
       return 'gzip compression error $e';
@@ -239,8 +239,12 @@ class DiagramTransfomer extends md.CodeBlockTransformer {
       String codeBlockType, String rawCodeBlock, BlockParser parser) {
     final String bookmark = getRandomString(30);
 
-    final md.AsyncText asyncText = md.AsyncText(parser,
-        initialPendingTextMessage: 'The bookmark is $bookmark');
+
+print('Here in transformCodeBlock  $bookmark ${rawCodeBlock.substring(0,20)}');
+
+
+    final md.AsyncText asyncText = md.AsyncText(kroki.convertDiagram(codeBlockType, rawCodeBlock), parser,
+        uncompletedFutureTextValue: 'The bookmark is $bookmark');
 
     bookmarks[bookmark] = null;
 
@@ -255,19 +259,22 @@ class DiagramTransfomer extends md.CodeBlockTransformer {
     //   });
     // } ();
 
-    asyncText.asyncFutureText =
-        kroki.convertDiagram(codeBlockType, rawCodeBlock).then((svg) {
-      asyncText.asyncTextVal = svg;
-      asyncText.isComplete = true;
-      print('Setting $bookmark to returnsvg = ${svg.substring(0, 20)}');
-      return svg;
-    }).onError((error, stackTrace) {
-      asyncText.asyncTextVal = 'Exception $error creating svg for $bookmark';
-      asyncText.isComplete = true;
-      print('Exception $error creating svg for $bookmark');
-      print(stackTrace);
-      return asyncText.asyncTextVal!;
-    });
+window.console.log('Here in transformCodeBlock  $bookmark ${rawCodeBlock.substring(0,20)}');
+
+    // asyncText.asyncFutureText =
+    //     kroki.convertDiagram(codeBlockType, rawCodeBlock).then((svg) {
+    //   bookmarks[bookmark] = svg;
+    //   asyncText.asyncTextVal = svg;
+    //   asyncText.isComplete = true;
+    //   print('Setting $bookmark to returnsvg = ${svg.substring(0, 20)}');
+    //   return svg;
+    // }).onError((error, stackTrace) {
+    //   asyncText.asyncTextVal = 'Exception $error creating svg for $bookmark';
+    //   asyncText.isComplete = true;
+    //   print('Exception $error creating svg for $bookmark');
+    //   print(stackTrace);
+    //   return asyncText.asyncTextVal!;
+    // });
 
     print('Remembered bookmark $bookmark');
     return asyncText;
@@ -315,7 +322,7 @@ void _renderMarkdown([Event? event]) async {
       blockSyntaxes: [diagramTransformingFencedCodeBlock],
       extensionSet: extensionSet);
 
-  /* CheckAndFileBookmarks() {
+ /*   CheckAndFileBookmarks() {
     print('Checking bookmarks');
     if (checkAllBookmarks()) {
       print('Done -fixing up');
@@ -330,7 +337,7 @@ void _renderMarkdown([Event? event]) async {
   }
 
   Timer(Duration(milliseconds: 250), CheckAndFileBookmarks);
- */
+  */
    htmlDiv.setInnerHtml(bookmarkedHtml,
      treeSanitizer: nullSanitizer,
    );
