@@ -103,13 +103,13 @@ class HtmlRenderer implements NodeVisitor {
 
   @override
   void visitText(Text text) {
-    var content = text.text;
+    var content = text.textContent;
     if (const ['br', 'p', 'li'].contains(_lastVisitedTag)) {
       final lines = LineSplitter.split(content);
       content = content.contains('<pre>')
           ? lines.join('\n')
           : lines.map((line) => line.trimLeft()).join('\n');
-      if (text.text.endsWith('\n')) {
+      if (text.textContent.endsWith('\n')) {
         content = '$content\n';
       }
     }
