@@ -5,6 +5,7 @@
 import '../ast.dart';
 import '../block_parser.dart';
 import '../patterns.dart';
+import '../util.dart';
 import 'block_syntax.dart';
 
 class ListItem {
@@ -23,7 +24,7 @@ abstract class ListSyntax extends BlockSyntax {
     // Ideally, [BlockSyntax.canEndBlock] should be changed to be a method
     // which accepts a [BlockParser], but this would be a breaking change,
     // so we're going with this temporarily.
-    final match = pattern.firstMatch(parser.current)!;
+    final match = pattern.firstMatch(parser.current.text)!;
     // The seventh group, in both [olPattern] and [ulPattern] is the text
     // after the delimiter.
     return match[7]?.isNotEmpty ?? false;
@@ -59,7 +60,7 @@ abstract class ListSyntax extends BlockSyntax {
 
     late Match? match;
     bool tryMatch(RegExp pattern) {
-      match = pattern.firstMatch(parser.current);
+      match = pattern.firstMatch(parser.current.text);
       return match != null;
     }
 
@@ -71,10 +72,10 @@ abstract class ListSyntax extends BlockSyntax {
 
     while (!parser.isDone) {
       final leadingSpace =
-          _whitespaceRe.matchAsPrefix(parser.current)!.group(0)!;
+          _whitespaceRe.matchAsPrefix(parser.current.text)!.group(0)!;
       final leadingExpandedTabLength = _expandedTabLength(leadingSpace);
       if (tryMatch(emptyPattern)) {
-        if (emptyPattern.hasMatch(parser.next ?? '')) {
+        if (emptyPattern.hasMatch(parser.next?.text ?? '')) {
           // Two blank lines ends a list.
           break;
         }
@@ -82,7 +83,7 @@ abstract class ListSyntax extends BlockSyntax {
         childLines.add('');
       } else if (indent != null && indent.length <= leadingExpandedTabLength) {
         // Strip off indent and add to current item.
-        final line = parser.current
+        final line = parser.current.text
             .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
             .replaceFirst(indent, '');
         childLines.add(line);
@@ -141,7 +142,7 @@ abstract class ListSyntax extends BlockSyntax {
         }
 
         // Anything else is paragraph continuation text.
-        childLines.add(parser.current);
+        childLines.add(parser.current.text);
       }
       parser.advance();
     }
@@ -154,7 +155,12 @@ abstract class ListSyntax extends BlockSyntax {
     var anyEmptyLinesBetweenBlocks = false;
 
     for (final item in items) {
-      final itemParser = BlockParser(item.lines, parser.document);
+      // TODO(Zhiguang): Fix it
+      final itemParser = BlockParser(
+        linesToSourceSpans(item.lines, line: 1000),
+        parser.document,
+      );
+
       final children = itemParser.parseLines();
       itemNodes.add(Element.todo('listItem', children: children));
       anyEmptyLinesBetweenBlocks =

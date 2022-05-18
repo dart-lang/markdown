@@ -58,7 +58,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     }
 
     // Prevent accidental standard autolink matches
-    if (url.endsWith('>') && parser.source[parser.pos - 1] == '<') {
+    if (url.endsWith('>') && parser.sourceText[parser.pos - 1] == '<') {
       return false;
     }
 

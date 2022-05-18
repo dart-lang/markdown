@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
 import '../block_parser.dart';
 import '../patterns.dart';
@@ -14,13 +16,12 @@ class FencedBlockquoteSyntax extends BlockSyntax {
   @override
   RegExp get pattern => blockquoteFencePattern;
 
-  @override
-  List<String> parseChildLines(BlockParser parser) {
-    final childLines = <String>[];
+  BlockSyntaxChildSource parseChildLines(BlockParser parser) {
+    final childLines = <SourceSpan>[];
     parser.advance();
 
     while (!parser.isDone) {
-      final match = pattern.hasMatch(parser.current);
+      final match = pattern.hasMatch(parser.current.text);
       if (!match) {
         childLines.add(parser.current);
         parser.advance();
@@ -30,7 +31,7 @@ class FencedBlockquoteSyntax extends BlockSyntax {
       }
     }
 
-    return childLines;
+    return BlockSyntaxChildSource([], childLines);
   }
 
   @override
@@ -38,7 +39,10 @@ class FencedBlockquoteSyntax extends BlockSyntax {
     final childLines = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
-    final children = BlockParser(childLines, parser.document).parseLines();
+    final children = BlockParser(
+      childLines.lines,
+      parser.document,
+    ).parseLines();
     return Element.todo('fencedBlockquote', children: children);
   }
 }

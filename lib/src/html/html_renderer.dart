@@ -37,21 +37,25 @@ String markdownToHtml(
   );
 
   if (inlineOnly) {
-    return renderToHtml(
-      HtmlTransformer().transform(document.parseInline(markdown)),
-    );
+    return renderToHtml(document.parseInline(markdown));
   }
 
   // Replace windows line endings with unix line endings, and split.
   final lines = markdown.replaceAll('\r\n', '\n').split('\n');
 
-  final nodes = HtmlTransformer().transform(document.parseLines(lines));
+  final nodes = document.parseLines(lines);
 
   return '${renderToHtml(nodes)}\n';
 }
 
 /// Renders [nodes] to HTML.
-String renderToHtml(List<HtmlNode> nodes) => HtmlRenderer().render(nodes);
+String renderToHtml(
+  List<Node> nodes, {
+  bool encodeHtml = true,
+}) {
+  final htmlNodes = HtmlTransformer(encodeHtml: encodeHtml).transform(nodes);
+  return HtmlRenderer().render(htmlNodes);
+}
 
 const _blockTags = [
   'blockquote',

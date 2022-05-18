@@ -18,12 +18,11 @@ class CodeBlockSyntax extends BlockSyntax {
 
   const CodeBlockSyntax();
 
-  @override
   List<String?> parseChildLines(BlockParser parser) {
     final childLines = <String?>[];
 
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
+      final match = pattern.firstMatch(parser.current.text);
       if (match != null) {
         childLines.add(match[1]);
         parser.advance();
@@ -31,8 +30,8 @@ class CodeBlockSyntax extends BlockSyntax {
         // If there's a codeblock, then a newline, then a codeblock, keep the
         // code blocks together.
         final nextMatch =
-            parser.next != null ? pattern.firstMatch(parser.next!) : null;
-        if (parser.current.trim() == '' && nextMatch != null) {
+            parser.next != null ? pattern.firstMatch(parser.next!.text) : null;
+        if (parser.current.text.trim() == '' && nextMatch != null) {
           childLines.add('');
           childLines.add(nextMatch[1]);
           parser.advance();

@@ -2,12 +2,21 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import 'ast.dart';
 import 'block_parser.dart';
 import 'block_syntaxes/block_syntax.dart';
 import 'extension_set.dart';
 import 'inline_parser.dart';
 import 'inline_syntaxes/inline_syntax.dart';
+import 'util.dart';
+
+// TODO(Zhiguang): remove encodeHtml and ecode html actions from AST parser
+// Because Markdown AST should keep the original string
+// As says in https://spec.commonmark.org/0.30/#about-this-document
+// the HTML encode is not mandated when parsing, it is fine to choose to encode
+// it in rendering process.
 
 /// Maintains the context needed to parse a Markdown document.
 class Document {
@@ -63,19 +72,20 @@ class Document {
 
   /// Parses the given [lines] of Markdown to a series of AST nodes.
   List<Node> parseLines(List<String> lines) {
-    final nodes = BlockParser(lines, this).parseLines();
+    final nodes = BlockParser(linesToSourceSpans(lines), this).parseLines();
     _parseInlineContent(nodes);
     return nodes;
   }
 
   /// Parses the given inline Markdown [text] to a series of AST nodes.
-  List<Node> parseInline(String text) => InlineParser(text, this).parse();
+  List<Node> parseInline(String text) =>
+      InlineParser(SourceFile.fromString(text).span(0), this).parse();
 
   void _parseInlineContent(List<Node> nodes) {
     for (var i = 0; i < nodes.length; i++) {
       final node = nodes[i];
       if (node is UnparsedContent) {
-        final inlineNodes = parseInline(node.textContent);
+        final inlineNodes = InlineParser(node, this).parse();
         nodes.removeAt(i);
         nodes.insertAll(i, inlineNodes);
         i += inlineNodes.length - 1;

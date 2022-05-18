@@ -6,9 +6,14 @@ import '../ast.dart';
 import '../util.dart';
 import 'html_ast.dart';
 
-// TODO(Zhiguang) Add markers to HTML AST
 class HtmlTransformer implements NodeVisitor {
+  final bool encodeHtml;
+
   final List<_TreeElement> _tree = [];
+
+  HtmlTransformer({
+    this.encodeHtml = false,
+  });
 
   List<HtmlNode> transform(List<Node> nodes) {
     _tree
@@ -25,7 +30,7 @@ class HtmlTransformer implements NodeVisitor {
 
   @override
   bool visitElementBefore(Element element) {
-    _tree.add(_TreeElement());
+    _tree.add(_TreeElement(element.type));
 
     return true;
   }
@@ -94,8 +99,16 @@ class HtmlTransformer implements NodeVisitor {
   void visitText(Text text) {
     final parent = _tree.last;
 
+    String content = text.text;
+    if (parent.name == 'codeSpan') {
+      content = content.trim().replaceAll('\n', ' ');
+      if (encodeHtml) {
+        content = escapeHtml(content);
+      }
+    }
+
     if (text is! UnparsedContent) {
-      parent.children.add(HtmlText(text.text));
+      parent.children.add(HtmlText(content));
     }
   }
 
@@ -128,9 +141,10 @@ class HtmlTransformer implements NodeVisitor {
 }
 
 class _TreeElement {
+  final String? name;
   final children = <HtmlNode>[];
 
-  _TreeElement();
+  _TreeElement([this.name]);
 }
 
 const _htmlTagMap = {

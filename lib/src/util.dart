@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:source_span/source_span.dart';
+
 import 'charcode.dart';
 
 String escapeHtml(String html) =>
@@ -94,3 +96,38 @@ extension MatchExtensions on Match {
 
 String mapToPrettyString(Map<String, dynamic> map) =>
     JsonEncoder.withIndent("    ").convert(map);
+
+/// Converts `List<String>` lines to `List<SourceSpan>` lines.
+List<SourceSpan> linesToSourceSpans(
+  List<String> lines, {
+  int line = 0,
+  int offset = 0,
+}) {
+  final spans = <SourceSpan>[];
+
+  for (var i = 0; i < lines.length; i++) {
+    final text = lines[i];
+    final span = SourceFile.fromString(text).span(0);
+
+    if (spans.isNotEmpty) {
+      line = spans.last.end.line + 1;
+      offset = spans.last.end.offset + 1;
+    }
+
+    spans.add(SourceSpan(
+      SourceLocation(
+        offset,
+        line: line,
+        column: span.start.column,
+      ),
+      SourceLocation(
+        offset + span.end.offset,
+        line: line,
+        column: span.end.column,
+      ),
+      text,
+    ));
+  }
+
+  return spans;
+}

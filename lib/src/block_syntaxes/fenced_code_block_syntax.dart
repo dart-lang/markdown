@@ -20,7 +20,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
 
   @override
   bool canParse(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current);
+    final match = pattern.firstMatch(parser.current.text);
     if (match == null) return false;
     final codeFence = match.group(1)!;
     final infoString = match.group(2);
@@ -32,7 +32,6 @@ class FencedCodeBlockSyntax extends BlockSyntax {
         !infoString!.codeUnits.contains($backquote));
   }
 
-  @override
   List<String> parseChildLines(BlockParser parser, [String? endBlock]) {
     endBlock ??= '';
 
@@ -40,9 +39,9 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     parser.advance();
 
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
+      final match = pattern.firstMatch(parser.current.text);
       if (match == null || !match[1]!.startsWith(endBlock)) {
-        childLines.add(parser.current);
+        childLines.add(parser.current.text);
         parser.advance();
       } else {
         parser.advance();
@@ -56,7 +55,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     // Get the syntax identifier, if there is one.
-    final match = pattern.firstMatch(parser.current)!;
+    final match = pattern.firstMatch(parser.current.text)!;
     final endBlock = match.group(1);
     var infoString = match.group(2)!;
 

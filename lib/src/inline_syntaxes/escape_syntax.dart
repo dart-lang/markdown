@@ -20,6 +20,7 @@ class EscapeSyntax extends InlineSyntax {
     // their equivalent HTML entity referenced appears to be missing from the
     // CommonMark spec, but is very present in all of the examples.
     // https://talk.commonmark.org/t/entity-ification-of-quotes-and-brackets-missing-from-spec/3207
+    // TODO(Zhiguang): remove HTML encoding from here
     if (parser.encodeHtml) {
       if (char == $double_quote) {
         parser.addNode(Text.todo('&quot;'));
@@ -28,11 +29,14 @@ class EscapeSyntax extends InlineSyntax {
       } else if (char == $gt) {
         parser.addNode(Text.todo('&gt;'));
       } else {
-        parser.addNode(Text.todo(chars[1]));
+        parser.addNode(_createText(parser));
       }
     } else {
-      parser.addNode(Text.todo(chars[1]));
+      parser.addNode(_createText(parser));
     }
     return true;
   }
+
+  Text _createText(InlineParser parser) =>
+      parser.subText(parser.start + 1, parser.start + 2);
 }

@@ -2,11 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import '../ast.dart';
+import 'package:markdown/markdown.dart';
+
 import '../charcode.dart';
-import '../inline_parser.dart';
 import '../util.dart';
-import 'inline_syntax.dart';
 
 /// Matches backtick-enclosed inline code blocks.
 class CodeSyntax extends InlineSyntax {
@@ -20,7 +19,7 @@ class CodeSyntax extends InlineSyntax {
   //
   // This conforms to the delimiters of inline code, both in Markdown.pl, and
   // CommonMark.
-  static final String _pattern = r'(`+(?!`))((?:.|\n)*?[^`])\1(?!`)';
+  static final String _pattern = r'(`+(?!`))((?:.|\n)*?[^`])(\1)(?!`)';
 
   CodeSyntax() : super(_pattern);
 
@@ -35,7 +34,7 @@ class CodeSyntax extends InlineSyntax {
       return false;
     }
 
-    final match = pattern.matchAsPrefix(parser.source, parser.pos);
+    final match = pattern.matchAsPrefix(parser.sourceText, parser.pos);
     if (match == null) {
       return false;
     }
@@ -46,9 +45,17 @@ class CodeSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    var code = match[2]!.trim().replaceAll('\n', ' ');
-    if (parser.encodeHtml) code = escapeHtml(code);
-    parser.addNode(Element.todo('codeSpan', children: [Text.todo(code)]));
+    final tokens = tokenize(parser, match);
+
+    parser.addNode(
+      Element(
+        'codeSpan',
+        children: [Text.fromSpan(tokens[1])],
+        markers: [tokens[0], tokens[2]],
+        start: parser.source.start,
+        end: parser.source.end,
+      ),
+    );
 
     return true;
   }

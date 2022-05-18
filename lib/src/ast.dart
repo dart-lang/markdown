@@ -2,15 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// TODO(Zhiguang): Add docs
-
 import 'package:source_span/source_span.dart';
 
+import 'token.dart';
 import 'util.dart';
 
 typedef Resolver = Node? Function(String name, [String? title]);
 
-/// Base class for Markdown AST item such as [Element] and [Text]
+/// Base class for Markdown AST item such as [Element] and [Text].
 abstract class Node {
   String get textContent;
 
@@ -19,8 +18,11 @@ abstract class Node {
   Map<String, dynamic> toMap();
 }
 
+/// An AST node that can contain other nodes.
 class Element implements Node {
+  /// Such as `atxHeading`
   final String type;
+
   final List<Token> markers;
   final List<Node> children;
   final SourceLocation start;
@@ -41,6 +43,7 @@ class Element implements Node {
     this.attributes = const {},
   });
 
+  /// TODO(Zhiguang): Delete this constructor
   Element.todo(
     this.type, {
     this.markers = const [],
@@ -76,9 +79,13 @@ class Element implements Node {
   String toString() => mapToPrettyString(toMap());
 }
 
+/// A plain text element.
 class Text extends Token implements Node {
   @override
   String get textContent => text;
+
+  @override
+  void accept(NodeVisitor visitor) => visitor.visitText(this);
 
   Text(
     String text, {
@@ -86,9 +93,10 @@ class Text extends Token implements Node {
     required SourceLocation end,
   }) : super(text, start: start, end: end);
 
-  @override
-  void accept(NodeVisitor visitor) => visitor.visitText(this);
+  /// Instantiates a [Text] from [span].
+  Text.fromSpan(SourceSpan span) : super.fromSpan(span);
 
+  /// TODO(Zhiguang): Delete this constructor
   Text.todo(String text) : super(text, start: _start(), end: _end(text));
 }
 
@@ -105,64 +113,12 @@ class UnparsedContent extends Text {
     required SourceLocation end,
   }) : super(text, start: start, end: end);
 
+  /// Instantiates a [UnparsedContent] from [span].
+  UnparsedContent.fromSpan(SourceSpan span) : super.fromSpan(span);
+
+  /// TODO(Zhiguang): Delete this constructor
   UnparsedContent.todo(String text) : super.todo(text);
 }
-
-class Token extends SourceSpanBase {
-  final Map<String, String> attributes;
-
-  Token(
-    String text, {
-    required SourceLocation start,
-    required SourceLocation end,
-    this.attributes = const {},
-  }) : super(start, end, text);
-
-  /// Creates a new [Token] from [text] and [context]
-  ///
-  /// [line] is the the line where [context] start in the Markdown string.
-  ///
-  /// [offset] is the offset where the [context] start in the Markdown string
-  factory Token.create(
-    String text, {
-    required int line,
-    required int offset,
-    required String context,
-    required int indexStart,
-  }) {
-    final length = text.length;
-    final contentOffset = context.indexOf(text, indexStart);
-    final sourceFile = SourceFile.fromString(context);
-    final fileSpan = sourceFile.span(contentOffset, contentOffset + length);
-
-    final start = SourceLocation(
-      offset + contentOffset,
-      column: fileSpan.start.column,
-      line: line + fileSpan.start.line,
-    );
-
-    final end = SourceLocation(
-      start.offset + length,
-      column: fileSpan.end.column,
-      line: line + fileSpan.end.line,
-    );
-
-    return Token(text, start: start, end: end);
-  }
-
-  Map<String, dynamic> toMap() => {
-        'text': text,
-        'length': length,
-        'start': _sourceLocationToMap(start),
-        'end': _sourceLocationToMap(end),
-        'attributes': attributes,
-      };
-
-  @override
-  String toString() => mapToPrettyString(toMap());
-}
-
-// TODO(Zhiguang): update docs
 
 /// Visitor pattern for the AST.
 ///

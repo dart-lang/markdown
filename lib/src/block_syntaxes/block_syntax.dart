@@ -2,8 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
 import '../block_parser.dart';
+import '../token.dart';
 
 abstract class BlockSyntax {
   const BlockSyntax();
@@ -12,59 +15,23 @@ abstract class BlockSyntax {
   RegExp get pattern;
 
   List<Token> tokenize(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current)!;
-    final groupCount = match.groupCount;
-    final List<String> keys = [];
+    final match = pattern.firstMatch(parser.current.text)!;
 
-    if (groupCount == 1) {
-      keys.add(parser.current);
-    } else {
-      for (var i = 0; i < groupCount; i++) {
-        keys.add(match[i + 1]!);
-      }
-    }
-
-    final List<Token> tokens = [];
-    for (final key in keys) {
-      var indexStart = 0;
-      final lastToken = tokens.isEmpty ? null : tokens.last;
-      if (lastToken != null) {
-        indexStart = lastToken.end.offset - parser.startOffset;
-      }
-
-      tokens.add(Token.create(
-        key,
-        line: parser.line,
-        offset: parser.startOffset,
-        context: parser.current,
-        indexStart: indexStart,
-      ));
-    }
-
-    return tokens;
+    return parseTokensFromMatch(
+      match,
+      text: parser.current.text,
+      offset: parser.current.start.offset,
+      line: parser.line,
+    );
   }
 
   bool canEndBlock(BlockParser parser) => true;
 
   bool canParse(BlockParser parser) {
-    return pattern.hasMatch(parser.current);
+    return pattern.hasMatch(parser.current.text);
   }
 
   Node? parse(BlockParser parser);
-
-  List<String?> parseChildLines(BlockParser parser) {
-    // Grab all of the lines that form the block element.
-    final childLines = <String?>[];
-
-    while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
-      if (match == null) break;
-      childLines.add(match[1]);
-      parser.advance();
-    }
-
-    return childLines;
-  }
 
   /// Gets whether or not [parser]'s current line should end the previous block.
   static bool isAtBlockEnd(BlockParser parser) {
@@ -80,4 +47,11 @@ abstract class BlockSyntax {
           .trim()
           .replaceAll(RegExp('[^a-z0-9 _-]'), '')
           .replaceAll(RegExp(r'\s'), '-');
+}
+
+class BlockSyntaxChildSource {
+  final List<Token> markers;
+  final List<SourceSpan> lines;
+
+  BlockSyntaxChildSource(this.markers, this.lines);
 }

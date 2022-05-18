@@ -41,12 +41,13 @@ class DelimiterSyntax extends InlineSyntax {
     final runLength = match.group(0)!.length;
     final matchStart = parser.pos;
     final matchEnd = parser.pos + runLength;
-    final text = Text.todo(parser.source.substring(matchStart, matchEnd));
+    final text = parser.subText(matchStart, matchEnd);
+
     if (!requiresDelimiterRun) {
       parser.pushDelimiter(SimpleDelimiter(
         node: text,
         length: runLength,
-        char: parser.source.codeUnitAt(matchStart),
+        char: parser.sourceText.codeUnitAt(matchStart),
         canOpen: true,
         canClose: false,
         syntax: this,
@@ -91,7 +92,14 @@ class DelimiterSyntax extends InlineSyntax {
     required String type,
     required List<Node> Function() getChildren,
   }) {
-    return Element.todo(type, children: getChildren());
+    return Element(
+      type,
+      children: getChildren(),
+      // TODO(Zhiguang): fix markers
+      markers: [],
+      start: parser.source.start,
+      end: parser.source.end,
+    );
   }
 }
 
@@ -278,15 +286,15 @@ class DelimiterRun implements Delimiter {
       rightFlanking = false;
       preceding = '\n';
     } else {
-      preceding = parser.source.substring(runStart - 1, runStart);
+      preceding = parser.sourceText.substring(runStart - 1, runStart);
     }
     precededByPunctuation = punctuation.hasMatch(preceding);
 
-    if (runEnd == parser.source.length) {
+    if (runEnd == parser.sourceText.length) {
       leftFlanking = false;
       following = '\n';
     } else {
-      following = parser.source.substring(runEnd, runEnd + 1);
+      following = parser.sourceText.substring(runEnd, runEnd + 1);
     }
     followedByPunctuation = punctuation.hasMatch(following);
 

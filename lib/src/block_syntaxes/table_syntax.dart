@@ -32,7 +32,7 @@ class TableSyntax extends BlockSyntax {
   /// * many body rows of body cells
   @override
   Node? parse(BlockParser parser) {
-    final alignments = _parseAlignments(parser.next!);
+    final alignments = _parseAlignments(parser.next!.text);
     final columnCount = alignments.length;
     final headRow = _parseRow(parser, alignments, 'tableHeadCell');
     if (headRow.children.length != columnCount) {
@@ -105,7 +105,7 @@ class TableSyntax extends BlockSyntax {
     List<String?> alignments,
     String cellType,
   ) {
-    final line = parser.current;
+    final line = parser.current.text;
     final cells = <String>[];
     var index = _walkPastOpeningPipe(line);
     final cellBuffer = StringBuffer();

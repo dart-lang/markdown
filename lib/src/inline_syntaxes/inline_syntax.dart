@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import '../inline_parser.dart';
+import '../token.dart';
 import '../util.dart';
 
 /// Represents one kind of Markdown tag that can be parsed.
@@ -25,6 +26,13 @@ abstract class InlineSyntax {
             RegExp(pattern, multiLine: true, caseSensitive: caseSensitive),
         _startCharacter = startCharacter;
 
+  List<Token> tokenize(InlineParser parser, Match match) =>
+      parseTokensFromMatch(
+        match,
+        offset: parser.source.start.offset,
+        line: parser.source.start.line,
+      );
+
   /// Tries to match at the parser's current position.
   ///
   /// The parser's position can be overriden with [startMatchPos].
@@ -36,11 +44,11 @@ abstract class InlineSyntax {
     // expensive on some platforms, check if even the first character matches
     // this syntax.
     if (_startCharacter != null &&
-        parser.source.codeUnitAt(startMatchPos) != _startCharacter) {
+        parser.sourceText.codeUnitAt(startMatchPos) != _startCharacter) {
       return false;
     }
 
-    final startMatch = pattern.matchAsPrefix(parser.source, startMatchPos);
+    final startMatch = pattern.matchAsPrefix(parser.sourceText, startMatchPos);
     if (startMatch == null) return false;
 
     // Write any existing plain text up to this point.

@@ -24,7 +24,7 @@ import 'document.dart';
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
 class BlockParser {
-  final List<String> lines;
+  final List<SourceSpan> _lines;
 
   /// The Markdown document this parser is parsing.
   final Document document;
@@ -39,9 +39,6 @@ class BlockParser {
   int _pos = 0;
 
   int get line => _pos;
-
-  // Offset of current line
-  int startOffset = 0;
 
   /// Whether the parser has encountered a blank line between two block-level
   /// elements.
@@ -69,7 +66,7 @@ class BlockParser {
     const ParagraphSyntax()
   ];
 
-  BlockParser(this.lines, this.document) {
+  BlockParser(List<SourceSpan> lines, this.document) : _lines = lines {
     blockSyntaxes.addAll(document.blockSyntaxes);
 
     if (document.withDefaultBlockSyntaxes) {
@@ -80,25 +77,13 @@ class BlockParser {
   }
 
   /// Gets the current line.
-  String get current => lines[_pos];
-
-  SourceLocation get startLocation => SourceLocation(
-        startOffset,
-        line: line,
-        column: 0,
-      );
-
-  SourceLocation get endLocation => SourceLocation(
-        startOffset + current.length,
-        line: line,
-        column: current.length,
-      );
+  SourceSpan get current => _lines[_pos];
 
   /// Gets the line after the current one or `null` if there is none.
-  String? get next {
+  SourceSpan? get next {
     // Don't read past the end.
-    if (_pos >= lines.length - 1) return null;
-    return lines[_pos + 1];
+    if (_pos >= _lines.length - 1) return null;
+    return _lines[_pos + 1];
   }
 
   /// Gets the line that is [linesAhead] lines ahead of the current one, or
@@ -107,35 +92,31 @@ class BlockParser {
   /// `peek(0)` is equivalent to [current].
   ///
   /// `peek(1)` is equivalent to [next].
-  String? peek(int linesAhead) {
+  SourceSpan? peek(int linesAhead) {
     if (linesAhead < 0) {
       throw ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.');
     }
     // Don't read past the end.
-    if (_pos >= lines.length - linesAhead) return null;
-    return lines[_pos + linesAhead];
+    if (_pos >= _lines.length - linesAhead) return null;
+    return _lines[_pos + linesAhead];
   }
 
   void advance() {
     _pos++;
-
-    if (!isDone) {
-      startOffset += current.length + 1;
-    }
   }
 
-  bool get isDone => _pos >= lines.length;
+  bool get isDone => _pos >= _lines.length;
 
   /// Gets whether or not the current line matches the given pattern.
   bool matches(RegExp regex) {
     if (isDone) return false;
-    return regex.hasMatch(current);
+    return regex.hasMatch(current.text);
   }
 
   /// Gets whether or not the next line matches the given pattern.
   bool matchesNext(RegExp regex) {
     if (next == null) return false;
-    return regex.hasMatch(next!);
+    return regex.hasMatch(next!.text);
   }
 
   List<Node> parseLines() {

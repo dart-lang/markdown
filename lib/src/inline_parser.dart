@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import 'ast.dart';
 import 'charcode.dart';
 import 'document.dart';
@@ -53,7 +55,9 @@ class InlineParser {
   ]);
 
   /// The string of Markdown being parsed.
-  final String source;
+  String get sourceText => source.text;
+
+  final SourceSpan source;
 
   /// The Markdown document this parser is parsing.
   final Document document;
@@ -329,16 +333,17 @@ class InlineParser {
     }
   }
 
-  int charAt(int index) => source.codeUnitAt(index);
+  int charAt(int index) => sourceText.codeUnitAt(index);
 
   void writeText() {
     if (pos == start) {
       return;
     }
-    final text = source.substring(start, pos);
-    _tree.add(Text.todo(text));
+    _tree.add(subText(start, pos));
     start = pos;
   }
+
+  Text subText(int start, int end) => Text.fromSpan(source.subspan(start, end));
 
   /// Add [node] to the current tree.
   void addNode(Node node) {
@@ -348,7 +353,7 @@ class InlineParser {
   /// Push [delimiter] onto the stack of [Delimiter]s.
   void pushDelimiter(Delimiter delimiter) => _delimiterStack.add(delimiter);
 
-  bool get isDone => pos == source.length;
+  bool get isDone => pos == sourceText.length;
 
   void advanceBy(int length) {
     pos += length;

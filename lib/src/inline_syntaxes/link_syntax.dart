@@ -30,11 +30,11 @@ class LinkSyntax extends DelimiterSyntax {
     String? type,
     required List<Node> Function() getChildren,
   }) {
-    final text = parser.source.substring(opener.endPos, parser.pos);
+    final text = parser.sourceText.substring(opener.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('
     // means a possible inline link; otherwise a possible reference link).
-    if (parser.pos + 1 >= parser.source.length) {
+    if (parser.pos + 1 >= parser.sourceText.length) {
       // The `]` is at the end of the document, but this may still be a valid
       // shortcut reference link.
       return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
@@ -70,7 +70,7 @@ class LinkSyntax extends DelimiterSyntax {
       parser.advanceBy(1);
       // At this point, we've matched `[...][`. Maybe a *full* reference link,
       // like `[foo][bar]` or a *collapsed* reference link, like `[foo][]`.
-      if (parser.pos + 1 < parser.source.length &&
+      if (parser.pos + 1 < parser.sourceText.length &&
           parser.charAt(parser.pos + 1) == $rbracket) {
         // That opening `[` is not actually part of the link. Maybe a
         // *shortcut* reference link (followed by a `[`).

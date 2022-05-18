@@ -2,9 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
 import '../block_parser.dart';
 import '../patterns.dart';
+import '../token.dart';
 import 'block_syntax.dart';
 import 'code_block_syntax.dart';
 import 'paragraph_syntax.dart';
@@ -16,18 +19,25 @@ class BlockquoteSyntax extends BlockSyntax {
 
   const BlockquoteSyntax();
 
-  @override
-  List<String> parseChildLines(BlockParser parser) {
+  BlockSyntaxChildSource parseChildLines(BlockParser parser) {
     // Grab all of the lines that form the blockquote, stripping off the ">".
-    final childLines = <String>[];
+    final childLines = <SourceSpan>[];
+    final markers = <Token>[];
 
     bool encounteredCodeBlock = false;
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
+      final match = pattern.firstMatch(parser.current.text);
       if (match != null) {
-        final line = match[1]!;
+        final tokens = parseTokensFromMatch(
+          match,
+          offset: parser.current.start.offset,
+          line: parser.line,
+        );
+        markers.add(tokens[0]);
+
+        final line = tokens[1];
         childLines.add(line);
-        encounteredCodeBlock = indentPattern.hasMatch(line);
+        encounteredCodeBlock = indentPattern.hasMatch(line.text);
         parser.advance();
         continue;
       }
@@ -48,16 +58,27 @@ class BlockquoteSyntax extends BlockSyntax {
       }
     }
 
-    return childLines;
+    return BlockSyntaxChildSource(markers, childLines);
   }
 
   @override
   Node parse(BlockParser parser) {
-    final childLines = parseChildLines(parser);
+    final start = parser.current.start;
+    final end = parser.current.end;
+    final childSource = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
-    final children = BlockParser(childLines, parser.document).parseLines();
+    final children = BlockParser(
+      childSource.lines,
+      parser.document,
+    ).parseLines();
 
-    return Element.todo('blockquote', children: children);
+    return Element(
+      'blockquote',
+      children: children,
+      markers: childSource.markers,
+      start: start,
+      end: end,
+    );
   }
 }

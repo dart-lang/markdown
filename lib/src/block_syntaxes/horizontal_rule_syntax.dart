@@ -5,6 +5,7 @@
 import '../ast.dart';
 import '../block_parser.dart';
 import '../patterns.dart';
+import '../token.dart';
 import 'block_syntax.dart';
 
 /// Parses horizontal rules like `---`, `_ _ _`, `*  *  *`, etc.
@@ -16,7 +17,17 @@ class HorizontalRuleSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
+    final start = parser.current.start;
+    final end = parser.current.end;
+    final marker = Token(parser.current.text, start: start, end: end);
+
     parser.advance();
-    return Element.todo('thematicBreak');
+
+    return Element(
+      'thematicBreak',
+      markers: [marker.trim()],
+      start: start,
+      end: end,
+    );
   }
 }
