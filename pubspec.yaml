@@ -9,16 +9,11 @@ executables:
   markdown:
 
 environment:
-  sdk: '>=2.16.2 <3.0.0'
-
-publish_to: none
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  archive: ^3.3.0
   args: ^2.0.0
-  http: ^0.13.0
-  kroki: ^0.0.1
-  #  path: ../kroki.dart/
+  kroki: ^0.0.2
   meta: ^1.3.0
 
 dev_dependencies:

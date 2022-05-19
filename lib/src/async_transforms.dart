@@ -8,15 +8,16 @@ import 'extension_set.dart';
 import 'inline_syntaxes/inline_syntax.dart';
 
 class AsyncDocument extends Document {
-  /// Manages any async node transforms that may be uncompleted
-  //final AsyncTranformManager asyncTransformManager = AsyncTranformManager();
+  /// List of async text node transforms that may be uncompleted
   final List<Future<String>> asyncTextNodes = [];
 
+  /// Called before final conversion to html so ensure that all
+  /// async text nodes have completed.
   Future<List<String>> waitForCompletion() {
     return Future.wait(asyncTextNodes);
   }
 
-  // New super initializer syntax
+  // New super initializer syntax -
   // AsyncDocument({
   //   super.blockSyntaxes,
   //   super.inlineSyntaxes,
@@ -49,14 +50,14 @@ class AsyncDocument extends Document {
             withDefaultInlineSyntaxes: withDefaultInlineSyntaxes);
 }
 
-/// A plain text element.
+/// An async text element whos value will change once the future completes.
 class AsyncText extends Text {
   String? asyncTextVal;
 
   bool isComplete = false;
 
   AsyncText(Future<String> theFuture, BlockParser parser,
-      {String uncompletedFutureTextValue = 'uncompleted future'})
+      {String uncompletedFutureTextValue = 'Uncompleted future.'})
       : super(uncompletedFutureTextValue) {
     final AsyncDocument parentDoc = parser.document as AsyncDocument;
 
@@ -65,54 +66,23 @@ class AsyncText extends Text {
     theFuture.then((val) {
       asyncTextVal = val;
       isComplete = true;
-      //print('INNTER THEN Setting to returnsvg = ${val.substring(0, 20)}');
       return val;
     }).onError((error, stackTrace) {
       asyncTextVal = 'Exception $error creating AsyncText node.';
       isComplete = true;
       print(asyncTextVal);
       print(stackTrace);
-      return asyncTextVal!;
+      return text; // Use original text value on error.
     });
   }
-
-// //KLUDGE just here to shut up warning of not using _asyncFutureText
-//   Future<String> get asyncFutureText {
-//     return _asyncFutureText!;
-//   }
-
-//   set asyncFutureText(Future<String> theFuture) {
-//     _asyncFutureText = theFuture;
-//     parentDoc.asyncTransformManager.asyncTextNodes.add(theFuture);
-
-//     theFuture.then((val) {
-//       asyncTextVal = val;
-//       isComplete = true;
-//       print('INNTER THEN Setting to returnsvg = ${val.substring(0, 20)}');
-//       return val;
-//     }).onError((error, stackTrace) {
-//       asyncTextVal = 'Exception $error creating INNER ASYNC';
-//       isComplete = true;
-//       print(asyncTextVal);
-//       print(stackTrace);
-//       return asyncTextVal!;
-//     });
-//   }
 
   @override
   String get textContent {
     if (!isComplete || asyncTextVal == null) {
+      // Return original text if future not complete or there
+      // is no async text value.
       return text;
     }
     return asyncTextVal!;
   }
 }
-
-// class AsyncTranformManager {
-//   final List<Future<String>> asyncTextNodes = [];
-
-//   Future<List<String>> waitForCompletion() {
-//     print('Here in waitForCompletion() about to WAIT asyncTextNodes.length=${asyncTextNodes.length}');
-//     return Future.wait(asyncTextNodes);
-//   }
-// }

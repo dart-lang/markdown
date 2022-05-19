@@ -15,7 +15,7 @@ final htmlDiv = querySelector('#html') as DivElement;
 final versionSpan = querySelector('.version') as SpanElement;
 
 final nullSanitizer = NullTreeSanitizer();
-const typing = Duration(milliseconds: 150);
+
 String sampleDiagramsText = buildSamplesText(1, 10);
 bool useLocalStorageVersion = false;
 
@@ -23,9 +23,13 @@ bool useLocalStorageVersion = false;
 final basicRadio = querySelector('#basic-radio') as HtmlElement;
 final commonmarkRadio = querySelector('#commonmark-radio') as HtmlElement;
 final gfmRadio = querySelector('#gfm-radio') as HtmlElement;
+
+// samples groups radio buttons.
 final group1Radio = querySelector('#group1-radio') as HtmlElement;
 final group2Radio = querySelector('#group2-radio') as HtmlElement;
 final group3Radio = querySelector('#group3-radio') as HtmlElement;
+
+// extension set choices
 md.ExtensionSet? extensionSet;
 
 final extensionSets = {
@@ -40,7 +44,8 @@ void main() {
 
   final savedMarkdown = window.localStorage['markdown'];
 
-  if (useLocalStorageVersion && savedMarkdown != null &&
+  if (useLocalStorageVersion &&
+      savedMarkdown != null &&
       savedMarkdown.isNotEmpty &&
       savedMarkdown != sampleDiagramsText) {
     markdownInput.value = savedMarkdown;
@@ -60,6 +65,10 @@ void main() {
   commonmarkRadio.onClick.listen(_switchFlavor);
   gfmRadio.onClick.listen(_switchFlavor);
 
+  // set default samples group
+  group1Radio.attributes['checked'] = '';
+  group1Radio.querySelector('.glyph')!.text = 'radio_button_checked';
+
   group1Radio.onClick.listen(_switchExamples);
   group2Radio.onClick.listen(_switchExamples);
   group3Radio.onClick.listen(_switchExamples);
@@ -68,12 +77,12 @@ void main() {
 void _renderMarkdown([Event? event]) async {
   final markdown = markdownInput.value!;
 
-  final finalHtml = await md.markdownToHtmlWithAsyncTransforms(markdown,
+  final outputHtml = await md.markdownToHtmlWithAsyncTransforms(markdown,
       blockSyntaxes: [diagramTransformingFencedCodeBlock],
       extensionSet: extensionSet);
 
   htmlDiv.setInnerHtml(
-    finalHtml,
+    outputHtml,
     treeSanitizer: nullSanitizer,
   );
 
@@ -121,8 +130,6 @@ void _switchFlavor(Event e) {
   }
 }
 
-
-
 void _switchExamples(Event e) {
   final target = e.currentTarget as HtmlElement;
   if (!target.attributes.containsKey('checked')) {
@@ -146,7 +153,7 @@ void _switchExamples(Event e) {
       groupLen = 15;
     }
 
-    target.attributes['checked'] = '';
+    target.attributes['checked'] = 'true';
     target.querySelector('.glyph')!.text = 'radio_button_checked';
     sampleDiagramsText = buildSamplesText(groupStart, groupLen);
     _setMarkdown(sampleDiagramsText);
@@ -161,8 +168,8 @@ class NullTreeSanitizer implements NodeTreeSanitizer {
 String buildSamplesText(int startIndex, int numTests) {
   final List<String> sampleTextBlocks = [];
 
-  for (var i=startIndex;i<(startIndex+numTests);i++) {
-    if(i>=KrokiSampleDiagrams.samples.length) break;
+  for (var i = startIndex; i < (startIndex + numTests); i++) {
+    if (i >= KrokiSampleDiagrams.samples.length) break;
     final sample = KrokiSampleDiagrams.samples[i];
     sampleTextBlocks.add('''
 ## [${sample.name}](${sample.url})

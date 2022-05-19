@@ -22,11 +22,47 @@ import 'block_syntax.dart';
 /// returns an Element than that Element is returned, else the [postProcessors]
 /// list continues to be checked until there are no more processors.
 /// If no processor transforms the code block then the code block is
-/// handled as [FencedCodeBlockSyntax] would and a
+/// handled as [FencedCodeBlockSyntax] would have and a
 ///   `<pre><code [class='language-$infoString']>...</code><pre>`
 /// Element is returned.
 ///
 /// See the CommonMark spec: https://spec.commonmark.org/0.29/#fenced-code-blocks
+///
+/// Example of [TransformableFencedCodeBlockSyntax] being used for
+/// asynchronous code block transformations.
+///
+/// ```dart
+/// import 'package:kroki/kroki.dart';
+/// import 'package:markdown/markdown.dart' as markdown;
+///
+/// final Kroki kroki = Kroki();
+///
+/// class DiagramTransfomer extends markdown.CodeBlockTransformer {
+///   @override
+///   markdown.Node? transformCodeBlock(
+///       String codeBlockType, String rawCodeBlock, markdown.BlockParser parser) {
+///     final markdown.AsyncText asyncText = markdown.AsyncText(
+///         kroki.convertDiagram(codeBlockType, rawCodeBlock), parser,
+///         uncompletedFutureTextValue:
+///             rawCodeBlock // fall back to showing diagram source
+///         );
+///     return asyncText;
+///   }
+///
+///   DiagramTransfomer() :
+///     super(handledCodeBlockTypes:KrokiDiagramEndpoints.supportedEndpoints);
+/// }
+///
+/// final diagramTransformingFencedCodeBlock =
+///     markdown.TransformableFencedCodeBlockSyntax([DiagramTransfomer()]);
+///
+/// main() {
+///     final finalHtml = await markdown.markdownToHtmlWithAsyncTransforms(
+///           markdownSource,
+///           blockSyntaxes: [diagramTransformingFencedCodeBlock],
+///           extensionSet: markdown.ExtensionSet.gitHubWeb);
+/// }
+/// ```
 class TransformableFencedCodeBlockSyntax extends BlockSyntax {
   @override
   RegExp get pattern => codeFencePattern;

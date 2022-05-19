@@ -145,6 +145,10 @@ i.glyph {
   color: #22d3c5;
 }
 
+#examplesbar .radio[checked] i.glyph {
+  color: #6622d3;
+}
+
 i.glyph.big {
   font-size: 32px;
   height: 32px;
