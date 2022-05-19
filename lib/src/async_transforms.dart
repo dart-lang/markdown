@@ -13,8 +13,6 @@ class AsyncDocument extends Document {
   final List<Future<String>> asyncTextNodes = [];
 
   Future<List<String>> waitForCompletion() {
-    print(
-        'Here in waitForCompletion() about to WAIT asyncTextNodes.length=${asyncTextNodes.length}');
     return Future.wait(asyncTextNodes);
   }
 
