@@ -17,8 +17,8 @@ dependencies:
   archive: ^3.3.0
   args: ^2.0.0
   http: ^0.13.0
-  kroki:
-    path: ../kroki.dart/
+  kroki: ^0.0.1
+  #  path: ../kroki.dart/
   meta: ^1.3.0
 
 dev_dependencies:
