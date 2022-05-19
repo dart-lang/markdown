@@ -6,19 +6,29 @@ import 'ast.dart';
 import 'block_parser.dart';
 
 abstract class CodeBlockTransformer {
-  /// override this with list of code block types the CodeBlockProcessor
-  /// handles.  The list of strings should be all lower-case as it will be
-  /// checked with lower cased strings so that it is case insensitive.
-  List<String> handledCodeBlockTypes = [];
+  /// [handledCodeBlockTypes] is set by constructor to the list of code
+  /// block types that the [CodeBlockProcessor] subclass handles.  The list
+  /// of strings should all be lower-case as it will be checked with lower
+  /// cased strings so as to be case insensitive.
+  late final List<String> handledCodeBlockTypes;
 
   bool expectsEncodedHtml = false;
 
+  /// Override with more complex logic if desired.
   bool canTransformCodeBlockType(String blockType) {
     return handledCodeBlockTypes.contains(blockType.toLowerCase());
   }
 
+  /// Implement this method to handle code block transformations.
+  /// This will be called only with code block of the types specified
+  /// in the constructor. [null] can be returned if no transformation
+  /// is performed and you want to pass to the next [CodeBlockTransformer]
+  /// in the [TransformableFencedCodeBlockSyntax]'s list.
+  /// If asynchronous transformations are required return [AsyncText]
+  /// nodes and be sure to use the [markdownToHtmlWithAsyncTransforms]
+  /// method to initiate the transform.
   Node? transformCodeBlock(
       String codeBlockType, String rawCodeBlock, BlockParser parser);
 
-  CodeBlockTransformer();
+  CodeBlockTransformer({required this.handledCodeBlockTypes});
 }
