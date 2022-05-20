@@ -1,11 +1,16 @@
 >>> without an optional language identifier
-```
+```secondary
 code
+CODE2
 ```
 
+outsideline
 <<<
-<pre><code>code
-</code></pre>
+secondary
+CODE
+CODE2
+
+<p>outsideline</p>
 >>> testtype1 fenced codeblock identifier
 ```testtype
 code
@@ -59,9 +64,10 @@ code
 </div>
 >>> Pandoc style with 'secondary' language identifier (only in secondary transformer type list)
 ~~~~~secondary
-code
+secondtransformergetsthis
 ~~~~~
 
 <<<
-<pre><code class="language-secondary">code
-</code></pre>
+secondary
+SECONDTRANSFORMERGETSTHIS
+

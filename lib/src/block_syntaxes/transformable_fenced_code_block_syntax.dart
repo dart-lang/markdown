@@ -155,7 +155,7 @@ class TransformableFencedCodeBlockSyntax extends BlockSyntax {
       text = encodedHtmlText ?? escapeHtml(text);
     }
     final code = Element.text('code', text);
-    if(infoString.isNotEmpty) {
+    if (infoString.isNotEmpty) {
       code.attributes['class'] = 'language-$infoString';
     }
     final element = Element('pre', [code]);
