@@ -20,8 +20,6 @@ Future<String> markdownToHtmlWithAsyncTransforms(
   bool encodeHtml = true,
   bool withDefaultBlockSyntaxes = true,
   bool withDefaultInlineSyntaxes = true,
-  Duration? maximumTimeToWaitForCompletion,
-  void Function(String html)? thenFunction,
 }) async {
   final asyncDocument = AsyncDocument(
     blockSyntaxes: blockSyntaxes,
