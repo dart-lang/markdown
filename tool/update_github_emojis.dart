@@ -10,11 +10,11 @@ import 'package:args/args.dart';
 
 import 'package:markdown/src/legacy_emojis.dart' as legacy;
 
-/// REGEXP to parse GitHub emoji API output filenames
+/// Regular expression to parse GitHub emoji API output filenames.
 RegExp parseGitHubEmojiApi =
     RegExp(r'^[\ \t]+"(.*?)".*unicode\/([A-Fa-f0-9\-]+)\.png');
 
-/// REGEXP to parse GitHub emoji API output filenames
+/// Regular expression to parse GitHub emoji API output filenames.
 RegExp parseGitHubEmojiUnicodeFromFilename =
     RegExp(r'.*unicode\/([A-Fa-f0-9\-]+)\.png');
 
@@ -25,7 +25,7 @@ RegExp parseGitHubEmojiUnicodeFromFilename =
 /// The 'beetle' emoji changes from `🐞` to `🪲`, legacy available as 'lady_beetle'.
 /// The 'cricket' emoji changes from `🏏` to `🦗`, legacy available as 'cricket_game'.
 /// (if the -g flag us used to force using the GitHub Unicode sequences for the
-/// emoji then additionally the 'email' emoji changes from '✉️' to '📧')
+/// emoji then additionally the 'email' emoji changes from '✉️' to '📧').
 final _emojisJsonRawUrl = 'https://api.github.com/emojis';
 final _emojisFilePath = 'lib/src/emojis.dart';
 
