@@ -17,7 +17,7 @@ class DummyBlockSyntax extends BlockSyntax {
   RegExp get pattern => dummyPattern;
 
   @override
-  bool canEndBlock(BlockParser parser) => false;
+  bool canInterrupt(BlockParser parser) => false;
 
   @override
   bool canParse(BlockParser parser) => true;
@@ -26,8 +26,8 @@ class DummyBlockSyntax extends BlockSyntax {
   Node parse(BlockParser parser) {
     final childLines = <String>[];
 
-    while (!BlockSyntax.isAtBlockEnd(parser)) {
-      childLines.add(parser.current.text);
+    while (!shouldEnd(parser)) {
+      childLines.add(parser.current.content.text);
       parser.advance();
     }
 

@@ -19,7 +19,7 @@ baz</em></h1>
 baz*	
 ====
 <<<
-<h1>  Foo <em>bar
+<h1>Foo <em>bar
 baz</em></h1>
 >>> Setext headings - 83
 Foo
@@ -40,9 +40,9 @@ Foo
   Foo
   ===
 <<<
-<h2>   Foo</h2>
-<h2>  Foo</h2>
-<h1>  Foo</h1>
+<h2>Foo</h2>
+<h2>Foo</h2>
+<h1>Foo</h1>
 >>> Setext headings - 85
     Foo
     ---
@@ -115,9 +115,10 @@ bar
 ===
 <<<
 <blockquote>
-<p>foo</p>
+<p>foo
+bar
+===</p>
 </blockquote>
-<h1>bar</h1>
 >>> Setext headings - 94
 - Foo
 ---

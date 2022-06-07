@@ -4,8 +4,7 @@
 
 import 'package:source_span/source_span.dart';
 
-import 'token.dart';
-import 'util.dart';
+import 'extensions.dart';
 
 typedef Resolver = Node? Function(String name, [String? title]);
 
@@ -23,10 +22,18 @@ class Element implements Node {
   /// Such as `atxHeading`
   final String type;
 
-  final List<Token> markers;
+  final List<SourceSpan> markers;
+
+  /// The line endings should be saved in [lineEndings] include:
+  /// 1. A line ending of a marker.
+  /// 2. The final line ending of a content other than a maker.
+  ///
+  /// The way of handling the ones not saved in [lineEndings], for example in a
+  /// paragraph:
+  /// 1. Concat with other [Text] node when it is possible.
+  /// 2. Otherwise save it as a [Text] node along with other [children].
+  final List<SourceSpan> lineEndings;
   final List<Node> children;
-  final SourceLocation start;
-  final SourceLocation end;
   final Map<String, String> attributes;
 
   @override
@@ -37,9 +44,8 @@ class Element implements Node {
   Element(
     this.type, {
     this.markers = const [],
+    this.lineEndings = const [],
     this.children = const [],
-    required this.start,
-    required this.end,
     this.attributes = const {},
   });
 
@@ -47,10 +53,10 @@ class Element implements Node {
   Element.todo(
     this.type, {
     this.markers = const [],
+    this.lineEndings = const [],
     this.children = const [],
     this.attributes = const {},
-  })  : start = _start(),
-        end = _end('0');
+  });
 
   @override
   void accept(NodeVisitor visitor) {
@@ -68,19 +74,22 @@ class Element implements Node {
   Map<String, dynamic> toMap() => {
         'type': type,
         'markers': markers.map((e) => e.toMap()).toList(),
+        'lineEndings': lineEndings.map((e) => e.toMap()).toList(),
         'children': children.map((e) => e.toMap()).toList(),
-        'start': _sourceLocationToMap(start),
-        'end': _sourceLocationToMap(end),
         'attributes': attributes,
         'textContent': textContent,
       };
 
   @override
-  String toString() => mapToPrettyString(toMap());
+  String toString() => toMap().toPrettyString();
 }
 
 /// A plain text element.
-class Text extends Token implements Node {
+class Text extends SourceSpanBase implements Node {
+  /// How many spaces of a tab that remains after part of it has been consumed.
+  // See: https://spec.commonmark.org/0.30/#example-6
+  final int? tabRemaining;
+
   @override
   String get textContent => text;
 
@@ -91,13 +100,29 @@ class Text extends Token implements Node {
     String text, {
     required SourceLocation start,
     required SourceLocation end,
-  }) : super(text, start: start, end: end);
+    this.tabRemaining,
+  }) : super(start, end, text);
 
   /// Instantiates a [Text] from [span].
-  Text.fromSpan(SourceSpan span) : super.fromSpan(span);
+  Text.fromSpan(
+    SourceSpan span, {
+    this.tabRemaining,
+  }) : super(span.start, span.end, span.text);
 
   /// TODO(Zhiguang): Delete this constructor
-  Text.todo(String text) : super(text, start: _start(), end: _end(text));
+  Text.todo(String text)
+      : tabRemaining = null,
+        super(_start(), _end(text), text);
+
+  @override
+  Map<String, dynamic> toMap() => {
+        'text': text,
+        'start': start.toMap(),
+        'end': end.toMap(),
+      };
+
+  @override
+  String toString() => toMap().toPrettyString();
 }
 
 /// Inline content that has not been parsed into inline nodes (strong, links,
@@ -141,12 +166,6 @@ abstract class Visitor<T, E> {
 }
 
 abstract class NodeVisitor extends Visitor<Text, Element> {}
-
-Map<String, int> _sourceLocationToMap(SourceLocation location) => {
-      'line': location.line,
-      'column': location.column,
-      'offset': location.offset,
-    };
 
 // TODO(Zhiguang): Delete the lines below
 var _offset = 0;

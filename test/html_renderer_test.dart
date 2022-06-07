@@ -25,7 +25,7 @@ void main() {
         withDefaultBlockSyntaxes: false,
         withDefaultInlineSyntaxes: false,
         encodeHtml: false,
-        blockSyntaxes: [const HorizontalRuleSyntax()],
+        blockSyntaxes: [const ThematicBreakSyntax()],
         inlineSyntaxes: [
           EmphasisSyntax.asterisk(),
         ],

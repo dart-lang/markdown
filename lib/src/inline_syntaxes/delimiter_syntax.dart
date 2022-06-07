@@ -97,8 +97,6 @@ class DelimiterSyntax extends InlineSyntax {
       children: getChildren(),
       // TODO(Zhiguang): fix markers
       markers: [],
-      start: parser.source.start,
-      end: parser.source.end,
     );
   }
 }

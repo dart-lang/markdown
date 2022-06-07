@@ -30,6 +30,11 @@ class HtmlTransformer implements NodeVisitor {
 
   @override
   bool visitElementBefore(Element element) {
+    if (element.type == 'blankLine' ||
+        element.type == 'linkReferenceDefinition') {
+      return false;
+    }
+
     _tree.add(_TreeElement(element.type));
 
     return true;
@@ -43,18 +48,22 @@ class HtmlTransformer implements NodeVisitor {
 
     HtmlElement node;
 
-    if (type == 'indentedCodeBlock' || type == 'fencedCodeBlock') {
+    if (_isCodeBlock(type)) {
       final code = HtmlElement('code', current.children);
 
       if (type == 'fencedCodeBlock' && attributes['infoString'] != null) {
-        code.attributes['class'] = 'language-${attributes['infoString']}';
+        var infoString = attributes['infoString']!;
+        if (encodeHtml) {
+          infoString = escapeHtmlAttribute(infoString);
+        }
+        code.attributes['class'] = 'language-$infoString';
       }
 
       node = HtmlElement('pre', [code]);
     } else {
       String tag = _htmlTagMap[type] ?? type;
 
-      if (type == 'atxHeading' || type == 'setextHeading') {
+      if (_isHeading(type)) {
         tag = 'h${attributes['level']}';
       }
 
@@ -67,7 +76,7 @@ class HtmlTransformer implements NodeVisitor {
       } else {
         node = HtmlElement(tag, current.children);
 
-        if (type == 'atxHeading' || type == 'setextHeading') {
+        if (_isHeading(type)) {
           node.generatedId = attributes['generatedId'];
         } else if (type == 'orderedList' && attributes['start'] != null) {
           node.attributes['start'] = attributes['start']!;
@@ -101,16 +110,35 @@ class HtmlTransformer implements NodeVisitor {
 
     String content = text.text;
     if (parent.name == 'codeSpan') {
-      content = content.trim().replaceAll('\n', ' ');
+      if (!RegExp(r'^\s+$').hasMatch(content)) {
+        content = content.trim().replaceAll('\n', ' ');
+      } else {
+        // See https://spec.commonmark.org/0.30/#example-138
+        content = ' ';
+      }
       if (encodeHtml) {
         content = escapeHtml(content);
       }
+    } else if (_isCodeBlock(parent.name)) {
+      if (encodeHtml) {
+        content = escapeHtml(content);
+      }
+    }
+
+    if (text.tabRemaining != null && text.tabRemaining! > 0) {
+      content = "${' ' * text.tabRemaining!}$content";
     }
 
     if (text is! UnparsedContent) {
       parent.children.add(HtmlText(content));
     }
   }
+
+  bool _isCodeBlock(String? type) =>
+      type == 'indentedCodeBlock' || type == 'fencedCodeBlock';
+
+  bool _isHeading(String? type) =>
+      type == 'atxHeading' || type == 'setextHeading';
 
   bool _isSelfClosing(Element element) =>
       [

@@ -40,10 +40,7 @@ String markdownToHtml(
     return renderToHtml(document.parseInline(markdown));
   }
 
-  // Replace windows line endings with unix line endings, and split.
-  final lines = markdown.replaceAll('\r\n', '\n').split('\n');
-
-  final nodes = document.parseLines(lines);
+  final nodes = document.parseLines(markdown);
 
   return '${renderToHtml(nodes)}\n';
 }
@@ -122,6 +119,13 @@ class HtmlRenderer implements HtmlNodeVisitor {
       if (text.text.endsWith('\n')) {
         content = '$content\n';
       }
+    }
+
+    // See https://spec.commonmark.org/0.30/#example-300
+    if (_elementStack.isNotEmpty &&
+        _elementStack.last.tag == 'li' &&
+        ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].contains(_lastVisitedTag)) {
+      buffer.writeln();
     }
     buffer.write(content);
 

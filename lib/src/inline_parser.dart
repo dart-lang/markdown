@@ -57,7 +57,7 @@ class InlineParser {
   /// The string of Markdown being parsed.
   String get sourceText => source.text;
 
-  final SourceSpan source;
+  final UnparsedContent source;
 
   /// The Markdown document this parser is parsing.
   final Document document;
@@ -77,7 +77,8 @@ class InlineParser {
   /// The tree of parsed HTML nodes.
   final _tree = <Node>[];
 
-  InlineParser(this.source, this.document) {
+  InlineParser(List<UnparsedContent> source, this.document)
+      : source = UnparsedContent.todo(source.map((e) => e.text).join()) {
     // User specified syntaxes are the first syntaxes to be evaluated.
     syntaxes.addAll(document.inlineSyntaxes);
 

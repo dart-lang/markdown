@@ -7,7 +7,7 @@ import 'block_tag_block_html_syntax.dart';
 
 class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
   @override
-  bool canEndBlock(BlockParser parser) => false;
+  bool canInterrupt(BlockParser parser) => false;
 
   // Really hacky way to detect "other" HTML. This matches:
   //

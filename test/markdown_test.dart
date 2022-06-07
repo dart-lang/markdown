@@ -8,6 +8,8 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() async {
+  testAstFromFile('common_mark/atx_headings.json');
+
   await testDirectory('original');
 
   // Block syntax extensions
@@ -17,11 +19,11 @@ void main() async {
   );
   testFile(
     'extensions/headers_with_ids.unit',
-    blockSyntaxes: [const HeaderWithIdSyntax()],
+    blockSyntaxes: [const AtxHeadingWithIdSyntax()],
   );
   testFile(
     'extensions/setext_headers_with_ids.unit',
-    blockSyntaxes: [const SetextHeaderWithIdSyntax()],
+    blockSyntaxes: [const SetextHeadingWithIdSyntax()],
   );
   testFile(
     'extensions/tables.unit',

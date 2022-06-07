@@ -12,16 +12,17 @@ final setextPattern = RegExp(r'^[ ]{0,3}(=+|-+)\s*$');
 ///
 /// Starts with 1-6 unescaped `#` characters which must not be followed by a
 /// non-space character. Line may end with any number of `#` characters,.
-final headerPattern = RegExp(r'^ {0,3}(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
+final headerPattern =
+    RegExp(r'^ {0,3}(#{1,6})(?:[ \x09\x0b\x0c](.*?))?(?:\s(#*)\s*)?$');
 
 /// The line starts with `>` with one optional space after.
-final blockquotePattern = RegExp(r'^[ ]{0,3}(>)[ ]?(.*)$');
+final blockquotePattern = RegExp(r'^[ ]{0,3}(>[ \t]?)(.*)$');
 
 /// A line indented four spaces. Used for code blocks and lists.
-final indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');
+final indentPattern = RegExp(r'^(?:    | {0,3}\t).*$');
 
 /// Fenced code block.
-final codeFencePattern = RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
+final codeFencePattern = RegExp(r'^([ ]{0,3})(?:(`{3,})([^`]*)|(~{3,})(.*))$');
 
 /// Fenced blockquotes.
 final blockquoteFencePattern = RegExp(r'^>{3}\s*$');
@@ -38,11 +39,11 @@ final hrPattern = RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
 /// Contains a dummy group at [2], so that the groups in [ulPattern] and
 /// [olPattern] match up; in both, [2] is the length of the number that begins
 /// the list marker.
-final ulPattern = RegExp(r'^([ ]{0,3})()([*+-])(([ \t])([ \t]*)(.*))?$');
+final ulPattern = RegExp(r'^[ ]{0,3}()[*+-](?:[ \t]+(.*))?$');
 
 /// A line starting with a number like `123.`. May have up to three leading
 /// spaces before the marker and any number of spaces or tabs after.
-final olPattern = RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
+final olPattern = RegExp(r'^[ ]{0,3}(\d{1,9})[\.)](?:[ \t]+(.*))?$');
 
 /// A line of hyphens separated by at least one pipe.
 final tablePattern = RegExp(
@@ -51,3 +52,6 @@ final tablePattern = RegExp(
 /// A pattern which should never be used. It just satisfies non-nullability of
 /// pattern fields.
 final dummyPattern = RegExp('');
+
+/// A line starts with `[`.
+final linkReferenceDefinitionPattern = RegExp(r'[ ]{0,3}\[');

@@ -35,9 +35,9 @@ The currently supported block extension syntaxes are:
 
 * `const FencedCodeBlockSyntax()` - Code blocks familiar to Pandoc and PHP
   Markdown Extra users.
-* `const HeaderWithIdSyntax()` - ATX-style headers have generated IDs, for link
+* `const AtxHeadingWithIdSyntax()` - ATX-style headers have generated IDs, for link
   anchors (akin to Pandoc's [`auto_identifiers`][pandoc-auto_identifiers]).
-* `const SetextHeaderWithIdSyntax()` - Setext-style headers have generated IDs
+* `const SetextHeadingWithIdSyntax()` - Setext-style headers have generated IDs
   for link anchors (akin to Pandoc's
   [`auto_identifiers`][pandoc-auto_identifiers]).
 * `const TableSyntax()` - Table syntax familiar to GitHub, PHP Markdown Extra,
@@ -90,15 +90,15 @@ parameter. Currently, there are four pre-defined extension sets:
 
 * `ExtensionSet.gitHubWeb` includes eight extensions. The same set of parsers use
    in the `gitHubFlavored` extension set with the addition of the block syntax parsers,
-   HeaderWithIdSyntax and SetextHeaderWithIdSyntax, which add `id` attributes to
+   AtxHeadingWithIdSyntax and SetextHeadingWithIdSyntax, which add `id` attributes to
    headers and inline syntax parser, EmojiSyntax, for parsing GitHub style emoji
    characters:
 
   * Block Syntax Parser
     * `const FencedCodeBlockSyntax()`
-    * `const HeaderWithIdSyntax()`, which adds `id` attributes to ATX-style
+    * `const AtxHeadingWithIdSyntax()`, which adds `id` attributes to ATX-style
       headers, for easy intra-document linking.
-    * `const SetextHeaderWithIdSyntax()`, which adds `id` attributes to
+    * `const SetextHeadingWithIdSyntax()`, which adds `id` attributes to
       Setext-style headers, for easy intra-document linking.
     * `const TableSyntax()`
   

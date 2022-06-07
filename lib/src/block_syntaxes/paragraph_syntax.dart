@@ -2,24 +2,26 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
 import '../block_parser.dart';
+import '../charcode.dart';
 import '../document.dart';
+import '../extensions.dart';
+import '../link_parser.dart';
 import '../patterns.dart';
 import '../util.dart';
 import 'block_syntax.dart';
+import 'setext_heading_syntax.dart';
 
 /// Parses paragraphs of regular text.
 class ParagraphSyntax extends BlockSyntax {
-  static final _reflinkDefinitionStart = RegExp(r'[ ]{0,3}\[');
-
-  static final _whitespacePattern = RegExp(r'^\s*$');
-
   @override
   RegExp get pattern => dummyPattern;
 
   @override
-  bool canEndBlock(BlockParser parser) => false;
+  bool canInterrupt(BlockParser parser) => false;
 
   const ParagraphSyntax();
 
@@ -27,156 +29,124 @@ class ParagraphSyntax extends BlockSyntax {
   bool canParse(BlockParser parser) => true;
 
   @override
-  Node parse(BlockParser parser) {
-    final childLines = <String>[];
+  Node? parse(BlockParser parser) {
+    parser
+      ..linesBuffer.clear()
+      ..linesBuffer.add(parser.current)
+      ..advance();
+
+    var hitSetextHeading = false;
 
     // Eat until we hit something that ends a paragraph.
-    while (!BlockSyntax.isAtBlockEnd(parser)) {
-      childLines.add(parser.current.text);
-      parser.advance();
+    while (!parser.isDone) {
+      final syntax = interruptedBy(parser);
+      if (syntax != null) {
+        hitSetextHeading = syntax is SetextHeadingSyntax;
+        break;
+      }
+      parser
+        ..linesBuffer.add(parser.current)
+        ..advance();
     }
 
-    final paragraphLines = _extractReflinkDefinitions(parser, childLines);
-    if (paragraphLines == null) {
+    final defNode = _parseLinkReferenceDefinition(parser.linesBuffer, parser);
+    if (defNode != null) {
+      parser.linesBuffer.clear();
+      return defNode;
+    }
+
+    // It is not a paragraph, but a setext heading.
+    if (hitSetextHeading || parser.linesBuffer.isEmpty) {
+      return null;
+    }
+
+    if (parser.linesBuffer.isEmpty) {
       // Paragraph consisted solely of reference link definitions.
       return Text.todo('');
     } else {
-      final contents =
-          UnparsedContent.todo(paragraphLines.join('\n').trimRight());
-      return Element.todo('paragraph', children: [contents]);
+      final contents = parser.linesBuffer.toNodes(
+        (span) => UnparsedContent.fromSpan(span),
+        trimTrailing: true,
+        popLineEnding: true,
+      );
+
+      return Element.todo(
+        'paragraph',
+        children: contents.nodes,
+        lineEndings: [if (contents.lineEnding != null) contents.lineEnding!],
+      );
     }
   }
 
-  /// Extract reference link definitions from the front of the paragraph, and
-  /// return the remaining paragraph lines.
-  List<String>? _extractReflinkDefinitions(
-    BlockParser parser,
-    List<String> lines,
-  ) {
-    bool lineStartsReflinkDefinition(int i) =>
-        lines[i].startsWith(_reflinkDefinitionStart);
+  Node? _parseLinkReferenceDefinition(List<Line> lines, BlockParser parser) {
+    final linkParser = LinkParser(lines.toSourceSpans().concatWhilePossible());
 
-    var i = 0;
-    loopOverDefinitions:
-    while (true) {
-      // Check for reflink definitions.
-      if (!lineStartsReflinkDefinition(i)) {
-        // It's paragraph content from here on out.
-        break;
-      }
-      var contents = lines[i];
-      var j = i + 1;
-      while (j < lines.length) {
-        // Check to see if the _next_ line might start a new reflink definition.
-        // Even if it turns out not to be, but it started with a '[', then it
-        // is not a part of _this_ possible reflink definition.
-        if (lineStartsReflinkDefinition(j)) {
-          // Try to parse [contents] as a reflink definition.
-          if (_parseReflinkDefinition(parser, contents)) {
-            // Loop again, starting at the next possible reflink definition.
-            i = j;
-            continue loopOverDefinitions;
-          } else {
-            // Could not parse [contents] as a reflink definition.
-            break;
-          }
-        } else {
-          contents = '$contents\n${lines[j]}';
-          j++;
-        }
-      }
-      // End of the block.
-      if (_parseReflinkDefinition(parser, contents)) {
-        i = j;
-        break;
-      }
-
-      // It may be that there is a reflink definition starting at [i], but it
-      // does not extend all the way to [j], such as:
-      //
-      //     [link]: url     // line i
-      //     "title"
-      //     garbage
-      //     [link2]: url   // line j
-      //
-      // In this case, [i, i+1] is a reflink definition, and the rest is
-      // paragraph content.
-      while (j >= i) {
-        // This isn't the most efficient loop, what with this big ole'
-        // Iterable allocation (`getRange`) followed by a big 'ole String
-        // allocation, but we
-        // must walk backwards, checking each range.
-        contents = lines.getRange(i, j).join('\n');
-        if (_parseReflinkDefinition(parser, contents)) {
-          // That is the last reflink definition. The rest is paragraph
-          // content.
-          i = j;
-          break;
-        }
-        j--;
-      }
-      // The ending was not a reflink definition at all. Just paragraph
-      // content.
-
-      break;
-    }
-
-    if (i == lines.length) {
-      // No paragraph content.
+    final label = linkParser.parseLabel();
+    if (label == null || linkParser.charAt() != $colon) {
       return null;
-    } else {
-      // Ends with paragraph content.
-      return lines.sublist(i);
     }
-  }
+    linkParser.advance();
 
-  // Parse [contents] as a reference link definition.
-  //
-  // Also adds the reference link definition to the document.
-  //
-  // Returns whether [contents] could be parsed as a reference link definition.
-  bool _parseReflinkDefinition(BlockParser parser, String contents) {
-    final pattern = RegExp(
-      // Leading indentation.
-      '''^[ ]{0,3}'''
-      // Reference id in brackets, and URL.
-      r'''\[((?:\\\]|[^\]])+)\]:\s*(?:<(\S+)>|(\S+))\s*'''
-      // Title in double or single quotes, or parens.
-      r'''("[^"]+"|'[^']+'|\([^)]+\)|)\s*$''',
-      multiLine: true,
+    final destination = linkParser.parseDestination();
+    if (destination == null) {
+      return null;
+    }
+
+    var endingPosition = linkParser.position;
+    List<SourceSpan>? title;
+    final hadWhitespace = linkParser.moveThroughWhitespace() > 0;
+
+    if (!linkParser.isDone) {
+      final multiline = linkParser.charAt() == $lf;
+      title = linkParser.parseTitle(hadWhitespace);
+
+      if (title == null && !multiline) {
+        return null;
+      }
+
+      if (title != null) {
+        linkParser.moveThroughWhitespace();
+        if (!linkParser.isDone && linkParser.charAt() != $lf) {
+          return null;
+        }
+        endingPosition = linkParser.position;
+      }
+    }
+
+    // Set the parsing position back to where the link reference definition
+    // ends, so other syntax are able to consume the rest.
+
+    // Here might be a performance issue, because the paragraph syntax needs to
+    // parse some lines twice if it begins with a possible link reference
+    // definition. In the future, maybe we can change the parse to return a Node
+    // list in order to return a linkReferenceDefinition and a paragraph at the
+    // same time.
+    parser.setLine(linkParser.positionToLocation(endingPosition).line + 1);
+
+    final labelString = normalizeLinkLabel(label.map((e) => e.text).join());
+    parser.document.linkReferences.putIfAbsent(
+      labelString,
+      () => LinkReference(
+        labelString,
+        destination.map((e) => e.text).join(),
+        title?.map((e) => e.text).join(),
+      ),
     );
-    final match = pattern.firstMatch(contents);
-    if (match == null) {
-      // Not a reference link definition.
-      return false;
-    }
-    if (match.match.length < contents.length) {
-      // Trailing text. No good.
-      return false;
-    }
 
-    var label = match[1]!;
-    final destination = match[2] ?? match[3]!;
-    var title = match[4];
-
-    // The label must contain at least one non-whitespace character.
-    if (_whitespacePattern.hasMatch(label)) {
-      return false;
-    }
-
-    if (title == '') {
-      // No title.
-      title = null;
-    } else {
-      // Remove "", '', or ().
-      title = title!.substring(1, title.length - 1);
-    }
-
-    // References are case-insensitive, and internal whitespace is compressed.
-    label = normalizeLinkLabel(label);
-
-    parser.document.linkReferences
-        .putIfAbsent(label, () => LinkReference(label, destination, title));
-    return true;
+    return Element('linkReferenceDefinition', children: [
+      Element(
+        'linkReferenceDefinitionLabel',
+        children: label.map((span) => Text.fromSpan(span)).toList(),
+      ),
+      Element(
+        'linkReferenceDefinitionDestination',
+        children: destination.map((span) => Text.fromSpan(span)).toList(),
+      ),
+      if (title != null)
+        Element(
+          'linkReferenceDefinitionTitle',
+          children: title.map((span) => Text.fromSpan(span)).toList(),
+        ),
+    ]);
   }
 }

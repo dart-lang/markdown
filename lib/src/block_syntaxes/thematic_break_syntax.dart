@@ -4,30 +4,31 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../extensions.dart';
 import '../patterns.dart';
-import '../token.dart';
 import 'block_syntax.dart';
 
+@Deprecated('Use ThematicBreakSyntax instead')
+class HorizontalRuleSyntax extends ThematicBreakSyntax {}
+
 /// Parses horizontal rules like `---`, `_ _ _`, `*  *  *`, etc.
-class HorizontalRuleSyntax extends BlockSyntax {
+class ThematicBreakSyntax extends BlockSyntax {
   @override
   RegExp get pattern => hrPattern;
 
-  const HorizontalRuleSyntax();
+  const ThematicBreakSyntax();
 
   @override
   Node parse(BlockParser parser) {
-    final start = parser.current.start;
-    final end = parser.current.end;
-    final marker = Token(parser.current.text, start: start, end: end);
+    final marker = parser.current.content;
+    final lineEnding = parser.current.lineEnding;
 
     parser.advance();
 
     return Element(
       'thematicBreak',
       markers: [marker.trim()],
-      start: start,
-      end: end,
+      lineEndings: [if (lineEnding != null) lineEnding],
     );
   }
 }

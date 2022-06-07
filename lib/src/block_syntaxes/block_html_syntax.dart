@@ -13,7 +13,7 @@ import 'block_syntax.dart';
 ///     parser, not an HTML parser!
 abstract class BlockHtmlSyntax extends BlockSyntax {
   @override
-  bool canEndBlock(BlockParser parser) => true;
+  bool canInterrupt(BlockParser parser) => true;
 
   const BlockHtmlSyntax();
 }

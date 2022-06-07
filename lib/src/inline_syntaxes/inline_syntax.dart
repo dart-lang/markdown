@@ -2,9 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:markdown/src/util.dart';
+import 'package:source_span/source_span.dart';
+
+import '../extensions.dart';
 import '../inline_parser.dart';
-import '../token.dart';
-import '../util.dart';
 
 /// Represents one kind of Markdown tag that can be parsed.
 abstract class InlineSyntax {
@@ -26,8 +28,8 @@ abstract class InlineSyntax {
             RegExp(pattern, multiLine: true, caseSensitive: caseSensitive),
         _startCharacter = startCharacter;
 
-  List<Token> tokenize(InlineParser parser, Match match) =>
-      parseTokensFromMatch(
+  List<SourceSpan> tokenize(InlineParser parser, Match match) =>
+      createSourceSpansFromMatch(
         match,
         offset: parser.source.start.offset,
         line: parser.source.start.line,

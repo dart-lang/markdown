@@ -6,7 +6,7 @@ import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
 import '../block_parser.dart';
-import '../token.dart';
+import '../util.dart';
 
 abstract class BlockSyntax {
   const BlockSyntax();
@@ -14,31 +14,70 @@ abstract class BlockSyntax {
   /// Gets the regex used to identify the beginning of this block, if any.
   RegExp get pattern;
 
-  List<Token> tokenize(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current.text)!;
+  /// Tries to match [line] against [pattern] and returns a list of [SourceSpan]
+  /// if matched.
+  List<SourceSpan?>? tryTokenize(Line line) {
+    final match = line.firstMatch(pattern);
 
-    return parseTokensFromMatch(
-      match,
-      text: parser.current.text,
-      offset: parser.current.start.offset,
-      line: parser.line,
-    );
+    if (match == null) {
+      return null;
+    }
+
+    final groups = toGroupsWithIndex(match);
+    final spans = <SourceSpan?>[];
+
+    for (var i = 0; i < groups.length; i++) {
+      final current = groups[i];
+      if (current != null) {
+        spans.add(SourceSpan(
+          SourceLocation(
+            line.start.offset + current.start,
+            column: line.start.column + current.start,
+            line: line.start.line,
+          ),
+          SourceLocation(
+            line.start.offset + current.end,
+            column: line.start.column + current.end,
+            line: line.start.line,
+          ),
+          current.text,
+        ));
+      } else {
+        spans.add(null);
+      }
+    }
+
+    return spans;
   }
 
-  bool canEndBlock(BlockParser parser) => true;
+  /// The same as [tryTokenize] but should only use it when [canParse] returns
+  /// true.
+  List<SourceSpan?> tokenize(Line line) => tryTokenize(line)!;
 
-  bool canParse(BlockParser parser) {
-    return pattern.hasMatch(parser.current.text);
-  }
+  /// If can interrupt a block.
+  bool canInterrupt(BlockParser parser) => true;
+
+  bool canParse(BlockParser parser) => parser.current.hasMatch(pattern);
 
   Node? parse(BlockParser parser);
 
-  /// Gets whether or not [parser]'s current line should end the previous block.
-  static bool isAtBlockEnd(BlockParser parser) {
-    if (parser.isDone) return true;
-    return parser.blockSyntaxes
-        .any((s) => s.canParse(parser) && s.canEndBlock(parser));
+  /// Returns the block which interrupts current syntax parsing if there is one,
+  /// otherwise returns `null`.
+  ///
+  /// Make sure to check if [parser] `isDone` is `false` first.
+  BlockSyntax? interruptedBy(BlockParser parser) {
+    for (final syntax in parser.blockSyntaxes) {
+      if (syntax.canParse(parser) && syntax.canInterrupt(parser)) {
+        return syntax;
+      }
+    }
+
+    return null;
   }
+
+  /// If should end the current syntax parseing.
+  bool shouldEnd(BlockParser parser) =>
+      parser.isDone || interruptedBy(parser) != null;
 
   /// Generates a valid HTML anchor from the inner text of [element].
   static String generateAnchorHash(Element element) =>
@@ -50,8 +89,17 @@ abstract class BlockSyntax {
 }
 
 class BlockSyntaxChildSource {
-  final List<Token> markers;
-  final List<SourceSpan> lines;
+  final List<SourceSpan> markers;
+  final List<SourceSpan> lineEndings;
+  final List<Line> lines;
 
-  BlockSyntaxChildSource(this.markers, this.lines);
+  /// If the lines is ending up with a lazy continuation line.
+  final bool lazyEnding;
+
+  BlockSyntaxChildSource({
+    this.markers = const [],
+    this.lines = const [],
+    this.lineEndings = const [],
+    this.lazyEnding = false,
+  });
 }

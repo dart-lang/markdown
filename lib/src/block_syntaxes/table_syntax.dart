@@ -11,7 +11,7 @@ import 'block_syntax.dart';
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
   @override
-  bool canEndBlock(BlockParser parser) => false;
+  bool canInterrupt(BlockParser parser) => false;
 
   @override
   RegExp get pattern => dummyPattern;
@@ -32,7 +32,7 @@ class TableSyntax extends BlockSyntax {
   /// * many body rows of body cells
   @override
   Node? parse(BlockParser parser) {
-    final alignments = _parseAlignments(parser.next!.text);
+    final alignments = _parseAlignments(parser.next!.content.text);
     final columnCount = alignments.length;
     final headRow = _parseRow(parser, alignments, 'tableHeadCell');
     if (headRow.children.length != columnCount) {
@@ -44,7 +44,7 @@ class TableSyntax extends BlockSyntax {
     parser.advance();
 
     final rows = <Element>[];
-    while (!parser.isDone && !BlockSyntax.isAtBlockEnd(parser)) {
+    while (!shouldEnd(parser)) {
       final row = _parseRow(parser, alignments, 'tableBodyCell');
       final children = row.children;
       while (children.length < columnCount) {
@@ -105,7 +105,7 @@ class TableSyntax extends BlockSyntax {
     List<String?> alignments,
     String cellType,
   ) {
-    final line = parser.current.text;
+    final line = parser.current.content.text;
     final cells = <String>[];
     var index = _walkPastOpeningPipe(line);
     final cellBuffer = StringBuffer();

@@ -70,25 +70,39 @@ class Document {
     }
   }
 
-  /// Parses the given [lines] of Markdown to a series of AST nodes.
-  List<Node> parseLines(List<String> lines) {
-    final nodes = BlockParser(linesToSourceSpans(lines), this).parseLines();
+  /// Parses the given string of Markdown to a series of AST nodes.
+  List<Node> parseLines(String text) {
+    final nodes = BlockParser(stringToLines(text), this).parseLines();
     _parseInlineContent(nodes);
     return nodes;
   }
 
   /// Parses the given inline Markdown [text] to a series of AST nodes.
-  List<Node> parseInline(String text) =>
-      InlineParser(SourceFile.fromString(text).span(0), this).parse();
+  List<Node> parseInline(String text) {
+    final unparsedContent = UnparsedContent.fromSpan(
+      SourceFile.fromString(text).span(0),
+    );
+
+    return InlineParser([unparsedContent], this).parse();
+  }
 
   void _parseInlineContent(List<Node> nodes) {
+    final unparsedSegments = <UnparsedContent>[];
+
     for (var i = 0; i < nodes.length; i++) {
       final node = nodes[i];
       if (node is UnparsedContent) {
-        final inlineNodes = InlineParser(node, this).parse();
-        nodes.removeAt(i);
-        nodes.insertAll(i, inlineNodes);
-        i += inlineNodes.length - 1;
+        unparsedSegments.add(node);
+
+        if (i + 1 == nodes.length || nodes[i + 1] is! UnparsedContent) {
+          final inlineNodes = InlineParser(unparsedSegments, this).parse();
+          nodes.replaceRange(
+            i - unparsedSegments.length + 1,
+            i + 1,
+            inlineNodes,
+          );
+          i += inlineNodes.length - 1;
+        }
       } else if (node is Element) {
         _parseInlineContent(node.children);
       }

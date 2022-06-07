@@ -30,7 +30,9 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
 
   @override
   bool canParse(BlockParser parser) {
-    if (!_openBracketPattern.hasMatch(parser.current.text)) return false;
+    if (!parser.current.hasMatch(_openBracketPattern)) {
+      return false;
+    }
     return super.canParse(parser);
   }
 
@@ -40,7 +42,7 @@ class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
 
     // Eat until we hit a blank line.
     while (!parser.isDone && !parser.matches(emptyPattern)) {
-      childLines.add(parser.current.text);
+      childLines.add(parser.current.content.text);
       parser.advance();
     }
 

@@ -4,8 +4,8 @@
 
 import '../ast.dart';
 import '../charcode.dart';
+import '../extensions.dart';
 import '../inline_parser.dart';
-import '../util.dart';
 import 'inline_syntax.dart';
 
 /// Escape punctuation preceded by a backslash.
@@ -28,6 +28,8 @@ class EscapeSyntax extends InlineSyntax {
         parser.addNode(Text.todo('&lt;'));
       } else if (char == $gt) {
         parser.addNode(Text.todo('&gt;'));
+      } else if (char == $ampersand) {
+        parser.addNode(Text.todo('&amp;'));
       } else {
         parser.addNode(_createText(parser));
       }

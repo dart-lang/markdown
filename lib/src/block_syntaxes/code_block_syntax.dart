@@ -4,8 +4,8 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../extensions.dart';
 import '../patterns.dart';
-import '../util.dart';
 import 'block_syntax.dart';
 
 /// Parses preformatted code blocks that are indented four spaces.
@@ -14,50 +14,76 @@ class CodeBlockSyntax extends BlockSyntax {
   RegExp get pattern => indentPattern;
 
   @override
-  bool canEndBlock(BlockParser parser) => false;
+  bool canInterrupt(BlockParser parser) => false;
 
   const CodeBlockSyntax();
 
-  List<String?> parseChildLines(BlockParser parser) {
-    final childLines = <String?>[];
+  bool _shouldEndBlankLine(BlockParser parser) {
+    var i = 1;
+    while (true) {
+      final nextLine = parser.peek(i);
+      if (nextLine == null) {
+        return true;
+      }
+
+      if (nextLine.isBlankLine) {
+        i++;
+        continue;
+      }
+
+      return nextLine.hasMatch(pattern) == false;
+    }
+  }
+
+  BlockSyntaxChildSource parseChildLines(BlockParser parser) {
+    final lines = <Line>[];
 
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current.text);
-      if (match != null) {
-        childLines.add(match[1]);
-        parser.advance();
-      } else {
-        // If there's a codeblock, then a newline, then a codeblock, keep the
-        // code blocks together.
-        final nextMatch =
-            parser.next != null ? pattern.firstMatch(parser.next!.text) : null;
-        if (parser.current.text.trim() == '' && nextMatch != null) {
-          childLines.add('');
-          childLines.add(nextMatch[1]);
-          parser.advance();
-          parser.advance();
-        } else {
-          break;
-        }
+      if (parser.current.isBlankLine && _shouldEndBlankLine(parser)) {
+        break;
       }
+
+      if (lines.isNotEmpty &&
+          !parser.current.isBlankLine &&
+          parser.current.hasMatch(pattern) != true) {
+        break;
+      }
+
+      lines.add(Line(
+        parser.current.content.indent().span,
+        lineEnding: parser.current.lineEnding,
+        tabRemaining: parser.current.tabRemaining,
+      ));
+
+      parser.advance();
     }
-    return childLines;
+
+    return BlockSyntaxChildSource(
+      lines: lines,
+      markers: [],
+      lineEndings: [],
+    );
   }
 
   @override
   Node parse(BlockParser parser) {
-    final childLines = parseChildLines(parser);
+    final childSource = parseChildLines(parser);
 
-    // The Markdown tests expect a trailing newline.
-    childLines.add('');
+    final codeLines = childSource.lines.map<Node>((line) {
+      var span = line.content;
+      if (line.lineEnding != null) {
+        span = span.union(line.lineEnding!);
+      }
 
-    var content = childLines.join('\n');
-    if (parser.document.encodeHtml) {
-      content = escapeHtml(content);
-    }
+      return Text.fromSpan(
+        span,
+        tabRemaining: line.tabRemaining,
+      );
+    }).toList();
 
-    return Element.todo('indentedCodeBlock', children: [
-      Text.todo(content),
-    ]);
+    return Element(
+      'indentedCodeBlock',
+      children: codeLines,
+    );
   }
 }

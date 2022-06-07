@@ -5,7 +5,7 @@
 import 'package:markdown/markdown.dart';
 
 import '../charcode.dart';
-import '../util.dart';
+import '../extensions.dart';
 
 /// Matches backtick-enclosed inline code blocks.
 class CodeSyntax extends InlineSyntax {
@@ -52,8 +52,6 @@ class CodeSyntax extends InlineSyntax {
         'codeSpan',
         children: [Text.fromSpan(tokens[1])],
         markers: [tokens[0], tokens[2]],
-        start: parser.source.start,
-        end: parser.source.end,
       ),
     );
 

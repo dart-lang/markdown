@@ -1,7 +1,7 @@
+import 'block_syntaxes/atx_heading_with_id_syntax.dart';
 import 'block_syntaxes/block_syntax.dart';
 import 'block_syntaxes/fenced_code_block_syntax.dart';
-import 'block_syntaxes/header_with_id_syntax.dart';
-import 'block_syntaxes/setext_header_with_id_syntax.dart';
+import 'block_syntaxes/setext_heading_with_id_syntax.dart';
 import 'block_syntaxes/table_syntax.dart';
 import 'inline_syntaxes/autolink_extension_syntax.dart';
 import 'inline_syntaxes/emoji_syntax.dart';
@@ -53,8 +53,8 @@ class ExtensionSet {
     List<BlockSyntax>.unmodifiable(
       <BlockSyntax>[
         const FencedCodeBlockSyntax(),
-        const HeaderWithIdSyntax(),
-        const SetextHeaderWithIdSyntax(),
+        const AtxHeadingWithIdSyntax(),
+        const SetextHeadingWithIdSyntax(),
         const TableSyntax(),
       ],
     ),

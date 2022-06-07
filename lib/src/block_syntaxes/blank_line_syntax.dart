@@ -7,18 +7,28 @@ import '../block_parser.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 
-class EmptyBlockSyntax extends BlockSyntax {
+@Deprecated('Use BlankLineSyntax instead')
+class EmptyBlockSyntax extends BlankLineSyntax {}
+
+class BlankLineSyntax extends BlockSyntax {
   @override
   RegExp get pattern => emptyPattern;
 
-  const EmptyBlockSyntax();
+  const BlankLineSyntax();
 
   @override
   Node? parse(BlockParser parser) {
     parser.encounteredBlankLine = true;
+
+    final text = Text.fromSpan(parser.current.content);
+    final lineEnding = parser.current.lineEnding;
+
     parser.advance();
 
-    // Don't actually emit anything.
-    return null;
+    return Element(
+      'blankLine',
+      lineEndings: [if (lineEnding != null) lineEnding],
+      children: [text],
+    );
   }
 }

@@ -2,147 +2,193 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
 import '../block_parser.dart';
+import '../charcode.dart';
+import '../extensions.dart';
 import '../patterns.dart';
-import '../util.dart';
+import '../source_span_parser.dart';
 import 'block_syntax.dart';
 
 class ListItem {
   ListItem(this.lines);
 
   bool forceBlock = false;
-  final List<String> lines;
+  final List<Line> lines;
 }
 
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
   @override
-  bool canEndBlock(BlockParser parser) {
-    // An empty list cannot interrupt a paragraph. See
-    // https://spec.commonmark.org/0.29/#example-255.
-    // Ideally, [BlockSyntax.canEndBlock] should be changed to be a method
-    // which accepts a [BlockParser], but this would be a breaking change,
-    // so we're going with this temporarily.
-    final match = pattern.firstMatch(parser.current.text)!;
+  bool canInterrupt(BlockParser parser) {
+    final match = parser.current.firstMatch(pattern)!;
+
+    // Allow only lists starting with 1 to interrupt paragraphs, if it is an
+    // ordered list. See https://spec.commonmark.org/0.30/#example-304.
+    // But there shuold be an exception for nested ordered lists, for example:
+    // ```
+    // 1. one
+    // 2. two
+    //   3. three
+    //   4. four
+    // 5. five
+    // ```
+    if (parser.parentSyntax is! ListSyntax &&
+        match[1]!.isNotEmpty &&
+        match[1] != '1') {
+      return false;
+    }
+
+    // An empty list item cannot interrupt a paragraph. See
+    // https://spec.commonmark.org/0.30/#example-285
     // The seventh group, in both [olPattern] and [ulPattern] is the text
     // after the delimiter.
-    return match[7]?.isNotEmpty ?? false;
+    return match[2]?.isNotEmpty ?? false;
   }
 
   bool get ordered;
 
   const ListSyntax();
 
-  /// A list of patterns that can start a valid block within a list item.
-  static final blocksInList = [
-    blockquotePattern,
-    headerPattern,
-    hrPattern,
-    indentPattern,
-    ulPattern,
-    olPattern
-  ];
-
-  static final _whitespaceRe = RegExp('[ \t]*');
-
   @override
   Node parse(BlockParser parser) {
     final items = <ListItem>[];
-    var childLines = <String>[];
+    var childLines = <Line>[];
 
     void endItem() {
       if (childLines.isNotEmpty) {
         items.add(ListItem(childLines));
-        childLines = <String>[];
+        childLines = <Line>[];
       }
     }
 
     late Match? match;
     bool tryMatch(RegExp pattern) {
-      match = pattern.firstMatch(parser.current.text);
+      match = parser.current.firstMatch(pattern);
       return match != null;
     }
 
     String? listMarker;
-    String? indent;
+    int indent = 0;
     // In case the first number in an ordered list is not 1, use it as the
     // "start".
     int? startNumber;
+    int blankLines = 0;
 
     while (!parser.isDone) {
-      final leadingSpace =
-          _whitespaceRe.matchAsPrefix(parser.current.text)!.group(0)!;
-      final leadingExpandedTabLength = _expandedTabLength(leadingSpace);
+      final currentIndent = parser.current.content.text.indentation() +
+          (parser.current.tabRemaining ?? 0);
+
       if (tryMatch(emptyPattern)) {
-        if (emptyPattern.hasMatch(parser.next?.text ?? '')) {
-          // Two blank lines ends a list.
+        childLines.add(parser.current);
+        if (blankLines != 0) {
+          blankLines++;
+        }
+      } else if (indent != 0 && indent <= currentIndent) {
+        // A list item can begin with at most one blank line. See:
+        // https://spec.commonmark.org/0.30/#example-280
+        if (blankLines > 1) {
           break;
         }
-        // Add a blank line to the current list item.
-        childLines.add('');
-      } else if (indent != null && indent.length <= leadingExpandedTabLength) {
-        // Strip off indent and add to current item.
-        final line = parser.current.text
-            .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
-            .replaceFirst(indent, '');
-        childLines.add(line);
+
+        final indentedLine = parser.current.content.indent(indent);
+
+        childLines.add(Line(
+          indentedLine.span,
+          lineEnding: parser.current.lineEnding,
+          tabRemaining: indentedLine.tabRemaining,
+        ));
       } else if (tryMatch(hrPattern)) {
         // Horizontal rule takes precedence to a new list item.
         break;
       } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
-        final precedingWhitespace = match![1]!;
-        final digits = match![2] ?? '';
-        if (startNumber == null && digits.isNotEmpty) {
-          startNumber = int.parse(digits);
+        blankLines = 0;
+
+        final sourceSpanParser = SourceSpanParser([parser.current.content]);
+        var precedingWhitespaces = sourceSpanParser.moveThroughWhitespace();
+        final digits = match![1] ?? '';
+        if (digits.isNotEmpty) {
+          if (startNumber == null && digits.isNotEmpty) {
+            startNumber = int.parse(digits);
+          }
+          sourceSpanParser.advanceBy(digits.length);
         }
-        final marker = match![3]!;
-        final firstWhitespace = match![5] ?? '';
-        final restWhitespace = match![6] ?? '';
-        final content = match![7] ?? '';
-        final isBlank = content.isEmpty;
+        final marker = String.fromCharCode(sourceSpanParser.charAt());
+        sourceSpanParser.advance();
+
+        var isBlank = true;
+        var contentWhitespances = 0;
+        var hitTab = false;
+        SourcePosition? contentBlockStart;
+
+        if (!sourceSpanParser.isDone) {
+          hitTab = sourceSpanParser.charAt() == $tab;
+          // Skip the first whitespace.
+          sourceSpanParser.advance();
+          contentBlockStart = sourceSpanParser.position;
+          if (!sourceSpanParser.isDone) {
+            contentWhitespances = sourceSpanParser.moveThroughWhitespace();
+
+            if (!sourceSpanParser.isDone) {
+              isBlank = false;
+            }
+          }
+        }
+
         if (listMarker != null && listMarker != marker) {
           // Changing the bullet or ordered list delimiter starts a new list.
           break;
         }
         listMarker = marker;
-        final markerAsSpaces = ' ' * (digits.length + marker.length);
+        precedingWhitespaces += digits.length + marker.length + 1;
         if (isBlank) {
-          // See http://spec.commonmark.org/0.28/#list-items under "3. Item
-          // starting with a blank line."
-          //
-          // If the list item starts with a blank line, the final piece of the
-          // indentation is just a single space.
-          indent = '$precedingWhitespace$markerAsSpaces ';
-        } else if (restWhitespace.length >= 4) {
-          // See http://spec.commonmark.org/0.28/#list-items under "2. Item
-          // starting with indented code."
+          // See https://spec.commonmark.org/0.30/#example-278.
+          blankLines = 1;
+          indent = precedingWhitespaces;
+        } else if (contentWhitespances >= 4) {
+          // See https://spec.commonmark.org/0.30/#example-270.
           //
           // If the list item starts with indented code, we need to _not_ count
           // any indentation past the required whitespace character.
-          indent = precedingWhitespace + markerAsSpaces + firstWhitespace;
+          indent = precedingWhitespaces;
         } else {
-          indent = precedingWhitespace +
-              markerAsSpaces +
-              firstWhitespace +
-              restWhitespace;
+          indent = precedingWhitespaces + contentWhitespances;
         }
+
         // End the current list item and start a new one.
         endItem();
-        childLines.add(restWhitespace + content);
-      } else if (BlockSyntax.isAtBlockEnd(parser)) {
+
+        SourceSpan content;
+        if (contentBlockStart != null && !isBlank) {
+          content = sourceSpanParser.subText(contentBlockStart).first;
+        } else {
+          final location = sourceSpanParser.positionToLocation(
+            sourceSpanParser.position,
+          );
+
+          content = SourceSpan(location, location, '');
+        }
+
+        childLines.add(Line(
+          content,
+          lineEnding: parser.current.lineEnding,
+          tabRemaining: hitTab ? 2 : null,
+        ));
+      } else if (shouldEnd(parser)) {
         // Done with the list.
         break;
       } else {
         // If the previous item is a blank line, this means we're done with the
         // list and are starting a new top-level paragraph.
-        if ((childLines.isNotEmpty) && (childLines.last == '')) {
+        if ((childLines.isNotEmpty) && (childLines.last.isBlankLine)) {
           parser.encounteredBlankLine = true;
           break;
         }
 
         // Anything else is paragraph continuation text.
-        childLines.add(parser.current.text);
+        childLines.add(parser.current);
       }
       parser.advance();
     }
@@ -155,20 +201,16 @@ abstract class ListSyntax extends BlockSyntax {
     var anyEmptyLinesBetweenBlocks = false;
 
     for (final item in items) {
-      // TODO(Zhiguang): Fix it
-      final itemParser = BlockParser(
-        linesToSourceSpans(item.lines, line: 1000),
-        parser.document,
-      );
+      final itemParser = BlockParser(item.lines, parser.document);
 
-      final children = itemParser.parseLines();
-      itemNodes.add(Element.todo('listItem', children: children));
+      final children = itemParser.parseLines(fromSyntax: this);
+      itemNodes.add(Element('listItem', children: children));
       anyEmptyLinesBetweenBlocks =
           anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
 
     // Must strip paragraph tags if the list is "tight".
-    // http://spec.commonmark.org/0.28/#lists
+    // http://spec.commonmark.org/0.30/#lists
     final listIsTight = !anyEmptyLines && !anyEmptyLinesBetweenBlocks;
 
     if (listIsTight) {
@@ -189,16 +231,16 @@ abstract class ListSyntax extends BlockSyntax {
     final listType = ordered ? 'orderedList' : 'bulletList';
 
     if (ordered && startNumber != 1) {
-      return Element.todo(listType, children: itemNodes, attributes: {
+      return Element(listType, children: itemNodes, attributes: {
         'start': '$startNumber',
       });
     } else {
-      return Element.todo(listType, children: itemNodes);
+      return Element(listType, children: itemNodes);
     }
   }
 
   void _removeLeadingEmptyLine(ListItem item) {
-    if (item.lines.isNotEmpty && emptyPattern.hasMatch(item.lines.first)) {
+    if (item.lines.isNotEmpty && item.lines.first.hasMatch(emptyPattern)) {
       item.lines.removeAt(0);
     }
   }
@@ -210,7 +252,7 @@ abstract class ListSyntax extends BlockSyntax {
     for (var i = 0; i < items.length; i++) {
       if (items[i].lines.length == 1) continue;
       while (items[i].lines.isNotEmpty &&
-          emptyPattern.hasMatch(items[i].lines.last)) {
+          items[i].lines.last.hasMatch(emptyPattern)) {
         if (i < items.length - 1) {
           anyEmpty = true;
         }
@@ -218,13 +260,5 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
     return anyEmpty;
-  }
-
-  static int _expandedTabLength(String input) {
-    var length = 0;
-    for (final char in input.codeUnits) {
-      length += char == 0x9 ? 4 - (length % 4) : 1;
-    }
-    return length;
   }
 }

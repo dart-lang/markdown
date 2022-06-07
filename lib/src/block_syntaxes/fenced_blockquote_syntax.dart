@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:source_span/source_span.dart';
-
 import '../ast.dart';
 import '../block_parser.dart';
 import '../patterns.dart';
@@ -17,32 +15,49 @@ class FencedBlockquoteSyntax extends BlockSyntax {
   RegExp get pattern => blockquoteFencePattern;
 
   BlockSyntaxChildSource parseChildLines(BlockParser parser) {
-    final childLines = <SourceSpan>[];
+    final lines = <Line>[];
+    final markders = [parser.current.content];
+    final lineEndings = [parser.current.lineEnding!];
+
     parser.advance();
 
     while (!parser.isDone) {
-      final match = pattern.hasMatch(parser.current.text);
+      final match = parser.current.hasMatch(pattern);
       if (!match) {
-        childLines.add(parser.current);
+        lines.add(parser.current);
         parser.advance();
       } else {
+        markders.add(parser.current.content);
+        if (parser.current.lineEnding != null) {
+          lineEndings.add(parser.current.lineEnding!);
+        }
         parser.advance();
         break;
       }
     }
 
-    return BlockSyntaxChildSource([], childLines);
+    return BlockSyntaxChildSource(
+      lines: lines,
+      markers: markders,
+      lineEndings: lineEndings,
+    );
   }
 
   @override
   Node? parse(BlockParser parser) {
-    final childLines = parseChildLines(parser);
+    final childSource = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
     final children = BlockParser(
-      childLines.lines,
+      childSource.lines,
       parser.document,
     ).parseLines();
-    return Element.todo('fencedBlockquote', children: children);
+
+    return Element(
+      'fencedBlockquote',
+      children: children,
+      lineEndings: childSource.lineEndings,
+      markers: childSource.markers,
+    );
   }
 }

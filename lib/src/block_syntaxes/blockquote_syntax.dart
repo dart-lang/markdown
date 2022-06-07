@@ -6,8 +6,8 @@ import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../extensions.dart';
 import '../patterns.dart';
-import '../token.dart';
 import 'block_syntax.dart';
 import 'code_block_syntax.dart';
 import 'paragraph_syntax.dart';
@@ -21,24 +21,29 @@ class BlockquoteSyntax extends BlockSyntax {
 
   BlockSyntaxChildSource parseChildLines(BlockParser parser) {
     // Grab all of the lines that form the blockquote, stripping off the ">".
-    final childLines = <SourceSpan>[];
-    final markers = <Token>[];
+    final childLines = <Line>[];
+    final markers = <SourceSpan>[];
 
-    bool encounteredCodeBlock = false;
+    bool lazyEnding = false;
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current.text);
-      if (match != null) {
-        final tokens = parseTokensFromMatch(
-          match,
-          offset: parser.current.start.offset,
-          line: parser.line,
-        );
-        markers.add(tokens[0]);
+      final tokens = tryTokenize(parser.current);
 
-        final line = tokens[1];
+      if (tokens != null) {
+        final marker = tokens[0]!;
+        markers.add(marker.trimRight());
+        int? tabRemaining;
+        if (marker.length > 1 && marker.text[1] == '\t') {
+          tabRemaining = 2;
+        }
+
+        final line = Line(
+          tokens[1]!,
+          lineEnding: parser.current.lineEnding,
+          tabRemaining: tabRemaining,
+        );
         childLines.add(line);
-        encounteredCodeBlock = indentPattern.hasMatch(line.text);
         parser.advance();
+        lazyEnding = false;
         continue;
       }
 
@@ -49,36 +54,40 @@ class BlockquoteSyntax extends BlockSyntax {
       // matched CodeBlockSyntax is also paragraph continuation text.
       final otherMatched =
           parser.blockSyntaxes.firstWhere((s) => s.canParse(parser));
-      if (otherMatched is ParagraphSyntax ||
-          (!encounteredCodeBlock && otherMatched is CodeBlockSyntax)) {
+      if ((otherMatched is ParagraphSyntax &&
+              childLines.last.content.length > 0 &&
+              !childLines.last.hasMatch(codeFencePattern)) ||
+          (!childLines.last.hasMatch(indentPattern) &&
+              otherMatched is CodeBlockSyntax)) {
         childLines.add(parser.current);
+        lazyEnding = true;
         parser.advance();
       } else {
         break;
       }
     }
 
-    return BlockSyntaxChildSource(markers, childLines);
+    return BlockSyntaxChildSource(
+      markers: markers,
+      lines: childLines,
+      lazyEnding: lazyEnding,
+    );
   }
 
   @override
   Node parse(BlockParser parser) {
-    final start = parser.current.start;
-    final end = parser.current.end;
     final childSource = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
     final children = BlockParser(
       childSource.lines,
       parser.document,
-    ).parseLines();
+    ).parseLines(disabledSetextHeading: childSource.lazyEnding);
 
     return Element(
       'blockquote',
       children: children,
       markers: childSource.markers,
-      start: start,
-      end: end,
     );
   }
 }

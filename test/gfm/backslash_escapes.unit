@@ -1,7 +1,7 @@
 >>> Backslash escapes - 308
 \!\"\#\$\%\&\'\(\)\*\+\,\-\.\/\:\;\<\=\>\?\@\[\\\]\^\_\`\{\|\}\~
 <<<
-<p>!&quot;#$%&'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
+<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
 >>> Backslash escapes - 309
 \	\A\a\ \3\φ\«
 <<<
@@ -25,7 +25,7 @@
 * not a list
 # not a heading
 [foo]: /url "not a reference"
-&ouml; not a character entity</p>
+&amp;ouml; not a character entity</p>
 >>> Backslash escapes - 311
 \\*emphasis*
 <<<
