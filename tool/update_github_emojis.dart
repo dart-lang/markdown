@@ -10,21 +10,22 @@ import 'package:args/args.dart';
 
 import 'package:markdown/src/legacy_emojis.dart' as legacy;
 
-// REGEXP to parse GitHub emoji API
+/// REGEXP to parse GitHub emoji API output filenames
 RegExp parseGitHubEmojiApi =
     RegExp(r'^[\ \t]+"(.*?)".*unicode\/([A-Fa-f0-9\-]+)\.png');
 
+/// REGEXP to parse GitHub emoji API output filenames
 RegExp parseGitHubEmojiUnicodeFromFilename =
     RegExp(r'.*unicode\/([A-Fa-f0-9\-]+)\.png');
 
-// Get our emoji list from GitHub's API.  We reconcile with our legacy emoji so that
-// we don't change or break anything.
-// There are essentially only TWO (2) emoji that change and the
-// legacy emoji is still available with an alternate name.
-// The 'beetle' emoji changes from `🐞` to `🪲`, legacy available as 'lady_beetle'.
-// The 'cricket' emoji changes from `🏏` to `🦗`, legacy available as 'cricket_game'.
-// (if the -g flag us used to force using the GitHub Unicode sequences for the
-// emoji then additionally the 'email' emoji changes from '✉️' to '📧')
+/// Get our emoji list from GitHub's API.  We reconcile with our legacy emoji so that
+/// we don't change or break anything.
+/// There are essentially only TWO (2) emoji that change and the
+/// legacy emoji is still available with an alternate name.
+/// The 'beetle' emoji changes from `🐞` to `🪲`, legacy available as 'lady_beetle'.
+/// The 'cricket' emoji changes from `🏏` to `🦗`, legacy available as 'cricket_game'.
+/// (if the -g flag us used to force using the GitHub Unicode sequences for the
+/// emoji then additionally the 'email' emoji changes from '✉️' to '📧')
 final _emojisJsonRawUrl = 'https://api.github.com/emojis';
 final _emojisFilePath = 'lib/src/emojis.dart';
 
