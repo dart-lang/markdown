@@ -307,7 +307,7 @@ Future<void> main(List<String> args) async {
   if (dumpMarkdownShortCodes) {
     // We are outputing the markdown to stdout, and presumably it
     // is being captured, so we exit now to exclude the summary
-    // report from being included in the emoji markdown we have 
+    // report from being included in the emoji markdown we have
     // been outputing.
     exit(0);
   }
