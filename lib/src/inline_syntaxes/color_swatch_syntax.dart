@@ -8,33 +8,33 @@ import '../inline_parser.dart';
 import '../util.dart';
 import 'inline_syntax.dart';
 
-/// Matches code blocks containing a subset of css color syntax.
+/// Matches code blocks containing a subset of CSS color syntax.
 class ColorSwatchSyntax extends InlineSyntax {
-  // This pattern matches:
-  // * Github Flavored Markup supports fewer of these options, GitLab Flavored
-  //   Markup supports all of these. Presumably Github will be more complete at
-  //   some point.
-  // * CSS style '#' prefixed color hex codes in 3,4,6 or 8 digits in length.
-  // * CSS style RGB()/RgbA()/Hsl()/HSLA() style color declarations, of any
-  //   capitalization.
-  // EXAMPLES:
-  // * `#f00`
-  // * `#BA`     NOT THIS
-  // * `#F00a`
-  // * `#F0BAD`  NOT THIS
-  // * `#FF0000`
-  // * `#F000BAD`   NOT THIS
-  // * `#FF0000aA`       (GitHub supports only this style)
-  // * `RGB(0,255,0)`
-  // * `rgb(0,255,0)`
-  // * `RGB(0%,100%,0%)`
-  // * `rgb(0%,100%,0%)`
-  // * `RGBA(0,255,0,0.3)`
-  // * `rgba(0,255,0,0.3)`
-  // * `HSL(540,70%,50%)`
-  // * `hsl(540,70%,50%)`
-  // * `HSLA(540,70%,50%,0.3)`
-  // * `Hsla(540,70%,50%,0.3)`
+  /// This pattern matches:
+  /// * GitHub Flavored Markup supports fewer of these options, GitLab Flavored
+  ///   Markup supports all of these. Presumably GitHub will be more complete at
+  ///   some point.
+  /// * CSS style '#' prefixed color hex codes in 3,4,6 or 8 digits in length.
+  /// * CSS style RGB()/RgbA()/Hsl()/HSLA() style color declarations, of any
+  ///   capitalization.
+  /// EXAMPLES:
+  /// * `#f00`
+  /// * `#BA`        (2 digit hex, regex will not match)
+  /// * `#F00a`
+  /// * `#F0BAD`     (5 digit hex, regex will not match)
+  /// * `#FF0000`
+  /// * `#F000BAD`   (7 digit hex, regex will not match)
+  /// * `#FF0000aA`    (GitHub supports only this style)
+  /// * `RGB(0,255,0)`
+  /// * `rgb(0,255,0)`
+  /// * `RGB(0%,100%,0%)`
+  /// * `rgb(0%,100%,0%)`
+  /// * `RGBA(0,255,0,0.3)`
+  /// * `rgba(0,255,0,0.3)`
+  /// * `HSL(540,70%,50%)`
+  /// * `hsl(540,70%,50%)`
+  /// * `HSLA(540,70%,50%,0.3)`
+  /// * `Hsla(540,70%,50%,0.3)`
   static final String _pattern =
       '`((#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8}))|'
       r'([Rr][Gg][Bb][Aa]?\((\d+[%]?),(\d+[%]?),(\d+[%]?),?(\d+\.?\d+[%]?)?\))|'

@@ -41,7 +41,7 @@ final hrPattern = RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
 final ulPattern = RegExp(r'^([ ]{0,3})()([*+-])(([ \t])([ \t]*)(.*))?$');
 
 /// Similar to [ulPattern] but with a GitHub style checkbox
-/// '[ ]'|'[x]'|'[X]' following the number. The checkbox will
+/// `'[ ]'|'[x]'|'[X]'` following the number. The checkbox will
 /// be grabbed by group [5] and ulPattern's groups [5,6,7] are all
 /// shifted 2 places to be [7,8,9]
 final ulWithCheckBoxPattern = RegExp(
@@ -52,7 +52,7 @@ final ulWithCheckBoxPattern = RegExp(
 final olPattern = RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
 
 /// Similar to [olPattern] but with a GitHub style checkbox
-/// '[ ]'|'[x]'|'[X]' following the number. The checkbox will
+/// `'[ ]'|'[x]'|'[X]'` following the number. The checkbox will
 /// be grabbed by group [5] and olPattern's groups [5,6,7] are all
 /// shifted 2 places to be [7,8,9]
 final olWithCheckBoxPattern = RegExp(

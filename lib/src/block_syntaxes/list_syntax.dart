@@ -14,13 +14,13 @@ class ListItem {
   final List<String> lines;
 }
 
-/// Invisible string used to placehold for a *Unchecked* CheckBox ('CB').
-/// The character is unicode ZERO WIDTH SPACE (U+200B).
-const invisibleIndicatorForUncheckedCB = '\u{200B}';
+/// Invisible string used to placehold for an *unchecked* CheckBox.
+/// The character is Unicode Zero Width Space (U+200B).
+const indicatorForUncheckedCheckBox = '\u{200B}';
 
-/// Invisible string used to placehold for a *Checked* CheckBox ('CB').
-/// This is 2 unicode ZERO WIDTH SPACE (U+200B) characters.
-const invisibleIndicatorForCheckedCB = '\u{200B}\u{200B}';
+/// Invisible string used to placehold for a *checked* CheckBox.
+/// This is 2 Unicode Zero Width Space (U+200B) characters.
+const indicatorForCheckedCheckBox = '\u{200B}\u{200B}';
 
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
@@ -126,9 +126,9 @@ abstract class ListSyntax extends BlockSyntax {
           // listitem li node.
           final String checkboxGroup = match![5]!.toLowerCase();
           if (checkboxGroup == '[ ]') {
-            checkBoxIndicatorPrefix = invisibleIndicatorForUncheckedCB;
+            checkBoxIndicatorPrefix = indicatorForUncheckedCheckBox;
           } else if (checkboxGroup == '[x]') {
-            checkBoxIndicatorPrefix = invisibleIndicatorForCheckedCB;
+            checkBoxIndicatorPrefix = indicatorForCheckedCheckBox;
           }
         }
         final firstWhitespace = match![5 + cbGroupOffset] ?? '';
@@ -198,12 +198,12 @@ abstract class ListSyntax extends BlockSyntax {
       if (isCheckboxListSubclass) {
         if (children.isNotEmpty) {
           if (children.first.textContent
-              .startsWith(invisibleIndicatorForCheckedCB)) {
+              .startsWith(indicatorForCheckedCheckBox)) {
             checkboxToInsert = Element.withTag('input')
               ..attributes['type'] = 'checkbox'
               ..attributes['checked'] = 'true';
           } else if (children.first.textContent
-              .startsWith(invisibleIndicatorForUncheckedCB)) {
+              .startsWith(indicatorForUncheckedCheckBox)) {
             checkboxToInsert = Element.withTag('input')
               ..attributes['type'] = 'checkbox';
           }
