@@ -10,15 +10,15 @@ import 'package:args/args.dart';
 
 import 'package:markdown/src/legacy_emojis.dart' as legacy;
 
-/// Regular expression to parse GitHub emoji API output filenames.
-RegExp parseGitHubEmojiApi =
+/// Regular expression to match GitHub emoji API output filenames.
+RegExp gitHubEmojiApiPattern =
     RegExp(r'^[\ \t]+"(.*?)".*unicode\/([A-Fa-f0-9\-]+)\.png');
 
-/// Regular expression to parse GitHub emoji API output filenames.
-RegExp parseGitHubEmojiUnicodeFromFilename =
+/// Regular expression to parse unicode from GitHub emoji API output filenames.
+RegExp gitHubEmojiUnicodeFromFilenamePattern =
     RegExp(r'.*unicode\/([A-Fa-f0-9\-]+)\.png');
 
-/// Get our emoji list from GitHub's API.  We reconcile with our legacy emoji so that
+/// URL for GitHub's emoji API.  We reconcile with our legacy emoji so that
 /// we don't change or break anything.
 /// There are essentially only TWO (2) emoji that change and the
 /// legacy emoji is still available with an alternate name.
@@ -140,7 +140,7 @@ String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
 
   try {
     final String? rawHexList =
-        parseGitHubEmojiUnicodeFromFilename.firstMatch(emojiFilename)?.group(1);
+        gitHubEmojiUnicodeFromFilenamePattern.firstMatch(emojiFilename)?.group(1);
     if (rawHexList == null) {
       // This is a GitHub custom emoji and it is represent by PNG only and
       // there is no equivalent Unicode.  We have to ingore.
