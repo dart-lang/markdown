@@ -23,14 +23,23 @@ class DummyBlockSyntax extends BlockSyntax {
   bool canParse(BlockParser parser) => true;
 
   @override
-  Node parse(BlockParser parser) {
-    final childLines = <String>[];
+  Node? parse(BlockParser parser) {
+    final childLines = <Line>[];
 
     while (!shouldEnd(parser)) {
-      childLines.add(parser.current.content.text);
+      childLines.add(parser.current);
       parser.advance();
     }
 
-    return UnparsedContent.todo(childLines.join('\n'));
+    final content = childLines.toNodes(
+      (span) => UnparsedContent.fromSpan(span),
+      popLineEnding: true,
+    );
+
+    if (content.nodes.isEmpty) {
+      return null;
+    }
+    assert(content.nodes.length == 1);
+    return content.nodes.first;
   }
 }

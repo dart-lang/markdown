@@ -27,6 +27,8 @@ extension StringExtensions on String {
     }
     return length;
   }
+
+  String last([int n = 1]) => substring(length - n);
 }
 
 /// Converts [object] to a JSON [String] with a 2 whitespace indent.

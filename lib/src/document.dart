@@ -101,7 +101,7 @@ class Document {
             i + 1,
             inlineNodes,
           );
-          i += inlineNodes.length - 1;
+          i -= unparsedSegments.length - inlineNodes.length;
         }
       } else if (node is Element) {
         _parseInlineContent(node.children);

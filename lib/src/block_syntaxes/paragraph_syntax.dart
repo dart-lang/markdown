@@ -55,27 +55,23 @@ class ParagraphSyntax extends BlockSyntax {
       return defNode;
     }
 
-    // It is not a paragraph, but a setext heading.
+    // It is not a paragraph, but a setext heading or a link reference
+    // definition.
     if (hitSetextHeading || parser.linesBuffer.isEmpty) {
       return null;
     }
 
-    if (parser.linesBuffer.isEmpty) {
-      // Paragraph consisted solely of reference link definitions.
-      return Text.todo('');
-    } else {
-      final contents = parser.linesBuffer.toNodes(
-        (span) => UnparsedContent.fromSpan(span),
-        trimTrailing: true,
-        popLineEnding: true,
-      );
+    final contents = parser.linesBuffer.toNodes(
+      (span) => UnparsedContent.fromSpan(span),
+      trimTrailing: true,
+      popLineEnding: true,
+    );
 
-      return Element.todo(
-        'paragraph',
-        children: contents.nodes,
-        lineEndings: [if (contents.lineEnding != null) contents.lineEnding!],
-      );
-    }
+    return Element(
+      'paragraph',
+      children: contents.nodes,
+      lineEndings: [if (contents.lineEnding != null) contents.lineEnding!],
+    );
   }
 
   Node? _parseLinkReferenceDefinition(List<Line> lines, BlockParser parser) {

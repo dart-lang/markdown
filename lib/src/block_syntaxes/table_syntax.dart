@@ -22,7 +22,7 @@ class TableSyntax extends BlockSyntax {
   bool canParse(BlockParser parser) {
     // Note: matches *next* line, not the current one. We're looking for the
     // bar separating the head row from the body rows.
-    return parser.matchesNext(tablePattern);
+    return parser.next?.hasMatch(tablePattern) ?? false;
   }
 
   /// Parses a table into its three parts:

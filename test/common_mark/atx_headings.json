@@ -317,8 +317,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -334,7 +332,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -345,7 +342,6 @@
     "output": [
       {
         "type": "paragraph",
-        "markers": [],
         "lineEndings": [
           {
             "start": {
@@ -376,13 +372,10 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": "####### foo"
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -398,7 +391,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -409,7 +401,6 @@
     "output": [
       {
         "type": "paragraph",
-        "markers": [],
         "lineEndings": [
           {
             "start": {
@@ -440,12 +431,10 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": "#5 bolt"
       },
       {
         "type": "blankLine",
-        "markers": [],
         "lineEndings": [
           {
             "start": {
@@ -476,12 +465,10 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       },
       {
         "type": "paragraph",
-        "markers": [],
         "lineEndings": [
           {
             "start": {
@@ -512,13 +499,10 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": "#hashtag"
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -534,7 +518,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -545,7 +528,6 @@
     "output": [
       {
         "type": "paragraph",
-        "markers": [],
         "lineEndings": [
           {
             "start": {
@@ -576,13 +558,10 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": "## foo"
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -598,7 +577,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -655,8 +633,6 @@
           },
           {
             "type": "emphasis",
-            "markers": [],
-            "lineEndings": [],
             "children": [
               {
                 "text": "bar",
@@ -672,7 +648,6 @@
                 }
               }
             ],
-            "attributes": {},
             "textContent": "bar"
           },
           {
@@ -696,8 +671,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -713,7 +686,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -789,8 +761,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -806,7 +776,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -973,8 +942,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -990,7 +957,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1001,8 +967,6 @@
     "output": [
       {
         "type": "indentedCodeBlock",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "# foo\n",
@@ -1018,13 +982,10 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": "# foo\n"
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -1040,7 +1001,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1051,7 +1011,6 @@
     "output": [
       {
         "type": "paragraph",
-        "markers": [],
         "lineEndings": [
           {
             "start": {
@@ -1082,13 +1041,10 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": "foo\n    # bar"
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -1104,7 +1060,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1245,8 +1200,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -1262,7 +1215,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1403,8 +1355,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -1420,7 +1370,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1496,8 +1445,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -1513,7 +1460,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1576,8 +1522,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -1593,7 +1537,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1656,8 +1599,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -1673,7 +1614,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1840,8 +1780,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -1857,7 +1795,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -1898,8 +1835,6 @@
             "text": "\n"
           }
         ],
-        "children": [],
-        "attributes": {},
         "textContent": ""
       },
       {
@@ -1986,14 +1921,10 @@
             "text": "\n"
           }
         ],
-        "children": [],
-        "attributes": {},
         "textContent": ""
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -2009,7 +1940,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -2020,7 +1950,6 @@
     "output": [
       {
         "type": "paragraph",
-        "markers": [],
         "lineEndings": [
           {
             "start": {
@@ -2051,7 +1980,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": "Foo bar"
       },
       {
@@ -2108,7 +2036,6 @@
       },
       {
         "type": "paragraph",
-        "markers": [],
         "lineEndings": [
           {
             "start": {
@@ -2139,13 +2066,10 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": "Bar foo"
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -2161,7 +2085,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]
@@ -2202,7 +2125,6 @@
             "text": "\n"
           }
         ],
-        "children": [],
         "attributes": {
           "level": "2"
         },
@@ -2240,7 +2162,6 @@
             "text": "\n"
           }
         ],
-        "children": [],
         "attributes": {
           "level": "1"
         },
@@ -2278,7 +2199,6 @@
             "text": "\n"
           }
         ],
-        "children": [],
         "attributes": {
           "level": "3"
         },
@@ -2286,8 +2206,6 @@
       },
       {
         "type": "blankLine",
-        "markers": [],
-        "lineEndings": [],
         "children": [
           {
             "text": "",
@@ -2303,7 +2221,6 @@
             }
           }
         ],
-        "attributes": {},
         "textContent": ""
       }
     ]

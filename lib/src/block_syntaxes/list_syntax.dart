@@ -12,13 +12,6 @@ import '../patterns.dart';
 import '../source_span_parser.dart';
 import 'block_syntax.dart';
 
-class ListItem {
-  ListItem(this.lines);
-
-  bool forceBlock = false;
-  final List<Line> lines;
-}
-
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
   @override
@@ -54,12 +47,16 @@ abstract class ListSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
-    final items = <ListItem>[];
+    SourceSpan? listMarker;
+    final items = <BlockSyntaxChildSource>[];
     var childLines = <Line>[];
 
     void endItem() {
       if (childLines.isNotEmpty) {
-        items.add(ListItem(childLines));
+        items.add(BlockSyntaxChildSource(
+          lines: childLines,
+          markers: [listMarker!],
+        ));
         childLines = <Line>[];
       }
     }
@@ -70,7 +67,6 @@ abstract class ListSyntax extends BlockSyntax {
       return match != null;
     }
 
-    String? listMarker;
     int indent = 0;
     // In case the first number in an ordered list is not 1, use it as the
     // "start".
@@ -108,6 +104,7 @@ abstract class ListSyntax extends BlockSyntax {
 
         final sourceSpanParser = SourceSpanParser([parser.current.content]);
         var precedingWhitespaces = sourceSpanParser.moveThroughWhitespace();
+        final markerStart = sourceSpanParser.position;
         final digits = match![1] ?? '';
         if (digits.isNotEmpty) {
           if (startNumber == null && digits.isNotEmpty) {
@@ -115,8 +112,12 @@ abstract class ListSyntax extends BlockSyntax {
           }
           sourceSpanParser.advanceBy(digits.length);
         }
-        final marker = String.fromCharCode(sourceSpanParser.charAt());
         sourceSpanParser.advance();
+
+        // See https://spec.commonmark.org/0.30/#ordered-list-marker
+        final marker = sourceSpanParser
+            .subText(markerStart, sourceSpanParser.position)
+            .first;
 
         var isBlank = true;
         var contentWhitespances = 0;
@@ -137,12 +138,13 @@ abstract class ListSyntax extends BlockSyntax {
           }
         }
 
-        if (listMarker != null && listMarker != marker) {
-          // Changing the bullet or ordered list delimiter starts a new list.
+        // Changing the bullet or ordered list delimiter starts a new list.
+        if (listMarker != null &&
+            listMarker.text.last() != marker.text.last()) {
           break;
         }
         listMarker = marker;
-        precedingWhitespaces += digits.length + marker.length + 1;
+        precedingWhitespaces += digits.length + 2;
         if (isBlank) {
           // See https://spec.commonmark.org/0.30/#example-278.
           blankLines = 1;
@@ -204,7 +206,11 @@ abstract class ListSyntax extends BlockSyntax {
       final itemParser = BlockParser(item.lines, parser.document);
 
       final children = itemParser.parseLines(fromSyntax: this);
-      itemNodes.add(Element('listItem', children: children));
+      itemNodes.add(Element(
+        'listItem',
+        children: children,
+        markers: item.markers,
+      ));
       anyEmptyLinesBetweenBlocks =
           anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
@@ -228,18 +234,17 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
 
-    final listType = ordered ? 'orderedList' : 'bulletList';
-
-    if (ordered && startNumber != 1) {
-      return Element(listType, children: itemNodes, attributes: {
-        'start': '$startNumber',
-      });
-    } else {
-      return Element(listType, children: itemNodes);
-    }
+    return Element(
+      ordered ? 'orderedList' : 'bulletList',
+      children: itemNodes,
+      attributes: {
+        if (ordered && startNumber != 1) 'start': '$startNumber',
+      },
+    );
   }
 
-  void _removeLeadingEmptyLine(ListItem item) {
+  // TODO(Zhiguang): Save the lineEnding of the removed line.
+  void _removeLeadingEmptyLine(BlockSyntaxChildSource item) {
     if (item.lines.isNotEmpty && item.lines.first.hasMatch(emptyPattern)) {
       item.lines.removeAt(0);
     }
@@ -247,7 +252,8 @@ abstract class ListSyntax extends BlockSyntax {
 
   /// Removes any trailing empty lines and notes whether any items are separated
   /// by such lines.
-  bool _removeTrailingEmptyLines(List<ListItem> items) {
+  // TODO(Zhiguang): Save the lineEnding of the removed line.
+  bool _removeTrailingEmptyLines(List<BlockSyntaxChildSource> items) {
     var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
       if (items[i].lines.length == 1) continue;

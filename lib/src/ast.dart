@@ -71,12 +71,21 @@ class Element implements Node {
   }
 
   @override
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap({
+    bool showNull = false,
+    bool showEmpty = false,
+    bool showRuntimeType = false,
+  }) =>
+      {
+        if (showRuntimeType) 'runtimeType': runtimeType,
         'type': type,
-        'markers': markers.map((e) => e.toMap()).toList(),
-        'lineEndings': lineEndings.map((e) => e.toMap()).toList(),
-        'children': children.map((e) => e.toMap()).toList(),
-        'attributes': attributes,
+        if (markers.isNotEmpty || showEmpty)
+          'markers': markers.map((e) => e.toMap()).toList(),
+        if (lineEndings.isNotEmpty || showEmpty)
+          'lineEndings': lineEndings.map((e) => e.toMap()).toList(),
+        if (children.isNotEmpty || showEmpty)
+          'children': children.map((e) => e.toMap()).toList(),
+        if (attributes.isNotEmpty || showEmpty) 'attributes': attributes,
         'textContent': textContent,
       };
 

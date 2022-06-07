@@ -149,3 +149,16 @@ item</li>
 <li>list</li>
 </ul>
 <hr />
+>>> with indented lazy continuations and nested lists
+* one
+  continue
+  * two
+<<<
+<ul>
+<li>one
+continue
+<ul>
+<li>two</li>
+</ul>
+</li>
+</ul>

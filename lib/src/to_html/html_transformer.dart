@@ -10,6 +10,7 @@ class HtmlTransformer implements NodeVisitor {
   final bool encodeHtml;
 
   final List<_TreeElement> _tree = [];
+  String? _lastVisitElement;
 
   HtmlTransformer({
     this.encodeHtml = false,
@@ -35,8 +36,24 @@ class HtmlTransformer implements NodeVisitor {
       return false;
     }
 
-    _tree.add(_TreeElement(element.type));
+    if (element.type == 'htmlBlock') {
+      var text =
+          element.children.map((e) => (e as Text).text).join().trimRight();
 
+      // Hackish. In order to strick for example:
+      // https://spec.commonmark.org/0.30/#example-167
+      // Maybe we should agree to add a special HTML tag `htmlBlock`, so we can
+      // achive the same result in HtmlRenderer.
+      text = (_lastVisitElement != null ? '\n' : '') + text;
+      if (_lastVisitElement == 'listItem') {
+        text += '\n';
+      }
+      _tree.last.children.add(HtmlText(text));
+      return false;
+    }
+
+    _lastVisitElement = element.type;
+    _tree.add(_TreeElement(element.type));
     return true;
   }
 
@@ -101,6 +118,7 @@ class HtmlTransformer implements NodeVisitor {
       }
     }
 
+    _lastVisitElement = type;
     _tree.last.children.add(node);
   }
 
@@ -132,6 +150,8 @@ class HtmlTransformer implements NodeVisitor {
     if (text is! UnparsedContent) {
       parent.children.add(HtmlText(content));
     }
+
+    _lastVisitElement = null;
   }
 
   bool _isCodeBlock(String? type) =>

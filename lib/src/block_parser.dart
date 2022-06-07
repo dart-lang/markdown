@@ -8,13 +8,11 @@ import 'ast.dart';
 import 'block_syntaxes/atx_heading_syntax.dart';
 import 'block_syntaxes/blank_line_syntax.dart';
 import 'block_syntaxes/block_syntax.dart';
-import 'block_syntaxes/block_tag_block_html_syntax.dart';
 import 'block_syntaxes/blockquote_syntax.dart';
 import 'block_syntaxes/code_block_syntax.dart';
 import 'block_syntaxes/dummy_block_syntax.dart';
-import 'block_syntaxes/long_block_html_syntax.dart';
+import 'block_syntaxes/html_block_syntax.dart';
 import 'block_syntaxes/ordered_list_syntax.dart';
-import 'block_syntaxes/other_tag_block_html_syntax.dart';
 import 'block_syntaxes/paragraph_syntax.dart';
 import 'block_syntaxes/setext_heading_syntax.dart';
 import 'block_syntaxes/thematic_break_syntax.dart';
@@ -46,15 +44,7 @@ class BlockParser {
   /// The collection of built-in block parsers.
   final List<BlockSyntax> standardBlockSyntaxes = [
     const BlankLineSyntax(),
-    const BlockTagBlockHtmlSyntax(),
-    LongBlockHtmlSyntax(r'^ {0,3}<pre(?:\s|>|$)', '</pre>'),
-    LongBlockHtmlSyntax(r'^ {0,3}<script(?:\s|>|$)', '</script>'),
-    LongBlockHtmlSyntax(r'^ {0,3}<style(?:\s|>|$)', '</style>'),
-    LongBlockHtmlSyntax('^ {0,3}<!--', '-->'),
-    LongBlockHtmlSyntax(r'^ {0,3}<\?', r'\?>'),
-    LongBlockHtmlSyntax('^ {0,3}<![A-Z]', '>'),
-    LongBlockHtmlSyntax(r'^ {0,3}<!\[CDATA\[', r'\]\]>'),
-    const OtherTagBlockHtmlSyntax(),
+    const HtmlBlockSyntax(),
     const SetextHeadingSyntax(),
     const AtxHeadingSyntax(),
     const CodeBlockSyntax(),
@@ -121,18 +111,6 @@ class BlockParser {
   }
 
   void setLine(int line) => _pos = line;
-
-  /// Gets whether or not the current line matches the given pattern.
-  bool matches(RegExp regex) {
-    if (isDone) return false;
-    return regex.hasMatch(current.content.text);
-  }
-
-  /// Gets whether or not the next line matches the given pattern.
-  bool matchesNext(RegExp regex) {
-    if (next == null) return false;
-    return regex.hasMatch(next!.content.text);
-  }
 
   List<Node> parseLines({
     bool disabledSetextHeading = false,
