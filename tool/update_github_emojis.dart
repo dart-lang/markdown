@@ -223,14 +223,14 @@ Future<void> main(List<String> args) async {
     exit(0);
   }
 
-  int totalEmojiWithDifferentUnicodeSequences = 0;
-  final bool useLegacyUnicodeSequences =
+  var totalEmojiWithDifferentUnicodeSequences = 0;
+  final useLegacyUnicodeSequences =
       !(results['useGitHubUnicodes'] as bool);
-  final bool visualizeUnicodeDiffs =
+  final visualizeUnicodeDiffs =
       results['visualizeDifferentUnicodes'] as bool;
-  final bool dumpMarkdownShortCodes =
+  final dumpMarkdownShortCodes =
       (results['dumpMarkdownShortCodes'].toLowerCase() == 'plain');
-  final bool dumpMarkdownToolTipShortCodes =
+  final dumpMarkdownToolTipShortCodes =
       (results['dumpMarkdownShortCodes'].toLowerCase() == 'tooltip');
 
   if (!useLegacyUnicodeSequences) {
