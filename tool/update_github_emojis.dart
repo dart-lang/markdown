@@ -205,7 +205,7 @@ Future<void> main(List<String> args) async {
         allowed: ['plain', 'tooltip'],
         allowedHelp: {
           'plain': 'just shortcode',
-          'tooltip': '(shortcode with link to provide emoji name in tooltip)',
+          'tooltip': '(shortcode with a link to provide emoji name in tooltips)',
         },
         help:
             'Outputs all emoji shortcodes to stdout which can be used in markdown to show and tests all emoji.');
