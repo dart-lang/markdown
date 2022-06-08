@@ -181,7 +181,8 @@ String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
     }
     return String.fromCharCodes(codePointsHex);
   } catch (e) {
-    print('Invalid/Non-Conformant emoji filename encountered "$emojiFilename"!');
+    print(
+        'Invalid/Non-Conformant emoji filename encountered "$emojiFilename"!');
     return (errorSpecialReplacement);
   }
 }
