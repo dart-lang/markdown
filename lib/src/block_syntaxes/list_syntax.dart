@@ -57,7 +57,7 @@ abstract class ListSyntax extends BlockSyntax {
   Node parse(BlockParser parser) {
     final items = <ListItem>[];
     var childLines = <String>[];
-    final bool isCheckboxListSubclass =
+    final isCheckboxListSubclass =
         (listTag == 'ol_with_checkbox' || listTag == 'ul_with_checkbox');
 
     void endItem() {
@@ -67,10 +67,10 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
 
-    late Match? match;
+    late Match? possibleMatch;
     bool tryMatch(RegExp pattern) {
-      match = pattern.firstMatch(parser.current);
-      return match != null;
+      possibleMatch = pattern.firstMatch(parser.current);
+      return possibleMatch != null;
     }
 
     String? listMarker;
@@ -104,36 +104,38 @@ abstract class ListSyntax extends BlockSyntax {
                   tryMatch(olWithCheckBoxPattern))) ||
           tryMatch(ulPattern) ||
           tryMatch(olPattern)) {
-        // The checkbox subclasse's patterns ([ulWithCheckBoxPattern] and
+        // We know we have a valid [possibleMatch] now, so capture it.
+        final successfulMatch = possibleMatch!;
+        // The checkbox "subclass" patterns ([ulWithCheckBoxPattern] and
         // [olWithCheckBoxPattern]) have 2 extra capturing groups at the 5
-        // position to capture the checkbox. This shift the other groups
+        // position to capture the checkbox. These shift the other groups
         // forward by 2 slots.
         final cbGroupOffset = isCheckboxListSubclass ? 2 : 0;
-        final precedingWhitespace = match![1]!;
-        final digits = match![2] ?? '';
+        final precedingWhitespace = successfulMatch[1]!;
+        final digits = successfulMatch[2] ?? '';
         if (startNumber == null && digits.isNotEmpty) {
           startNumber = int.parse(digits);
         }
-        final marker = match![3]!;
-        // [checkBoxIndicatorPrefix] is always empty unless a checkbox is found
-        String checkBoxIndicatorPrefix = '';
+        final marker = successfulMatch[3]!;
+        // [checkBoxIndicator] is always empty unless a checkbox was found.
+        String checkBoxIndicator = '';
         if (isCheckboxListSubclass) {
           // Look at checkbox capture group and get checkbox state.
           // If we find a checked or unchecked checkbox then we will
-          // set [checkBoxIndicatorPrefix] to one of our invisible
+          // set [checkBoxIndicator] to one of our invisible
           // codes that we can later detect to know if we need to insert
           // a check or unchecked checkbox when we are inserting the
           // listitem li node.
-          final String checkboxGroup = match![5]!.toLowerCase();
+          final String checkboxGroup = successfulMatch[5]!.toLowerCase();
           if (checkboxGroup == '[ ]') {
-            checkBoxIndicatorPrefix = indicatorForUncheckedCheckBox;
+            checkBoxIndicator = indicatorForUncheckedCheckBox;
           } else if (checkboxGroup == '[x]') {
-            checkBoxIndicatorPrefix = indicatorForCheckedCheckBox;
+            checkBoxIndicator = indicatorForCheckedCheckBox;
           }
         }
-        final firstWhitespace = match![5 + cbGroupOffset] ?? '';
-        final restWhitespace = match![6 + cbGroupOffset] ?? '';
-        final content = match![7 + cbGroupOffset] ?? '';
+        final firstWhitespace = successfulMatch[5 + cbGroupOffset] ?? '';
+        final restWhitespace = successfulMatch[6 + cbGroupOffset] ?? '';
+        final content = successfulMatch[7 + cbGroupOffset] ?? '';
         final isBlank = content.isEmpty;
         if (listMarker != null && listMarker != marker) {
           // Changing the bullet or ordered list delimiter starts a new list.
@@ -163,7 +165,7 @@ abstract class ListSyntax extends BlockSyntax {
         }
         // End the current list item and start a new one.
         endItem();
-        childLines.add('$checkBoxIndicatorPrefix$restWhitespace$content');
+        childLines.add('$checkBoxIndicator$restWhitespace$content');
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
