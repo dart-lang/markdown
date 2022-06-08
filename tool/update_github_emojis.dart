@@ -205,7 +205,8 @@ Future<void> main(List<String> args) async {
         allowed: ['plain', 'tooltip'],
         allowedHelp: {
           'plain': 'just shortcode',
-          'tooltip': '(shortcode with a link to provide emoji name in tooltips)',
+          'tooltip':
+              '(shortcode with a link to provide emoji name in tooltips)',
         },
         help:
             'Outputs all emoji shortcodes to stdout which can be used in markdown to show and tests all emoji.');
@@ -224,10 +225,8 @@ Future<void> main(List<String> args) async {
   }
 
   var totalEmojiWithDifferentUnicodeSequences = 0;
-  final useLegacyUnicodeSequences =
-      !(results['useGitHubUnicodes'] as bool);
-  final visualizeUnicodeDiffs =
-      results['visualizeDifferentUnicodes'] as bool;
+  final useLegacyUnicodeSequences = !(results['useGitHubUnicodes'] as bool);
+  final visualizeUnicodeDiffs = results['visualizeDifferentUnicodes'] as bool;
   final dumpMarkdownShortCodes =
       (results['dumpMarkdownShortCodes'].toLowerCase() == 'plain');
   final dumpMarkdownToolTipShortCodes =
