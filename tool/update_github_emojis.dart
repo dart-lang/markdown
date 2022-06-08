@@ -234,7 +234,7 @@ Future<void> main(List<String> args) async {
       (results['dumpMarkdownShortCodes'].toLowerCase() == 'tooltip');
 
   if (!useLegacyUnicodeSequences) {
-    // Issue warning.
+    // Issue warning of the implications of using full GitHub emjoi Unicode sequences.
     print(useOfGitHubUnicodeSequencesWarning);
   }
   if (visualizeUnicodeDiffs) {
