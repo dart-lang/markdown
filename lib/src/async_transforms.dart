@@ -8,7 +8,7 @@ import 'extension_set.dart';
 import 'inline_syntaxes/inline_syntax.dart';
 
 class AsyncDocument extends Document {
-  /// List of async text node transforms that may be uncompleted
+  /// List of async text node transforms that may be uncompleted.
   final List<Future<String>> asyncTextNodes = [];
 
   /// Called before final conversion to html so ensure that all

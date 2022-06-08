@@ -30,7 +30,7 @@ class OurSecondTestTransfomer extends CodeBlockTransformer {
   OurSecondTestTransfomer() : super(handledCodeBlockTypes: ourBlockTypeList);
 }
 
-// Synchronous transformer
+// Synchronous transformer for testing.
 class OurTestTransfomer extends CodeBlockTransformer {
   static const ourBlockTypeList = ['testtype', 'mermaid', 'diagram2'];
 
@@ -59,7 +59,7 @@ class OurTestTransfomer extends CodeBlockTransformer {
 final ourTestTransformingFencedCodeBlock =
     TransformableFencedCodeBlockSyntax([OurTestTransfomer()]);
 
-// Async transformer
+// Async transformer for testing future completions.
 class OurAsyncTestTransfomer extends CodeBlockTransformer {
   static const ourBlockTypeList = ['testtype', 'mermaid', 'diagram2'];
 
@@ -81,7 +81,7 @@ class OurAsyncTestTransfomer extends CodeBlockTransformer {
   @override
   Node? transformCodeBlock(
       String codeBlockType, String rawCodeBlock, BlockParser parser) {
-    final AsyncText asyncText = AsyncText(
+    final asyncText = AsyncText(
         fakeAsyncTransformer(codeBlockType, rawCodeBlock), parser,
         uncompletedFutureTextValue:
             rawCodeBlock // Fallback to showing original diagram source.
@@ -96,11 +96,11 @@ class OurAsyncTestTransfomer extends CodeBlockTransformer {
 final ourAsyncTestTransformingFencedCodeBlock =
     TransformableFencedCodeBlockSyntax([OurAsyncTestTransfomer()]);
 
-// This test 2 transformers in the list
+// This test 2 transformers in the list.
 final ourTest2TransformingFencedCodeBlock = TransformableFencedCodeBlockSyntax(
     [OurTestTransfomer(), OurSecondTestTransfomer()]);
 
-// This test 2 transformers in the list, one async and the other synchronous
+// This test 2 transformers in the list, one async and the other synchronous.
 final ourAsyncMix2TestTransformingFencedCodeBlock =
     TransformableFencedCodeBlockSyntax(
         [OurAsyncTestTransfomer(), OurSecondTestTransfomer()]);

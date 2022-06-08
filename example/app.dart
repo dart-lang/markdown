@@ -24,12 +24,12 @@ final basicRadio = querySelector('#basic-radio') as HtmlElement;
 final commonmarkRadio = querySelector('#commonmark-radio') as HtmlElement;
 final gfmRadio = querySelector('#gfm-radio') as HtmlElement;
 
-// samples groups radio buttons.
+// Samples group radio buttons.
 final group1Radio = querySelector('#group1-radio') as HtmlElement;
 final group2Radio = querySelector('#group2-radio') as HtmlElement;
 final group3Radio = querySelector('#group3-radio') as HtmlElement;
 
-// extension set choices
+// Extension set choices.
 md.ExtensionSet? extensionSet;
 
 final extensionSets = {
@@ -65,7 +65,7 @@ void main() {
   commonmarkRadio.onClick.listen(_switchFlavor);
   gfmRadio.onClick.listen(_switchFlavor);
 
-  // set default samples group
+  // Set default samples group.
   group1Radio.attributes['checked'] = '';
   group1Radio.querySelector('.glyph')!.text = 'radio_button_checked';
 
