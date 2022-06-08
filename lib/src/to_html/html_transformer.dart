@@ -97,9 +97,13 @@ class HtmlTransformer implements NodeVisitor {
           node.generatedId = attributes['generatedId'];
         } else if (type == 'orderedList' && attributes['start'] != null) {
           node.attributes['start'] = attributes['start']!;
-        } else if ((type == 'tableHeadCell' || type == 'tableBodyCell') &&
-            attributes['textAlign'] != null) {
-          node.attributes['style'] = 'text-align: ${attributes['textAlign']};';
+        } else if (type == 'tableHeadCell' || type == 'tableBodyCell') {
+          if (attributes['exception'] == 'exceeded') {
+            return;
+          }
+          if (attributes['textAlign'] != null) {
+            node.attributes['align'] = attributes['textAlign']!;
+          }
         } else if (type == 'link') {
           _updateLinkAttributes(node, element);
         } else if ([
@@ -165,7 +169,6 @@ class HtmlTransformer implements NodeVisitor {
         'image',
         'thematicBreak',
         'hardLineBreak',
-        'tableBodyCell',
       ].contains(element.type) &&
       element.children.isEmpty;
 

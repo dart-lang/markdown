@@ -13,7 +13,7 @@ class HtmlBlockSyntax extends BlockSyntax {
   static final _endConditions = [
     // For condition 1, it does not need to match the start tag, see
     // https://spec.commonmark.org/0.30/#end-condition
-    RegExp('</(?:pre|script|style|textarea)>'),
+    RegExp('</(?:pre|script|style|textarea)>', caseSensitive: false),
     RegExp('-->'),
     RegExp(r'\?>'),
     RegExp('>'),

@@ -13,12 +13,8 @@ class SourceSpanParser {
   final String _sourceText;
 
   /// The current read position.
-  SourcePosition _position = SourcePosition(0, 0);
-
+  var _position = SourcePosition(0, 0);
   SourcePosition get position => _position;
-
-  /// Starting position of the last unconsumed text.
-  SourcePosition start = SourcePosition(0, 0);
 
   /// The ending position, which is not actually in the source.
   late final SourcePosition _end;
@@ -148,6 +144,13 @@ class SourceSpanParser {
     return SourcePosition(newIndex, newOffset);
   }
 
+  /// Create an empty SourceSpan from [position]
+  SourceSpan emptySpan([SourcePosition? position]) {
+    position ??= _position;
+    final location = positionToLocation(position);
+    return SourceSpan(location, location, '');
+  }
+
   /// The [position] can not be the end position which is not actually in the
   /// source.
   int charAt([SourcePosition? position]) {
@@ -159,6 +162,12 @@ class SourceSpanParser {
   /// The same as [charAt] but returns a string.
   String? stringAt([SourcePosition? position]) =>
       String.fromCharCode(charAt(position));
+
+  /// Returns a `SourceSpan` at [position].
+  SourceSpan spanAt([SourcePosition? position]) {
+    position ??= _position;
+    return subText(position, offsetPosition(position, 1)).first;
+  }
 
   int? nextChar([SourcePosition? position]) {
     if (isDone) {
@@ -223,7 +232,7 @@ class SourceSpanParser {
     }
 
     var offset = 0;
-    for (var i = start.index; i < endIndex - 1; i++) {
+    for (var i = 0; i < endIndex - 1; i++) {
       offset += source[i].length;
     }
     offset += position.offset;

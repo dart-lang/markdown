@@ -105,7 +105,7 @@ abstract class ListSyntax extends BlockSyntax {
         final sourceSpanParser = SourceSpanParser([parser.current.content]);
         var precedingWhitespaces = sourceSpanParser.moveThroughWhitespace();
         final markerStart = sourceSpanParser.position;
-        final digits = match![1] ?? '';
+        final digits = match![1]!;
         if (digits.isNotEmpty) {
           if (startNumber == null && digits.isNotEmpty) {
             startNumber = int.parse(digits);
@@ -162,16 +162,9 @@ abstract class ListSyntax extends BlockSyntax {
         // End the current list item and start a new one.
         endItem();
 
-        SourceSpan content;
-        if (contentBlockStart != null && !isBlank) {
-          content = sourceSpanParser.subText(contentBlockStart).first;
-        } else {
-          final location = sourceSpanParser.positionToLocation(
-            sourceSpanParser.position,
-          );
-
-          content = SourceSpan(location, location, '');
-        }
+        final content = contentBlockStart != null && !isBlank
+            ? sourceSpanParser.subText(contentBlockStart).first
+            : sourceSpanParser.emptySpan();
 
         childLines.add(Line(
           content,

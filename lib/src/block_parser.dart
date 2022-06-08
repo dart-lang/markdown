@@ -151,6 +151,9 @@ class Line {
   // See: https://spec.commonmark.org/0.30/#example-6
   final int? tabRemaining;
 
+  /// This is used to avoid infinite circular matching.
+  final List<BlockSyntax> _noMatch = [];
+
   // The definition of blank line:
   // https://spec.commonmark.org/0.30/#blank-line
   bool get isBlankLine => content.text.trim().isEmpty;
@@ -165,7 +168,7 @@ class Line {
   String get text =>
       "${content.text}${lineEnding == null ? '' : lineEnding!.text}";
 
-  const Line(
+  Line(
     this.content, {
     this.lineEnding,
     this.tabRemaining,
@@ -181,12 +184,22 @@ class Line {
         'tabRemaining': tabRemaining,
       };
 
+  void neverMatch(BlockSyntax syntax) => _noMatch.add(syntax);
+
   Match? firstMatch(RegExp pattern) => pattern.firstMatch(content.text);
 
   Match? matchAsPrefix(RegExp pattern, [int start = 0]) =>
       pattern.matchAsPrefix(content.text, start);
 
-  bool hasMatch(RegExp pattern) => pattern.hasMatch(content.text);
+  bool hasMatch(
+    RegExp pattern, {
+    BlockSyntax? syntax,
+  }) {
+    if (syntax != null && _noMatch.contains(syntax)) {
+      return false;
+    }
+    return pattern.hasMatch(content.text);
+  }
 
   bool startsWith(Pattern pattern, [int index = 0]) =>
       content.text.startsWith(pattern, index);

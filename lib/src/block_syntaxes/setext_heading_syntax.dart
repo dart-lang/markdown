@@ -27,9 +27,10 @@ class SetextHeadingSyntax extends BlockSyntax {
     if (parser.setextHeadingDisabled || lastSyntax is! ParagraphSyntax) {
       return false;
     }
-    final matched = parser.current.hasMatch(pattern);
+    final matched = parser.current.hasMatch(pattern, syntax: this);
     if (matched) {
       if (parser.linesBuffer.isEmpty) {
+        parser.current.neverMatch(this);
         return false;
       }
     }

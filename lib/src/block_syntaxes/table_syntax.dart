@@ -2,10 +2,14 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
 import '../block_parser.dart';
 import '../charcode.dart';
+import '../extensions.dart';
 import '../patterns.dart';
+import '../source_span_parser.dart';
 import 'block_syntax.dart';
 
 /// Parses tables.
@@ -22,7 +26,7 @@ class TableSyntax extends BlockSyntax {
   bool canParse(BlockParser parser) {
     // Note: matches *next* line, not the current one. We're looking for the
     // bar separating the head row from the body rows.
-    return parser.next?.hasMatch(tablePattern) ?? false;
+    return parser.next?.hasMatch(tablePattern, syntax: this) ?? false;
   }
 
   /// Parses a table into its three parts:
@@ -32,64 +36,83 @@ class TableSyntax extends BlockSyntax {
   /// * many body rows of body cells
   @override
   Node? parse(BlockParser parser) {
-    final alignments = _parseAlignments(parser.next!.content.text);
+    final markers = [parser.next!.content.trim()];
+    final lineEndings = [
+      parser.current.lineEnding!,
+      if (parser.next?.lineEnding != null) parser.next!.lineEnding!,
+    ];
+
+    final alignments = _parseDelimiterRow(parser.next!.content.text);
     final columnCount = alignments.length;
-    final headRow = _parseRow(parser, alignments, 'tableHeadCell');
-    if (headRow.children.length != columnCount) {
+    final parsedRow = _parseRow(
+      parser.current.content,
+      alignments,
+      'tableHeadCell',
+    );
+    if (parsedRow.row.children.length != columnCount) {
+      parser.next!.neverMatch(this);
       return null;
     }
-    final head = Element.todo('tableHead', children: [headRow]);
+
+    markers.insertAll(0, parsedRow.markers);
+    final head = Element('tableHead', children: [parsedRow.row]);
+    parser.advance();
 
     // Advance past the divider of hyphens.
     parser.advance();
 
     final rows = <Element>[];
     while (!shouldEnd(parser)) {
-      final row = _parseRow(parser, alignments, 'tableBodyCell');
-      final children = row.children;
+      final parsedRow = _parseRow(
+        parser.current.content,
+        alignments,
+        'tableBodyCell',
+      );
+      final children = parsedRow.row.children;
+      markers.addAll(parsedRow.markers);
+      if (parser.current.lineEnding != null) {
+        lineEndings.add(parser.current.lineEnding!);
+      }
+
       while (children.length < columnCount) {
         // Insert synthetic empty cells.
-        children.add(Element.todo('tableBodyCell'));
+        children.add(Element('tableBodyCell'));
       }
-      while (children.length > columnCount) {
-        children.removeLast();
-      }
-      while (row.children.length > columnCount) {
-        row.children.removeLast();
-      }
-      rows.add(row);
-    }
-    if (rows.isEmpty) {
-      return Element.todo('table', children: [head]);
-    } else {
-      final body = Element.todo('tableBody', children: rows);
 
-      return Element.todo('table', children: [head, body]);
+      // https://github.github.com/gfm/#example-204
+      // But we do not ignore the excess in Markdown AST, mark them instead.
+      if (children.length > columnCount) {
+        children.getRange(columnCount, children.length).forEach((element) {
+          (element as Element).attributes['exception'] = "exceeded";
+        });
+      }
+      rows.add(parsedRow.row);
+      parser.advance();
     }
+
+    Element? body;
+    if (rows.isNotEmpty) {
+      body = Element('tableBody', children: rows);
+    }
+    return Element(
+      'table',
+      children: [head, if (body != null) body],
+      lineEndings: lineEndings,
+      markers: markers,
+    );
   }
 
-  List<String?> _parseAlignments(String line) {
-    final startIndex = _walkPastOpeningPipe(line);
+  List<String?> _parseDelimiterRow(String text) {
+    final columns = text.replaceAll(RegExp(r'^\s*\||\|\s*$'), '').split('|');
 
-    var endIndex = line.length - 1;
-    while (endIndex > 0) {
-      final ch = line.codeUnitAt(endIndex);
-      if (ch == $pipe) {
-        endIndex--;
-        break;
-      }
-      if (ch != $space && ch != $tab) {
-        break;
-      }
-      endIndex--;
-    }
-
-    // Optimization: We walk [line] too many times. One lap should do it.
-    return line.substring(startIndex, endIndex + 1).split('|').map((column) {
+    return columns.map((column) {
       column = column.trim();
-      if (column.startsWith(':') && column.endsWith(':')) return 'center';
-      if (column.startsWith(':')) return 'left';
-      if (column.endsWith(':')) return 'right';
+      final matchLeft = column.startsWith(':');
+      final matchRight = column.endsWith(':');
+
+      if (matchLeft && matchRight) return 'center';
+      if (matchLeft) return 'left';
+      if (matchRight) return 'right';
       return null;
     }).toList();
   }
@@ -100,131 +123,91 @@ class TableSyntax extends BlockSyntax {
   /// [alignments] is used to annotate an alignment on each cell, and
   /// [cellType] is used to declare either "tableBodyCell" or "tableHeadCell"
   /// cells.
-  Element _parseRow(
-    BlockParser parser,
+  _RowElements _parseRow(
+    SourceSpan content,
     List<String?> alignments,
     String cellType,
   ) {
-    final line = parser.current.content.text;
-    final cells = <String>[];
-    var index = _walkPastOpeningPipe(line);
-    final cellBuffer = StringBuffer();
-
-    while (true) {
-      if (index >= line.length) {
-        // This row ended without a trailing pipe, which is fine.
-        cells.add(cellBuffer.toString().trimRight());
-        cellBuffer.clear();
-        break;
-      }
-      final ch = line.codeUnitAt(index);
-      if (ch == $backslash) {
-        if (index == line.length - 1) {
-          // A table row ending in a backslash is not well-specified, but it
-          // looks like GitHub just allows the character as part of the text of
-          // the last cell.
-          cellBuffer.writeCharCode(ch);
-          cells.add(cellBuffer.toString().trimRight());
-          cellBuffer.clear();
-          break;
-        }
-        final escaped = line.codeUnitAt(index + 1);
-        if (escaped == $pipe) {
-          // GitHub Flavored Markdown has a strange bit here; the pipe is to be
-          // escaped before any other inline processing. One consequence, for
-          // example, is that "| `\|` |" should be parsed as a cell with a code
-          // element with text "|", rather than "\|". Most parsers are not
-          // compliant with this corner, but this is what is specified, and what
-          // GitHub does in practice.
-          cellBuffer.writeCharCode(escaped);
-        } else {
-          // The [InlineParser] will handle the escaping.
-          cellBuffer.writeCharCode(ch);
-          cellBuffer.writeCharCode(escaped);
-        }
-        index += 2;
-      } else if (ch == $pipe) {
-        cells.add(cellBuffer.toString().trimRight());
-        cellBuffer.clear();
-        // Walk forward past any whitespace which leads the next cell.
-        index++;
-        index = _walkPastWhitespace(line, index);
-        if (index >= line.length) {
-          // This row ended with a trailing pipe.
-          break;
-        }
-      } else {
-        cellBuffer.writeCharCode(ch);
-        index++;
-      }
-    }
-    parser.advance();
-
+    final markers = <SourceSpan>[];
     final row = <Element>[];
+    final cells = <List<Node>>[];
+    final spanParser = SourceSpanParser([content.trimRight()]);
+
+    /// Walks through the opening pipe and any whitespace that surrounds it.
+    spanParser.moveThroughWhitespace();
+    if (spanParser.charAt() == $pipe) {
+      spanParser.advance();
+    }
+
+    var cellStart = spanParser.position;
+    final segments = <SourceSpan>[];
+    while (!spanParser.isDone) {
+      final char = spanParser.charAt();
+      final atEnd = spanParser.isEndingPosition(
+        spanParser.offsetPosition(spanParser.position, 1),
+      );
+
+      // GitHub Flavored Markdown has a strange bit here; the pipe is to be
+      // escaped before any other inline processing. One consequence, for
+      // example, is that "| `\|` |" should be parsed as a cell with a code
+      // element with text "|", rather than "\|". Most parsers are not
+      // compliant with this corner, but this is what is specified, and what
+      // GitHub does in practice.
+      // See https://github.github.com/gfm/#example-200.
+      if (char == $backslash && !atEnd) {
+        segments.addAll(spanParser.subText(cellStart, spanParser.position));
+
+        // Save "\" as a marker.
+        markers.add(spanParser.spanAt());
+        spanParser.advance();
+
+        cellStart = spanParser.position;
+        spanParser.advance();
+        continue;
+      }
+
+      if (char == $pipe || atEnd) {
+        segments.addAll(spanParser.subText(
+          cellStart,
+          (atEnd && char != $pipe) ? null : spanParser.position,
+        ));
+
+        if (segments.isNotEmpty) {
+          segments.first = segments.first.trimLeft();
+          segments.last = segments.last.trimRight();
+        }
+        cells.add(
+          segments.map<Node>((span) => UnparsedContent.fromSpan(span)).toList(),
+        );
+        segments.clear();
+        if (!atEnd) {
+          spanParser.advance();
+          cellStart = spanParser.position;
+          continue;
+        }
+      }
+      spanParser.advance();
+    }
+
     for (var i = 0; i < cells.length; i++) {
       String? textAlign;
       if (i < alignments.length && alignments[i] != null) {
         textAlign = '${alignments[i]}';
       }
 
-      row.add(Element.todo(
+      row.add(Element(
         cellType,
-        children: [UnparsedContent.todo(cells[i])],
+        children: cells[i],
         attributes: textAlign == null ? {} : {'textAlign': textAlign},
       ));
     }
-    /*
-    final row = [
-      for (final cell in cells)
-        Element.todo(
-          cellType,
-          children: [UnparsedContent.todo(cell)],
-        )
-    ];
 
-    for (var i = 0; i < row.length && i < alignments.length; i++) {
-      if (alignments[i] == null) continue;
-      row[i].attributes['textAlign'] = '${alignments[i]}';
-    }
-    */
-
-    return Element.todo('tableRow', children: row);
+    return _RowElements(Element('tableRow', children: row), markers);
   }
+}
 
-  /// Walks past whitespace in [line] starting at [index].
-  ///
-  /// Returns the index of the first non-whitespace character.
-  int _walkPastWhitespace(String line, int index) {
-    while (index < line.length) {
-      final ch = line.codeUnitAt(index);
-      if (ch != $space && ch != $tab) {
-        break;
-      }
-      index++;
-    }
-    return index;
-  }
-
-  /// Walks past the opening pipe (and any whitespace that surrounds it) in
-  /// [line].
-  ///
-  /// Returns the index of the first non-whitespace character after the pipe.
-  /// If no opening pipe is found, this just returns the index of the first
-  /// non-whitespace character.
-  int _walkPastOpeningPipe(String line) {
-    var index = 0;
-    while (index < line.length) {
-      final ch = line.codeUnitAt(index);
-      if (ch == $pipe) {
-        index++;
-        index = _walkPastWhitespace(line, index);
-      }
-      if (ch != $space && ch != $tab) {
-        // No leading pipe.
-        break;
-      }
-      index++;
-    }
-    return index;
-  }
+class _RowElements {
+  final Element row;
+  final List<SourceSpan> markers;
+  _RowElements(this.row, this.markers);
 }
