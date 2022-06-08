@@ -100,7 +100,8 @@ const legacyEmojisUsedVariationModifier = [
   '2666',
 ];
 
-const errorSpecialReplacement = '\u{FFFD}'; // Special replacement character '�'
+/// Special replacement character '�'
+const errorSpecialReplacement = '\u{FFFD}';
 
 const useOfGitHubUnicodeSequencesWarning = '''
 IMPORTANT NOTE: The use of the --useGitHubUnicodes switch will force using
@@ -116,8 +117,8 @@ expected GitHub versions of the Unicode sequences of the emoji in order
 for the tests to pass.
 ''';
 
-/// The GitHub API url will return a json map of alls emoji in form of
-/// { 'shortcode':'emojifilename' ... }
+/// The GitHub API URL will return a JSON map of all emoji in the form of
+/// `{ 'shortcode':'emojifilename' ... }`.
 /// The filenames are simply a list of all of the hex string of the
 /// *essential* Unicode codepoints representing the emoji.
 /// These sequences exclude the Unicode join zero width (0x200D) and
@@ -139,38 +140,39 @@ String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
   const zeroWidthJoiner = 0x200D;
 
   try {
-    final String? rawHexList =
-        gitHubEmojiUnicodeFromFilenamePattern.firstMatch(emojiFilename)?.group(1);
+    final String? rawHexList = gitHubEmojiUnicodeFromFilenamePattern
+        .firstMatch(emojiFilename)
+        ?.group(1);
     if (rawHexList == null) {
-      // This is a GitHub custom emoji and it is represent by PNG only and
+      // This is a GitHub custom emoji and it is represented by a PNG image only and
       // there is no equivalent Unicode.  We have to ingore.
       return '';
     }
-    bool legacyUsedVariationCode = false;
+    var legacyUsedVariationCode = false;
     if (legacyEmojisUsedVariationModifier.contains(rawHexList)) {
       legacyUsedVariationCode = true;
     }
-    final List<int> rawCodePointsHex = rawHexList
+    final rawCodePointsHex = rawHexList
         .split('-')
         .map((hexstr) => int.parse(hexstr, radix: 16))
         .toList();
-    final List<int> codePointsHex = [];
+    final codePointsHex = <int>[];
 
     if (legacyUsedVariationCode) {
-      // just add single variation selector
+      // Just add single variation selector.
       codePointsHex.addAll(rawCodePointsHex);
       codePointsHex.add(variationSelector);
     } else {
-      // now insert the join zero width and variation select modifying Unicode chars
+      // Now insert the join zero width and variation select modifying Unicode chars.
       for (var i = 0; i < rawCodePointsHex.length; i++) {
         final codePointAtIndex = rawCodePointsHex[i];
         codePointsHex.add(codePointAtIndex);
         if (i < (rawCodePointsHex.length - 1)) {
           codePointsHex.add(variationSelector);
-          // # and 0-9 don't use zero width joiners.
+          // # and 0-9 don't use Zero Width Joiner.
           if (codePointAtIndex == 0x23 ||
               (codePointAtIndex >= 0x30 && codePointAtIndex <= 0x39)) {
-            // no zerowidth joiner
+            // Don't add Zero Width Joiner.
           } else {
             codePointsHex.add(zeroWidthJoiner);
           }
@@ -179,7 +181,7 @@ String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
     }
     return String.fromCharCodes(codePointsHex);
   } catch (e) {
-    print('Invalid/Non-Conformant emoji filename encountered $emojiFilename !');
+    print('Invalid/Non-Conformant emoji filename encountered "$emojiFilename"!');
     return (errorSpecialReplacement);
   }
 }
@@ -231,7 +233,7 @@ Future<void> main(List<String> args) async {
       (results['dumpMarkdownShortCodes'].toLowerCase() == 'tooltip');
 
   if (!useLegacyUnicodeSequences) {
-    // issue warning
+    // Issue warning.
     print(useOfGitHubUnicodeSequencesWarning);
   }
   if (visualizeUnicodeDiffs) {
@@ -276,7 +278,7 @@ Future<void> main(List<String> args) async {
         shortCodeAlias != 'cricket' &&
         shortCodeAlias != 'beetle') {
       emojiUnicode = legacyEmojis[
-          shortCodeAlias]!; // Use legacy Unicode string if available
+          shortCodeAlias]!; // Use legacy Unicode string if available.
     }
     if (legacyEmojis.containsKey(shortCodeAlias) &&
         emojiUnicode != legacyEmojis[shortCodeAlias]) {
