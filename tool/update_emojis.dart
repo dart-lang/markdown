@@ -6,12 +6,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-// TODO(srawlins): Switch to https://github.com/muan/unicode-emoji-json. This
-// is definitely a breaking change; the emoji names are not necessarily the
-// same.
+// update_github_emojis.dart now generates the emoji list using the GitHub API
+// to retrieve the emoji list.  It uses this emoji source as a source to keep
+// binary compatibility with the Unicode sequences for each emoji found here.
 final _emojisJsonRawUrl =
     'https://raw.githubusercontent.com/muan/emojilib/v2.4.0/emojis.json';
-final _emojisFilePath = 'lib/src/emojis.dart';
+final _emojisFilePath = 'lib/src/legacy_emojis.dart';
 
 Future<void> main() async {
   final client = HttpClient();
@@ -33,17 +33,22 @@ Future<void> main() async {
   emojisContent.writeln('const emojis = <String, String>{');
   var emojiCount = 0;
   final ignored = <String>[];
-  json.forEach((String alias, Map<String, dynamic> info) {
+  // Dump in sorted order now to facilitate comparison with new GitHub emoji.
+  final sortedKeys = json.keys.toList()..sort();
+  for (final String alias in sortedKeys) {
+    final info = json[alias] as Map<String, dynamic>;
     if (info['char'] != null) {
       emojisContent.writeln("  '$alias': '${info['char']}',");
       emojiCount++;
     } else {
       ignored.add(alias);
     }
-  });
+  }
   emojisContent.writeln('};');
   File(_emojisFilePath).writeAsStringSync(emojisContent.toString());
-  print('Wrote data to $_emojisFilePath for $emojiCount emojis, '
+  print('WARNING: This updates only the LEGACY emoji - to update the active\n'
+      'emoji recognized by the markdown package, execute `update_github_emojis.dart`.\n');
+  print('Wrote data to $_emojisFilePath for $emojiCount emoji, '
       'ignoring ${ignored.length}: ${ignored.join(', ')}.');
   exit(0);
 }
