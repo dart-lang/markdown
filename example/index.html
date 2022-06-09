@@ -10,6 +10,34 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/languages/dart.min.js" integrity="sha512-14QR6tzX5xTNeMJKXzSK+xCquDvtNEr1jM5NlKy/149BBY50Kv70qqxHtzo6zClbtc1gIG7G0CGWXuMgPIMt0g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="app.dart.js"></script>
     <title>Dart Markdown Live Editor</title>
+    <style>
+.gfm-color_chip span {
+  display: inline-block;
+  line-height: 1;
+  margin: 0 0 2px 4px;
+  vertical-align: middle;
+  border-radius: 3px;
+  width: 0.9em;
+  height: 0.9em;
+  background: #fff;
+}
+
+code.gfm-color_chip {
+  padding: 2px 4px;
+  color: #1f1f1f;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+ul.contains-task-list, ol.contains-task-list {
+  margin-left: -1em;
+  list-style-type: none;
+}
+
+.task-list-item {
+  list-style-type: none;
+}
+    </style>
   </head>
   <body>
     <div class="container">

@@ -35,14 +35,28 @@ final hrPattern = RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
 /// three leading spaces before the marker and any number of spaces or tabs
 /// after.
 ///
-/// Contains a dummy group at [2], so that the groups in [ulPattern] and
-/// [olPattern] match up; in both, [2] is the length of the number that begins
+/// Contains a dummy group at `[2]`, so that the groups in [ulPattern] and
+/// [olPattern] match up; in both, `[2]` is the length of the number that begins
 /// the list marker.
 final ulPattern = RegExp(r'^([ ]{0,3})()([*+-])(([ \t])([ \t]*)(.*))?$');
+
+/// Similar to [ulPattern] but with a GitHub style checkbox
+/// `'[ ]'|'[x]'|'[X]'` following the number. The checkbox will
+/// be grabbed by group `[5]` and [ulPattern]'s groups `[5,6,7]` are all
+/// shifted 2 places to be `[7,8,9]`
+final ulWithCheckBoxPattern = RegExp(
+    r'^([ ]{0,3})()([*+-])([ \t]{0,4})(\[[ xX]{1}\])(([ \t])([ \t]*)(.*))?$');
 
 /// A line starting with a number like `123.`. May have up to three leading
 /// spaces before the marker and any number of spaces or tabs after.
 final olPattern = RegExp(r'^([ ]{0,3})(\d{1,9})([\.)])(([ \t])([ \t]*)(.*))?$');
+
+/// Similar to [olPattern] but with a GitHub style checkbox
+/// `'[ ]'|'[x]'|'[X]'` following the number. The checkbox will
+/// be grabbed by group `[5]` and [olPattern]'s groups `[5,6,7]` are all
+/// shifted 2 places to be `[7,8,9]`
+final olWithCheckBoxPattern = RegExp(
+    r'^([ ]{0,3})(\d{1,9})([\.)])([ \t]{0,4})(\[[ xX]{1}\])(([ \t])([ \t]*)(.*))?$');
 
 /// A line of hyphens separated by at least one pipe.
 final tablePattern = RegExp(
