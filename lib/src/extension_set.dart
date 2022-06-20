@@ -5,8 +5,8 @@ import 'block_syntaxes/setext_heading_with_id_syntax.dart';
 import 'block_syntaxes/table_syntax.dart';
 import 'inline_syntaxes/autolink_extension_syntax.dart';
 import 'inline_syntaxes/emoji_syntax.dart';
-import 'inline_syntaxes/inline_html_syntax.dart';
 import 'inline_syntaxes/inline_syntax.dart';
+import 'inline_syntaxes/raw_html_syntax.dart';
 import 'inline_syntaxes/strikethrough_syntax.dart';
 
 /// ExtensionSets provide a simple grouping mechanism for common Markdown
@@ -36,7 +36,7 @@ class ExtensionSet {
       <BlockSyntax>[const FencedCodeBlockSyntax()],
     ),
     List<InlineSyntax>.unmodifiable(
-      <InlineSyntax>[InlineHtmlSyntax()],
+      <InlineSyntax>[RawHtmlSyntax()],
     ),
   );
 
@@ -60,7 +60,7 @@ class ExtensionSet {
     ),
     List<InlineSyntax>.unmodifiable(
       <InlineSyntax>[
-        InlineHtmlSyntax(),
+        RawHtmlSyntax(),
         StrikethroughSyntax(),
         EmojiSyntax(),
         AutolinkExtensionSyntax()
@@ -79,7 +79,7 @@ class ExtensionSet {
     ),
     List<InlineSyntax>.unmodifiable(
       <InlineSyntax>[
-        InlineHtmlSyntax(),
+        RawHtmlSyntax(),
         StrikethroughSyntax(),
         AutolinkExtensionSyntax()
       ],

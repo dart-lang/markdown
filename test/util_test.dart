@@ -48,19 +48,6 @@ void main() {
           "isBlankLine": false,
           "tabRemaining": null,
         },
-        {
-          "text": "",
-          "content": {
-            "start": {"line": 1, "column": 0, "offset": 4},
-            "end": {"line": 1, "column": 0, "offset": 4},
-            "text": ""
-          },
-          "lineEnding": null,
-          "start": {"line": 1, "column": 0, "offset": 4},
-          "end": {"line": 1, "column": 0, "offset": 4},
-          "isBlankLine": true,
-          "tabRemaining": null,
-        }
       ]);
     });
     test('multiple lines with a blank line in between', () {
@@ -114,28 +101,6 @@ void main() {
           "isBlankLine": false,
           "tabRemaining": null,
         }
-      ]);
-    });
-  });
-  group("for toGroupsWithIndex()", () {
-    final text = "> Hello Markdown!";
-    test('has no capturing', () {
-      final pattern = RegExp(r'^[ ]{0,3}>[ ]?.*$');
-      final match = pattern.firstMatch(text);
-      final groups = toGroupsWithIndex(match!);
-
-      expect(groups.map((e) => e!.toMap()), [
-        {"text": "> Hello Markdown!", "start": 0, "end": 17},
-      ]);
-    });
-    test('has capturing', () {
-      final pattern = RegExp(r'^[ ]{0,3}(>)[ ]?(.*)$');
-      final match = pattern.firstMatch(text);
-      final groups = toGroupsWithIndex(match!);
-
-      expect(groups.map((e) => e!.toMap()), [
-        {"text": ">", "start": 0, "end": 1},
-        {"text": "Hello Markdown!", "start": 2, "end": 17}
       ]);
     });
   });

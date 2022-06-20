@@ -5,11 +5,11 @@
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
-import '../block_parser.dart';
 import '../charcode.dart';
 import '../extensions.dart';
+import '../parsers/block_parser.dart';
+import '../parsers/source_parser.dart';
 import '../patterns.dart';
-import '../source_span_parser.dart';
 import 'block_syntax.dart';
 
 /// Parses tables.
@@ -26,7 +26,7 @@ class TableSyntax extends BlockSyntax {
   bool canParse(BlockParser parser) {
     // Note: matches *next* line, not the current one. We're looking for the
     // bar separating the head row from the body rows.
-    return parser.next?.hasMatch(tablePattern, syntax: this) ?? false;
+    return parser.next?.hasMatch(tablePattern) ?? false;
   }
 
   /// Parses a table into its three parts:
@@ -50,7 +50,6 @@ class TableSyntax extends BlockSyntax {
       'tableHeadCell',
     );
     if (parsedRow.row.children.length != columnCount) {
-      parser.next!.neverMatch(this);
       return null;
     }
 
@@ -131,7 +130,7 @@ class TableSyntax extends BlockSyntax {
     final markers = <SourceSpan>[];
     final row = <Element>[];
     final cells = <List<Node>>[];
-    final spanParser = SourceSpanParser([content.trimRight()]);
+    final spanParser = SourceParser([content.trimRight()]);
 
     /// Walks through the opening pipe and any whitespace that surrounds it.
     spanParser.moveThroughWhitespace();
@@ -143,9 +142,7 @@ class TableSyntax extends BlockSyntax {
     final segments = <SourceSpan>[];
     while (!spanParser.isDone) {
       final char = spanParser.charAt();
-      final atEnd = spanParser.isEndingPosition(
-        spanParser.offsetPosition(spanParser.position, 1),
-      );
+      final isLastChar = spanParser.nextChar() == null;
 
       // GitHub Flavored Markdown has a strange bit here; the pipe is to be
       // escaped before any other inline processing. One consequence, for
@@ -154,8 +151,8 @@ class TableSyntax extends BlockSyntax {
       // compliant with this corner, but this is what is specified, and what
       // GitHub does in practice.
       // See https://github.github.com/gfm/#example-200.
-      if (char == $backslash && !atEnd) {
-        segments.addAll(spanParser.subText(cellStart, spanParser.position));
+      if (char == $backslash && !isLastChar) {
+        segments.addAll(spanParser.subspan(cellStart, spanParser.position));
 
         // Save "\" as a marker.
         markers.add(spanParser.spanAt());
@@ -166,10 +163,10 @@ class TableSyntax extends BlockSyntax {
         continue;
       }
 
-      if (char == $pipe || atEnd) {
-        segments.addAll(spanParser.subText(
+      if (char == $pipe || isLastChar) {
+        segments.addAll(spanParser.subspan(
           cellStart,
-          (atEnd && char != $pipe) ? null : spanParser.position,
+          (isLastChar && char != $pipe) ? null : spanParser.position,
         ));
 
         if (segments.isNotEmpty) {
@@ -180,7 +177,7 @@ class TableSyntax extends BlockSyntax {
           segments.map<Node>((span) => UnparsedContent.fromSpan(span)).toList(),
         );
         segments.clear();
-        if (!atEnd) {
+        if (!isLastChar) {
           spanParser.advance();
           cellStart = spanParser.position;
           continue;

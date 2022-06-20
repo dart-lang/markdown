@@ -5,11 +5,12 @@
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
-import '../block_parser.dart';
 import '../charcode.dart';
 import '../extensions.dart';
+import '../line.dart';
+import '../parsers/block_parser.dart';
+import '../parsers/source_parser.dart';
 import '../patterns.dart';
-import '../source_span_parser.dart';
 import 'block_syntax.dart';
 
 /// Base class for both ordered and unordered lists.
@@ -102,37 +103,36 @@ abstract class ListSyntax extends BlockSyntax {
       } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
         blankLines = 0;
 
-        final sourceSpanParser = SourceSpanParser([parser.current.content]);
-        var precedingWhitespaces = sourceSpanParser.moveThroughWhitespace();
-        final markerStart = sourceSpanParser.position;
+        final spanParser = SourceParser([parser.current.content]);
+        var precedingWhitespaces = spanParser.moveThroughWhitespace();
+        final markerStart = spanParser.position;
         final digits = match![1]!;
         if (digits.isNotEmpty) {
           if (startNumber == null && digits.isNotEmpty) {
             startNumber = int.parse(digits);
           }
-          sourceSpanParser.advanceBy(digits.length);
+          spanParser.advanceBy(digits.length);
         }
-        sourceSpanParser.advance();
+        spanParser.advance();
 
         // See https://spec.commonmark.org/0.30/#ordered-list-marker
-        final marker = sourceSpanParser
-            .subText(markerStart, sourceSpanParser.position)
-            .first;
+        final marker =
+            spanParser.subspan(markerStart, spanParser.position).first;
 
         var isBlank = true;
         var contentWhitespances = 0;
         var hitTab = false;
-        SourcePosition? contentBlockStart;
+        int? contentBlockStart;
 
-        if (!sourceSpanParser.isDone) {
-          hitTab = sourceSpanParser.charAt() == $tab;
+        if (!spanParser.isDone) {
+          hitTab = spanParser.charAt() == $tab;
           // Skip the first whitespace.
-          sourceSpanParser.advance();
-          contentBlockStart = sourceSpanParser.position;
-          if (!sourceSpanParser.isDone) {
-            contentWhitespances = sourceSpanParser.moveThroughWhitespace();
+          spanParser.advance();
+          contentBlockStart = spanParser.position;
+          if (!spanParser.isDone) {
+            contentWhitespances = spanParser.moveThroughWhitespace();
 
-            if (!sourceSpanParser.isDone) {
+            if (!spanParser.isDone) {
               isBlank = false;
             }
           }
@@ -163,8 +163,8 @@ abstract class ListSyntax extends BlockSyntax {
         endItem();
 
         final content = contentBlockStart != null && !isBlank
-            ? sourceSpanParser.subText(contentBlockStart).first
-            : sourceSpanParser.emptySpan();
+            ? spanParser.subspan(contentBlockStart).first
+            : spanParser.emptySpan();
 
         childLines.add(Line(
           content,

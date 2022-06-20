@@ -75,7 +75,7 @@ links [are *awesome*]
 <p><a href="(yes-a-link">a</a>
 <a href="(yes-a-link)">a</a>
 [a](\(not-a-link))
-<a href="(yes-a-link))">a</a></p>
+<a href="%5C(yes-a-link))">a</a></p>
 >>> links with unbalanced parentheses
 [foo](link(1.png) (what?)
 <<<
@@ -84,4 +84,4 @@ links [are *awesome*]
 links [are](<http://example.com> "title\") awesome
 
 <<<
-<p>links [are](<a href="http://example.com">http://example.com</a> "title&quot;) awesome</p>
+<p>links [are](<a href="http://example.com">http://example.com</a> &quot;title&quot;) awesome</p>

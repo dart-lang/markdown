@@ -3,12 +3,13 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:markdown/markdown.dart';
+import 'package:source_span/source_span.dart';
 import 'package:test/test.dart';
 
 import 'util.dart';
 
 void main() async {
-  testAstFromFile('common_mark/atx_headings.json');
+  // testAstFromFile('common_mark/atx_headings.json');
 
   await testDirectory('original');
 
@@ -41,7 +42,7 @@ void main() async {
   );
   testFile(
     'extensions/inline_html.unit',
-    inlineSyntaxes: [InlineHtmlSyntax()],
+    inlineSyntaxes: [RawHtmlSyntax()],
   );
   testFile(
     'extensions/strikethrough.unit',
@@ -49,40 +50,42 @@ void main() async {
   );
 
   await testDirectory('common_mark');
-  await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
+  await testDirectory('gfm');
 
   group('Corner cases', () {
-    validateCore('Incorrect Links', '''
+    validateCore(
+        'Incorrect Links',
+        '''
 5 Ethernet ([Music](
-''', '''
-<p>5 Ethernet ([Music](</p>
-''');
+''',
+        '<p>5 Ethernet ([Music](</p>');
 
-    validateCore('Escaping code block language', '''
+    validateCore(
+        'Escaping code block language',
+        '''
 ```"/><a/href="url">arbitrary_html</a>
 ```
-''', '''
-<pre><code class="language-&quot;/&gt;&lt;a/href=&quot;url&quot;&gt;arbitrary_html&lt;/a&gt;"></code></pre>
-''');
+''',
+        '<pre><code class="language-&quot;/&gt;&lt;a/href=&quot;url&quot;&gt;arbitrary_html&lt;/a&gt;"></code></pre>');
 
-    validateCore('Unicode ellipsis as punctuation', '''
+    validateCore(
+        'Unicode ellipsis as punctuation',
+        '''
 "Connecting dot **A** to **B.**…"
-''', '''
-<p>"Connecting dot <strong>A</strong> to <strong>B.</strong>…"</p>
-''');
+''',
+        '<p>&quot;Connecting dot <strong>A</strong> to <strong>B.</strong>…&quot;</p>');
   });
 
   group('Resolver', () {
-    Node? nyanResolver(String text, [_]) =>
-        text.isEmpty ? null : Text.todo('~=[,,_${text}_,,]:3');
+    Node? nyanResolver(String text, [_]) => text.isEmpty
+        ? null
+        : Text.fromSpan(SourceFile.fromString(('~=[,,_${text}_,,]:3')).span(0));
     validateCore(
         'simple link resolver',
         '''
 resolve [this] thing
 ''',
-        '''
-<p>resolve ~=[,,_this_,,]:3 thing</p>
-''',
+        '<p>resolve ~=[,,_this_,,]:3 thing</p>',
         linkResolver: nyanResolver);
 
     validateCore(
@@ -90,9 +93,7 @@ resolve [this] thing
         '''
 resolve ![this] thing
 ''',
-        '''
-<p>resolve ~=[,,_this_,,]:3 thing</p>
-''',
+        '<p>resolve ~=[,,_this_,,]:3 thing</p>',
         imageLinkResolver: nyanResolver);
 
     validateCore(
@@ -100,9 +101,7 @@ resolve ![this] thing
         '''
 resolve [*star* _underline_] thing
 ''',
-        '''
-<p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>
-''',
+        '<p>resolve ~=[,,_*star* _underline__,,]:3 thing</p>',
         linkResolver: nyanResolver);
 
     validateCore(
@@ -110,9 +109,7 @@ resolve [*star* _underline_] thing
         '''
 resolve [TH  IS] thing
 ''',
-        '''
-<p>resolve ~=[,,_TH  IS_,,]:3 thing</p>
-''',
+        '<p>resolve ~=[,,_TH  IS_,,]:3 thing</p>',
         linkResolver: nyanResolver);
 
     validateCore(
@@ -120,9 +117,7 @@ resolve [TH  IS] thing
         r'''
 resolve [\[\]] thing
 ''',
-        '''
-<p>resolve ~=[,,_[]_,,]:3 thing</p>
-''',
+        '<p>resolve ~=[,,_[]_,,]:3 thing</p>',
         linkResolver: nyanResolver);
 
     validateCore(
@@ -130,29 +125,22 @@ resolve [\[\]] thing
         '''
 resolve [[]] thing
 ''',
-        '''
-<p>resolve ~=[,,_[]_,,]:3 thing</p>
-''',
+        '<p>resolve ~=[,,_[]_,,]:3 thing</p>',
         linkResolver: nyanResolver);
   });
 
   group('Custom inline syntax', () {
-    final nyanSyntax = <InlineSyntax>[TextSyntax('nyan', sub: '~=[,,_,,]:3')];
-    validateCore(
-        'simple inline syntax',
-        '''
-nyan''',
-        '''<p>~=[,,_,,]:3</p>
-''',
-        inlineSyntaxes: nyanSyntax);
-
     validateCore(
       'dart custom links',
       'links [are<foo>] awesome',
-      '<p>links <a>are&lt;foo></a> awesome</p>\n',
-      linkResolver: (String text, [String? _]) => Element.todo(
+      '<p>links <a>are&lt;foo&gt;</a> awesome</p>',
+      linkResolver: (String text, [String? _]) => Element(
         'link',
-        children: [Text.todo(text.replaceAll('<', '&lt;'))],
+        children: [
+          Text.fromSpan(
+            SourceFile.fromString(text.replaceAll('<', '&lt;')).span(0),
+          ),
+        ],
       ),
     );
 

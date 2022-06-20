@@ -2,8 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
-import '../inline_parser.dart';
+import '../extensions.dart';
+import '../parsers/inline_parser.dart';
+import '../patterns.dart';
 import 'inline_syntax.dart';
 
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
@@ -12,12 +16,14 @@ class DelimiterSyntax extends InlineSyntax {
   /// Whether this is parsed according to the same nesting rules as [emphasis
   /// delimiters][].
   ///
-  /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
+  /// [emphasis delimiters]: http://spec.commonmark.org/0.30/#can-open-emphasis
   final bool requiresDelimiterRun;
 
-  /// Whether to allow intra-word delimiter runs. CommonMark emphasis and
-  /// strong emphasis does not allow this, but GitHub-Flavored Markdown allows
-  /// it on strikethrough.
+  /// Whether to allow intraword delimiter runs.
+  ///
+  /// CommonMark emphasis with `*` is
+  /// permitted but disallowed for `_`.\
+  /// GitHub-Flavored Markdown allows it on strikethrough.
   final bool allowIntraWord;
 
   final List<DelimiterTag>? tags;
@@ -34,46 +40,48 @@ class DelimiterSyntax extends InlineSyntax {
     int? startCharacter,
     this.allowIntraWord = false,
     this.tags,
-  }) : super(pattern, startCharacter: startCharacter);
+  }) : super(RegExp(pattern), startCharacter: startCharacter);
 
   @override
-  bool onMatch(InlineParser parser, Match match) {
-    final runLength = match.group(0)!.length;
-    final matchStart = parser.pos;
-    final matchEnd = parser.pos + runLength;
-    final text = parser.subText(matchStart, matchEnd);
+  Node? parse(InlineParser parser, Match match) {
+    final delimiterLength = match.match.length;
+    final startPosition = parser.position;
+    final endPosition = parser.position + delimiterLength;
+    final delimiterNode = Text.fromSpan(
+      parser.subspan(startPosition, endPosition).first,
+    );
 
     if (!requiresDelimiterRun) {
       parser.pushDelimiter(SimpleDelimiter(
-        node: text,
-        length: runLength,
-        char: parser.sourceText.codeUnitAt(matchStart),
+        node: delimiterNode,
+        char: parser.charAt(startPosition),
         canOpen: true,
         canClose: false,
         syntax: this,
-        endPos: matchEnd,
+        startPosition: startPosition,
       ));
-      parser.addNode(text);
-      return true;
+      parser.advanceBy(delimiterLength);
+      return delimiterNode;
     }
 
     final delimiterRun = DelimiterRun.tryParse(
       parser,
-      matchStart,
-      matchEnd,
+      startPosition,
+      endPosition,
       syntax: this,
-      node: text,
+      node: delimiterNode,
       allowIntraWord: allowIntraWord,
       tags: tags ?? [],
     );
+
+    parser.advanceBy(delimiterLength);
+
     if (delimiterRun != null) {
       parser.pushDelimiter(delimiterRun);
-      parser.addNode(text);
-      return true;
-    } else {
-      parser.advanceBy(runLength);
-      return false;
+      return delimiterNode;
     }
+
+    return null;
   }
 
   /// Attempts to close this tag at the current position.
@@ -87,32 +95,31 @@ class DelimiterSyntax extends InlineSyntax {
   /// The returned [Node] incorpororates these child nodes.
   Node? close(
     InlineParser parser,
-    Delimiter opener,
-    Delimiter closer, {
+    int startPosition, {
     required String type,
+    required SourceSpan openMarker,
+    required SourceSpan closeMarker,
     required List<Node> Function() getChildren,
-  }) {
-    return Element(
-      type,
-      children: getChildren(),
-      // TODO(Zhiguang): fix markers
-      markers: [],
-    );
-  }
+  }) =>
+      Element(
+        type,
+        children: getChildren(),
+        markers: [openMarker, closeMarker],
+      );
 }
 
 class DelimiterTag {
-  DelimiterTag(this.type, this.indicatorLength);
-
   final String type;
   final int indicatorLength;
+
+  DelimiterTag(this.type, this.indicatorLength);
 }
 
 /// A delimiter indicating the possible "open" or possible "close" of a tag for
 /// a [DelimiterSyntax].
 abstract class Delimiter {
   /// The [Text] node representing the plain text representing this delimiter.
-  abstract Text node;
+  Text get node;
 
   /// The type of delimiter.
   ///
@@ -120,7 +127,10 @@ abstract class Delimiter {
   int get char;
 
   /// The number of delimiters.
-  int get length;
+  int get length => node.length;
+
+  /// The position where this [Delimiter] ends up in [InlineParser].
+  int get startPosition;
 
   /// Whether the delimiter is active.
   ///
@@ -147,15 +157,12 @@ abstract class Delimiter {
 
 /// A simple delimiter implements the [Delimiter] interface with basic fields,
 /// and does not have the concept of "left-flanking" or "right-flanking".
-class SimpleDelimiter implements Delimiter {
+class SimpleDelimiter extends Delimiter {
   @override
   Text node;
 
   @override
   final int char;
-
-  @override
-  final int length;
 
   @override
   bool isActive;
@@ -169,16 +176,16 @@ class SimpleDelimiter implements Delimiter {
   @override
   final DelimiterSyntax syntax;
 
-  final int endPos;
+  @override
+  final int startPosition;
 
   SimpleDelimiter({
     required this.node,
     required this.char,
-    required this.length,
     required this.canOpen,
     required this.canClose,
     required this.syntax,
-    required this.endPos,
+    required this.startPosition,
   }) : isActive = true;
 }
 
@@ -187,50 +194,12 @@ class SimpleDelimiter implements Delimiter {
 ///
 /// This is primarily used when parsing emphasis and strong emphasis, but can
 /// also be used by other extensions of [DelimiterSyntax].
-class DelimiterRun implements Delimiter {
-  /// According to
-  /// [CommonMark](https://spec.commonmark.org/0.29/#punctuation-character):
-  ///
-  /// > A punctuation character is an ASCII punctuation character or anything in
-  /// > the general Unicode categories `Pc`, `Pd`, `Pe`, `Pf`, `Pi`, `Po`, or
-  /// > `Ps`.
-  // This RegExp is inspired by
-  // https://github.com/commonmark/commonmark.js/blob/1f7d09099c20d7861a674674a5a88733f55ff729/lib/inlines.js#L39.
-  // I don't know if there is any way to simplify it or maintain it.
-  static final RegExp punctuation = RegExp('['
-      r'''!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~'''
-      r'\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE'
-      r'\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E'
-      r'\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E'
-      r'\u0964\u0965\u0970\u0AF0\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14'
-      r'\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB'
-      r'\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736'
-      r'\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F'
-      r'\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E'
-      r'\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051'
-      r'\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A'
-      r'\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC'
-      r'\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E42'
-      r'\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE'
-      r'\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF'
-      r'\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF'
-      r'\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19'
-      r'\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03'
-      r'\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F'
-      r'\uFF5B\uFF5D\uFF5F-\uFF65'
-      ']');
-
-  // TODO(srawlins): Unicode whitespace
-  static final String whitespace = ' \t\r\n';
-
+class DelimiterRun extends Delimiter {
   @override
   Text node;
 
   @override
   final int char;
-
-  @override
-  int get length => node.length;
 
   @override
   bool isActive;
@@ -246,6 +215,9 @@ class DelimiterRun implements Delimiter {
   @override
   final bool canClose;
 
+  @override
+  final int startPosition;
+
   final List<DelimiterTag> tags;
 
   DelimiterRun._({
@@ -258,6 +230,7 @@ class DelimiterRun implements Delimiter {
     required bool isPrecededByPunctuation,
     required bool isFollowedByPunctuation,
     required this.allowIntraWord,
+    required this.startPosition,
   })  : canOpen = isLeftFlanking &&
             (!isRightFlanking || allowIntraWord || isPrecededByPunctuation),
         canClose = isRightFlanking &&
@@ -275,50 +248,46 @@ class DelimiterRun implements Delimiter {
     required Text node,
     bool allowIntraWord = false,
   }) {
-    bool leftFlanking,
-        rightFlanking,
-        precededByPunctuation,
-        followedByPunctuation;
-    String preceding, following;
+    bool precededByWhitespace;
+    bool followedByWhitespace;
+    bool precededByPunctuation;
+    bool followedByPunctuation;
+
     if (runStart == 0) {
-      rightFlanking = false;
-      preceding = '\n';
+      precededByWhitespace = true;
+      precededByPunctuation = false;
     } else {
-      preceding = parser.sourceText.substring(runStart - 1, runStart);
+      final preceding = parser.stringAt(runStart - 1);
+      precededByWhitespace = unicodeWhitespaceCharacters.contains(preceding);
+      precededByPunctuation = !precededByWhitespace &&
+          unicodePunctuationPattern.hasMatch(preceding);
     }
-    precededByPunctuation = punctuation.hasMatch(preceding);
 
-    if (runEnd == parser.sourceText.length) {
-      leftFlanking = false;
-      following = '\n';
+    if (runEnd == parser.length) {
+      followedByWhitespace = true;
+      followedByPunctuation = false;
     } else {
-      following = parser.sourceText.substring(runEnd, runEnd + 1);
-    }
-    followedByPunctuation = punctuation.hasMatch(following);
-
-    // http://spec.commonmark.org/0.30/#left-flanking-delimiter-run
-    if (whitespace.contains(following)) {
-      leftFlanking = false;
-    } else {
-      leftFlanking = !followedByPunctuation ||
-          whitespace.contains(preceding) ||
-          precededByPunctuation;
+      final following = parser.stringAt(runEnd);
+      followedByWhitespace = unicodeWhitespaceCharacters.contains(following);
+      followedByPunctuation = !followedByWhitespace &&
+          unicodePunctuationPattern.hasMatch(following);
     }
 
-    // http://spec.commonmark.org/0.30/#right-flanking-delimiter-run
-    if (whitespace.contains(preceding)) {
-      rightFlanking = false;
-    } else {
-      rightFlanking = !precededByPunctuation ||
-          whitespace.contains(following) ||
-          followedByPunctuation;
-    }
+    // If it is a left-flanking delimiter run, see
+    // http://spec.commonmark.org/0.30/#left-flanking-delimiter-run.
+    final leftFlanking = !followedByWhitespace &&
+        (!followedByPunctuation ||
+            precededByWhitespace ||
+            precededByPunctuation);
 
-    if (!leftFlanking && !rightFlanking) {
-      // Could not parse a delimiter run.
-      return null;
-    }
+    // If it is a right-flanking delimiter run, see
+    // http://spec.commonmark.org/0.30/#right-flanking-delimiter-run.
+    final rightFlanking = !precededByWhitespace &&
+        (!precededByPunctuation ||
+            followedByWhitespace ||
+            followedByPunctuation);
 
+    // Make sure the shorter delimiter takes precedence.
     tags.sort((a, b) => a.indicatorLength.compareTo(b.indicatorLength));
 
     return DelimiterRun._(
@@ -326,6 +295,7 @@ class DelimiterRun implements Delimiter {
       char: parser.charAt(runStart),
       syntax: syntax,
       tags: tags,
+      startPosition: runStart,
       isLeftFlanking: leftFlanking,
       isRightFlanking: rightFlanking,
       isPrecededByPunctuation: precededByPunctuation,

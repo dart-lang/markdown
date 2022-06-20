@@ -8,7 +8,7 @@ import 'dart:mirrors';
 
 import 'package:html/dom.dart' show Element;
 import 'package:html/parser.dart' show parseFragment;
-import 'package:markdown/markdown.dart' show markdownToHtml, ExtensionSet;
+import 'package:markdown/markdown.dart' as md;
 import 'package:path/path.dart' as p;
 
 import '../test/util.dart';
@@ -53,20 +53,17 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
 class Config {
   static final Config commonMarkConfig = Config._(
     'common_mark',
-    'http://spec.commonmark.org/0.28/',
-    null,
+    'http://spec.commonmark.org/0.30/',
   );
   static final Config gfmConfig = Config._(
     'gfm',
     'https://github.github.com/gfm/',
-    ExtensionSet.gitHubFlavored,
   );
 
   final String prefix;
   final String baseUrl;
-  final ExtensionSet? extensionSet;
 
-  Config._(this.prefix, this.baseUrl, this.extensionSet);
+  Config._(this.prefix, this.baseUrl);
 }
 
 class CommonMarkTestCase {
@@ -76,6 +73,7 @@ class CommonMarkTestCase {
   final String html;
   final int startLine;
   final int endLine;
+  final List<String>? extensions;
 
   CommonMarkTestCase(
     this.example,
@@ -84,6 +82,7 @@ class CommonMarkTestCase {
     this.endLine,
     this.markdown,
     this.html,
+    this.extensions,
   );
 
   factory CommonMarkTestCase.fromJson(Map<String, dynamic> json) {
@@ -94,6 +93,9 @@ class CommonMarkTestCase {
       json['end_line'] as int,
       json['markdown'] as String /*!*/,
       json['html'] as String,
+      json['extensions'] == null
+          ? null
+          : List<String>.from(json['extensions'] as List),
     );
   }
 
@@ -111,17 +113,45 @@ class CompareResult {
   CompareResult(this.testCase, this.result, this.compareLevel);
 }
 
+final extensionMap = <String, dynamic>{
+  'table': md.TableSyntax(),
+  'strikethrough': md.StrikethroughSyntax(),
+  'autolink': md.AutolinkExtensionSyntax(),
+};
+
 CompareResult compareResult(
   Config config,
   CommonMarkTestCase testCase, {
   bool throwOnError = false,
   bool verboseFail = false,
   bool verboseLooseMatch = false,
+  List<String>? extensions,
 }) {
+  final blockSyntaxes = <md.BlockSyntax>[];
+  final inlineSyntaxes = <md.InlineSyntax>[];
+  if (extensions != null && extensions.isNotEmpty) {
+    for (final extension in extensions) {
+      final syntax = extensionMap[extension];
+      if (syntax is md.InlineSyntax) {
+        inlineSyntaxes.add(syntax);
+      } else if (syntax is md.BlockSyntax) {
+        blockSyntaxes.add(syntax);
+      }
+    }
+  }
+
   String output;
   try {
-    output =
-        markdownToHtml(testCase.markdown, extensionSet: config.extensionSet);
+    output = md.markdownToHtml(
+      testCase.markdown,
+      blockSyntaxes: blockSyntaxes,
+      inlineSyntaxes: inlineSyntaxes,
+    );
+
+    // Add a line feed to each line if it is not an emplty line.
+    if (output.isNotEmpty) {
+      output += '\n';
+    }
   } catch (err, stackTrace) {
     if (throwOnError) {
       rethrow;

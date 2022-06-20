@@ -2,17 +2,18 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
 import '../charcode.dart';
 import '../document.dart';
-import '../inline_parser.dart';
+import '../parsers/inline_parser.dart';
+import '../parsers/link_parser.dart';
 import '../util.dart';
 import 'delimiter_syntax.dart';
 
 /// Matches links like `[blah][label]` and `[blah](url)`.
 class LinkSyntax extends DelimiterSyntax {
-  static final _entirelyWhitespacePattern = RegExp(r'^\s*$');
-
   final Resolver linkResolver;
 
   LinkSyntax({
@@ -25,68 +26,112 @@ class LinkSyntax extends DelimiterSyntax {
   @override
   Node? close(
     InlineParser parser,
-    covariant SimpleDelimiter opener,
-    Delimiter? closer, {
+    int startPosition, {
+    required SourceSpan openMarker,
+    required SourceSpan closeMarker,
     String? type,
     required List<Node> Function() getChildren,
   }) {
-    final text = parser.sourceText.substring(opener.endPos, parser.pos);
-    // The current character is the `]` that closed the link text. Examine the
-    // next character, to determine what type of link we might have (a '('
-    // means a possible inline link; otherwise a possible reference link).
-    if (parser.pos + 1 >= parser.sourceText.length) {
-      // The `]` is at the end of the document, but this may still be a valid
-      // shortcut reference link.
-      return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
+    var label = parser.substring(
+      startPosition + openMarker.length,
+      parser.position,
+    );
+
+    // Walk past the closing `]`.
+    parser.advance();
+
+    final parserStart = parser.position;
+
+    // Tries to create a reference link node.
+    // Returns the link if it was successfully created, `null` otherwise.
+    Node? _tryCreateReferenceLink() {
+      final link = _resolveReferenceLink(
+        label,
+        parser.document.linkReferences,
+        getChildren: getChildren,
+      );
+
+      if (link == null) {
+        // Retreat the position.
+        parser.advanceBy(parserStart - parser.position);
+      }
+      return link;
     }
 
-    // Peek at the next character; don't advance, so as to avoid later stepping
-    // backward.
-    final char = parser.charAt(parser.pos + 1);
+    // There are three kinds of reference links: full, collapsed, and shortcut.
+    // 1. Full reference link: [text][label], see
+    //    https://spec.commonmark.org/0.30/#full-reference-link.
+    // 2. Collapsed reference link: [label][], equals to label][label], see
+    //    https://spec.commonmark.org/0.30/#collapsed-reference-link.
+    // 3. Shortcut reference link: [label], equals to [label][], see
+    //    https://spec.commonmark.org/0.30/#shortcut-reference-link.
+
+    // The `]` is at the end of the document, this may be a valid shortcut
+    // reference link.
+    if (parser.isDone) {
+      return _tryCreateReferenceLink();
+    }
+
+    final char = parser.charAt();
 
     if (char == $lparen) {
       // Maybe an inline link, like `[text](destination)`.
-      parser.advanceBy(1);
-      final leftParenIndex = parser.pos;
-      final inlineLink = _parseInlineLink(parser);
-      if (inlineLink != null) {
-        return _tryCreateInlineLink(
-          parser,
-          inlineLink,
+      final spans = parser.subspan(parser.position, parser.length);
+      final linkParser = LinkParser(spans)..parseInlineLink();
+
+      if (linkParser.valid) {
+        parser.advanceBy(linkParser.position + 1);
+
+        // TODO(Zhiguang): Save backslashMarkers and other link markers.
+        return createNode(
+          linkParser.formatted.destination,
+          linkParser.formatted.title,
           getChildren: getChildren,
         );
       }
+
       // At this point, we've matched `[...](`, but that `(` did not pan out to
       // be an inline link. We must now check if `[...]` is simply a shortcut
       // reference link.
-
-      // Reset the parser position.
-      parser.pos = leftParenIndex;
-      parser.advanceBy(-1);
-      return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
+      return _tryCreateReferenceLink();
     }
 
+    // At this point, we've matched `[...][`. Maybe a *full* reference link,
+    // like `[text][label]` or a *collapsed* reference link, like `[label][]`.
     if (char == $lbracket) {
-      parser.advanceBy(1);
-      // At this point, we've matched `[...][`. Maybe a *full* reference link,
-      // like `[foo][bar]` or a *collapsed* reference link, like `[foo][]`.
-      if (parser.pos + 1 < parser.sourceText.length &&
-          parser.charAt(parser.pos + 1) == $rbracket) {
-        // That opening `[` is not actually part of the link. Maybe a
-        // *shortcut* reference link (followed by a `[`).
-        parser.advanceBy(1);
-        return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
+      // Maybe a *shortcut* reference link like [label][].
+      if (parser.nextChar() == $rbracket) {
+        parser.advanceBy(2);
+        return _tryCreateReferenceLink();
       }
-      final label = _parseReferenceLinkLabel(parser);
-      if (label != null) {
-        return _tryCreateReferenceLink(parser, label, getChildren: getChildren);
+
+      // Maybe a *full* reference link, like [text][label].
+      final linkParser = LinkParser(parser.subspan(parser.position));
+      if (linkParser.parseLabel()) {
+        parser.advanceBy(linkParser.position);
+        label = linkParser.label.map((e) => e.text).join();
+        return _tryCreateReferenceLink();
       }
+
       return null;
     }
 
     // The link text (inside `[...]`) was not followed with a opening `(` nor
     // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
-    return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
+    final node = _tryCreateReferenceLink();
+    if (node != null) {
+      // As with full reference links, spaces, tabs, or line endings are not
+      // allowed between the two sets of brackets, see
+      // https://spec.commonmark.org/0.30/#example-555.
+      //
+      // A space after the link text should be preserved, see
+      // https://spec.commonmark.org/0.30/#example-561.
+      final spaces = parser.moveThroughWhitespace();
+      if (parser.charAt() != $lf) {
+        parser.advanceBy(-spaces);
+      }
+    }
+    return node;
   }
 
   /// Resolve a possible reference link.
@@ -108,6 +153,7 @@ class LinkSyntax extends DelimiterSyntax {
     if (linkReference != null) {
       return createNode(
         linkReference.destination,
+        //Uri.encodeFull(linkReference.destination).toHtmlText(),
         linkReference.title,
         getChildren: getChildren,
       );
@@ -120,6 +166,8 @@ class LinkSyntax extends DelimiterSyntax {
       // Normally, label text does not get parsed as inline Markdown. However,
       // for the benefit of the link resolver, we need to at least escape
       // brackets, so that, e.g. a link resolver can receive `[\[\]]` as `[]`.
+
+      // TODO(Zhiguang): escape helper?
       final resolved = linkResolver(label
           .replaceAll(r'\\', r'\')
           .replaceAll(r'\[', '[')
@@ -139,314 +187,17 @@ class LinkSyntax extends DelimiterSyntax {
   }) {
     final children = getChildren();
     final attributes = {
-      'uri': destination,
+      'destination': destination,
     };
 
     if (title != null && title.isNotEmpty) {
       attributes['title'] = title;
     }
 
-    return Element.todo(
+    return Element(
       'link',
       children: children,
       attributes: attributes,
     );
   }
-
-  /// Tries to create a reference link node.
-  ///
-  /// Returns the link if it was successfully created, `null` otherwise.
-  Node? _tryCreateReferenceLink(
-    InlineParser parser,
-    String label, {
-    required List<Node> Function() getChildren,
-  }) {
-    return _resolveReferenceLink(
-      label,
-      parser.document.linkReferences,
-      getChildren: getChildren,
-    );
-  }
-
-  // Tries to create an inline link node.
-  //
-  /// Returns the link if it was successfully created, `null` otherwise.
-  Node _tryCreateInlineLink(
-    InlineParser parser,
-    InlineLink link, {
-    required List<Node> Function() getChildren,
-  }) {
-    return createNode(link.destination, link.title, getChildren: getChildren);
-  }
-
-  /// Parse a reference link label at the current position.
-  ///
-  /// Specifically, [parser.pos] is expected to be pointing at the `[` which
-  /// opens the link label.
-  ///
-  /// Returns the label if it could be parsed, or `null` if not.
-  String? _parseReferenceLinkLabel(InlineParser parser) {
-    // Walk past the opening `[`.
-    parser.advanceBy(1);
-    if (parser.isDone) return null;
-
-    final buffer = StringBuffer();
-    while (true) {
-      final char = parser.charAt(parser.pos);
-      if (char == $backslash) {
-        parser.advanceBy(1);
-        final next = parser.charAt(parser.pos);
-        if (next != $backslash && next != $rbracket) {
-          buffer.writeCharCode(char);
-        }
-        buffer.writeCharCode(next);
-      } else if (char == $lbracket) {
-        return null;
-      } else if (char == $rbracket) {
-        break;
-      } else {
-        buffer.writeCharCode(char);
-      }
-      parser.advanceBy(1);
-      if (parser.isDone) return null;
-      // TODO(srawlins): only check 999 characters, for performance reasons?
-    }
-
-    final label = buffer.toString();
-
-    // A link label must contain at least one non-whitespace character.
-    if (_entirelyWhitespacePattern.hasMatch(label)) return null;
-
-    return label;
-  }
-
-  /// Parse an inline [InlineLink] at the current position.
-  ///
-  /// At this point, we have parsed a link's (or image's) opening `[`, and then
-  /// a matching closing `]`, and [parser.pos] is pointing at an opening `(`.
-  /// This method will then attempt to parse a link destination wrapped in `<>`,
-  /// such as `(<http://url>)`, or a bare link destination, such as
-  /// `(http://url)`, or a link destination with a title, such as
-  /// `(http://url "title")`.
-  ///
-  /// Returns the [InlineLink] if one was parsed, or `null` if not.
-  InlineLink? _parseInlineLink(InlineParser parser) {
-    // Start walking to the character just after the opening `(`.
-    parser.advanceBy(1);
-
-    _moveThroughWhitespace(parser);
-    if (parser.isDone) return null; // EOF. Not a link.
-
-    if (parser.charAt(parser.pos) == $lt) {
-      // Maybe a `<...>`-enclosed link destination.
-      return _parseInlineBracketedLink(parser);
-    } else {
-      return _parseInlineBareDestinationLink(parser);
-    }
-  }
-
-  /// Parse an inline link with a bracketed destination (a destination wrapped
-  /// in `<...>`). The current position of the parser must be the first
-  /// character of the destination.
-  ///
-  /// Returns the link if it was successfully created, `null` otherwise.
-  InlineLink? _parseInlineBracketedLink(InlineParser parser) {
-    parser.advanceBy(1);
-
-    final buffer = StringBuffer();
-    while (true) {
-      final char = parser.charAt(parser.pos);
-      if (char == $backslash) {
-        parser.advanceBy(1);
-        final next = parser.charAt(parser.pos);
-        // TODO: Follow the backslash spec better here.
-        // http://spec.commonmark.org/0.29/#backslash-escapes
-        if (next != $backslash && next != $gt) {
-          buffer.writeCharCode(char);
-        }
-        buffer.writeCharCode(next);
-      } else if (char == $lf || char == $cr || char == $ff) {
-        // Not a link (no line breaks allowed within `<...>`).
-        return null;
-      } else if (char == $space) {
-        buffer.write('%20');
-      } else if (char == $gt) {
-        break;
-      } else {
-        buffer.writeCharCode(char);
-      }
-      parser.advanceBy(1);
-      if (parser.isDone) return null;
-    }
-    final destination = buffer.toString();
-
-    parser.advanceBy(1);
-    final char = parser.charAt(parser.pos);
-    if (char == $space || char == $lf || char == $cr || char == $ff) {
-      final title = _parseTitle(parser);
-      if (title == null &&
-          (parser.isDone || parser.charAt(parser.pos) != $rparen)) {
-        // This looked like an inline link, until we found this $space
-        // followed by mystery characters; no longer a link.
-        return null;
-      }
-      return InlineLink(destination, title: title);
-    } else if (char == $rparen) {
-      return InlineLink(destination);
-    } else {
-      // We parsed something like `[foo](<url>X`. Not a link.
-      return null;
-    }
-  }
-
-  /// Parse an inline link with a "bare" destination (a destination _not_
-  /// wrapped in `<...>`). The current position of the parser must be the first
-  /// character of the destination.
-  ///
-  /// Returns the link if it was successfully created, `null` otherwise.
-  InlineLink? _parseInlineBareDestinationLink(InlineParser parser) {
-    // According to
-    // [CommonMark](http://spec.commonmark.org/0.28/#link-destination):
-    //
-    // > A link destination consists of [...] a nonempty sequence of
-    // > characters [...], and includes parentheses only if (a) they are
-    // > backslash-escaped or (b) they are part of a balanced pair of
-    // > unescaped parentheses.
-    //
-    // We need to count the open parens. We start with 1 for the paren that
-    // opened the destination.
-    var parenCount = 1;
-    final buffer = StringBuffer();
-
-    while (true) {
-      final char = parser.charAt(parser.pos);
-      switch (char) {
-        case $backslash:
-          parser.advanceBy(1);
-          if (parser.isDone) return null; // EOF. Not a link.
-          final next = parser.charAt(parser.pos);
-          // Parentheses may be escaped.
-          //
-          // http://spec.commonmark.org/0.28/#example-467
-          if (next != $backslash && next != $lparen && next != $rparen) {
-            buffer.writeCharCode(char);
-          }
-          buffer.writeCharCode(next);
-          break;
-
-        case $space:
-        case $lf:
-        case $cr:
-        case $ff:
-          final destination = buffer.toString();
-          final title = _parseTitle(parser);
-          if (title == null &&
-              (parser.isDone || parser.charAt(parser.pos) != $rparen)) {
-            // This looked like an inline link, until we found this $space
-            // followed by mystery characters; no longer a link.
-            return null;
-          }
-          // [_parseTitle] made sure the title was follwed by a closing `)`
-          // (but it's up to the code here to examine the balance of
-          // parentheses).
-          parenCount--;
-          if (parenCount == 0) {
-            return InlineLink(destination, title: title);
-          }
-          break;
-
-        case $lparen:
-          parenCount++;
-          buffer.writeCharCode(char);
-          break;
-
-        case $rparen:
-          parenCount--;
-          if (parenCount == 0) {
-            final destination = buffer.toString();
-            return InlineLink(destination);
-          }
-          buffer.writeCharCode(char);
-          break;
-
-        default:
-          buffer.writeCharCode(char);
-      }
-      parser.advanceBy(1);
-      if (parser.isDone) return null; // EOF. Not a link.
-    }
-  }
-
-  // Walk the parser forward through any whitespace.
-  void _moveThroughWhitespace(InlineParser parser) {
-    while (!parser.isDone) {
-      final char = parser.charAt(parser.pos);
-      if (char != $space &&
-          char != $tab &&
-          char != $lf &&
-          char != $vt &&
-          char != $cr &&
-          char != $ff) {
-        return;
-      }
-      parser.advanceBy(1);
-    }
-  }
-
-  /// Parses a link title in [parser] at it's current position. The parser's
-  /// current position should be a whitespace character that followed a link
-  /// destination.
-  ///
-  /// Returns the title if it was successfully parsed, `null` otherwise.
-  String? _parseTitle(InlineParser parser) {
-    _moveThroughWhitespace(parser);
-    if (parser.isDone) return null;
-
-    // The whitespace should be followed by a title delimiter.
-    final delimiter = parser.charAt(parser.pos);
-    if (delimiter != $apostrophe &&
-        delimiter != $quote &&
-        delimiter != $lparen) {
-      return null;
-    }
-
-    final closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
-    parser.advanceBy(1);
-
-    // Now we look for an un-escaped closing delimiter.
-    final buffer = StringBuffer();
-    while (true) {
-      final char = parser.charAt(parser.pos);
-      if (char == $backslash) {
-        parser.advanceBy(1);
-        final next = parser.charAt(parser.pos);
-        if (next != $backslash && next != closeDelimiter) {
-          buffer.writeCharCode(char);
-        }
-        buffer.writeCharCode(next);
-      } else if (char == closeDelimiter) {
-        break;
-      } else {
-        buffer.writeCharCode(char);
-      }
-      parser.advanceBy(1);
-      if (parser.isDone) return null;
-    }
-    final title = buffer.toString();
-
-    // Advance past the closing delimiter.
-    parser.advanceBy(1);
-    if (parser.isDone) return null;
-    _moveThroughWhitespace(parser);
-    if (parser.isDone) return null;
-    if (parser.charAt(parser.pos) != $rparen) return null;
-    return title;
-  }
-}
-
-class InlineLink {
-  final String destination;
-  final String? title;
-
-  InlineLink(this.destination, {this.title});
 }

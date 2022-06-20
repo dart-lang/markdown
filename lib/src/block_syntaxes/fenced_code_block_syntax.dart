@@ -5,8 +5,11 @@
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
-import '../block_parser.dart';
+import '../line.dart';
+import '../parsers/backslash_parser.dart';
+import '../parsers/block_parser.dart';
 import '../patterns.dart';
+import '../util.dart';
 import 'block_syntax.dart';
 
 /// Parses preformatted code blocks between two ~~~ or ``` sequences.
@@ -69,13 +72,15 @@ class FencedCodeBlockSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
-    final match = _FenceMatch.fromMatch(parser.current.firstMatch(pattern)!);
+    final match = _FenceMatch.fromMatch(pattern.firstMatch(
+      BackslashParser.parseString(parser.current.content.text),
+    )!);
     final childSource = parseChildLines(parser, match.marker, match.indent);
     final codeLines = childSource.lines.toNodes((e) => Text.fromSpan(e)).nodes;
 
     final Map<String, String> attributes = {};
     if (match.info.isNotEmpty) {
-      attributes['infoString'] = match.info;
+      attributes['infoString'] = decodeHtmlCharacters(match.info);
     }
 
     return Element(

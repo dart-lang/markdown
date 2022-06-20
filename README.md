@@ -28,7 +28,7 @@ specifying an Array of extension syntaxes in the `blockSyntaxes` or
 
 The currently supported inline extension syntaxes are:
 
-* `InlineHtmlSyntax()` - approximately CommonMark's
+* `RawHtmlSyntax()` - approximately CommonMark's
   [definition][commonmark-raw-html] of "Raw HTML".
 
 The currently supported block extension syntaxes are:
@@ -50,7 +50,7 @@ import 'package:markdown/markdown.dart';
 
 void main() {
   print(markdownToHtml('Hello <span class="green">Markdown</span>',
-      inlineSyntaxes: [InlineHtmlSyntax()]));
+      inlineSyntaxes: [RawHtmlSyntax()]));
   //=> <p>Hello <span class="green">Markdown</span></p>
 }
 ```
@@ -73,7 +73,7 @@ parameter. Currently, there are four pre-defined extension sets:
     * `const FencedCodeBlockSyntax()`
   
   * Inline Syntax Parser
-    * `InlineHtmlSyntax()`
+    * `RawHtmlSyntax()`
 
 * `ExtensionSet.gitHubFlavored` includes five extensions in addition to the default
   parsers to bring the parsed output close to the [GitHub Flavored] Markdown
@@ -84,7 +84,7 @@ parameter. Currently, there are four pre-defined extension sets:
     * `const TableSyntax()`
   
   * Inline Syntax Parser
-    * `InlineHtmlSyntax()`
+    * `RawHtmlSyntax()`
     * `StrikethroughSyntax()`
     * `AutolinkExtensionSyntax()`
 
@@ -103,7 +103,7 @@ parameter. Currently, there are four pre-defined extension sets:
     * `const TableSyntax()`
   
   * Inline Syntax Parser
-    * `InlineHtmlSyntax()`
+    * `RawHtmlSyntax()`
     * `StrikethroughSyntax()`
     * `EmojiSyntax()`
     * `AutolinkExtensionSyntax()`

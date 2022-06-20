@@ -31,18 +31,20 @@ String markdownToHtml(
     extensionSet: extensionSet,
     linkResolver: linkResolver,
     imageLinkResolver: imageLinkResolver,
-    encodeHtml: encodeHtml,
     withDefaultBlockSyntaxes: withDefaultBlockSyntaxes,
     withDefaultInlineSyntaxes: withDefaultInlineSyntaxes,
   );
 
   if (inlineOnly) {
-    return renderToHtml(document.parseInline(markdown));
+    return renderToHtml(
+      document.parseInline(markdown),
+      encodeHtml: encodeHtml,
+    );
   }
 
   final nodes = document.parseLines(markdown);
 
-  return '${renderToHtml(nodes)}\n';
+  return renderToHtml(nodes, encodeHtml: encodeHtml);
 }
 
 /// Renders [nodes] to HTML.
@@ -118,9 +120,7 @@ class HtmlRenderer implements HtmlNodeVisitor {
     var content = text.text;
     if (const ['br', 'p', 'li'].contains(_lastVisitedTag)) {
       final lines = LineSplitter.split(content);
-      content = content.contains('<pre>')
-          ? lines.join('\n')
-          : lines.map((line) => line.trimLeft()).join('\n');
+      content = content.contains('<pre>') ? lines.join('\n') : lines.join('\n');
       if (text.text.endsWith('\n')) {
         content = '$content\n';
       }

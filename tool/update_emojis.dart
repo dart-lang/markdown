@@ -11,7 +11,7 @@ import 'dart:io';
 // same.
 final _emojisJsonRawUrl =
     'https://raw.githubusercontent.com/muan/emojilib/v2.4.0/emojis.json';
-final _emojisFilePath = 'lib/src/emojis.dart';
+final _emojisFilePath = 'lib/assets/emojis.dart';
 
 Future<void> main() async {
   final client = HttpClient();

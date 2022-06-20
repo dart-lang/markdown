@@ -5,33 +5,23 @@
 import 'package:source_span/source_span.dart';
 
 import 'ast.dart';
-import 'block_parser.dart';
 import 'block_syntaxes/block_syntax.dart';
 import 'extension_set.dart';
-import 'inline_parser.dart';
 import 'inline_syntaxes/inline_syntax.dart';
+import 'parsers/block_parser.dart';
+import 'parsers/inline_parser.dart';
 import 'util.dart';
-
-// TODO(Zhiguang): remove encodeHtml and ecode html actions from AST parser
-// Because Markdown AST should keep the original string
-// As says in https://spec.commonmark.org/0.30/#about-this-document
-// the HTML encode is not mandated when parsing, it is fine to choose to encode
-// it in rendering process.
 
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = <String, LinkReference>{};
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;
-  final bool encodeHtml;
 
   /// Whether to use default block syntaxes.
   final bool withDefaultBlockSyntaxes;
 
   /// Whether to use default inline syntaxes.
-  ///
-  /// Need to set both [withDefaultInlineSyntaxes] and [encodeHtml] to
-  /// `false` to disable all inline syntaxes including html encoding syntaxes.
   final bool withDefaultInlineSyntaxes;
 
   final _blockSyntaxes = <BlockSyntax>{};
@@ -48,7 +38,6 @@ class Document {
     ExtensionSet? extensionSet,
     this.linkResolver,
     this.imageLinkResolver,
-    this.encodeHtml = true,
     this.withDefaultBlockSyntaxes = true,
     this.withDefaultInlineSyntaxes = true,
   }) : hasCustomInlineSyntaxes = (inlineSyntaxes?.isNotEmpty ?? false) ||

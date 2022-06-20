@@ -11,7 +11,7 @@
 >>> Images - 573
 ![foo ![bar](/url)](/url2)
 <<<
-<p><img src="/url2" alt="foo " /></p>
+<p><img src="/url2" alt="foo bar" /></p>
 >>> Images - 574
 ![foo [bar](/url)](/url2)
 <<<
@@ -80,7 +80,7 @@ My ![foo bar](/path/to/train.jpg  "title"   )
 
 [foo]: /url "title"
 <<<
-<p><img src="/url" alt="foo" title="title" /> 
+<p><img src="/url" alt="foo" title="title" />
 []</p>
 >>> Images - 587
 ![foo]
@@ -100,7 +100,7 @@ My ![foo bar](/path/to/train.jpg  "title"   )
 [[foo]]: /url "title"
 <<<
 <p>![[foo]]</p>
-<p>[[foo]]: /url "title"</p>
+<p>[[foo]]: /url &quot;title&quot;</p>
 >>> Images - 590
 ![Foo]
 

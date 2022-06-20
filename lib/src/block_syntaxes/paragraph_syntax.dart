@@ -2,14 +2,11 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:source_span/source_span.dart';
-
 import '../ast.dart';
-import '../block_parser.dart';
-import '../charcode.dart';
 import '../document.dart';
-import '../extensions.dart';
-import '../link_parser.dart';
+import '../line.dart';
+import '../parsers/block_parser.dart';
+import '../parsers/link_parser.dart';
 import '../patterns.dart';
 import '../util.dart';
 import 'block_syntax.dart';
@@ -64,6 +61,7 @@ class ParagraphSyntax extends BlockSyntax {
     final contents = parser.linesBuffer.toNodes(
       (span) => UnparsedContent.fromSpan(span),
       trimTrailing: true,
+      trimLeft: true,
       popLineEnding: true,
     );
 
@@ -75,40 +73,14 @@ class ParagraphSyntax extends BlockSyntax {
   }
 
   Node? _parseLinkReferenceDefinition(List<Line> lines, BlockParser parser) {
-    final linkParser = LinkParser(lines.toSourceSpans().concatWhilePossible());
-
-    final label = linkParser.parseLabel();
-    if (label == null || linkParser.charAt() != $colon) {
-      return null;
-    }
-    linkParser.advance();
-
-    final destination = linkParser.parseDestination();
-    if (destination == null) {
+    final linkParser = LinkParser(lines.toSourceSpans())..parseDefinition();
+    if (!linkParser.valid) {
       return null;
     }
 
-    var endingPosition = linkParser.position;
-    List<SourceSpan>? title;
-    final hadWhitespace = linkParser.moveThroughWhitespace() > 0;
-
-    if (!linkParser.isDone) {
-      final multiline = linkParser.charAt() == $lf;
-      title = linkParser.parseTitle(hadWhitespace);
-
-      if (title == null && !multiline) {
-        return null;
-      }
-
-      if (title != null) {
-        linkParser.moveThroughWhitespace();
-        if (!linkParser.isDone && linkParser.charAt() != $lf) {
-          return null;
-        }
-        endingPosition = linkParser.position;
-      }
-    }
-
+    final label = linkParser.label;
+    final destination = linkParser.destination;
+    final title = linkParser.title;
     // Set the parsing position back to where the link reference definition
     // ends, so other syntax are able to consume the rest.
 
@@ -117,15 +89,21 @@ class ParagraphSyntax extends BlockSyntax {
     // definition. In the future, maybe we can change the parse to return a Node
     // list in order to return a linkReferenceDefinition and a paragraph at the
     // same time.
-    parser.setLine(linkParser.positionToLocation(endingPosition).line + 1);
+    final line = title == null
+        ? (destination.isNotEmpty
+            ? destination.last.end.line
+            : label.last.end.line)
+        : title.last.end.line;
+    parser.setLine(line + 1);
 
     final labelString = normalizeLinkLabel(label.map((e) => e.text).join());
+
     parser.document.linkReferences.putIfAbsent(
       labelString,
       () => LinkReference(
         labelString,
-        destination.map((e) => e.text).join(),
-        title?.map((e) => e.text).join(),
+        linkParser.formatted.destination,
+        linkParser.formatted.title,
       ),
     );
 

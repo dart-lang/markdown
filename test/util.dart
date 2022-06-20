@@ -12,16 +12,43 @@ import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import '../tool/expected_output.dart';
 
+final extensionMap = <String, dynamic>{
+  'tables': TableSyntax(),
+  'strikethrough': StrikethroughSyntax(),
+  'autolinks': AutolinkExtensionSyntax(),
+};
+
+/// Removes the last line feed of each test case from "*.unit" files.
+String _removeLineFeed(String text) =>
+    text.endsWith('\n') ? text.substring(0, text.length - 1) : text;
+
 /// Runs tests defined in "*.unit" files inside directory [name].
-Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
+Future<void> testDirectory(String name) async {
   await for (final dataCase in dataCasesUnder(testDirectory: name)) {
     final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
+    final blockSyntaxes = <BlockSyntax>[];
+    final inlineSyntaxes = <InlineSyntax>[];
+
+    if (dataCase.file.endsWith('_extension')) {
+      final syntaxName = dataCase.file.substring(
+        0,
+        dataCase.file.lastIndexOf('_extension'),
+      );
+
+      final syntax = extensionMap[syntaxName];
+      if (syntax is InlineSyntax) {
+        inlineSyntaxes.add(syntax);
+      } else if (syntax is BlockSyntax) {
+        blockSyntaxes.add(syntax);
+      }
+    }
     validateCore(
       description,
       dataCase.input,
-      dataCase.expectedOutput,
-      extensionSet: extensionSet,
+      _removeLineFeed(dataCase.expectedOutput),
+      blockSyntaxes: blockSyntaxes,
+      inlineSyntaxes: inlineSyntaxes,
     );
   }
 }
@@ -44,7 +71,7 @@ void testFile(
     validateCore(
       description,
       dataCase.input,
-      dataCase.expectedOutput,
+      _removeLineFeed(dataCase.expectedOutput),
       blockSyntaxes: blockSyntaxes,
       inlineSyntaxes: inlineSyntaxes,
     );
@@ -57,7 +84,6 @@ void validateCore(
   String html, {
   Iterable<BlockSyntax> blockSyntaxes = const [],
   Iterable<InlineSyntax> inlineSyntaxes = const [],
-  ExtensionSet? extensionSet,
   Resolver? linkResolver,
   Resolver? imageLinkResolver,
   bool inlineOnly = false,
@@ -67,7 +93,6 @@ void validateCore(
       markdown,
       blockSyntaxes: blockSyntaxes,
       inlineSyntaxes: inlineSyntaxes,
-      extensionSet: extensionSet,
       linkResolver: linkResolver,
       imageLinkResolver: imageLinkResolver,
       inlineOnly: inlineOnly,

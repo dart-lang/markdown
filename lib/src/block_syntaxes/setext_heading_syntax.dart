@@ -5,8 +5,9 @@
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
-import '../block_parser.dart';
 import '../extensions.dart';
+import '../line.dart';
+import '../parsers/block_parser.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 import 'paragraph_syntax.dart';
@@ -27,10 +28,9 @@ class SetextHeadingSyntax extends BlockSyntax {
     if (parser.setextHeadingDisabled || lastSyntax is! ParagraphSyntax) {
       return false;
     }
-    final matched = parser.current.hasMatch(pattern, syntax: this);
+    final matched = parser.current.hasMatch(pattern);
     if (matched) {
       if (parser.linesBuffer.isEmpty) {
-        parser.current.neverMatch(this);
         return false;
       }
     }
@@ -62,8 +62,6 @@ class SetextHeadingSyntax extends BlockSyntax {
     if (content.lineEnding != null) {
       lineEndings.add(content.lineEnding!);
     }
-
-    // TODO(Zhiguang): Fix https://spec.commonmark.org/0.30/#example-91
 
     parser.linesBuffer.clear();
     parser.advance();

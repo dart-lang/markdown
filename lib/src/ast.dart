@@ -26,7 +26,7 @@ class Element implements Node {
 
   /// The line endings should be saved in [lineEndings] include:
   /// 1. A line ending of a marker.
-  /// 2. The final line ending of a content other than a maker.
+  /// 2. Any other line endings should not be saved in AST [Node].
   ///
   /// The way of handling the ones not saved in [lineEndings], for example in a
   /// paragraph:
@@ -49,15 +49,6 @@ class Element implements Node {
     this.attributes = const {},
   });
 
-  /// TODO(Zhiguang): Delete this constructor
-  Element.todo(
-    this.type, {
-    this.markers = const [],
-    this.lineEndings = const [],
-    this.children = const [],
-    this.attributes = const {},
-  });
-
   @override
   void accept(NodeVisitor visitor) {
     if (visitor.visitElementBefore(this)) {
@@ -69,6 +60,13 @@ class Element implements Node {
       visitor.visitElementAfter(this);
     }
   }
+
+  bool get isHeading => type == 'atxHeading' || type == 'setextHeading';
+
+  bool get isCodeBlock =>
+      type == 'indentedCodeBlock' || type == 'fencedCodeBlock';
+
+  bool get isLink => ['link', 'autolink', 'extendedAutolink'].contains(type);
 
   @override
   Map<String, dynamic> toMap({
@@ -118,10 +116,27 @@ class Text extends SourceSpanBase implements Node {
     this.tabRemaining,
   }) : super(span.start, span.end, span.text);
 
-  /// TODO(Zhiguang): Delete this constructor
-  Text.todo(String text)
-      : tabRemaining = null,
-        super(_start(), _end(text), text);
+  /// Converts [text] to the result which meets the CommonMark specification,
+  /// includinug:
+  ///
+  /// 1. Escapes the characters (`<`), (`>`) and (`&`).
+  /// 2. Set [escapesDoubleQuotes] to `true` to escape double quotes (`"`).
+  /// 3. Set [decodeHtmlCharacter] to `true` to decode HTML entity and numeric
+  ///    character references, for example decode `&#35` to `#`.
+  String htmlText({
+    bool escapesDoubleQuotes = true,
+    bool decodeHtmlCharacter = true,
+  }) =>
+      text.toHtmlText(
+        escapesDoubleQuotes: escapesDoubleQuotes,
+        decodeHtmlCharacter: decodeHtmlCharacter,
+      );
+
+  Text subText(int start, [int? end]) => Text.fromSpan(subspan(start, end));
+
+  /// Combines `this` and the adjacent [other].
+  Text concat(SourceSpan other) =>
+      Text('$text${other.text}', start: start, end: other.end);
 
   @override
   Map<String, dynamic> toMap() => {
@@ -149,9 +164,6 @@ class UnparsedContent extends Text {
 
   /// Instantiates a [UnparsedContent] from [span].
   UnparsedContent.fromSpan(SourceSpan span) : super.fromSpan(span);
-
-  /// TODO(Zhiguang): Delete this constructor
-  UnparsedContent.todo(String text) : super.todo(text);
 }
 
 /// Visitor pattern for the AST.
@@ -175,8 +187,3 @@ abstract class Visitor<T, E> {
 }
 
 abstract class NodeVisitor extends Visitor<Text, Element> {}
-
-// TODO(Zhiguang): Delete the lines below
-var _offset = 0;
-SourceLocation _start() => SourceLocation(_offset++);
-SourceLocation _end(String text) => SourceLocation(text.length + _offset - 1);

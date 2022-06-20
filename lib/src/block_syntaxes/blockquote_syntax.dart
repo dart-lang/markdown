@@ -5,8 +5,10 @@
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
-import '../block_parser.dart';
+import '../charcode.dart';
 import '../extensions.dart';
+import '../line.dart';
+import '../parsers/block_parser.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 import 'code_block_syntax.dart';
@@ -26,22 +28,28 @@ class BlockquoteSyntax extends BlockSyntax {
 
     bool lazyEnding = false;
     while (!parser.isDone) {
-      final tokens = tryTokenize(parser.current);
+      final currentLine = parser.current;
+      final match = currentLine.firstMatch(pattern);
+      if (match != null) {
+        final markerString = match[1]!;
+        final markerLength = markerString.length;
+        final markerStart = match.match.indexOf(markerString);
+        final markerEnd = markerStart + markerLength;
 
-      if (tokens != null) {
-        final marker = tokens[0]!;
-        markers.add(marker.trimRight());
+        // TODO(Zhiguang) Fix marker.
+        // final marker = currentLine.content.subspan(markerStart, markerEnd);
+
         int? tabRemaining;
-        if (marker.length > 1 && marker.text[1] == '\t') {
+        if (currentLine.text.codeUnitAt(markerEnd - 1) == $tab) {
           tabRemaining = 2;
         }
 
-        final line = Line(
-          tokens[1]!,
+        childLines.add(Line(
+          currentLine.content.subspan(markerEnd),
           lineEnding: parser.current.lineEnding,
           tabRemaining: tabRemaining,
-        );
-        childLines.add(line);
+        ));
+
         parser.advance();
         lazyEnding = false;
         continue;

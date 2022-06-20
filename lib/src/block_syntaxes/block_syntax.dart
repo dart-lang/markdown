@@ -5,54 +5,14 @@
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
-import '../block_parser.dart';
-import '../util.dart';
+import '../line.dart';
+import '../parsers/block_parser.dart';
 
 abstract class BlockSyntax {
   const BlockSyntax();
 
   /// Gets the regex used to identify the beginning of this block, if any.
   RegExp get pattern;
-
-  /// Tries to match [line] against [pattern] and returns a list of [SourceSpan]
-  /// if matched.
-  List<SourceSpan?>? tryTokenize(Line line) {
-    final match = line.firstMatch(pattern);
-
-    if (match == null) {
-      return null;
-    }
-
-    final groups = toGroupsWithIndex(match);
-    final spans = <SourceSpan?>[];
-
-    for (var i = 0; i < groups.length; i++) {
-      final current = groups[i];
-      if (current != null) {
-        spans.add(SourceSpan(
-          SourceLocation(
-            line.start.offset + current.start,
-            column: line.start.column + current.start,
-            line: line.start.line,
-          ),
-          SourceLocation(
-            line.start.offset + current.end,
-            column: line.start.column + current.end,
-            line: line.start.line,
-          ),
-          current.text,
-        ));
-      } else {
-        spans.add(null);
-      }
-    }
-
-    return spans;
-  }
-
-  /// The same as [tryTokenize] but should only use it when [canParse] returns
-  /// true.
-  List<SourceSpan?> tokenize(Line line) => tryTokenize(line)!;
 
   /// If can interrupt a block.
   bool canInterrupt(BlockParser parser) => true;

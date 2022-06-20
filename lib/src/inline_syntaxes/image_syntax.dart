@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../charcode.dart';
+import '../extensions.dart';
 import 'link_syntax.dart';
 
 /// Matches images like `![alternate text](url "optional title")` and
@@ -22,16 +23,26 @@ class ImageSyntax extends LinkSyntax {
     String? title, {
     required List<Node> Function() getChildren,
   }) {
-    final children = getChildren();
+    final description = getChildren().map((node) {
+      // See https://spec.commonmark.org/0.30/#image-description.
+      // An image description may contain links. Fetch text from the description
+      // attribute if this nested link is an image.
+      if (node is Element && node.type == 'image') {
+        return node.attributes['description'];
+      }
+      return node.textContent;
+    }).join();
+
+    // TODO(Zhiguang): Fix marker.
     final attributes = {
-      'uri': destination,
-      'description': children.map((node) => node.textContent).join(),
+      'destination': destination,
+      'description': description,
     };
 
     if (title != null && title.isNotEmpty) {
-      attributes['title'] = title.replaceAll('&', '&amp;');
+      attributes['title'] = title.toHtmlText();
     }
 
-    return Element.todo('image', attributes: attributes);
+    return Element('image', attributes: attributes);
   }
 }

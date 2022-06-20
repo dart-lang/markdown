@@ -16,7 +16,7 @@ void main() {
         withDefaultInlineSyntaxes: false,
         encodeHtml: false,
       );
-      expect(result, equals('# Hello **Markdown<em>!</em>**\n***\n'));
+      expect(result, equals('# Hello **Markdown<em>!</em>**\n***'));
     });
 
     test('with no default syntaxes but with custom syntaxes', () {
@@ -33,7 +33,7 @@ void main() {
 
       expect(
         result,
-        equals('# Hello <strong>Markdown<em>!</em></strong>\n<hr />\n'),
+        equals('# Hello <strong>Markdown<em>!</em></strong>\n<hr />'),
       );
     });
 
@@ -47,7 +47,7 @@ void main() {
 
       expect(
         result,
-        equals('<h1>Hello **Markdown<em>!</em>**</h1>\n<hr />\n'),
+        equals('<h1>Hello **Markdown<em>!</em>**</h1>\n<hr />'),
       );
     });
 
@@ -61,7 +61,7 @@ void main() {
 
       expect(
         result,
-        equals('# Hello <strong>Markdown<em>!</em></strong>\n***\n'),
+        equals('# Hello <strong>Markdown<em>!</em></strong>\n***'),
       );
     });
 
@@ -75,43 +75,8 @@ void main() {
 
       expect(
         result,
-        equals('# Hello **Markdown&lt;em&gt;!&lt;/em&gt;**\n***\n'),
+        equals('# Hello **Markdown&lt;em&gt;!&lt;/em&gt;**\n***'),
       );
     });
   });
-
-  group('test InlineSyntax caseSensitive parameter', () {
-    const text = 'one BREAK two';
-
-    test('with caseSensitive enabled', () {
-      final result = markdownToHtml(
-        text,
-        inlineOnly: true,
-        inlineSyntaxes: [_BreakSyntax(true)],
-      );
-
-      expect(result, equals('one BREAK two'));
-    });
-
-    test('with caseSensitive disabled', () {
-      final result = markdownToHtml(
-        text,
-        inlineOnly: true,
-        inlineSyntaxes: [_BreakSyntax(false)],
-      );
-
-      expect(result, equals('one <break></break> two'));
-    });
-  });
-}
-
-class _BreakSyntax extends InlineSyntax {
-  _BreakSyntax(bool caseSensitive)
-      : super('break', caseSensitive: caseSensitive);
-
-  @override
-  bool onMatch(InlineParser parser, Match match) {
-    parser.addNode(Element.todo('break'));
-    return true;
-  }
 }

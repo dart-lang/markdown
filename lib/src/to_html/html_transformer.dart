@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import '../ast.dart';
-import '../util.dart';
+import '../extensions.dart';
 import 'html_ast.dart';
 
 class HtmlTransformer implements NodeVisitor {
@@ -50,10 +50,24 @@ class HtmlTransformer implements NodeVisitor {
       }
       _tree.last.children.add(HtmlText(text));
       return false;
+    } else if (element.type == 'rawHtml') {
+      _tree.last.children.add(
+        HtmlText(element.children.map((e) => (e as Text).text).join()),
+      );
+      return false;
+    } else if (element.type == 'backslashEscape') {
+      final text = (element.children.first as Text);
+      _tree.last.children.add(
+        HtmlText(!encodeHtml ? text.text : text.htmlText()),
+      );
+      return false;
+    } else if (element.type == 'emoji') {
+      _tree.last.children.add(HtmlText(element.attributes['emoji']!));
+      return false;
     }
 
     _lastVisitElement = element.type;
-    _tree.add(_TreeElement(element.type));
+    _tree.add(_TreeElement(element));
     return true;
   }
 
@@ -65,13 +79,13 @@ class HtmlTransformer implements NodeVisitor {
 
     HtmlElement node;
 
-    if (_isCodeBlock(type)) {
+    if (element.isCodeBlock) {
       final code = HtmlElement('code', current.children);
 
       if (type == 'fencedCodeBlock' && attributes['infoString'] != null) {
         var infoString = attributes['infoString']!;
         if (encodeHtml) {
-          infoString = escapeHtmlAttribute(infoString);
+          infoString = infoString.toHtmlText();
         }
         code.attributes['class'] = 'language-$infoString';
       }
@@ -80,7 +94,7 @@ class HtmlTransformer implements NodeVisitor {
     } else {
       String tag = _htmlTagMap[type] ?? type;
 
-      if (_isHeading(type)) {
+      if (element.isHeading) {
         tag = 'h${attributes['level']}';
       }
 
@@ -88,12 +102,17 @@ class HtmlTransformer implements NodeVisitor {
         node = HtmlElement.empty(tag);
 
         if (type == 'image') {
-          _updateLinkAttributes(node, element);
+          node.attributes.addAll({
+            'src': attributes['destination']!,
+            if (attributes['description'] != null)
+              'alt': attributes['description']!,
+            if (attributes['title'] != null) 'title': attributes['title']!,
+          });
         }
       } else {
         node = HtmlElement(tag, current.children);
 
-        if (_isHeading(type)) {
+        if (element.isHeading) {
           node.generatedId = attributes['generatedId'];
         } else if (type == 'orderedList' && attributes['start'] != null) {
           node.attributes['start'] = attributes['start']!;
@@ -104,19 +123,17 @@ class HtmlTransformer implements NodeVisitor {
           if (attributes['textAlign'] != null) {
             node.attributes['align'] = attributes['textAlign']!;
           }
-        } else if (type == 'link') {
-          _updateLinkAttributes(node, element);
-        } else if ([
-          'autolink',
-          "emailAutolink",
-          'extendedAutolink',
-        ].contains(type)) {
-          final href = type == 'emailAutolink'
-              ? 'mailto:${attributes['emailAddress']}'
-              : attributes['uri'];
+        } else if (element.isLink) {
+          node.attributes.addAll({
+            if (attributes['destination'] != null)
+              'href': attributes['destination']!,
+            if (attributes['title'] != null) 'title': attributes['title']!,
+          });
 
-          if (href != null) {
-            node.attributes['href'] = Uri.encodeFull(href);
+          if (attributes['text'] != null) {
+            node.children!
+              ..clear()
+              ..add(HtmlText(attributes['text']!));
           }
         }
       }
@@ -129,23 +146,13 @@ class HtmlTransformer implements NodeVisitor {
   @override
   void visitText(Text text) {
     final parent = _tree.last;
+    final parentType = parent.element?.type;
+    final decodeHtmlCharacter =
+        parentType != 'codeSpan' && parentType != 'indentedCodeBlock';
 
-    String content = text.text;
-    if (parent.name == 'codeSpan') {
-      if (!RegExp(r'^\s+$').hasMatch(content)) {
-        content = content.trim().replaceAll('\n', ' ');
-      } else {
-        // See https://spec.commonmark.org/0.30/#example-138
-        content = ' ';
-      }
-      if (encodeHtml) {
-        content = escapeHtml(content);
-      }
-    } else if (_isCodeBlock(parent.name)) {
-      if (encodeHtml) {
-        content = escapeHtml(content);
-      }
-    }
+    var content = !encodeHtml
+        ? text.text
+        : text.htmlText(decodeHtmlCharacter: decodeHtmlCharacter);
 
     if (text.tabRemaining != null && text.tabRemaining! > 0) {
       content = "${' ' * text.tabRemaining!}$content";
@@ -158,12 +165,6 @@ class HtmlTransformer implements NodeVisitor {
     _lastVisitElement = null;
   }
 
-  bool _isCodeBlock(String? type) =>
-      type == 'indentedCodeBlock' || type == 'fencedCodeBlock';
-
-  bool _isHeading(String? type) =>
-      type == 'atxHeading' || type == 'setextHeading';
-
   bool _isSelfClosing(Element element) =>
       [
         'image',
@@ -171,31 +172,13 @@ class HtmlTransformer implements NodeVisitor {
         'hardLineBreak',
       ].contains(element.type) &&
       element.children.isEmpty;
-
-  void _updateLinkAttributes(HtmlElement node, Element element) {
-    final isImage = element.type == 'image';
-    final attributes = element.attributes;
-
-    if (attributes['uri'] != null) {
-      node.attributes[isImage ? 'src' : 'href'] =
-          escapeAttribute(attributes['uri']!);
-    }
-
-    if (isImage && attributes['description'] != null) {
-      node.attributes['alt'] = attributes['description']!;
-    }
-
-    if (attributes['title'] != null) {
-      node.attributes['title'] = escapeAttribute(attributes['title']!);
-    }
-  }
 }
 
 class _TreeElement {
-  final String? name;
+  final Element? element;
   final children = <HtmlNode>[];
 
-  _TreeElement([this.name]);
+  _TreeElement([this.element]);
 }
 
 const _htmlTagMap = {

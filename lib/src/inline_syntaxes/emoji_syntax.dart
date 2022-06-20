@@ -2,9 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
+import '../../assets/emojis.dart';
 import '../ast.dart';
-import '../emojis.dart';
-import '../inline_parser.dart';
+import '../extensions.dart';
+import '../parsers/inline_parser.dart';
 import 'inline_syntax.dart';
 
 /// Matches GitHub Markdown emoji syntax like `:smile:`.
@@ -15,18 +18,24 @@ import 'inline_syntax.dart';
 class EmojiSyntax extends InlineSyntax {
   // Emoji "aliases" are mostly limited to lower-case letters, numbers, and
   // underscores, but GitHub also supports `:+1:` and `:-1:`.
-  EmojiSyntax() : super(':([a-z0-9_+-]+):');
+  EmojiSyntax() : super(RegExp(':([a-z0-9_+-]+):'));
 
   @override
-  bool onMatch(InlineParser parser, Match match) {
+  Node? parse(InlineParser parser, Match match) {
     final alias = match[1]!;
     final emoji = emojis[alias];
-    if (emoji == null) {
-      parser.advanceBy(1);
-      return false;
-    }
-    parser.addNode(Text.todo(emoji));
+    final markers = <SourceSpan>[];
 
-    return true;
+    if (emoji == null) {
+      return null;
+    }
+
+    markers.addAll(parser.consumeBy(match.match.length));
+
+    return Element(
+      'emoji',
+      markers: markers,
+      attributes: {'emoji': emoji},
+    );
   }
 }

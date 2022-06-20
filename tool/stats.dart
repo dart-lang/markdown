@@ -140,6 +140,7 @@ Future<void> _processConfig(
         e,
         verboseFail: verbose,
         verboseLooseMatch: verboseLooseMatch,
+        extensions: e.extensions,
       );
 
       units.add(DataCase(
