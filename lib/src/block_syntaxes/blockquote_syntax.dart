@@ -31,23 +31,27 @@ class BlockquoteSyntax extends BlockSyntax {
       final currentLine = parser.current;
       final match = currentLine.firstMatch(pattern);
       if (match != null) {
-        final markerString = match[1]!;
-        final markerLength = markerString.length;
-        final markerStart = match.match.indexOf(markerString);
-        final markerEnd = markerStart + markerLength;
-
-        // TODO(Zhiguang) Fix marker.
-        // final marker = currentLine.content.subspan(markerStart, markerEnd);
-
-        int? tabRemaining;
-        if (currentLine.text.codeUnitAt(markerEnd - 1) == $tab) {
-          tabRemaining = 2;
+        int markerEnd;
+        var isTabIndentation = false;
+        // A block quote marker consists of a `>` together with a optional
+        // following space of indentation, see
+        // https://spec.commonmark.org/0.30/#block-quote-marker.
+        final markerStart = match.match.indexOf('>');
+        if (currentLine.content.length > 1) {
+          final nextChar = currentLine.content.text.codeUnitAt(markerStart + 1);
+          isTabIndentation = nextChar == $tab;
+          final hasSpace = isTabIndentation || nextChar == $space;
+          markerEnd = markerStart + (hasSpace ? 2 : 1);
+        } else {
+          markerEnd = markerStart + 1;
         }
+
+        markers.add(currentLine.content.subspan(markerStart, markerStart + 1));
 
         childLines.add(Line(
           currentLine.content.subspan(markerEnd),
-          lineEnding: parser.current.lineEnding,
-          tabRemaining: tabRemaining,
+          lineEnding: currentLine.lineEnding,
+          tabRemaining: isTabIndentation ? 2 : null,
         ));
 
         parser.advance();

@@ -61,13 +61,6 @@ class Element implements Node {
     }
   }
 
-  bool get isHeading => type == 'atxHeading' || type == 'setextHeading';
-
-  bool get isCodeBlock =>
-      type == 'indentedCodeBlock' || type == 'fencedCodeBlock';
-
-  bool get isLink => ['link', 'autolink', 'extendedAutolink'].contains(type);
-
   @override
   Map<String, dynamic> toMap({
     bool showNull = false,

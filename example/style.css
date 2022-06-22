@@ -14,11 +14,15 @@ html, body {
 }
 
 .main {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50px;
+  bottom: 40px;
   align-items: stretch;
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
-  height: 100%;
   margin: 32px;
 }
 
@@ -114,10 +118,14 @@ textarea:focus {
 }
 
 footer {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  height: 40px;
   box-sizing: border-box;
   display: flex;
   font-size: 20px;
-  height: 64px;
   padding: 0 16px;
 }
 

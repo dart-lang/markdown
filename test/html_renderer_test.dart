@@ -6,7 +6,7 @@ import 'package:markdown/markdown.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('markdownToHtml', () {
+  group('test withDefaultBlockSyntaxes and withDefaultInlineSyntaxes', () {
     const text = '# Hello **Markdown<em>!</em>**\n***';
 
     test('with no syntaxes', () {

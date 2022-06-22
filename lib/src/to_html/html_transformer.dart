@@ -79,7 +79,7 @@ class HtmlTransformer implements NodeVisitor {
 
     HtmlElement node;
 
-    if (element.isCodeBlock) {
+    if (_isCodeBlock(type)) {
       final code = HtmlElement('code', current.children);
 
       if (type == 'fencedCodeBlock' && attributes['infoString'] != null) {
@@ -93,8 +93,9 @@ class HtmlTransformer implements NodeVisitor {
       node = HtmlElement('pre', [code]);
     } else {
       String tag = _htmlTagMap[type] ?? type;
+      final isHeading = _isHeading(type);
 
-      if (element.isHeading) {
+      if (isHeading) {
         tag = 'h${attributes['level']}';
       }
 
@@ -112,7 +113,7 @@ class HtmlTransformer implements NodeVisitor {
       } else {
         node = HtmlElement(tag, current.children);
 
-        if (element.isHeading) {
+        if (isHeading) {
           node.generatedId = attributes['generatedId'];
         } else if (type == 'orderedList' && attributes['start'] != null) {
           node.attributes['start'] = attributes['start']!;
@@ -123,7 +124,7 @@ class HtmlTransformer implements NodeVisitor {
           if (attributes['textAlign'] != null) {
             node.attributes['align'] = attributes['textAlign']!;
           }
-        } else if (element.isLink) {
+        } else if (_isLink(type)) {
           node.attributes.addAll({
             if (attributes['destination'] != null)
               'href': attributes['destination']!,
@@ -172,6 +173,15 @@ class HtmlTransformer implements NodeVisitor {
         'hardLineBreak',
       ].contains(element.type) &&
       element.children.isEmpty;
+
+  bool _isCodeBlock(String type) =>
+      type == 'indentedCodeBlock' || type == 'fencedCodeBlock';
+
+  bool _isLink(String type) =>
+      ['link', 'autolink', 'extendedAutolink'].contains(type);
+
+  bool _isHeading(String type) =>
+      type == 'atxHeading' || type == 'setextHeading';
 }
 
 class _TreeElement {
