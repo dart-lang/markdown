@@ -28,15 +28,18 @@ class LinkParser extends SourceParser {
   final formatted = _FormattedAttributes();
 
   ///
-  final backslashMarkers = <SourceSpan>[];
+  final markers = <SourceSpan>[];
 
   LinkParser(List<SourceSpan> source) : super(source);
 
   /// Parses [source] to a link reference definition.
   void parseDefinition() {
-    if (!parseLabel() || charAt() != $colon) {
+    if (!parseLabel() || isDone || charAt() != $colon) {
       return;
     }
+
+    // Add `:` to markers.
+    markers.add(spanAt());
 
     advance();
     if (!_parseDestination()) {
@@ -84,11 +87,16 @@ class LinkParser extends SourceParser {
       }
     }
 
+    // In order to collect the final line ending.
+    moveThroughWhitespace(multiLine: true);
     valid = true;
   }
 
   /// Parses [source] to a inline link.
   void parseInlineLink() {
+    // Add `(` to markers.
+    markers.add(spanAt());
+
     // Walk past the opening `(`.
     advance();
     if (!_parseDestination(isInlineLink: true)) {
@@ -103,6 +111,8 @@ class LinkParser extends SourceParser {
 
     // Hit the ending `)`, no title, valid.
     if (charAt() == $rparen) {
+      // Add `)` to markers.
+      markers.add(spanAt());
       valid = true;
       return;
     }
@@ -123,19 +133,24 @@ class LinkParser extends SourceParser {
       return;
     }
 
+    // Add `)` to markers.
+    markers.add(spanAt());
     valid = true;
   }
 
   /// Parses the link label, returns `true` there is a valid link label found.
   bool parseLabel() {
     moveThroughWhitespace(multiLine: true);
-    if (isDone) {
+    if (length - position < 2) {
       return false;
     }
 
     if (charAt() != $lbracket) {
       return false;
     }
+
+    // Add `[` to markers.
+    markers.add(spanAt());
 
     // Advance past the opening `[`.
     advance();
@@ -169,6 +184,9 @@ class LinkParser extends SourceParser {
     spans
       ..first.trimLeft()
       ..last.trimLeft();
+    // Add `]` to markers.
+    markers.add(spanAt());
+
     // Advance past the closing `]`.
     advance();
     label.addAll(spans);
@@ -205,7 +223,12 @@ class LinkParser extends SourceParser {
   ///
   /// Returns `true` if there is a valid link destination found.
   bool _parseInlineBracketedLink() {
+    // Add `<` to markers.
+    markers.add(spanAt());
+
+    // Walk past the opening `<`.
     advance();
+
     final start = position;
     while (true) {
       final char = charAt();
@@ -223,6 +246,12 @@ class LinkParser extends SourceParser {
     }
 
     final spans = subspan(start, position);
+
+    markers.addAll(spans);
+
+    // Add `>` to markers.
+    markers.add(spanAt());
+
     // Advance past the closing `>`.
     advance();
     destination.addAll(spans);
@@ -266,6 +295,7 @@ class LinkParser extends SourceParser {
     }
 
     destination.addAll(subspan(start, position));
+    markers.addAll(destination);
     return true;
   }
 
@@ -282,7 +312,11 @@ class LinkParser extends SourceParser {
     }
 
     final closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
+    markers.add(spanAt());
     advance();
+    if (isDone) {
+      return false;
+    }
     final start = position;
 
     // Now we look for an un-escaped closing delimiter.
@@ -304,6 +338,9 @@ class LinkParser extends SourceParser {
     }
 
     title = subspan(start, position);
+    markers
+      ..addAll(title!)
+      ..add(spanAt());
     // Advance past the closing delimiter.
     advance();
     _formatAttribute('title', title!);
@@ -315,7 +352,7 @@ class LinkParser extends SourceParser {
     List<SourceSpan> spans,
   ) {
     final backslashParser = BackslashParser(spans);
-    backslashMarkers.addAll(backslashParser.markers);
+    markers.addAll(backslashParser.markers);
     var text = backslashParser.text;
 
     if (attribute == 'destination') {

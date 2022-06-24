@@ -5,6 +5,7 @@
 import '../ast.dart';
 import '../charcode.dart';
 import '../document.dart';
+import '../extensions.dart';
 import '../inline_syntaxes/autolink_syntax.dart';
 import '../inline_syntaxes/backslash_escape_syntax.dart';
 import '../inline_syntaxes/code_syntax.dart';
@@ -173,7 +174,8 @@ class InlineParser extends SourceParser {
         if (text == null) {
           startAt = i;
           text = node;
-        } else if (text.end.offset != node.start.offset) {
+        } else if (text.end.offset != node.start.offset ||
+            text.isLineEndingWhitespace) {
           nodes.replaceRange(startAt, i, [text]);
           i -= i - startAt;
           text = null;

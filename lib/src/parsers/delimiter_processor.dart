@@ -163,7 +163,7 @@ class DelimiterProcessor {
         var openerTreeIndex = _tree.indexOf(openerTextNode);
         var closerTreeIndex = _tree.indexOf(closerTextNode);
         var openMarker = openerTextNode;
-        var closeMarker = openerTextNode;
+        var closeMarker = closerTextNode;
 
         _delimiterStack.removeRange(openerIndex + 1, stackPosition);
         // Slide [stackPosition] back accordingly.
@@ -195,7 +195,7 @@ class DelimiterProcessor {
           final newCloserTextNode = closerTextNode.subText(indicatorLength);
           _tree[closerTreeIndex] = newCloserTextNode;
           closer.node = newCloserTextNode;
-          closeMarker = openerTextNode.subText(0, indicatorLength);
+          closeMarker = closerTextNode.subText(0, indicatorLength);
         }
 
         final node = opener.syntax.close(

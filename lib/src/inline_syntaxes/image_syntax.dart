@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
 import '../charcode.dart';
 import '../extensions.dart';
@@ -21,8 +23,12 @@ class ImageSyntax extends LinkSyntax {
   Element createNode(
     String destination,
     String? title, {
+    required List<SourceSpan> markers,
+    required List<SourceSpan> lineEndings,
+    required List<SourceSpan> plainTextChildren,
     required List<Node> Function() getChildren,
   }) {
+    markers.insertAll(1, plainTextChildren);
     final description = getChildren().map((node) {
       // See https://spec.commonmark.org/0.30/#image-description.
       // An image description may contain links. Fetch text from the description
@@ -33,7 +39,6 @@ class ImageSyntax extends LinkSyntax {
       return node.textContent;
     }).join();
 
-    // TODO(Zhiguang): Fix marker.
     final attributes = {
       'destination': destination,
       'description': description,
@@ -43,6 +48,11 @@ class ImageSyntax extends LinkSyntax {
       attributes['title'] = title.toHtmlText();
     }
 
-    return Element('image', attributes: attributes);
+    return Element(
+      'image',
+      attributes: attributes,
+      markers: markers,
+      lineEndings: lineEndings,
+    );
   }
 }

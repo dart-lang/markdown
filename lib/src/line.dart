@@ -6,6 +6,7 @@ import 'package:source_span/source_span.dart';
 
 import 'ast.dart';
 import 'extensions.dart';
+import 'patterns.dart';
 
 // A line is a sequence of zero or more characters other than line feed
 // (`U+000A`) or carriage return (`U+000D`), followed by a line ending or by
@@ -31,7 +32,7 @@ class Line {
   // A line containing no characters, or a line containing only spaces
   // (`U+0020`) or tabs (`U+0009`), is called a blank line.
   // https://spec.commonmark.org/0.30/#blank-line
-  bool get isBlankLine => content.text.trim().isEmpty;
+  bool get isBlankLine => emptyPattern.hasMatch(content.text);
 
   /// The start location of this [Line].
   SourceLocation get start => content.start;

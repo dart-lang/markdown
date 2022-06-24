@@ -18,11 +18,7 @@ class InlineHtmlSyntax extends RawHtmlSyntax {}
 // TODO(srawlins): improve accuracy while ensuring performance, once
 /// Markdown benchmarking is more mature.
 class RawHtmlSyntax extends InlineSyntax {
-  RawHtmlSyntax()
-      : super(
-          rawHtmlPattern,
-          startCharacter: $lt,
-        );
+  RawHtmlSyntax() : super(rawHtmlPattern, startCharacter: $lt);
 
   @override
   Node? parse(InlineParser parser, Match match) {

@@ -49,14 +49,17 @@ abstract class ListSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     SourceSpan? listMarker;
-    final items = <BlockSyntaxChildSource>[];
+    final listItems = <BlockSyntaxChildSource>[];
+
+    // The child lines of each list item.
     var childLines = <Line>[];
 
     void endItem() {
       if (childLines.isNotEmpty) {
-        items.add(BlockSyntaxChildSource(
+        listItems.add(BlockSyntaxChildSource(
           lines: childLines,
           markers: [listMarker!],
+          lineEndings: [],
         ));
         childLines = <Line>[];
       }
@@ -68,25 +71,28 @@ abstract class ListSyntax extends BlockSyntax {
       return match != null;
     }
 
-    int indent = 0;
     // In case the first number in an ordered list is not 1, use it as the
     // "start".
     int? startNumber;
-    int blankLines = 0;
+
+    int? indent;
+    int? blankLines;
 
     while (!parser.isDone) {
       final currentIndent = parser.current.content.text.indentation() +
           (parser.current.tabRemaining ?? 0);
 
+      // If meet a blank line.
       if (tryMatch(emptyPattern)) {
         childLines.add(parser.current);
-        if (blankLines != 0) {
+
+        if (blankLines != null) {
           blankLines++;
         }
-      } else if (indent != 0 && indent <= currentIndent) {
+      } else if (indent != null && indent <= currentIndent) {
         // A list item can begin with at most one blank line. See:
         // https://spec.commonmark.org/0.30/#example-280
-        if (blankLines > 1) {
+        if (blankLines != null && blankLines > 1) {
           break;
         }
 
@@ -101,7 +107,7 @@ abstract class ListSyntax extends BlockSyntax {
         // Horizontal rule takes precedence to a new list item.
         break;
       } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
-        blankLines = 0;
+        blankLines = null;
 
         final spanParser = SourceParser([parser.current.content]);
         var precedingWhitespaces = spanParser.moveThroughWhitespace();
@@ -143,6 +149,12 @@ abstract class ListSyntax extends BlockSyntax {
             listMarker.text.last() != marker.text.last()) {
           break;
         }
+
+        // End the current list item.
+        endItem();
+
+        // Start a new list item, the last item will be ended up outside of the
+        // `while` loop.
         listMarker = marker;
         precedingWhitespaces += digits.length + 2;
         if (isBlank) {
@@ -158,9 +170,6 @@ abstract class ListSyntax extends BlockSyntax {
         } else {
           indent = precedingWhitespaces + contentWhitespances;
         }
-
-        // End the current list item and start a new one.
-        endItem();
 
         final content = contentBlockStart != null && !isBlank
             ? spanParser.subspan(contentBlockStart).first
@@ -188,14 +197,16 @@ abstract class ListSyntax extends BlockSyntax {
       parser.advance();
     }
 
+    // End the last list item.
     endItem();
+
     final itemNodes = <Element>[];
 
-    items.forEach(_removeLeadingEmptyLine);
-    final anyEmptyLines = _removeTrailingEmptyLines(items);
-    var anyEmptyLinesBetweenBlocks = false;
+    _removeLeadingBlankLines(listItems);
+    final anyBlankLines = _removeTrailingBlankLines(listItems);
+    var anyBlankLinesBetweenBlocks = false;
 
-    for (final item in items) {
+    for (final item in listItems) {
       final itemParser = BlockParser(item.lines, parser.document);
 
       final children = itemParser.parseLines(fromSyntax: this);
@@ -203,14 +214,15 @@ abstract class ListSyntax extends BlockSyntax {
         'listItem',
         children: children,
         markers: item.markers,
+        lineEndings: item.lineEndings,
       ));
-      anyEmptyLinesBetweenBlocks =
-          anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
+      anyBlankLinesBetweenBlocks =
+          anyBlankLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
 
     // Must strip paragraph tags if the list is "tight".
     // http://spec.commonmark.org/0.30/#lists
-    final listIsTight = !anyEmptyLines && !anyEmptyLinesBetweenBlocks;
+    final listIsTight = !anyBlankLines && !anyBlankLinesBetweenBlocks;
 
     if (listIsTight) {
       // We must post-process the list items, converting any top-level paragraph
@@ -220,8 +232,10 @@ abstract class ListSyntax extends BlockSyntax {
         for (var i = 0; i < children.length; i++) {
           final child = children[i];
           if (child is Element && child.type == 'paragraph') {
-            children.removeAt(i);
-            children.insertAll(i, child.children);
+            children
+              ..removeAt(i)
+              ..insertAll(i, child.children);
+            item.lineEndings.addAll(child.lineEndings);
           }
         }
       }
@@ -236,26 +250,28 @@ abstract class ListSyntax extends BlockSyntax {
     );
   }
 
-  // TODO(Zhiguang): Save the lineEnding of the removed line.
-  void _removeLeadingEmptyLine(BlockSyntaxChildSource item) {
-    if (item.lines.isNotEmpty && item.lines.first.hasMatch(emptyPattern)) {
-      item.lines.removeAt(0);
+  void _removeLeadingBlankLines(List<BlockSyntaxChildSource> listItems) {
+    for (final item in listItems) {
+      if (item.lines.isNotEmpty && item.lines.first.isBlankLine) {
+        item.lineEndings.addIfNotNull(item.lines.first.lineEnding);
+        item.lines.removeAt(0);
+      }
     }
   }
 
-  /// Removes any trailing empty lines and notes whether any items are separated
+  /// Removes any trailing blank lines and notes whether any items are separated
   /// by such lines.
-  // TODO(Zhiguang): Save the lineEnding of the removed line.
-  bool _removeTrailingEmptyLines(List<BlockSyntaxChildSource> items) {
+  bool _removeTrailingBlankLines(List<BlockSyntaxChildSource> listItems) {
     var anyEmpty = false;
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].lines.length == 1) continue;
-      while (items[i].lines.isNotEmpty &&
-          items[i].lines.last.hasMatch(emptyPattern)) {
-        if (i < items.length - 1) {
+    for (var i = 0; i < listItems.length; i++) {
+      final lines = listItems[i].lines;
+      if (lines.length == 1) continue;
+      while (lines.isNotEmpty && lines.last.isBlankLine) {
+        if (i < listItems.length - 1) {
           anyEmpty = true;
         }
-        items[i].lines.removeLast();
+        listItems[i].lineEndings.addIfNotNull(lines.last.lineEnding);
+        lines.removeLast();
       }
     }
     return anyEmpty;

@@ -23,10 +23,7 @@ class CodeSyntax extends InlineSyntax {
   static const _pattern = r'(`+(?!`))(?:.|\n)*?[^`](\1)(?!`)';
 
   CodeSyntax()
-      : super(
-          RegExp(_pattern, multiLine: true),
-          startCharacter: $backquote,
-        );
+      : super(RegExp(_pattern, multiLine: true), startCharacter: $backquote);
 
   @override
   Match? tryMatch(InlineParser parser, [int? start]) {

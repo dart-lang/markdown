@@ -71,6 +71,7 @@ class SetextHeadingSyntax extends BlockSyntax {
       children: content.nodes,
       lineEndings: lineEndings,
       attributes: {'level': level},
+      markers: [marker],
     );
   }
 }

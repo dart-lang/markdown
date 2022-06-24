@@ -9,7 +9,7 @@ import '../extensions.dart';
 import '../parsers/inline_parser.dart';
 import 'inline_syntax.dart';
 
-/// Matches autolinks like `http://foo.com`.
+/// Matches autolinks like `http://foo.com` and `foo@bar.com`.
 class AutolinkExtensionSyntax extends InlineSyntax {
   static const _linkPattern =
       // Autolinks can only come at the beginning of a line, after whitespace,

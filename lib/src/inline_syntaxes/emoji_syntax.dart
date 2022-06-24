@@ -6,6 +6,7 @@ import 'package:source_span/source_span.dart';
 
 import '../../assets/emojis.dart';
 import '../ast.dart';
+import '../charcode.dart';
 import '../extensions.dart';
 import '../parsers/inline_parser.dart';
 import 'inline_syntax.dart';
@@ -18,7 +19,7 @@ import 'inline_syntax.dart';
 class EmojiSyntax extends InlineSyntax {
   // Emoji "aliases" are mostly limited to lower-case letters, numbers, and
   // underscores, but GitHub also supports `:+1:` and `:-1:`.
-  EmojiSyntax() : super(RegExp(':([a-z0-9_+-]+):'));
+  EmojiSyntax() : super(RegExp(':([a-z0-9_+-]+):'), startCharacter: $colon);
 
   @override
   Node? parse(InlineParser parser, Match match) {

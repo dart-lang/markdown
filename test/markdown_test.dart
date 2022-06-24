@@ -9,8 +9,6 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() async {
-  // testAstFromFile('common_mark/atx_headings.json');
-
   await testDirectory('original');
 
   // Block syntax extensions

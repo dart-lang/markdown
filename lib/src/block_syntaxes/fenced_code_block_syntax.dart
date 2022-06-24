@@ -5,6 +5,7 @@
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
+import '../extensions.dart';
 import '../line.dart';
 import '../parsers/backslash_parser.dart';
 import '../parsers/block_parser.dart';
@@ -53,6 +54,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
         parser.advance();
       } else {
         markders.add(parser.current.content);
+        lineEndings.addIfNotNull(parser.current.lineEnding);
         if (parser.current.lineEnding != null) {
           lineEndings.add(
             _removeIndentation(parser.current.lineEnding!, indent),

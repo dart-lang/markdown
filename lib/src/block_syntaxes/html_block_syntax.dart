@@ -2,7 +2,10 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:source_span/source_span.dart';
+
 import '../ast.dart';
+import '../extensions.dart';
 import '../line.dart';
 import '../parsers/block_parser.dart';
 import '../patterns.dart';
@@ -30,9 +33,11 @@ class HtmlBlockSyntax extends BlockSyntax {
   bool canInterrupt(BlockParser parser) =>
       parser.current.firstMatch(pattern)![7] == null;
 
-  List<Line> parseChildLines(BlockParser parser) {
+  BlockSyntaxChildSource parseChildLines(BlockParser parser) {
+    final lineEndings = <SourceSpan>[];
+    final lines = <Line>[];
+
     final match = parser.current.firstMatch(pattern);
-    final childLines = <Line>[];
     var matchedCondition = 0;
     for (var i = 0; i < match!.groupCount; i++) {
       if (match.group(i + 1) != null) {
@@ -44,16 +49,20 @@ class HtmlBlockSyntax extends BlockSyntax {
     final endCondition = _endConditions[matchedCondition];
 
     if (endCondition == emptyPattern) {
-      childLines.add(parser.current);
+      lines.add(parser.current);
       parser.advance();
 
       while (!parser.isDone && !parser.current.hasMatch(endCondition)) {
-        childLines.add(parser.current);
+        lines.add(parser.current);
         parser.advance();
+      }
+
+      if (!parser.isDone) {
+        lineEndings.addIfNotNull(parser.current.lineEnding);
       }
     } else {
       while (!parser.isDone) {
-        childLines.add(parser.current);
+        lines.add(parser.current);
         if (parser.current.hasMatch(endCondition)) {
           break;
         }
@@ -66,17 +75,22 @@ class HtmlBlockSyntax extends BlockSyntax {
     // current HTML block.
     if (!parser.isDone && (parser.next?.hasMatch(pattern) ?? false)) {
       parser.advance();
-      childLines.addAll(parseChildLines(parser));
+      final childLines = parseChildLines(parser);
+      lines.addAll(childLines.lines);
+      lineEndings.addAll(childLines.lineEndings);
     }
 
-    return childLines;
+    return BlockSyntaxChildSource(
+      lines: lines,
+      lineEndings: lineEndings,
+    );
   }
 
   @override
   Node parse(BlockParser parser) {
-    final childLines = parseChildLines(parser);
+    final childSource = parseChildLines(parser);
 
-    final content = childLines.toNodes(
+    final content = childSource.lines.toNodes(
       (span) => Text.fromSpan(span),
       popLineEnding: true,
     );
@@ -84,9 +98,7 @@ class HtmlBlockSyntax extends BlockSyntax {
     return Element(
       'htmlBlock',
       children: content.nodes,
-      lineEndings: [
-        if (content.lineEnding != null) content.lineEnding!,
-      ],
+      lineEndings: childSource.lineEndings..addIfNotNull(content.lineEnding),
     );
   }
 }

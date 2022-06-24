@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// TODO(Zhiguang): Optimise link syntaxs and the link parser.
+
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
@@ -32,10 +34,22 @@ class LinkSyntax extends DelimiterSyntax {
     String? type,
     required List<Node> Function() getChildren,
   }) {
-    var label = parser.substring(
+    // The content between openMarker and closeMarker.
+    final plainTextChildren = parser.subspan(
       startPosition + openMarker.length,
       parser.position,
     );
+
+    final markers = [openMarker, closeMarker];
+
+    // There are three kinds of reference links: full, collapsed, and shortcut.
+    // 1. Full reference link: [text][label], see
+    //    https://spec.commonmark.org/0.30/#full-reference-link.
+    // 2. Collapsed reference link: [label][], equals to label][label], see
+    //    https://spec.commonmark.org/0.30/#collapsed-reference-link.
+    // 3. Shortcut reference link: [label], equals to [label][], see
+    //    https://spec.commonmark.org/0.30/#shortcut-reference-link.
+    var label = plainTextChildren.map((e) => e.text).join();
 
     // Walk past the closing `]`.
     parser.advance();
@@ -49,6 +63,8 @@ class LinkSyntax extends DelimiterSyntax {
         label,
         parser.document.linkReferences,
         getChildren: getChildren,
+        markers: markers,
+        plainTextChildren: plainTextChildren,
       );
 
       if (link == null) {
@@ -57,14 +73,6 @@ class LinkSyntax extends DelimiterSyntax {
       }
       return link;
     }
-
-    // There are three kinds of reference links: full, collapsed, and shortcut.
-    // 1. Full reference link: [text][label], see
-    //    https://spec.commonmark.org/0.30/#full-reference-link.
-    // 2. Collapsed reference link: [label][], equals to label][label], see
-    //    https://spec.commonmark.org/0.30/#collapsed-reference-link.
-    // 3. Shortcut reference link: [label], equals to [label][], see
-    //    https://spec.commonmark.org/0.30/#shortcut-reference-link.
 
     // The `]` is at the end of the document, this may be a valid shortcut
     // reference link.
@@ -82,10 +90,13 @@ class LinkSyntax extends DelimiterSyntax {
       if (linkParser.valid) {
         parser.advanceBy(linkParser.position + 1);
 
-        // TODO(Zhiguang): Save backslashMarkers and other link markers.
+        markers.addAll(linkParser.markers);
         return createNode(
           linkParser.formatted.destination,
           linkParser.formatted.title,
+          markers: markers,
+          plainTextChildren: plainTextChildren,
+          lineEndings: linkParser.lineEndings,
           getChildren: getChildren,
         );
       }
@@ -93,6 +104,7 @@ class LinkSyntax extends DelimiterSyntax {
       // At this point, we've matched `[...](`, but that `(` did not pan out to
       // be an inline link. We must now check if `[...]` is simply a shortcut
       // reference link.
+
       return _tryCreateReferenceLink();
     }
 
@@ -101,7 +113,13 @@ class LinkSyntax extends DelimiterSyntax {
     if (char == $lbracket) {
       // Maybe a *shortcut* reference link like [label][].
       if (parser.nextChar() == $rbracket) {
-        parser.advanceBy(2);
+        // Add `[` to markers;
+        markers.add(parser.spanAt());
+        parser.advance();
+
+        // Add `]` to markers;
+        markers.add(parser.spanAt());
+        parser.advance();
         return _tryCreateReferenceLink();
       }
 
@@ -109,6 +127,10 @@ class LinkSyntax extends DelimiterSyntax {
       final linkParser = LinkParser(parser.subspan(parser.position));
       if (linkParser.parseLabel()) {
         parser.advanceBy(linkParser.position);
+        markers
+          ..addAll(linkParser.markers)
+          ..insertAll(markers.length - 1, linkParser.label);
+
         label = linkParser.label.map((e) => e.text).join();
         return _tryCreateReferenceLink();
       }
@@ -147,15 +169,19 @@ class LinkSyntax extends DelimiterSyntax {
   Node? _resolveReferenceLink(
     String label,
     Map<String, LinkReference> linkReferences, {
+    required List<SourceSpan> markers,
     required List<Node> Function() getChildren,
+    required List<SourceSpan> plainTextChildren,
   }) {
     final linkReference = linkReferences[normalizeLinkLabel(label)];
     if (linkReference != null) {
       return createNode(
         linkReference.destination,
-        //Uri.encodeFull(linkReference.destination).toHtmlText(),
         linkReference.title,
         getChildren: getChildren,
+        plainTextChildren: plainTextChildren,
+        lineEndings: [],
+        markers: markers,
       );
     } else {
       // This link has no reference definition. But we allow users of the
@@ -183,7 +209,10 @@ class LinkSyntax extends DelimiterSyntax {
   Node createNode(
     String destination,
     String? title, {
+    required List<SourceSpan> markers,
+    required List<SourceSpan> lineEndings,
     required List<Node> Function() getChildren,
+    required List<SourceSpan> plainTextChildren,
   }) {
     final children = getChildren();
     final attributes = {
@@ -198,6 +227,8 @@ class LinkSyntax extends DelimiterSyntax {
       'link',
       children: children,
       attributes: attributes,
+      lineEndings: lineEndings,
+      markers: markers,
     );
   }
 }

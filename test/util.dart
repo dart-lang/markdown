@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
-import 'dart:io';
 import 'dart:isolate';
 
 import 'package:io/ansi.dart' as ansi;
@@ -122,22 +120,4 @@ GOT:
 '''r
 ${whitespaceColor(actual)}'''
 """);
-}
-
-void testAstFromFile(
-  String file, {
-  Iterable<BlockSyntax> blockSyntaxes = const [],
-  Iterable<InlineSyntax> inlineSyntaxes = const [],
-}) async {
-  final directory = p.join(await markdownPackageRoot, 'test');
-  final path = p.join(directory, file);
-  final cases = json.decode(File(path).readAsStringSync());
-
-  for (final testCase in cases) {
-    test(testCase['description'], () {
-      final document = Document();
-      final nodes = document.parseLines(testCase['input'] as String);
-      expect(nodes.map((e) => e.toMap()), testCase['output']);
-    });
-  }
 }

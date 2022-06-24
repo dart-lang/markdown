@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../document.dart';
+import '../extensions.dart';
 import '../line.dart';
 import '../parsers/block_parser.dart';
 import '../parsers/link_parser.dart';
@@ -68,7 +69,7 @@ class ParagraphSyntax extends BlockSyntax {
     return Element(
       'paragraph',
       children: contents.nodes,
-      lineEndings: [if (contents.lineEnding != null) contents.lineEnding!],
+      lineEndings: []..addIfNotNull(contents.lineEnding),
     );
   }
 
@@ -89,7 +90,7 @@ class ParagraphSyntax extends BlockSyntax {
     // definition. In the future, maybe we can change the parse to return a Node
     // list in order to return a linkReferenceDefinition and a paragraph at the
     // same time.
-    final line = title == null
+    final line = title == null || title.isEmpty
         ? (destination.isNotEmpty
             ? destination.last.end.line
             : label.last.end.line)
@@ -107,20 +108,25 @@ class ParagraphSyntax extends BlockSyntax {
       ),
     );
 
-    return Element('linkReferenceDefinition', children: [
-      Element(
-        'linkReferenceDefinitionLabel',
-        children: label.map((span) => Text.fromSpan(span)).toList(),
-      ),
-      Element(
-        'linkReferenceDefinitionDestination',
-        children: destination.map((span) => Text.fromSpan(span)).toList(),
-      ),
-      if (title != null)
+    return Element(
+      'linkReferenceDefinition',
+      markers: linkParser.markers,
+      lineEndings: linkParser.lineEndings,
+      children: [
         Element(
-          'linkReferenceDefinitionTitle',
-          children: title.map((span) => Text.fromSpan(span)).toList(),
+          'linkReferenceDefinitionLabel',
+          children: label.map((span) => Text.fromSpan(span)).toList(),
         ),
-    ]);
+        Element(
+          'linkReferenceDefinitionDestination',
+          children: destination.map((span) => Text.fromSpan(span)).toList(),
+        ),
+        if (title != null)
+          Element(
+            'linkReferenceDefinitionTitle',
+            children: title.map((span) => Text.fromSpan(span)).toList(),
+          ),
+      ],
+    );
   }
 }

@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import '../ast.dart';
+import '../charcode.dart';
 import '../parsers/inline_parser.dart';
 import '../patterns.dart';
 import 'inline_syntax.dart';
@@ -15,11 +16,12 @@ class EscapeSyntax extends BackslashEscapeSyntax {}
 /// Backslashes before other characters are treated as literal backslashes.
 // See https://spec.commonmark.org/0.30/#backslash-escapes.
 class BackslashEscapeSyntax extends InlineSyntax {
-  BackslashEscapeSyntax()
-      : super(RegExp(
-          r'\\'
-          '[$asciiPunctuationEscaped]',
-        ));
+  static final _pattern = RegExp(
+    r'\\'
+    '[$asciiPunctuationEscaped]',
+  );
+
+  BackslashEscapeSyntax() : super(_pattern, startCharacter: $backslash);
 
   @override
   Node parse(InlineParser parser, Match match) {

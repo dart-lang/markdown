@@ -52,6 +52,12 @@ String _toPrettyString(Object object) =>
     JsonEncoder.withIndent("  ").convert(object);
 
 extension ListExtensions on List<dynamic> {
+  void addIfNotNull<T>(T item) {
+    if (item != null) {
+      add(item);
+    }
+  }
+
   String toPrettyString() => _toPrettyString(toList());
 }
 
