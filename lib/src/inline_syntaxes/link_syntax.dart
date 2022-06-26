@@ -96,7 +96,6 @@ class LinkSyntax extends DelimiterSyntax {
           linkParser.formatted.title,
           markers: markers,
           plainTextChildren: plainTextChildren,
-          lineEndings: linkParser.lineEndings,
           getChildren: getChildren,
         );
       }
@@ -180,7 +179,6 @@ class LinkSyntax extends DelimiterSyntax {
         linkReference.title,
         getChildren: getChildren,
         plainTextChildren: plainTextChildren,
-        lineEndings: [],
         markers: markers,
       );
     } else {
@@ -210,7 +208,6 @@ class LinkSyntax extends DelimiterSyntax {
     String destination,
     String? title, {
     required List<SourceSpan> markers,
-    required List<SourceSpan> lineEndings,
     required List<Node> Function() getChildren,
     required List<SourceSpan> plainTextChildren,
   }) {
@@ -227,7 +224,6 @@ class LinkSyntax extends DelimiterSyntax {
       'link',
       children: children,
       attributes: attributes,
-      lineEndings: lineEndings,
       markers: markers,
     );
   }

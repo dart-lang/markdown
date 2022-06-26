@@ -62,7 +62,6 @@ class CodeBlockSyntax extends BlockSyntax {
     return BlockSyntaxChildSource(
       lines: lines,
       markers: [],
-      lineEndings: [],
     );
   }
 

@@ -11,9 +11,6 @@ class SourceParser {
 
   final String _sourceText;
 
-  ///
-  final lineEndings = <SourceSpan>[];
-
   int get length => _sourceText.length;
 
   /// The current read position, the offset against the start of [_sourceText].
@@ -197,10 +194,6 @@ class SourceParser {
           char != $ff &&
           !(multiLine == true && char == $lf)) {
         return i;
-      }
-
-      if (multiLine == true && char == $lf) {
-        lineEndings.add(spanAt());
       }
 
       i++;

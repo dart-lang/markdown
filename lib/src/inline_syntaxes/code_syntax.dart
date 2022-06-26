@@ -45,13 +45,11 @@ class CodeSyntax extends InlineSyntax {
     final markerLength = match[1]!.length;
     final contentLength = match.match.length - markerLength * 2;
     final markers = parser.consumeBy(markerLength);
-    final lineEndings = <SourceSpan>[];
     final contentSpans = <SourceSpan>[];
 
     _parseAndStrip(
       parser,
       contentLength: contentLength,
-      lineEndings: lineEndings,
       contentSpans: contentSpans,
     );
 
@@ -61,24 +59,18 @@ class CodeSyntax extends InlineSyntax {
 
     markers.add(parser.consumeBy(markerLength).first);
 
-    // Convert any line endings left with whitespaces.
-    final finalContent = <SourceSpan>[];
-    for (final span in contentSpans) {
-      finalContent.addAll(span.convertLineEndings());
-    }
-
     return Element(
       'codeSpan',
-      children: finalContent.map((span) => Text.fromSpan(span)).toList(),
+      children: contentSpans
+          .map((span) => Text.fromSpan(span, lineEndingToWhitespace: true))
+          .toList(),
       markers: markers,
-      lineEndings: lineEndings,
     );
   }
 
   void _parseAndStrip(
     InlineParser parser, {
     required int contentLength,
-    required List<SourceSpan> lineEndings,
     required List<SourceSpan> contentSpans,
   }) {
     final contentText = parser.substring(
@@ -92,13 +84,12 @@ class CodeSyntax extends InlineSyntax {
       return;
     }
 
-    final startsWithLineEnding = contentText.startsWith('\n');
-    final endsWithLineEnding = contentText.endsWith('\n');
-
     // Only spaces, and not unicode whitespace in general, are stripped in this
     // way, see https://spec.commonmark.org/0.30/#example-333.
-    final startWithSpace = startsWithLineEnding || contentText.startsWith(' ');
-    final endsWithSpace = endsWithLineEnding || contentText.endsWith(' ');
+    final startWithSpace =
+        contentText.startsWith(' ') || contentText.startsWith('\n');
+    final endsWithSpace =
+        contentText.endsWith(' ') || contentText.endsWith('\n');
 
     // The stripping only happens if the space is on both sides of the string:
     // https://spec.commonmark.org/0.30/#example-332.
@@ -106,20 +97,8 @@ class CodeSyntax extends InlineSyntax {
       return;
     }
 
-    // Save the stripped line ending.
-    if (startsWithLineEnding) {
-      lineEndings.add(parser.consume());
-    } else {
-      parser.advance();
-    }
-
+    parser.advance();
     contentSpans.addAll(parser.consumeBy(contentLength - 2));
-
-    // Save the stripped line ending.
-    if (endsWithLineEnding) {
-      lineEndings.add(parser.consume());
-    } else {
-      parser.advance();
-    }
+    parser.advance();
   }
 }

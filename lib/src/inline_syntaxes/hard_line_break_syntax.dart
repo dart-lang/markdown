@@ -18,11 +18,10 @@ class HardLineBreakSyntax extends InlineSyntax {
   @override
   Node parse(InlineParser parser, Match match) {
     final marker = parser.consumeBy(match.match.length - 1).first;
-    final lineEnding = parser.consume();
+    parser.advance();
 
     return Element(
       'hardLineBreak',
-      lineEndings: [lineEnding],
       markers: [if (marker.text == r'\') marker],
     );
   }

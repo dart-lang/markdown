@@ -18,7 +18,6 @@ class FencedBlockquoteSyntax extends BlockSyntax {
   BlockSyntaxChildSource parseChildLines(BlockParser parser) {
     final lines = <Line>[];
     final markders = [parser.current.content];
-    final lineEndings = [parser.current.lineEnding!];
 
     parser.advance();
 
@@ -29,9 +28,6 @@ class FencedBlockquoteSyntax extends BlockSyntax {
         parser.advance();
       } else {
         markders.add(parser.current.content);
-        if (parser.current.lineEnding != null) {
-          lineEndings.add(parser.current.lineEnding!);
-        }
         parser.advance();
         break;
       }
@@ -40,7 +36,6 @@ class FencedBlockquoteSyntax extends BlockSyntax {
     return BlockSyntaxChildSource(
       lines: lines,
       markers: markders,
-      lineEndings: lineEndings,
     );
   }
 
@@ -57,7 +52,6 @@ class FencedBlockquoteSyntax extends BlockSyntax {
     return Element(
       'fencedBlockquote',
       children: children,
-      lineEndings: childSource.lineEndings,
       markers: childSource.markers,
     );
   }

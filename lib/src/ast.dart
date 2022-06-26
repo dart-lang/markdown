@@ -24,27 +24,17 @@ class Element implements Node {
 
   final List<SourceSpan> markers;
 
-  /// The line endings should be saved in [lineEndings] include:
-  /// 1. A line ending of a marker.
-  /// 2. Any other line endings should not be saved in AST [Node].
-  ///
-  /// The way of handling the ones not saved in [lineEndings], for example in a
-  /// paragraph:
-  /// 1. Concat with other [Text] node when it is possible.
-  /// 2. Otherwise save it as a [Text] node along with other [children].
-  final List<SourceSpan> lineEndings;
   final List<Node> children;
   final Map<String, String> attributes;
 
   @override
   String get textContent {
-    return children.map((child) => child.textContent).join('');
+    return children.map((child) => child.textContent).join();
   }
 
   Element(
     this.type, {
     this.markers = const [],
-    this.lineEndings = const [],
     this.children = const [],
     this.attributes = const {},
   });
@@ -72,12 +62,9 @@ class Element implements Node {
         'type': type,
         if (markers.isNotEmpty || showEmpty)
           'markers': markers.map((e) => e.toMap()).toList(),
-        if (lineEndings.isNotEmpty || showEmpty)
-          'lineEndings': lineEndings.map((e) => e.toMap()).toList(),
         if (children.isNotEmpty || showEmpty)
           'children': children.map((e) => e.toMap()).toList(),
         if (attributes.isNotEmpty || showEmpty) 'attributes': attributes,
-        'textContent': textContent,
       };
 
   @override
@@ -88,10 +75,24 @@ class Element implements Node {
 class Text extends SourceSpanBase implements Node {
   /// How many spaces of a tab that remains after part of it has been consumed.
   // See: https://spec.commonmark.org/0.30/#example-6
-  final int? tabRemaining;
+  final int? _tabRemaining;
+
+  /// If needs to convert line endings to whitespaces.
+  // When it is a code span, line endings are treated like spaces, see
+  // https://spec.commonmark.org/0.30/#example-335
+  final bool _lineEndingToWhitespace;
 
   @override
-  String get textContent => text;
+  String get textContent {
+    var result = text;
+    if (_lineEndingToWhitespace) {
+      result = text.replaceAll('\n', ' ');
+    }
+    if (_tabRemaining != null) {
+      result = "${' ' * _tabRemaining!}$text";
+    }
+    return result;
+  }
 
   @override
   void accept(NodeVisitor visitor) => visitor.visitText(this);
@@ -100,14 +101,20 @@ class Text extends SourceSpanBase implements Node {
     String text, {
     required SourceLocation start,
     required SourceLocation end,
-    this.tabRemaining,
-  }) : super(start, end, text);
+    int? tabRemaining,
+    bool lineEndingToWhitespace = false,
+  })  : _tabRemaining = tabRemaining,
+        _lineEndingToWhitespace = lineEndingToWhitespace,
+        super(start, end, text);
 
   /// Instantiates a [Text] from [span].
   Text.fromSpan(
     SourceSpan span, {
-    this.tabRemaining,
-  }) : super(span.start, span.end, span.text);
+    int? tabRemaining,
+    bool lineEndingToWhitespace = false,
+  })  : _tabRemaining = tabRemaining,
+        _lineEndingToWhitespace = lineEndingToWhitespace,
+        super(span.start, span.end, span.text);
 
   /// Converts [text] to the result which meets the CommonMark specification,
   /// includinug:
@@ -120,7 +127,7 @@ class Text extends SourceSpanBase implements Node {
     bool escapesDoubleQuotes = true,
     bool decodeHtmlCharacter = true,
   }) =>
-      text.toHtmlText(
+      textContent.toHtmlText(
         escapesDoubleQuotes: escapesDoubleQuotes,
         decodeHtmlCharacter: decodeHtmlCharacter,
       );
@@ -134,6 +141,7 @@ class Text extends SourceSpanBase implements Node {
   @override
   Map<String, dynamic> toMap() => {
         'text': text,
+        if (text != textContent) 'textContent': textContent,
         'start': start.toMap(),
         'end': end.toMap(),
       };

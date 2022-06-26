@@ -50,7 +50,6 @@ abstract class BlockSyntax {
 
 class BlockSyntaxChildSource {
   final List<SourceSpan> markers;
-  final List<SourceSpan> lineEndings;
   final List<Line> lines;
 
   /// If the lines is ending up with a lazy continuation line.
@@ -59,7 +58,6 @@ class BlockSyntaxChildSource {
   BlockSyntaxChildSource({
     this.markers = const [],
     this.lines = const [],
-    this.lineEndings = const [],
     this.lazyEnding = false,
   });
 }

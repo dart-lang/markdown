@@ -4,7 +4,6 @@
 
 import '../ast.dart';
 import '../document.dart';
-import '../extensions.dart';
 import '../line.dart';
 import '../parsers/block_parser.dart';
 import '../parsers/link_parser.dart';
@@ -69,7 +68,6 @@ class ParagraphSyntax extends BlockSyntax {
     return Element(
       'paragraph',
       children: contents.nodes,
-      lineEndings: []..addIfNotNull(contents.lineEnding),
     );
   }
 
@@ -111,7 +109,6 @@ class ParagraphSyntax extends BlockSyntax {
     return Element(
       'linkReferenceDefinition',
       markers: linkParser.markers,
-      lineEndings: linkParser.lineEndings,
       children: [
         Element(
           'linkReferenceDefinitionLabel',

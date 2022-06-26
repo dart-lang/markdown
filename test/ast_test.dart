@@ -38,13 +38,6 @@ Future<void> testCases(String name) async {
     final description = '$url/#example-${testCase['example']}';
     test(description, () {
       final input = testCase['markdown'] as String;
-
-      // TODO(Zhiguang): Fix the `\t` issue.
-      // Skip the cases contain `\t`.
-      if (RegExp('\t').hasMatch(input)) {
-        return;
-      }
-
       final output = markdownToMarkdown(input);
 
       expect(output, input);

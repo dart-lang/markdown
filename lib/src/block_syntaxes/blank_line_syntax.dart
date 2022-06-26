@@ -2,10 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:source_span/source_span.dart';
-
 import '../ast.dart';
-import '../extensions.dart';
 import '../parsers/block_parser.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
@@ -24,20 +21,14 @@ class BlankLineSyntax extends BlockSyntax {
 
   @override
   Node? parse(BlockParser parser) {
-    parser.encounteredBlankLine = true;
-    final lineEndings = <SourceSpan>[];
-
-    lineEndings.addIfNotNull(parser.current.lineEnding);
-    parser.advance();
+    parser
+      ..encounteredBlankLine = true
+      ..advance();
 
     while (!parser.isDone && parser.current.hasMatch(pattern)) {
-      lineEndings.addIfNotNull(parser.current.lineEnding);
       parser.advance();
     }
 
-    return Element(
-      'blankLine',
-      lineEndings: lineEndings,
-    );
+    return null;
   }
 }

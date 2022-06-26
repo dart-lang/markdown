@@ -2,10 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:source_span/source_span.dart';
-
 import '../ast.dart';
-import '../extensions.dart';
 import '../line.dart';
 import '../parsers/block_parser.dart';
 import '../patterns.dart';
@@ -34,7 +31,6 @@ class HtmlBlockSyntax extends BlockSyntax {
       parser.current.firstMatch(pattern)![7] == null;
 
   BlockSyntaxChildSource parseChildLines(BlockParser parser) {
-    final lineEndings = <SourceSpan>[];
     final lines = <Line>[];
 
     final match = parser.current.firstMatch(pattern);
@@ -56,10 +52,6 @@ class HtmlBlockSyntax extends BlockSyntax {
         lines.add(parser.current);
         parser.advance();
       }
-
-      if (!parser.isDone) {
-        lineEndings.addIfNotNull(parser.current.lineEnding);
-      }
     } else {
       while (!parser.isDone) {
         lines.add(parser.current);
@@ -77,12 +69,10 @@ class HtmlBlockSyntax extends BlockSyntax {
       parser.advance();
       final childLines = parseChildLines(parser);
       lines.addAll(childLines.lines);
-      lineEndings.addAll(childLines.lineEndings);
     }
 
     return BlockSyntaxChildSource(
       lines: lines,
-      lineEndings: lineEndings,
     );
   }
 
@@ -98,7 +88,6 @@ class HtmlBlockSyntax extends BlockSyntax {
     return Element(
       'htmlBlock',
       children: content.nodes,
-      lineEndings: childSource.lineEndings..addIfNotNull(content.lineEnding),
     );
   }
 }

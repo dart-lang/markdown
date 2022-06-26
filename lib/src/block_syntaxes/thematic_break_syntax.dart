@@ -21,14 +21,12 @@ class ThematicBreakSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     final marker = parser.current.content;
-    final lineEnding = parser.current.lineEnding;
 
     parser.advance();
 
     return Element(
       'thematicBreak',
       markers: [marker.trim()],
-      lineEndings: [if (lineEnding != null) lineEnding],
     );
   }
 }

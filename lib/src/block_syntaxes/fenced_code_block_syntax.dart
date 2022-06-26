@@ -5,7 +5,6 @@
 import 'package:source_span/source_span.dart';
 
 import '../ast.dart';
-import '../extensions.dart';
 import '../line.dart';
 import '../parsers/backslash_parser.dart';
 import '../parsers/block_parser.dart';
@@ -34,7 +33,6 @@ class FencedCodeBlockSyntax extends BlockSyntax {
   ) {
     final lines = <Line>[];
     final markders = [parser.current.content];
-    final lineEndings = [parser.current.lineEnding!];
 
     parser.advance();
 
@@ -54,12 +52,6 @@ class FencedCodeBlockSyntax extends BlockSyntax {
         parser.advance();
       } else {
         markders.add(parser.current.content);
-        lineEndings.addIfNotNull(parser.current.lineEnding);
-        if (parser.current.lineEnding != null) {
-          lineEndings.add(
-            _removeIndentation(parser.current.lineEnding!, indent),
-          );
-        }
         parser.advance();
         break;
       }
@@ -68,7 +60,6 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     return BlockSyntaxChildSource(
       lines: lines,
       markers: markders,
-      lineEndings: lineEndings,
     );
   }
 
@@ -89,7 +80,6 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       'fencedCodeBlock',
       children: codeLines,
       attributes: attributes,
-      lineEndings: childSource.lineEndings,
       markers: childSource.markers,
     );
   }

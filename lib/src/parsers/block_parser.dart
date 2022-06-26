@@ -10,11 +10,10 @@ import '../block_syntaxes/blockquote_syntax.dart';
 import '../block_syntaxes/code_block_syntax.dart';
 import '../block_syntaxes/dummy_block_syntax.dart';
 import '../block_syntaxes/html_block_syntax.dart';
-import '../block_syntaxes/ordered_list_syntax.dart';
+import '../block_syntaxes/list_syntax.dart';
 import '../block_syntaxes/paragraph_syntax.dart';
 import '../block_syntaxes/setext_heading_syntax.dart';
 import '../block_syntaxes/thematic_break_syntax.dart';
-import '../block_syntaxes/unordered_list_syntax.dart';
 import '../document.dart';
 import '../line.dart';
 
@@ -48,8 +47,7 @@ class BlockParser {
     const CodeBlockSyntax(),
     const BlockquoteSyntax(),
     const ThematicBreakSyntax(),
-    const UnorderedListSyntax(),
-    const OrderedListSyntax(),
+    const ListSyntax(),
     const ParagraphSyntax()
   ];
 

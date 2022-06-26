@@ -64,7 +64,6 @@ class AtxHeadingSyntax extends BlockSyntax {
       children: [
         if (contentSpan != null) UnparsedContent.fromSpan(contentSpan.trim()),
       ],
-      lineEndings: [if (line.lineEnding != null) line.lineEnding!],
       attributes: {'level': '$level'},
     );
   }

@@ -31,8 +31,7 @@ class HtmlTransformer implements NodeVisitor {
 
   @override
   bool visitElementBefore(Element element) {
-    if (element.type == 'blankLine' ||
-        element.type == 'linkReferenceDefinition') {
+    if (element.type == 'linkReferenceDefinition') {
       return false;
     }
 
@@ -58,7 +57,7 @@ class HtmlTransformer implements NodeVisitor {
     } else if (element.type == 'backslashEscape') {
       final text = (element.children.first as Text);
       _tree.last.children.add(
-        HtmlText(!encodeHtml ? text.text : text.htmlText()),
+        HtmlText(!encodeHtml ? text.textContent : text.htmlText()),
       );
       return false;
     } else if (element.type == 'emoji') {
@@ -151,13 +150,9 @@ class HtmlTransformer implements NodeVisitor {
     final decodeHtmlCharacter =
         parentType != 'codeSpan' && parentType != 'indentedCodeBlock';
 
-    var content = !encodeHtml
-        ? text.text
+    final content = !encodeHtml
+        ? text.textContent
         : text.htmlText(decodeHtmlCharacter: decodeHtmlCharacter);
-
-    if (text.tabRemaining != null && text.tabRemaining! > 0) {
-      content = "${' ' * text.tabRemaining!}$content";
-    }
 
     if (text is! UnparsedContent) {
       parent.children.add(HtmlText(content));

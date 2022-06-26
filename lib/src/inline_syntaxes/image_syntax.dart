@@ -24,7 +24,6 @@ class ImageSyntax extends LinkSyntax {
     String destination,
     String? title, {
     required List<SourceSpan> markers,
-    required List<SourceSpan> lineEndings,
     required List<SourceSpan> plainTextChildren,
     required List<Node> Function() getChildren,
   }) {
@@ -52,7 +51,6 @@ class ImageSyntax extends LinkSyntax {
       'image',
       attributes: attributes,
       markers: markers,
-      lineEndings: lineEndings,
     );
   }
 }

@@ -13,8 +13,17 @@ import '../parsers/source_parser.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 
+@Deprecated('Use ListSyntax instead')
+class OrderedListSyntax extends ListSyntax {}
+
+@Deprecated('Use ListSyntax instead')
+class UnorderedListSyntax extends ListSyntax {}
+
 /// Base class for both ordered and unordered lists.
-abstract class ListSyntax extends BlockSyntax {
+class ListSyntax extends BlockSyntax {
+  @override
+  RegExp get pattern => listPattern;
+
   @override
   bool canInterrupt(BlockParser parser) {
     final match = parser.current.firstMatch(pattern)!;
@@ -30,7 +39,7 @@ abstract class ListSyntax extends BlockSyntax {
     // 5. five
     // ```
     if (parser.parentSyntax is! ListSyntax &&
-        match[1]!.isNotEmpty &&
+        match[1] != null &&
         match[1] != '1') {
       return false;
     }
@@ -42,12 +51,13 @@ abstract class ListSyntax extends BlockSyntax {
     return match[2]?.isNotEmpty ?? false;
   }
 
-  bool get ordered;
-
   const ListSyntax();
 
   @override
   Node parse(BlockParser parser) {
+    var match = parser.current.firstMatch(listPattern);
+    final ordered = match![1] != null;
+
     SourceSpan? listMarker;
     final listItems = <BlockSyntaxChildSource>[];
 
@@ -59,13 +69,11 @@ abstract class ListSyntax extends BlockSyntax {
         listItems.add(BlockSyntaxChildSource(
           lines: childLines,
           markers: [listMarker!],
-          lineEndings: [],
         ));
         childLines = <Line>[];
       }
     }
 
-    late Match? match;
     bool tryMatch(RegExp pattern) {
       match = parser.current.firstMatch(pattern);
       return match != null;
@@ -106,17 +114,15 @@ abstract class ListSyntax extends BlockSyntax {
       } else if (tryMatch(hrPattern)) {
         // Horizontal rule takes precedence to a new list item.
         break;
-      } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
+      } else if (tryMatch(listPattern)) {
         blankLines = null;
 
         final spanParser = SourceParser([parser.current.content]);
         var precedingWhitespaces = spanParser.moveThroughWhitespace();
         final markerStart = spanParser.position;
-        final digits = match![1]!;
+        final digits = match![1] ?? '';
         if (digits.isNotEmpty) {
-          if (startNumber == null && digits.isNotEmpty) {
-            startNumber = int.parse(digits);
-          }
+          startNumber ??= int.parse(digits);
           spanParser.advanceBy(digits.length);
         }
         spanParser.advance();
@@ -214,7 +220,6 @@ abstract class ListSyntax extends BlockSyntax {
         'listItem',
         children: children,
         markers: item.markers,
-        lineEndings: item.lineEndings,
       ));
       anyBlankLinesBetweenBlocks =
           anyBlankLinesBetweenBlocks || itemParser.encounteredBlankLine;
@@ -235,7 +240,6 @@ abstract class ListSyntax extends BlockSyntax {
             children
               ..removeAt(i)
               ..insertAll(i, child.children);
-            item.lineEndings.addAll(child.lineEndings);
           }
         }
       }
@@ -253,7 +257,6 @@ abstract class ListSyntax extends BlockSyntax {
   void _removeLeadingBlankLines(List<BlockSyntaxChildSource> listItems) {
     for (final item in listItems) {
       if (item.lines.isNotEmpty && item.lines.first.isBlankLine) {
-        item.lineEndings.addIfNotNull(item.lines.first.lineEnding);
         item.lines.removeAt(0);
       }
     }
@@ -270,7 +273,6 @@ abstract class ListSyntax extends BlockSyntax {
         if (i < listItems.length - 1) {
           anyEmpty = true;
         }
-        listItems[i].lineEndings.addIfNotNull(lines.last.lineEnding);
         lines.removeLast();
       }
     }

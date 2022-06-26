@@ -37,10 +37,6 @@ class TableSyntax extends BlockSyntax {
   @override
   Node? parse(BlockParser parser) {
     final markers = [parser.next!.content.trim()];
-    final lineEndings = [
-      parser.current.lineEnding!,
-      if (parser.next?.lineEnding != null) parser.next!.lineEnding!,
-    ];
 
     final alignments = _parseDelimiterRow(parser.next!.content.text);
     final columnCount = alignments.length;
@@ -69,9 +65,6 @@ class TableSyntax extends BlockSyntax {
       );
       final children = parsedRow.row.children;
       markers.addAll(parsedRow.markers);
-      if (parser.current.lineEnding != null) {
-        lineEndings.add(parser.current.lineEnding!);
-      }
 
       while (children.length < columnCount) {
         // Insert synthetic empty cells.
@@ -96,7 +89,6 @@ class TableSyntax extends BlockSyntax {
     return Element(
       'table',
       children: [head, if (body != null) body],
-      lineEndings: lineEndings,
       markers: markers,
     );
   }

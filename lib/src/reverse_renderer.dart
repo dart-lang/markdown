@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:markdown/markdown.dart';
-import 'package:markdown/src/extensions.dart';
+import 'package:markdown/src/patterns.dart';
 import 'package:source_span/source_span.dart';
 
 /// Converts the given string to AST and renders AST to given string itself.
@@ -29,39 +29,30 @@ String markdownToMarkdown(
     withDefaultInlineSyntaxes: withDefaultInlineSyntaxes,
   );
 
-  if (inlineOnly) {
-    return renderToMarkdown(
-      document.parseInline(markdown),
-      encodeHtml: encodeHtml,
-    );
-  }
+  final nodes = inlineOnly
+      ? document.parseInline(markdown)
+      : document.parseLines(markdown);
 
-  final nodes = document.parseLines(markdown);
-  return renderToMarkdown(nodes, encodeHtml: encodeHtml);
+  return ReverseRenderer(markdown).render(nodes);
 }
 
-/// Renders [nodes] to Markdown string.
-String renderToMarkdown(
-  List<Node> nodes, {
-  bool encodeHtml = true,
-}) =>
-    ReverseRenderer().render(nodes);
-
-/// Translates a parsed AST to Markdown string.
 class ReverseRenderer implements NodeVisitor {
-  final _SourceSpanBuffer _buffer;
-  ReverseRenderer() : _buffer = _SourceSpanBuffer();
+  String _markdown;
+
+  ReverseRenderer(String markdown)
+      : _markdown =
+            markdown.replaceAll(RegExp('[^$whitespaceCharacters]'), ' ');
 
   String render(List<Node> nodes) {
     for (final node in nodes) {
       node.accept(this);
     }
-    return _buffer.text;
+    return _markdown;
   }
 
   @override
   void visitText(text) {
-    _buffer.write(text);
+    _write(text);
   }
 
   @override
@@ -69,38 +60,14 @@ class ReverseRenderer implements NodeVisitor {
 
   @override
   void visitElementAfter(element) {
-    element
-      ..lineEndings.forEach(_buffer.write)
-      ..markers.forEach(_buffer.write);
+    element.markers.forEach(_write);
   }
-}
 
-class _SourceSpanBuffer {
-  var _buffer = '';
-
-  String get text => _buffer;
-
-  void write(SourceSpan span) {
-    final textStart = span.start.offset;
-    final textEnd = span.end.offset;
-    if (textStart == textEnd) {
-      return;
-    }
-
-    final overflow = textEnd - _buffer.length;
-
-    if (overflow > 0) {
-      _buffer += ' ' * overflow;
-    }
-
-    // TODO(Zhiguang): Check if there is duplicated data.
-    // final spaces = _buffer.substring(textStart, textEnd);
-    // if (!RegExp(r'^ +$').hasMatch(spaces)) {}
-
-    _buffer = _buffer.replaceRange(
-      textStart,
-      textEnd,
-      span.isLineEndingWhitespace ? '\n' : span.text,
+  void _write(SourceSpan span) {
+    _markdown = _markdown.replaceRange(
+      span.start.offset,
+      span.end.offset,
+      span.text,
     );
   }
 }

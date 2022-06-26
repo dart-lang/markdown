@@ -138,42 +138,6 @@ extension SourceSpanExtensions on SourceSpan {
     }
     return _IndentedSourceSpan(subspan(start), tabRemaining);
   }
-
-  /// Replaces line feeds `\n` with whitespace ` ` and make the [SourceLocation]
-  /// attribute of this whitespace the same as the orginal `\n`.
-  List<SourceSpan> convertLineEndings() {
-    final segments = text.split('\n');
-    final spans = <SourceSpan>[];
-    var segmentStart = 0;
-    for (var i = 0; i < segments.length; i++) {
-      final span = subspan(segmentStart, segmentStart + segments[i].length);
-      // Ignore the empty span.
-      if (span.length == 0) {
-        continue;
-      }
-      spans.add(span);
-      if (i < segments.length - 1) {
-        spans.add(SourceSpan(
-          span.end,
-          SourceLocation(
-            span.end.offset + 1,
-            column: 0,
-            line: span.end.line + 1,
-          ),
-          ' ',
-        ));
-      }
-      segmentStart += segments[i].length + 1;
-    }
-
-    return spans;
-  }
-
-  /// Checks if it is a whitespace which was converted from a line ending.
-  ///
-  /// This flag is useful when reversing a Markdown AST to Markdown string.
-  bool get isLineEndingWhitespace =>
-      text == ' ' && (end.line - start.line == 1);
 }
 
 extension SourceFileExtensions on SourceFile {
@@ -198,9 +162,7 @@ extension SourceSpanListExtensions on List<SourceSpan> {
 
     for (var i = 0; i < length; i++) {
       final current = this[i];
-      if (spans.isNotEmpty &&
-          spans.last.end.offset == current.start.offset &&
-          !current.isLineEndingWhitespace) {
+      if (spans.isNotEmpty && spans.last.end.offset == current.start.offset) {
         spans.last = spans.last.union(current);
       } else {
         spans.add(current);

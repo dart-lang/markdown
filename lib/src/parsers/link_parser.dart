@@ -181,9 +181,7 @@ class LinkParser extends SourceParser {
     if (spans.isEmpty || spans.isEmptyContent()) {
       return false;
     }
-    spans
-      ..first.trimLeft()
-      ..last.trimLeft();
+
     // Add `]` to markers.
     markers.add(spanAt());
 

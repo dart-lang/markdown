@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'package:source_span/source_span.dart';
-
 import '../ast.dart';
 import '../extensions.dart';
 import '../line.dart';
@@ -48,9 +46,6 @@ class SetextHeadingSyntax extends BlockSyntax {
 
     final marker = parser.current.content.trim();
     final level = (marker.text[0] == '=') ? '1' : '2';
-    final lineEndings = <SourceSpan>[
-      if (parser.current.lineEnding != null) parser.current.lineEnding!
-    ];
 
     final content = parser.linesBuffer.toNodes(
       ((e) => UnparsedContent.fromSpan(e)),
@@ -59,17 +54,12 @@ class SetextHeadingSyntax extends BlockSyntax {
       popLineEnding: true,
     );
 
-    if (content.lineEnding != null) {
-      lineEndings.add(content.lineEnding!);
-    }
-
     parser.linesBuffer.clear();
     parser.advance();
 
     return Element(
       'setextHeading',
       children: content.nodes,
-      lineEndings: lineEndings,
       attributes: {'level': level},
       markers: [marker],
     );
