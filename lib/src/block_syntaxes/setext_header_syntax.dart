@@ -67,5 +67,6 @@ class SetextHeaderSyntax extends BlockSyntax {
           hrPattern.hasMatch(line) ||
           ulPattern.hasMatch(line) ||
           olPattern.hasMatch(line) ||
-          emptyPattern.hasMatch(line));
+          emptyPattern.hasMatch(line) ||
+          texFencePattern.hasMatch(line));
 }
