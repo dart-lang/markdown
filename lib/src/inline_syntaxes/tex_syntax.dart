@@ -14,7 +14,8 @@ class TexInlineSyntex extends InlineSyntax {
 
     if (hasMatch) {
       /// 매칭 문자열
-      final matchedString = match.group(1)!;
+      final matchedString = match.group(2)!;
+      print(matchedString);
 
       /// Element tex 태그 부착
       parser.addNode(
