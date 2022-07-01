@@ -60,7 +60,6 @@ export 'src/block_syntaxes/paragraph_syntax.dart';
 export 'src/block_syntaxes/setext_header_syntax.dart';
 export 'src/block_syntaxes/setext_header_with_id_syntax.dart';
 export 'src/block_syntaxes/table_syntax.dart';
-export 'src/block_syntaxes/tex_block_syntax.dart';
 export 'src/block_syntaxes/unordered_list_syntax.dart';
 export 'src/block_syntaxes/unordered_list_with_checkbox_syntax.dart';
 export 'src/document.dart';
