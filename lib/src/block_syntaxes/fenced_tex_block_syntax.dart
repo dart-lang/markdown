@@ -59,11 +59,8 @@ class FencedTexBlockSyntax extends BlockSyntax {
     /// 하나의 문장으로 합침
     final text = childLines.join('\n');
 
-    /// tex 엘리먼트
-    final tex = Element.text('tex', text);
-
     /// tex 엘리먼트를 포함한 블록 엘리먼트
-    final element = Element('texblock', [tex]);
+    final element = Element.text('texblock', text);
 
     return element;
   }
