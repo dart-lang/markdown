@@ -4,25 +4,12 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
-import '../charcode.dart';
+// import '../charcode.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 
 class FencedTexBlockSyntax extends BlockSyntax {
   const FencedTexBlockSyntax();
-  @override
-  bool canParse(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current);
-    if (match == null) return false;
-    final codeFence = match.group(1)!;
-    final infoString = match.group(2);
-    // From the CommonMark spec:
-    //
-    // > Ifthe info string comes after a backtick fence, it may not contain
-    // > any backtick characters.
-    return (codeFence.codeUnitAt(0) != $backquote ||
-        !infoString!.codeUnits.contains($backquote));
-  }
 
   /// 블록 하위 문장 파싱
   @override

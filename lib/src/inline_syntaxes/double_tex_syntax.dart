@@ -3,9 +3,9 @@ import '../inline_parser.dart';
 import 'inline_syntax.dart';
 
 /// 텍스 인라인 구문 분석기
-class TexInlineSyntex extends InlineSyntax {
+class DoubleTexInlineSyntex extends InlineSyntax {
   /// 텍스 인라인 구문 분석기 초기화
-  TexInlineSyntex() : super(r'(\$)(.*?)(\$)');
+  DoubleTexInlineSyntex() : super(r'(\$\$)(.*?)(\$\$)');
 
   /// 구문 분석기의 조건에 만족할 때 처리 함수
   @override
@@ -15,7 +15,6 @@ class TexInlineSyntex extends InlineSyntax {
     if (hasMatch) {
       /// 매칭 문자열
       final matchedString = match.group(2)!;
-      print(matchedString);
 
       /// Element tex 태그 부착
       parser.addNode(
