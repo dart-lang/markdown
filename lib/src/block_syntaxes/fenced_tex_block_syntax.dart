@@ -4,25 +4,12 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
-import '../charcode.dart';
+// import '../charcode.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 
 class FencedTexBlockSyntax extends BlockSyntax {
   const FencedTexBlockSyntax();
-  @override
-  bool canParse(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current);
-    if (match == null) return false;
-    final codeFence = match.group(1)!;
-    final infoString = match.group(2);
-    // From the CommonMark spec:
-    //
-    // > Ifthe info string comes after a backtick fence, it may not contain
-    // > any backtick characters.
-    return (codeFence.codeUnitAt(0) != $backquote ||
-        !infoString!.codeUnits.contains($backquote));
-  }
 
   /// 블록 하위 문장 파싱
   @override
@@ -67,16 +54,13 @@ class FencedTexBlockSyntax extends BlockSyntax {
     final endBlock = match.group(1);
 
     /// 블록 하위 문장리스트
-    final childLines = parseChildLines(parser, endBlock)..add('');
+    final childLines = parseChildLines(parser, endBlock);
 
     /// 하나의 문장으로 합침
     final text = childLines.join('\n');
 
-    /// tex 엘리먼트
-    final tex = Element.text('tex', text);
-
     /// tex 엘리먼트를 포함한 블록 엘리먼트
-    final element = Element('texblock', [tex]);
+    final element = Element.text('texblock', text);
 
     return element;
   }

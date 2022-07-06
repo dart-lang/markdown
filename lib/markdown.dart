@@ -72,6 +72,7 @@ export 'src/inline_syntaxes/autolink_syntax.dart';
 export 'src/inline_syntaxes/code_syntax.dart';
 export 'src/inline_syntaxes/color_swatch_syntax.dart';
 export 'src/inline_syntaxes/delimiter_syntax.dart';
+export 'src/inline_syntaxes/double_tex_syntax.dart';
 export 'src/inline_syntaxes/email_autolink_syntax.dart';
 export 'src/inline_syntaxes/emoji_syntax.dart';
 export 'src/inline_syntaxes/emphasis_syntax.dart';
@@ -81,9 +82,9 @@ export 'src/inline_syntaxes/inline_html_syntax.dart';
 export 'src/inline_syntaxes/inline_syntax.dart';
 export 'src/inline_syntaxes/line_break_syntax.dart';
 export 'src/inline_syntaxes/link_syntax.dart';
+export 'src/inline_syntaxes/single_tex_syntax.dart';
 export 'src/inline_syntaxes/strikethrough_syntax.dart';
 export 'src/inline_syntaxes/tag_syntax.dart';
-export 'src/inline_syntaxes/tex_syntax.dart';
 export 'src/inline_syntaxes/text_syntax.dart';
 
 const version = packageVersion;

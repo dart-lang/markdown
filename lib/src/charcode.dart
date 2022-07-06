@@ -121,3 +121,6 @@ const int $rbrace = 0x7D;
 
 /// Character `~`.
 const int $tilde = 0x7E;
+
+/// Character `$`.
+const int $dollorSign = 0x36;
