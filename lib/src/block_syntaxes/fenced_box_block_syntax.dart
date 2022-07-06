@@ -75,13 +75,12 @@ class FencedBoxBlockSyntax extends BlockSyntax {
 
     final parsedChildlines = parseChildLines(parser, endBlock);
 
-    final childrenLines = [...parsedChildlines, '']
-        .where((element) => element != null)
+    final childrenLines = parsedChildlines
+        .where((element) => element != null && element.isNotEmpty)
         .cast<String>()
         .toList();
 
     final astNodes = document.parseLines(childrenLines);
-
     if (boxType == 'checked') {
       /// 첫번재 h1 인덱스
       final titleH1Index = astNodes
