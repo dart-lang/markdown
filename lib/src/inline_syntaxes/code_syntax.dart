@@ -22,6 +22,9 @@ class CodeSyntax extends InlineSyntax {
   // CommonMark.
   static final String _pattern = r'(`+(?!`))((?:.|\n)*?[^`])\1(?!`)';
 
+  /// O와X만 있는지 체크하는 정규식
+  late final RegExp _levelRegExp = RegExp(r'^([OX]{0,})$');
+
   CodeSyntax() : super(_pattern);
 
   @override
@@ -48,7 +51,16 @@ class CodeSyntax extends InlineSyntax {
   bool onMatch(InlineParser parser, Match match) {
     var code = match[2]!.trim().replaceAll('\n', ' ');
     if (parser.encodeHtml) code = escapeHtml(code);
-    parser.addNode(Element.text('code', code));
+    final levelMatch = _levelRegExp.firstMatch(code);
+
+    parser.addNode(
+      Element.text(
+        'code',
+        levelMatch == null
+            ? code
+            : code.replaceAll('O', '●').replaceAll('X', '○'),
+      ),
+    );
 
     return true;
   }
