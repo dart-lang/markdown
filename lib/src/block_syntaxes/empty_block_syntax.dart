@@ -15,7 +15,7 @@ class EmptyBlockSyntax extends BlockSyntax {
 
   @override
   Node? parse(BlockParser parser) {
-    parser.encounteredBlankLine = true;
+    parser.encounteredBlankLine = false;
     parser.advance();
 
     // Don't actually emit anything.
