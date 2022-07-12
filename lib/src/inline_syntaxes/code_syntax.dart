@@ -52,14 +52,13 @@ class CodeSyntax extends InlineSyntax {
     var code = match[2]!.trim().replaceAll('\n', ' ');
     if (parser.encodeHtml) code = escapeHtml(code);
     final levelMatch = _levelRegExp.firstMatch(code);
-
     parser.addNode(
       Element.text(
         'code',
         levelMatch == null
             ? code
             : code.replaceAll('O', '●').replaceAll('X', '○'),
-      ),
+      )..attributes['class'] = levelMatch == null ? '' : 'level',
     );
 
     return true;
