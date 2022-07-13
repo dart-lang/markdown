@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:markdown/markdown.dart';
+
 import '../ast.dart';
 import '../block_parser.dart';
 import '../patterns.dart';
@@ -21,6 +23,8 @@ const indicatorForUncheckedCheckBox = '\u{200B}';
 /// Invisible string used to placehold for a *checked* CheckBox.
 /// This is 2 Unicode Zero Width Space (U+200B) characters.
 const indicatorForCheckedCheckBox = '\u{200B}\u{200B}';
+
+const indicatorForLargeCheckedCheckBox = '\u{200B}\u{200B}\u{200B}';
 
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
@@ -131,6 +135,8 @@ abstract class ListSyntax extends BlockSyntax {
             checkBoxIndicator = indicatorForUncheckedCheckBox;
           } else if (checkboxGroup == '[x]') {
             checkBoxIndicator = indicatorForCheckedCheckBox;
+          } else if (checkboxGroup == '[X]') {
+            checkBoxIndicator = indicatorForLargeCheckedCheckBox;
           }
         }
         final firstWhitespace = successfulMatch[5 + cbGroupOffset] ?? '';
@@ -242,16 +248,23 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
 
-    if (listTag == 'ol_with_checkbox') {
-      final olWithCheckbox = Element('ol', itemNodes)
-        ..attributes['class'] = 'contains-task-list';
-      if (startNumber != 1) {
-        olWithCheckbox.attributes['start'] = '$startNumber';
+    if (listTag == 'ol_with_checkbox' || listTag == 'ul_with_checkbox') {
+      for (var element in itemNodes) {
+        element.attributes['class'] = 'task-list-item';
       }
-      return olWithCheckbox;
-    } else if (listTag == 'ul_with_checkbox') {
-      return Element('ul', itemNodes)
-        ..attributes['class'] = 'contains-task-list';
+
+      if (listTag == 'ol_with_checkbox') {
+        final olWithCheckbox = Element('ol', itemNodes)
+          ..attributes['class'] = 'contains-task-list';
+        if (startNumber != 1) {
+          olWithCheckbox.attributes['start'] = '$startNumber';
+        }
+
+        return olWithCheckbox;
+      } else {
+        return Element('ul', itemNodes)
+          ..attributes['class'] = 'contains-task-list';
+      }
     } else if (listTag == 'ol' && startNumber != 1) {
       return Element(listTag, itemNodes)..attributes['start'] = '$startNumber';
     } else {
