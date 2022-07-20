@@ -1,6 +1,14 @@
 ## 6.0.0-dev
 
-* Change emoji list do be derived from the GitHub API. The only two emoji that visually change are `:cricket:` and `:beetle:`. There are alternate emoji `:cricket_game:` and `:lady_beetle:` which can be used to access the previous emoji.  `update_github_emoji.dart` now pulls all emoji info directly from GitHub API and as a result we have now support the entire GitHub emoji set (excluding the 19 custom GitHub specific emoji which have no Unicode support).
+* Add support to GFM extension for GitHub task lists (aka checkboxes).  These
+  are only active in the `gitHubFlavored` and `gitHubWeb` extension sets.
+* Add support for `#ff0000` color swatches.
+* Change emoji list do be derived from the GitHub API. The only two emoji that
+  visually change are `:cricket:` and `:beetle:`. There are alternate emoji
+  `:cricket_game:` and `:lady_beetle:` which can be used to access the previous
+  emoji.  `update_github_emoji.dart` now pulls all emoji info directly from
+  GitHub API and as a result we have now support the entire GitHub emoji set
+  (excluding the 19 custom GitHub specific emoji which have no Unicode support).
 * **Breaking change**: The `TagSyntax` is _deprecated_.
 * Add new syntax `DelimiterSyntax`.
 * **Breaking change**: `StrikethroughSyntax` now extends `DelimiterSyntax`
