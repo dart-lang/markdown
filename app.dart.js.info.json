@@ -1336,7 +1336,8 @@
         },
         "children": [
           "field/dart:_foreign_helper::JS_CONST.code"
-        ]
+        ],
+        "supers": []
       },
       "dart:_interceptors::ArrayIterator": {
         "id": "class/dart:_interceptors::ArrayIterator",
@@ -1356,6 +1357,9 @@
           "function/dart:_interceptors::ArrayIterator.ArrayIterator",
           "function/dart:_interceptors::ArrayIterator.current",
           "function/dart:_interceptors::ArrayIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:_interceptors::Interceptor": {
@@ -1372,7 +1376,8 @@
           "function/dart:_interceptors::Interceptor.==",
           "function/dart:_interceptors::Interceptor.hashCode",
           "function/dart:_interceptors::Interceptor.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:_interceptors::JSArray": {
         "id": "class/dart:_interceptors::JSArray",
@@ -1435,6 +1440,10 @@
           "function/dart:_interceptors::JSArray.sublist",
           "function/dart:_interceptors::JSArray.toList",
           "function/dart:_interceptors::JSArray.toString"
+        ],
+        "supers": [
+          "class/dart:_interceptors::Interceptor",
+          "class/dart:core::List"
         ]
       },
       "dart:_interceptors::JSBool": {
@@ -1450,6 +1459,10 @@
         "children": [
           "function/dart:_interceptors::JSBool.hashCode",
           "function/dart:_interceptors::JSBool.toString"
+        ],
+        "supers": [
+          "class/dart:_interceptors::Interceptor",
+          "class/dart:core::bool"
         ]
       },
       "dart:_interceptors::JSInt": {
@@ -1462,7 +1475,11 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JSNumber",
+          "class/dart:core::int"
+        ]
       },
       "dart:_interceptors::JSNull": {
         "id": "class/dart:_interceptors::JSNull",
@@ -1478,6 +1495,10 @@
           "function/dart:_interceptors::JSNull.==",
           "function/dart:_interceptors::JSNull.hashCode",
           "function/dart:_interceptors::JSNull.toString"
+        ],
+        "supers": [
+          "class/dart:_interceptors::Interceptor",
+          "class/dart:core::Null"
         ]
       },
       "dart:_interceptors::JSNumNotInt": {
@@ -1490,7 +1511,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JSNumber"
+        ]
       },
       "dart:_interceptors::JSNumber": {
         "id": "class/dart:_interceptors::JSNumber",
@@ -1514,6 +1538,9 @@
           "function/dart:_interceptors::JSNumber.isNaN",
           "function/dart:_interceptors::JSNumber.isNegative",
           "function/dart:_interceptors::JSNumber.toString"
+        ],
+        "supers": [
+          "class/dart:_interceptors::Interceptor"
         ]
       },
       "dart:_interceptors::JSString": {
@@ -1555,6 +1582,10 @@
           "function/dart:_interceptors::JSString.trim",
           "function/dart:_interceptors::JSString.trimLeft",
           "function/dart:_interceptors::JSString.trimRight"
+        ],
+        "supers": [
+          "class/dart:_interceptors::Interceptor",
+          "class/dart:core::String"
         ]
       },
       "dart:_interceptors::JSUnmodifiableArray": {
@@ -1567,7 +1598,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JSArray"
+        ]
       },
       "dart:_interceptors::JavaScriptFunction": {
         "id": "class/dart:_interceptors::JavaScriptFunction",
@@ -1581,6 +1615,9 @@
         },
         "children": [
           "function/dart:_interceptors::JavaScriptFunction.toString"
+        ],
+        "supers": [
+          "class/dart:_interceptors::LegacyJavaScriptObject"
         ]
       },
       "dart:_interceptors::JavaScriptObject": {
@@ -1593,7 +1630,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::Interceptor"
+        ]
       },
       "dart:_interceptors::LegacyJavaScriptObject": {
         "id": "class/dart:_interceptors::LegacyJavaScriptObject",
@@ -1608,6 +1648,9 @@
         "children": [
           "function/dart:_interceptors::LegacyJavaScriptObject.hashCode",
           "function/dart:_interceptors::LegacyJavaScriptObject.toString"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
         ]
       },
       "dart:_interceptors::PlainJavaScriptObject": {
@@ -1620,7 +1663,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::LegacyJavaScriptObject"
+        ]
       },
       "dart:_interceptors::UnknownJavaScriptObject": {
         "id": "class/dart:_interceptors::UnknownJavaScriptObject",
@@ -1632,7 +1678,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::LegacyJavaScriptObject"
+        ]
       },
       "dart:_internal::CodeUnits": {
         "id": "class/dart:_internal::CodeUnits",
@@ -1649,6 +1698,9 @@
           "function/dart:_internal::CodeUnits.CodeUnits",
           "function/dart:_internal::CodeUnits.[]",
           "function/dart:_internal::CodeUnits.length"
+        ],
+        "supers": [
+          "class/dart:_internal::UnmodifiableListBase"
         ]
       },
       "dart:_internal::EfficientLengthIterable": {
@@ -1661,7 +1713,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:core::Iterable"
+        ]
       },
       "dart:_internal::EfficientLengthMappedIterable": {
         "id": "class/dart:_internal::EfficientLengthMappedIterable",
@@ -1675,6 +1730,10 @@
         },
         "children": [
           "function/dart:_internal::EfficientLengthMappedIterable.EfficientLengthMappedIterable"
+        ],
+        "supers": [
+          "class/dart:_internal::EfficientLengthIterable",
+          "class/dart:_internal::MappedIterable"
         ]
       },
       "dart:_internal::FixedLengthListMixin": {
@@ -1695,7 +1754,8 @@
           "function/dart:_internal::FixedLengthListMixin.removeAt",
           "function/dart:_internal::FixedLengthListMixin.removeLast",
           "function/dart:_internal::FixedLengthListMixin.removeRange"
-        ]
+        ],
+        "supers": []
       },
       "dart:_internal::IterableElementError": {
         "id": "class/dart:_internal::IterableElementError",
@@ -1710,7 +1770,8 @@
         "children": [
           "function/dart:_internal::IterableElementError.noElement",
           "function/dart:_internal::IterableElementError.tooFew"
-        ]
+        ],
+        "supers": []
       },
       "dart:_internal::LateError": {
         "id": "class/dart:_internal::LateError",
@@ -1728,6 +1789,9 @@
           "function/dart:_internal::LateError.LateError.fieldNI",
           "function/dart:_internal::LateError.LateError.localNI",
           "function/dart:_internal::LateError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:_internal::ListIterable": {
@@ -1745,6 +1809,9 @@
           "function/dart:_internal::ListIterable.join",
           "function/dart:_internal::ListIterable.toList",
           "function/dart:_internal::ListIterable.where"
+        ],
+        "supers": [
+          "class/dart:_internal::EfficientLengthIterable"
         ]
       },
       "dart:_internal::ListIterator": {
@@ -1765,6 +1832,9 @@
           "function/dart:_internal::ListIterator.ListIterator",
           "function/dart:_internal::ListIterator.current",
           "function/dart:_internal::ListIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:_internal::MappedIterable": {
@@ -1784,6 +1854,9 @@
           "function/dart:_internal::MappedIterable.MappedIterable._",
           "function/dart:_internal::MappedIterable.iterator",
           "function/dart:_internal::MappedIterable.length"
+        ],
+        "supers": [
+          "class/dart:core::Iterable"
         ]
       },
       "dart:_internal::MappedIterator": {
@@ -1803,6 +1876,9 @@
           "function/dart:_internal::MappedIterator.MappedIterator",
           "function/dart:_internal::MappedIterator.current",
           "function/dart:_internal::MappedIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:_internal::MappedListIterable": {
@@ -1821,6 +1897,9 @@
           "function/dart:_internal::MappedListIterable.MappedListIterable",
           "function/dart:_internal::MappedListIterable.elementAt",
           "function/dart:_internal::MappedListIterable.length"
+        ],
+        "supers": [
+          "class/dart:_internal::ListIterable"
         ]
       },
       "dart:_internal::NotNullableError": {
@@ -1836,6 +1915,10 @@
         "children": [
           "field/dart:_internal::NotNullableError._name",
           "function/dart:_internal::NotNullableError.NotNullableError"
+        ],
+        "supers": [
+          "class/dart:core::Error",
+          "class/dart:core::TypeError"
         ]
       },
       "dart:_internal::SkipIterable": {
@@ -1850,6 +1933,9 @@
         },
         "children": [
           "field/dart:_internal::SkipIterable._iterable"
+        ],
+        "supers": [
+          "class/dart:core::Iterable"
         ]
       },
       "dart:_internal::SkipIterator": {
@@ -1865,6 +1951,9 @@
         "children": [
           "field/dart:_internal::SkipIterator._iterator",
           "field/dart:_internal::SkipIterator._skipCount"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:_internal::Sort": {
@@ -1882,7 +1971,8 @@
           "function/dart:_internal::Sort._dualPivotQuicksort",
           "function/dart:_internal::Sort._insertionSort",
           "function/dart:_internal::Sort.sort"
-        ]
+        ],
+        "supers": []
       },
       "dart:_internal::SubListIterable": {
         "id": "class/dart:_internal::SubListIterable",
@@ -1904,6 +1994,9 @@
           "function/dart:_internal::SubListIterable.elementAt",
           "function/dart:_internal::SubListIterable.length",
           "function/dart:_internal::SubListIterable.toList"
+        ],
+        "supers": [
+          "class/dart:_internal::ListIterable"
         ]
       },
       "dart:_internal::UnmodifiableListBase": {
@@ -1927,6 +2020,10 @@
           "function/dart:_internal::UnmodifiableListBase.removeRange",
           "function/dart:_internal::UnmodifiableListBase.setAll",
           "function/dart:_internal::UnmodifiableListBase.setRange"
+        ],
+        "supers": [
+          "class/dart:_internal::UnmodifiableListMixin",
+          "class/dart:collection::ListBase"
         ]
       },
       "dart:_internal::UnmodifiableListMixin": {
@@ -1950,6 +2047,9 @@
           "function/dart:_internal::UnmodifiableListMixin.removeRange",
           "function/dart:_internal::UnmodifiableListMixin.setAll",
           "function/dart:_internal::UnmodifiableListMixin.setRange"
+        ],
+        "supers": [
+          "class/dart:core::List"
         ]
       },
       "dart:_internal::WhereIterable": {
@@ -1967,6 +2067,9 @@
           "field/dart:_internal::WhereIterable._iterable",
           "function/dart:_internal::WhereIterable.WhereIterable",
           "function/dart:_internal::WhereIterable.iterator"
+        ],
+        "supers": [
+          "class/dart:core::Iterable"
         ]
       },
       "dart:_internal::WhereIterator": {
@@ -1985,6 +2088,9 @@
           "function/dart:_internal::WhereIterator.WhereIterator",
           "function/dart:_internal::WhereIterator.current",
           "function/dart:_internal::WhereIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:_js_helper::BoundClosure": {
@@ -2014,6 +2120,9 @@
           "function/dart:_js_helper::BoundClosure.receiverFieldName",
           "function/dart:_js_helper::BoundClosure.receiverOf",
           "function/dart:_js_helper::BoundClosure.toString"
+        ],
+        "supers": [
+          "class/dart:_js_helper::TearOffClosure"
         ]
       },
       "dart:_js_helper::Closure": {
@@ -2036,7 +2145,8 @@
           "function/dart:_js_helper::Closure.fromTearOff",
           "function/dart:_js_helper::Closure.isCsp",
           "function/dart:_js_helper::Closure.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:_js_helper::Closure0Args": {
         "id": "class/dart:_js_helper::Closure0Args",
@@ -2048,7 +2158,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_js_helper::Closure"
+        ]
       },
       "dart:_js_helper::Closure2Args": {
         "id": "class/dart:_js_helper::Closure2Args",
@@ -2060,7 +2173,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_js_helper::Closure"
+        ]
       },
       "dart:_js_helper::ConstantMap": {
         "id": "class/dart:_js_helper::ConstantMap",
@@ -2074,7 +2190,8 @@
         },
         "children": [
           "function/dart:_js_helper::ConstantMap.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:_js_helper::ConstantStringMap": {
         "id": "class/dart:_js_helper::ConstantStringMap",
@@ -2096,6 +2213,9 @@
           "function/dart:_js_helper::ConstantStringMap.containsKey",
           "function/dart:_js_helper::ConstantStringMap.forEach",
           "function/dart:_js_helper::ConstantStringMap.length"
+        ],
+        "supers": [
+          "class/dart:_js_helper::ConstantMap"
         ]
       },
       "dart:_js_helper::GeneralConstantMap": {
@@ -2110,6 +2230,9 @@
         },
         "children": [
           "field/dart:_js_helper::GeneralConstantMap._jsData"
+        ],
+        "supers": [
+          "class/dart:_js_helper::ConstantMap"
         ]
       },
       "dart:_js_helper::JSSyntaxRegExp": {
@@ -2143,6 +2266,9 @@
           "function/dart:_js_helper::JSSyntaxRegExp.makeNative",
           "function/dart:_js_helper::JSSyntaxRegExp.matchAsPrefix",
           "function/dart:_js_helper::JSSyntaxRegExp.toString"
+        ],
+        "supers": [
+          "class/dart:core::RegExp"
         ]
       },
       "dart:_js_helper::JsLinkedHashMap": {
@@ -2190,6 +2316,10 @@
           "function/dart:_js_helper::JsLinkedHashMap.length",
           "function/dart:_js_helper::JsLinkedHashMap.putIfAbsent",
           "function/dart:_js_helper::JsLinkedHashMap.toString"
+        ],
+        "supers": [
+          "class/dart:collection::LinkedHashMap",
+          "class/dart:collection::MapBase"
         ]
       },
       "dart:_js_helper::JsNoSuchMethodError": {
@@ -2208,6 +2338,9 @@
           "field/dart:_js_helper::JsNoSuchMethodError._receiver",
           "function/dart:_js_helper::JsNoSuchMethodError.JsNoSuchMethodError",
           "function/dart:_js_helper::JsNoSuchMethodError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:_js_helper::LinkedHashMapCell": {
@@ -2226,7 +2359,8 @@
           "field/dart:_js_helper::LinkedHashMapCell.hashMapCellKey",
           "field/dart:_js_helper::LinkedHashMapCell.hashMapCellValue",
           "function/dart:_js_helper::LinkedHashMapCell.LinkedHashMapCell"
-        ]
+        ],
+        "supers": []
       },
       "dart:_js_helper::LinkedHashMapKeyIterable": {
         "id": "class/dart:_js_helper::LinkedHashMapKeyIterable",
@@ -2243,6 +2377,9 @@
           "function/dart:_js_helper::LinkedHashMapKeyIterable.LinkedHashMapKeyIterable",
           "function/dart:_js_helper::LinkedHashMapKeyIterable.iterator",
           "function/dart:_js_helper::LinkedHashMapKeyIterable.length"
+        ],
+        "supers": [
+          "class/dart:_internal::EfficientLengthIterable"
         ]
       },
       "dart:_js_helper::LinkedHashMapKeyIterator": {
@@ -2263,6 +2400,9 @@
           "function/dart:_js_helper::LinkedHashMapKeyIterator.LinkedHashMapKeyIterator",
           "function/dart:_js_helper::LinkedHashMapKeyIterator.current",
           "function/dart:_js_helper::LinkedHashMapKeyIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:_js_helper::NullError": {
@@ -2280,6 +2420,9 @@
           "field/dart:_js_helper::NullError._method",
           "function/dart:_js_helper::NullError.NullError",
           "function/dart:_js_helper::NullError.toString"
+        ],
+        "supers": [
+          "class/dart:core::TypeError"
         ]
       },
       "dart:_js_helper::NullThrownFromJavaScriptException": {
@@ -2296,6 +2439,9 @@
           "field/dart:_js_helper::NullThrownFromJavaScriptException._irritant",
           "function/dart:_js_helper::NullThrownFromJavaScriptException.NullThrownFromJavaScriptException",
           "function/dart:_js_helper::NullThrownFromJavaScriptException.toString"
+        ],
+        "supers": [
+          "class/dart:core::Exception"
         ]
       },
       "dart:_js_helper::Primitives": {
@@ -2320,7 +2466,8 @@
           "function/dart:_js_helper::Primitives.parseInt",
           "function/dart:_js_helper::Primitives.stringConcatUnchecked",
           "function/dart:_js_helper::Primitives.stringFromCharCode"
-        ]
+        ],
+        "supers": []
       },
       "dart:_js_helper::RuntimeError": {
         "id": "class/dart:_js_helper::RuntimeError",
@@ -2336,6 +2483,9 @@
           "field/dart:_js_helper::RuntimeError.message",
           "function/dart:_js_helper::RuntimeError.RuntimeError",
           "function/dart:_js_helper::RuntimeError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:_js_helper::StaticClosure": {
@@ -2351,6 +2501,9 @@
         "children": [
           "function/dart:_js_helper::StaticClosure.StaticClosure",
           "function/dart:_js_helper::StaticClosure.toString"
+        ],
+        "supers": [
+          "class/dart:_js_helper::TearOffClosure"
         ]
       },
       "dart:_js_helper::StringMatch": {
@@ -2369,7 +2522,8 @@
           "field/dart:_js_helper::StringMatch.start",
           "function/dart:_js_helper::StringMatch.StringMatch",
           "function/dart:_js_helper::StringMatch.end"
-        ]
+        ],
+        "supers": []
       },
       "dart:_js_helper::TearOffClosure": {
         "id": "class/dart:_js_helper::TearOffClosure",
@@ -2381,7 +2535,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_js_helper::Closure"
+        ]
       },
       "dart:_js_helper::TypeErrorDecoder": {
         "id": "class/dart:_js_helper::TypeErrorDecoder",
@@ -2421,7 +2578,8 @@
           "function/dart:_js_helper::TypeErrorDecoder.provokePropertyErrorOn",
           "function/dart:_js_helper::TypeErrorDecoder.provokePropertyErrorOnNull",
           "function/dart:_js_helper::TypeErrorDecoder.provokePropertyErrorOnUndefined"
-        ]
+        ],
+        "supers": []
       },
       "dart:_js_helper::UnknownJsTypeError": {
         "id": "class/dart:_js_helper::UnknownJsTypeError",
@@ -2437,6 +2595,9 @@
           "field/dart:_js_helper::UnknownJsTypeError._message",
           "function/dart:_js_helper::UnknownJsTypeError.UnknownJsTypeError",
           "function/dart:_js_helper::UnknownJsTypeError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:_js_helper::_AllMatchesIterable": {
@@ -2455,6 +2616,9 @@
           "field/dart:_js_helper::_AllMatchesIterable._string",
           "function/dart:_js_helper::_AllMatchesIterable._AllMatchesIterable",
           "function/dart:_js_helper::_AllMatchesIterable.iterator"
+        ],
+        "supers": [
+          "class/dart:collection::IterableBase"
         ]
       },
       "dart:_js_helper::_AllMatchesIterator": {
@@ -2477,6 +2641,9 @@
           "function/dart:_js_helper::_AllMatchesIterator._isTrailSurrogate",
           "function/dart:_js_helper::_AllMatchesIterator.current",
           "function/dart:_js_helper::_AllMatchesIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:_js_helper::_ConstantMapKeyIterable": {
@@ -2491,6 +2658,9 @@
         },
         "children": [
           "field/dart:_js_helper::_ConstantMapKeyIterable._map"
+        ],
+        "supers": [
+          "class/dart:core::Iterable"
         ]
       },
       "dart:_js_helper::_MatchImplementation": {
@@ -2512,7 +2682,8 @@
           "function/dart:_js_helper::_MatchImplementation.group",
           "function/dart:_js_helper::_MatchImplementation.input",
           "function/dart:_js_helper::_MatchImplementation.start"
-        ]
+        ],
+        "supers": []
       },
       "dart:_js_helper::_StackTrace": {
         "id": "class/dart:_js_helper::_StackTrace",
@@ -2529,7 +2700,8 @@
           "field/dart:_js_helper::_StackTrace._trace",
           "function/dart:_js_helper::_StackTrace._StackTrace",
           "function/dart:_js_helper::_StackTrace.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:_js_helper::_StringAllMatchesIterable": {
         "id": "class/dart:_js_helper::_StringAllMatchesIterable",
@@ -2547,6 +2719,9 @@
           "field/dart:_js_helper::_StringAllMatchesIterable._pattern",
           "function/dart:_js_helper::_StringAllMatchesIterable._StringAllMatchesIterable",
           "function/dart:_js_helper::_StringAllMatchesIterable.iterator"
+        ],
+        "supers": [
+          "class/dart:core::Iterable"
         ]
       },
       "dart:_js_helper::_StringAllMatchesIterator": {
@@ -2567,6 +2742,9 @@
           "function/dart:_js_helper::_StringAllMatchesIterator._StringAllMatchesIterator",
           "function/dart:_js_helper::_StringAllMatchesIterator.current",
           "function/dart:_js_helper::_StringAllMatchesIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:_js_shared_embedded_names::RtiUniverseFieldNames": {
@@ -2585,7 +2763,8 @@
           "field/dart:_js_shared_embedded_names::RtiUniverseFieldNames.sharedEmptyArray",
           "field/dart:_js_shared_embedded_names::RtiUniverseFieldNames.typeParameterVariances",
           "field/dart:_js_shared_embedded_names::RtiUniverseFieldNames.typeRules"
-        ]
+        ],
+        "supers": []
       },
       "dart:_late_helper::_Cell": {
         "id": "class/dart:_late_helper::_Cell",
@@ -2604,7 +2783,8 @@
           "function/dart:_late_helper::_Cell._readLocal",
           "function/dart:_late_helper::_Cell.readLocal",
           "function/dart:_late_helper::_Cell.value"
-        ]
+        ],
+        "supers": []
       },
       "dart:_native_typed_data::NativeTypedArray": {
         "id": "class/dart:_native_typed_data::NativeTypedArray",
@@ -2619,6 +2799,9 @@
         "children": [
           "function/dart:_native_typed_data::NativeTypedArray._setRangeFast",
           "function/dart:_native_typed_data::NativeTypedArray.length"
+        ],
+        "supers": [
+          "class/dart:_native_typed_data::NativeTypedData"
         ]
       },
       "dart:_native_typed_data::NativeTypedArrayOfInt": {
@@ -2634,6 +2817,10 @@
         "children": [
           "function/dart:_native_typed_data::NativeTypedArrayOfInt.[]=",
           "function/dart:_native_typed_data::NativeTypedArrayOfInt.setRange"
+        ],
+        "supers": [
+          "class/dart:_native_typed_data::NativeTypedArray",
+          "class/dart:core::List"
         ]
       },
       "dart:_native_typed_data::NativeTypedData": {
@@ -2649,6 +2836,9 @@
         "children": [
           "function/dart:_native_typed_data::NativeTypedData._checkPosition",
           "function/dart:_native_typed_data::NativeTypedData._invalidPosition"
+        ],
+        "supers": [
+          "class/dart:_interceptors::Interceptor"
         ]
       },
       "dart:_native_typed_data::NativeUint8List": {
@@ -2668,6 +2858,9 @@
           "function/dart:_native_typed_data::NativeUint8List._createLength",
           "function/dart:_native_typed_data::NativeUint8List.length",
           "function/dart:_native_typed_data::NativeUint8List.sublist"
+        ],
+        "supers": [
+          "class/dart:_native_typed_data::NativeTypedArrayOfInt"
         ]
       },
       "dart:_recipe_syntax::Recipe": {
@@ -2684,7 +2877,8 @@
           "function/dart:_recipe_syntax::Recipe.digitValue",
           "function/dart:_recipe_syntax::Recipe.isDigit",
           "function/dart:_recipe_syntax::Recipe.isIdentifierStart"
-        ]
+        ],
+        "supers": []
       },
       "dart:_rti::Rti": {
         "id": "class/dart:_rti::Rti",
@@ -2750,7 +2944,8 @@
           "function/dart:_rti::Rti._setRest",
           "function/dart:_rti::Rti._setSpecializedTestResource",
           "function/dart:_rti::Rti.allocate"
-        ]
+        ],
+        "supers": []
       },
       "dart:_rti::TypeRule": {
         "id": "class/dart:_rti::TypeRule",
@@ -2765,7 +2960,8 @@
         "children": [
           "function/dart:_rti::TypeRule.lookupSupertype",
           "function/dart:_rti::TypeRule.lookupTypeVariable"
-        ]
+        ],
+        "supers": []
       },
       "dart:_rti::_Error": {
         "id": "class/dart:_rti::_Error",
@@ -2781,6 +2977,9 @@
           "field/dart:_rti::_Error._message",
           "function/dart:_rti::_Error.compose",
           "function/dart:_rti::_Error.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:_rti::_FunctionParameters": {
@@ -2805,7 +3004,8 @@
           "function/dart:_rti::_FunctionParameters._setOptionalPositional",
           "function/dart:_rti::_FunctionParameters._setRequiredPositional",
           "function/dart:_rti::_FunctionParameters.allocate"
-        ]
+        ],
+        "supers": []
       },
       "dart:_rti::_Parser": {
         "id": "class/dart:_rti::_Parser",
@@ -2845,7 +3045,8 @@
           "function/dart:_rti::_Parser.toTypes",
           "function/dart:_rti::_Parser.toTypesNamed",
           "function/dart:_rti::_Parser.universe"
-        ]
+        ],
+        "supers": []
       },
       "dart:_rti::_Type": {
         "id": "class/dart:_rti::_Type",
@@ -2859,7 +3060,8 @@
         },
         "children": [
           "field/dart:_rti::_Type._rti"
-        ]
+        ],
+        "supers": []
       },
       "dart:_rti::_TypeError": {
         "id": "class/dart:_rti::_TypeError",
@@ -2874,6 +3076,10 @@
         "children": [
           "function/dart:_rti::_TypeError._TypeError.forType",
           "function/dart:_rti::_TypeError._TypeError.fromMessage"
+        ],
+        "supers": [
+          "class/dart:_rti::_Error",
+          "class/dart:core::TypeError"
         ]
       },
       "dart:_rti::_Universe": {
@@ -2949,7 +3155,8 @@
           "function/dart:_rti::_Universe.sharedEmptyArray",
           "function/dart:_rti::_Universe.typeParameterVariances",
           "function/dart:_rti::_Universe.typeRules"
-        ]
+        ],
+        "supers": []
       },
       "dart:_rti::_Utils": {
         "id": "class/dart:_rti::_Utils",
@@ -2987,7 +3194,8 @@
           "function/dart:_rti::_Utils.objectKeys",
           "function/dart:_rti::_Utils.stringLessThan",
           "function/dart:_rti::_Utils.substring"
-        ]
+        ],
+        "supers": []
       },
       "dart:async::AsyncError": {
         "id": "class/dart:async::AsyncError",
@@ -3002,6 +3210,9 @@
         "children": [
           "field/dart:async::AsyncError.error",
           "field/dart:async::AsyncError.stackTrace"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:async::StreamSubscription": {
@@ -3014,7 +3225,8 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": []
       },
       "dart:async::StreamTransformerBase": {
         "id": "class/dart:async::StreamTransformerBase",
@@ -3026,7 +3238,8 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": []
       },
       "dart:async::Timer": {
         "id": "class/dart:async::Timer",
@@ -3041,7 +3254,8 @@
         "children": [
           "function/dart:async::Timer.Timer",
           "function/dart:async::Timer._createTimer"
-        ]
+        ],
+        "supers": []
       },
       "dart:async::Zone": {
         "id": "class/dart:async::Zone",
@@ -3058,7 +3272,8 @@
           "function/dart:async::Zone._enter",
           "function/dart:async::Zone._leave",
           "function/dart:async::Zone.current"
-        ]
+        ],
+        "supers": []
       },
       "dart:async::_AsyncCallbackEntry": {
         "id": "class/dart:async::_AsyncCallbackEntry",
@@ -3074,7 +3289,8 @@
           "field/dart:async::_AsyncCallbackEntry.callback",
           "field/dart:async::_AsyncCallbackEntry.next",
           "function/dart:async::_AsyncCallbackEntry._AsyncCallbackEntry"
-        ]
+        ],
+        "supers": []
       },
       "dart:async::_AsyncRun": {
         "id": "class/dart:async::_AsyncRun",
@@ -3093,7 +3309,8 @@
           "function/dart:async::_AsyncRun._scheduleImmediateJsOverride",
           "function/dart:async::_AsyncRun._scheduleImmediateWithSetImmediate",
           "function/dart:async::_AsyncRun._scheduleImmediateWithTimer"
-        ]
+        ],
+        "supers": []
       },
       "dart:async::_Future": {
         "id": "class/dart:async::_Future",
@@ -3109,7 +3326,8 @@
           "field/dart:async::_Future._resultOrListeners",
           "field/dart:async::_Future._state",
           "field/dart:async::_Future._zone"
-        ]
+        ],
+        "supers": []
       },
       "dart:async::_FutureListener": {
         "id": "class/dart:async::_FutureListener",
@@ -3127,7 +3345,8 @@
           "field/dart:async::_FutureListener.errorCallback",
           "field/dart:async::_FutureListener.result",
           "field/dart:async::_FutureListener.state"
-        ]
+        ],
+        "supers": []
       },
       "dart:async::_IterationMarker": {
         "id": "class/dart:async::_IterationMarker",
@@ -3147,7 +3366,8 @@
           "function/dart:async::_IterationMarker.toString",
           "function/dart:async::_IterationMarker.uncaughtError",
           "function/dart:async::_IterationMarker.yieldStar"
-        ]
+        ],
+        "supers": []
       },
       "dart:async::_RootZone": {
         "id": "class/dart:async::_RootZone",
@@ -3166,6 +3386,9 @@
           "function/dart:async::_RootZone.handleUncaughtError",
           "function/dart:async::_RootZone.runGuarded",
           "function/dart:async::_RootZone.runUnaryGuarded"
+        ],
+        "supers": [
+          "class/dart:async::_Zone"
         ]
       },
       "dart:async::_SyncStarIterable": {
@@ -3182,6 +3405,9 @@
           "field/dart:async::_SyncStarIterable._outerHelper",
           "function/dart:async::_SyncStarIterable._SyncStarIterable",
           "function/dart:async::_SyncStarIterable.iterator"
+        ],
+        "supers": [
+          "class/dart:collection::IterableBase"
         ]
       },
       "dart:async::_SyncStarIterator": {
@@ -3203,6 +3429,9 @@
           "function/dart:async::_SyncStarIterator._runBody",
           "function/dart:async::_SyncStarIterator.current",
           "function/dart:async::_SyncStarIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:async::_TimerImpl": {
@@ -3221,6 +3450,9 @@
           "field/dart:async::_TimerImpl._tick",
           "function/dart:async::_TimerImpl._TimerImpl",
           "function/dart:async::_TimerImpl.cancel"
+        ],
+        "supers": [
+          "class/dart:async::Timer"
         ]
       },
       "dart:async::_Zone": {
@@ -3233,7 +3465,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:async::Zone"
+        ]
       },
       "dart:async::_ZoneFunction": {
         "id": "class/dart:async::_ZoneFunction",
@@ -3248,7 +3483,8 @@
         "children": [
           "field/dart:async::_ZoneFunction.function",
           "field/dart:async::_ZoneFunction.zone"
-        ]
+        ],
+        "supers": []
       },
       "dart:collection::IterableBase": {
         "id": "class/dart:collection::IterableBase",
@@ -3263,6 +3499,9 @@
         "children": [
           "function/dart:collection::IterableBase.iterableToFullString",
           "function/dart:collection::IterableBase.iterableToShortString"
+        ],
+        "supers": [
+          "class/dart:core::Iterable"
         ]
       },
       "dart:collection::LinkedHashMap": {
@@ -3278,7 +3517,8 @@
         "children": [
           "function/dart:collection::LinkedHashMap.LinkedHashMap._empty",
           "function/dart:collection::LinkedHashMap.LinkedHashMap._literal"
-        ]
+        ],
+        "supers": []
       },
       "dart:collection::LinkedHashSet": {
         "id": "class/dart:collection::LinkedHashSet",
@@ -3294,7 +3534,8 @@
           "function/dart:collection::LinkedHashSet.LinkedHashSet",
           "function/dart:collection::LinkedHashSet.LinkedHashSet._empty",
           "function/dart:collection::LinkedHashSet.LinkedHashSet.from"
-        ]
+        ],
+        "supers": []
       },
       "dart:collection::ListBase": {
         "id": "class/dart:collection::ListBase",
@@ -3308,7 +3549,8 @@
         },
         "children": [
           "function/dart:collection::ListBase.listToString"
-        ]
+        ],
+        "supers": []
       },
       "dart:collection::ListMixin": {
         "id": "class/dart:collection::ListMixin",
@@ -3340,6 +3582,9 @@
           "function/dart:collection::ListMixin.skip",
           "function/dart:collection::ListMixin.toList",
           "function/dart:collection::ListMixin.toString"
+        ],
+        "supers": [
+          "class/dart:core::List"
         ]
       },
       "dart:collection::MapBase": {
@@ -3354,6 +3599,9 @@
         },
         "children": [
           "function/dart:collection::MapBase.mapToString"
+        ],
+        "supers": [
+          "class/dart:collection::MapMixin"
         ]
       },
       "dart:collection::MapMixin": {
@@ -3371,7 +3619,8 @@
           "function/dart:collection::MapMixin.forEach",
           "function/dart:collection::MapMixin.length",
           "function/dart:collection::MapMixin.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:collection::SetMixin": {
         "id": "class/dart:collection::SetMixin",
@@ -3386,7 +3635,8 @@
         "children": [
           "function/dart:collection::SetMixin.addAll",
           "function/dart:collection::SetMixin.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:collection::_LinkedCustomHashMap": {
         "id": "class/dart:collection::_LinkedCustomHashMap",
@@ -3402,6 +3652,9 @@
           "field/dart:collection::_LinkedCustomHashMap._equals",
           "field/dart:collection::_LinkedCustomHashMap._hashCode",
           "field/dart:collection::_LinkedCustomHashMap._validKey"
+        ],
+        "supers": [
+          "class/dart:_js_helper::JsLinkedHashMap"
         ]
       },
       "dart:collection::_LinkedCustomHashSet": {
@@ -3418,6 +3671,9 @@
           "field/dart:collection::_LinkedCustomHashSet._equality",
           "field/dart:collection::_LinkedCustomHashSet._hasher",
           "field/dart:collection::_LinkedCustomHashSet._validKey"
+        ],
+        "supers": [
+          "class/dart:collection::_LinkedHashSet"
         ]
       },
       "dart:collection::_LinkedHashSet": {
@@ -3457,6 +3713,10 @@
           "function/dart:collection::_LinkedHashSet.contains",
           "function/dart:collection::_LinkedHashSet.iterator",
           "function/dart:collection::_LinkedHashSet.length"
+        ],
+        "supers": [
+          "class/dart:collection::LinkedHashSet",
+          "class/dart:collection::_SetBase"
         ]
       },
       "dart:collection::_LinkedHashSetCell": {
@@ -3474,7 +3734,8 @@
           "field/dart:collection::_LinkedHashSetCell._next",
           "field/dart:collection::_LinkedHashSetCell._previous",
           "function/dart:collection::_LinkedHashSetCell._LinkedHashSetCell"
-        ]
+        ],
+        "supers": []
       },
       "dart:collection::_LinkedHashSetIterator": {
         "id": "class/dart:collection::_LinkedHashSetIterator",
@@ -3494,6 +3755,9 @@
           "function/dart:collection::_LinkedHashSetIterator._LinkedHashSetIterator",
           "function/dart:collection::_LinkedHashSetIterator.current",
           "function/dart:collection::_LinkedHashSetIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:collection::_LinkedIdentityHashSet": {
@@ -3508,6 +3772,9 @@
         },
         "children": [
           "function/dart:collection::_LinkedIdentityHashSet._LinkedIdentityHashSet"
+        ],
+        "supers": [
+          "class/dart:collection::_LinkedHashSet"
         ]
       },
       "dart:collection::_SetBase": {
@@ -3520,7 +3787,8 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": []
       },
       "dart:convert::Codec": {
         "id": "class/dart:convert::Codec",
@@ -3534,7 +3802,8 @@
         },
         "children": [
           "function/dart:convert::Codec.encode"
-        ]
+        ],
+        "supers": []
       },
       "dart:convert::Converter": {
         "id": "class/dart:convert::Converter",
@@ -3546,7 +3815,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:async::StreamTransformerBase"
+        ]
       },
       "dart:convert::Encoding": {
         "id": "class/dart:convert::Encoding",
@@ -3558,7 +3830,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:convert::Codec"
+        ]
       },
       "dart:convert::HtmlEscape": {
         "id": "class/dart:convert::HtmlEscape",
@@ -3574,6 +3849,9 @@
           "field/dart:convert::HtmlEscape.mode",
           "function/dart:convert::HtmlEscape._convert",
           "function/dart:convert::HtmlEscape.convert"
+        ],
+        "supers": [
+          "class/dart:convert::Converter"
         ]
       },
       "dart:convert::HtmlEscapeMode": {
@@ -3593,7 +3871,8 @@
           "field/dart:convert::HtmlEscapeMode.escapeQuot",
           "field/dart:convert::HtmlEscapeMode.escapeSlash",
           "function/dart:convert::HtmlEscapeMode.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:convert::LineSplitter": {
         "id": "class/dart:convert::LineSplitter",
@@ -3607,6 +3886,9 @@
         },
         "children": [
           "function/dart:convert::LineSplitter.split"
+        ],
+        "supers": [
+          "class/dart:async::StreamTransformerBase"
         ]
       },
       "dart:convert::Utf8Codec": {
@@ -3622,6 +3904,9 @@
         "children": [
           "field/dart:convert::Utf8Codec._allowMalformed",
           "function/dart:convert::Utf8Codec.encoder"
+        ],
+        "supers": [
+          "class/dart:convert::Encoding"
         ]
       },
       "dart:convert::Utf8Encoder": {
@@ -3636,6 +3921,9 @@
         },
         "children": [
           "function/dart:convert::Utf8Encoder.convert"
+        ],
+        "supers": [
+          "class/dart:convert::Converter"
         ]
       },
       "dart:convert::_Utf8Encoder": {
@@ -3657,7 +3945,8 @@
           "function/dart:convert::_Utf8Encoder._fillBuffer",
           "function/dart:convert::_Utf8Encoder._writeReplacementCharacter",
           "function/dart:convert::_Utf8Encoder._writeSurrogate"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::ArgumentError": {
         "id": "class/dart:core::ArgumentError",
@@ -3679,6 +3968,9 @@
           "function/dart:core::ArgumentError._errorExplanation",
           "function/dart:core::ArgumentError._errorName",
           "function/dart:core::ArgumentError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::AssertionError": {
@@ -3695,6 +3987,9 @@
           "field/dart:core::AssertionError.message",
           "function/dart:core::AssertionError.AssertionError",
           "function/dart:core::AssertionError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::ConcurrentModificationError": {
@@ -3711,6 +4006,9 @@
           "field/dart:core::ConcurrentModificationError.modifiedObject",
           "function/dart:core::ConcurrentModificationError.ConcurrentModificationError",
           "function/dart:core::ConcurrentModificationError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::CyclicInitializationError": {
@@ -3727,6 +4025,9 @@
           "field/dart:core::CyclicInitializationError.variableName",
           "function/dart:core::CyclicInitializationError.CyclicInitializationError",
           "function/dart:core::CyclicInitializationError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::Duration": {
@@ -3746,7 +4047,8 @@
           "function/dart:core::Duration.inMicroseconds",
           "function/dart:core::Duration.inMilliseconds",
           "function/dart:core::Duration.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::Error": {
         "id": "class/dart:core::Error",
@@ -3764,7 +4066,8 @@
           "function/dart:core::Error._throw",
           "function/dart:core::Error.safeToString",
           "function/dart:core::Error.throwWithStackTrace"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::Exception": {
         "id": "class/dart:core::Exception",
@@ -3778,7 +4081,8 @@
         },
         "children": [
           "function/dart:core::Exception.Exception"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::FormatException": {
         "id": "class/dart:core::FormatException",
@@ -3796,6 +4100,9 @@
           "field/dart:core::FormatException.source",
           "function/dart:core::FormatException.FormatException",
           "function/dart:core::FormatException.toString"
+        ],
+        "supers": [
+          "class/dart:core::Exception"
         ]
       },
       "dart:core::IndexError": {
@@ -3814,6 +4121,10 @@
           "function/dart:core::IndexError.IndexError",
           "function/dart:core::IndexError._errorExplanation",
           "function/dart:core::IndexError._errorName"
+        ],
+        "supers": [
+          "class/dart:core::ArgumentError",
+          "class/dart:core::RangeError"
         ]
       },
       "dart:core::Iterable": {
@@ -3834,7 +4145,8 @@
           "function/dart:core::Iterable.map",
           "function/dart:core::Iterable.toString",
           "function/dart:core::Iterable.where"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::Iterator": {
         "id": "class/dart:core::Iterator",
@@ -3846,7 +4158,8 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": []
       },
       "dart:core::List": {
         "id": "class/dart:core::List",
@@ -3867,6 +4180,9 @@
           "function/dart:core::List.List.from",
           "function/dart:core::List.List.of",
           "function/dart:core::List.List.unmodifiable"
+        ],
+        "supers": [
+          "class/dart:_internal::EfficientLengthIterable"
         ]
       },
       "dart:core::MapEntry": {
@@ -3884,7 +4200,8 @@
           "field/dart:core::MapEntry.value",
           "function/dart:core::MapEntry.MapEntry._",
           "function/dart:core::MapEntry.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::Null": {
         "id": "class/dart:core::Null",
@@ -3899,7 +4216,8 @@
         "children": [
           "function/dart:core::Null.hashCode",
           "function/dart:core::Null.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::NullThrownError": {
         "id": "class/dart:core::NullThrownError",
@@ -3914,6 +4232,9 @@
         "children": [
           "function/dart:core::NullThrownError.NullThrownError",
           "function/dart:core::NullThrownError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::Object": {
@@ -3930,7 +4251,8 @@
           "function/dart:core::Object.==",
           "function/dart:core::Object.hashCode",
           "function/dart:core::Object.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::OutOfMemoryError": {
         "id": "class/dart:core::OutOfMemoryError",
@@ -3944,6 +4266,9 @@
         },
         "children": [
           "function/dart:core::OutOfMemoryError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::RangeError": {
@@ -3966,6 +4291,9 @@
           "function/dart:core::RangeError.checkNotNegative",
           "function/dart:core::RangeError.checkValidRange",
           "function/dart:core::RangeError.checkValueInInterval"
+        ],
+        "supers": [
+          "class/dart:core::ArgumentError"
         ]
       },
       "dart:core::RegExp": {
@@ -3980,7 +4308,8 @@
         },
         "children": [
           "function/dart:core::RegExp.RegExp"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::StackOverflowError": {
         "id": "class/dart:core::StackOverflowError",
@@ -3995,6 +4324,9 @@
         "children": [
           "function/dart:core::StackOverflowError.StackOverflowError",
           "function/dart:core::StackOverflowError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::StateError": {
@@ -4011,6 +4343,9 @@
           "field/dart:core::StateError.message",
           "function/dart:core::StateError.StateError",
           "function/dart:core::StateError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::String": {
@@ -4025,7 +4360,8 @@
         },
         "children": [
           "function/dart:core::String.String.fromCharCode"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::StringBuffer": {
         "id": "class/dart:core::StringBuffer",
@@ -4052,7 +4388,8 @@
           "function/dart:core::StringBuffer.writeAll",
           "function/dart:core::StringBuffer.writeCharCode",
           "function/dart:core::StringBuffer.writeln"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::TypeError": {
         "id": "class/dart:core::TypeError",
@@ -4064,7 +4401,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:core::Error"
+        ]
       },
       "dart:core::UnimplementedError": {
         "id": "class/dart:core::UnimplementedError",
@@ -4080,6 +4420,10 @@
           "field/dart:core::UnimplementedError.message",
           "function/dart:core::UnimplementedError.UnimplementedError",
           "function/dart:core::UnimplementedError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error",
+          "class/dart:core::UnsupportedError"
         ]
       },
       "dart:core::UnsupportedError": {
@@ -4096,6 +4440,9 @@
           "field/dart:core::UnsupportedError.message",
           "function/dart:core::UnsupportedError.UnsupportedError",
           "function/dart:core::UnsupportedError.toString"
+        ],
+        "supers": [
+          "class/dart:core::Error"
         ]
       },
       "dart:core::Uri": {
@@ -4110,7 +4457,8 @@
         },
         "children": [
           "function/dart:core::Uri.encodeFull"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::_Enum": {
         "id": "class/dart:core::_Enum",
@@ -4125,7 +4473,8 @@
         "children": [
           "field/dart:core::_Enum._name",
           "field/dart:core::_Enum.index"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::_Exception": {
         "id": "class/dart:core::_Exception",
@@ -4141,6 +4490,9 @@
           "field/dart:core::_Exception.message",
           "function/dart:core::_Exception._Exception",
           "function/dart:core::_Exception.toString"
+        ],
+        "supers": [
+          "class/dart:core::Exception"
         ]
       },
       "dart:core::_StringStackTrace": {
@@ -4155,7 +4507,8 @@
         },
         "children": [
           "field/dart:core::_StringStackTrace._stackTrace"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::_Uri": {
         "id": "class/dart:core::_Uri",
@@ -4170,6 +4523,9 @@
         "children": [
           "field/dart:core::_Uri._needsNoEncoding",
           "function/dart:core::_Uri._uriEncode"
+        ],
+        "supers": [
+          "class/dart:core::Uri"
         ]
       },
       "dart:core::bool": {
@@ -4185,7 +4541,8 @@
         "children": [
           "function/dart:core::bool.hashCode",
           "function/dart:core::bool.toString"
-        ]
+        ],
+        "supers": []
       },
       "dart:core::int": {
         "id": "class/dart:core::int",
@@ -4200,7 +4557,8 @@
         "children": [
           "function/dart:core::int.parse",
           "function/dart:core::int.tryParse"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::AbortPaymentEvent": {
         "id": "class/dart:html::AbortPaymentEvent",
@@ -4212,7 +4570,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::AnchorElement": {
         "id": "class/dart:html::AnchorElement",
@@ -4227,6 +4588,9 @@
         "children": [
           "function/dart:html::AnchorElement.AnchorElement",
           "function/dart:html::AnchorElement.toString"
+        ],
+        "supers": [
+          "class/dart:html::HtmlElement"
         ]
       },
       "dart:html::AnimationEvent": {
@@ -4239,7 +4603,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::AnimationPlaybackEvent": {
         "id": "class/dart:html::AnimationPlaybackEvent",
@@ -4251,7 +4618,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::ApplicationCacheErrorEvent": {
         "id": "class/dart:html::ApplicationCacheErrorEvent",
@@ -4263,7 +4633,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::AreaElement": {
         "id": "class/dart:html::AreaElement",
@@ -4277,6 +4650,9 @@
         },
         "children": [
           "function/dart:html::AreaElement.toString"
+        ],
+        "supers": [
+          "class/dart:html::HtmlElement"
         ]
       },
       "dart:html::AudioElement": {
@@ -4289,7 +4665,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::MediaElement"
+        ]
       },
       "dart:html::BRElement": {
         "id": "class/dart:html::BRElement",
@@ -4301,7 +4680,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::BackgroundFetchClickEvent": {
         "id": "class/dart:html::BackgroundFetchClickEvent",
@@ -4313,7 +4695,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::BackgroundFetchEvent"
+        ]
       },
       "dart:html::BackgroundFetchEvent": {
         "id": "class/dart:html::BackgroundFetchEvent",
@@ -4325,7 +4710,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::BackgroundFetchFailEvent": {
         "id": "class/dart:html::BackgroundFetchFailEvent",
@@ -4337,7 +4725,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::BackgroundFetchEvent"
+        ]
       },
       "dart:html::BackgroundFetchedEvent": {
         "id": "class/dart:html::BackgroundFetchedEvent",
@@ -4349,7 +4740,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::BackgroundFetchEvent"
+        ]
       },
       "dart:html::BaseElement": {
         "id": "class/dart:html::BaseElement",
@@ -4361,7 +4755,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::BeforeInstallPromptEvent": {
         "id": "class/dart:html::BeforeInstallPromptEvent",
@@ -4373,7 +4770,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::BeforeUnloadEvent": {
         "id": "class/dart:html::BeforeUnloadEvent",
@@ -4385,7 +4785,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::BlobEvent": {
         "id": "class/dart:html::BlobEvent",
@@ -4397,7 +4800,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::BodyElement": {
         "id": "class/dart:html::BodyElement",
@@ -4409,7 +4815,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::ButtonElement": {
         "id": "class/dart:html::ButtonElement",
@@ -4421,7 +4830,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::CDataSection": {
         "id": "class/dart:html::CDataSection",
@@ -4433,7 +4845,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Text"
+        ]
       },
       "dart:html::CanMakePaymentEvent": {
         "id": "class/dart:html::CanMakePaymentEvent",
@@ -4445,7 +4860,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::CanvasElement": {
         "id": "class/dart:html::CanvasElement",
@@ -4457,7 +4875,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::CharacterData": {
         "id": "class/dart:html::CharacterData",
@@ -4471,6 +4892,9 @@
         },
         "children": [
           "function/dart:html::CharacterData.length"
+        ],
+        "supers": [
+          "class/dart:html::Node"
         ]
       },
       "dart:html::ClipboardEvent": {
@@ -4483,7 +4907,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::CloseEvent": {
         "id": "class/dart:html::CloseEvent",
@@ -4495,7 +4922,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::Comment": {
         "id": "class/dart:html::Comment",
@@ -4507,7 +4937,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::CharacterData"
+        ]
       },
       "dart:html::CompositionEvent": {
         "id": "class/dart:html::CompositionEvent",
@@ -4519,7 +4952,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::UIEvent"
+        ]
       },
       "dart:html::Console": {
         "id": "class/dart:html::Console",
@@ -4535,7 +4971,8 @@
           "function/dart:html::Console._isConsoleDefined",
           "function/dart:html::Console.error",
           "function/dart:html::Console.warn"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::ContentElement": {
         "id": "class/dart:html::ContentElement",
@@ -4547,7 +4984,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::CustomEvent": {
         "id": "class/dart:html::CustomEvent",
@@ -4559,7 +4999,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::DListElement": {
         "id": "class/dart:html::DListElement",
@@ -4571,7 +5014,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::DataElement": {
         "id": "class/dart:html::DataElement",
@@ -4583,7 +5029,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::DataListElement": {
         "id": "class/dart:html::DataListElement",
@@ -4595,7 +5044,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::DetailsElement": {
         "id": "class/dart:html::DetailsElement",
@@ -4607,7 +5059,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::DeviceMotionEvent": {
         "id": "class/dart:html::DeviceMotionEvent",
@@ -4619,7 +5074,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::DeviceOrientationEvent": {
         "id": "class/dart:html::DeviceOrientationEvent",
@@ -4631,7 +5089,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::DialogElement": {
         "id": "class/dart:html::DialogElement",
@@ -4643,7 +5104,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::DivElement": {
         "id": "class/dart:html::DivElement",
@@ -4655,7 +5119,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::Document": {
         "id": "class/dart:html::Document",
@@ -4670,6 +5137,9 @@
         "children": [
           "function/dart:html::Document._createElement_2",
           "function/dart:html::Document.createElement"
+        ],
+        "supers": [
+          "class/dart:html::Node"
         ]
       },
       "dart:html::DocumentFragment": {
@@ -4682,7 +5152,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Node"
+        ]
       },
       "dart:html::DomError": {
         "id": "class/dart:html::DomError",
@@ -4694,7 +5167,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
+        ]
       },
       "dart:html::DomException": {
         "id": "class/dart:html::DomException",
@@ -4708,6 +5184,9 @@
         },
         "children": [
           "function/dart:html::DomException.toString"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
         ]
       },
       "dart:html::DomImplementation": {
@@ -4720,7 +5199,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
+        ]
       },
       "dart:html::Element": {
         "id": "class/dart:html::Element",
@@ -4753,6 +5235,9 @@
           "function/dart:html::Element.setInnerHtml",
           "function/dart:html::Element.tagName",
           "function/dart:html::Element.toString"
+        ],
+        "supers": [
+          "class/dart:html::Node"
         ]
       },
       "dart:html::EmbedElement": {
@@ -4765,7 +5250,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::ErrorEvent": {
         "id": "class/dart:html::ErrorEvent",
@@ -4777,7 +5265,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::Event": {
         "id": "class/dart:html::Event",
@@ -4791,6 +5282,9 @@
         },
         "children": [
           "function/dart:html::Event.currentTarget"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
         ]
       },
       "dart:html::EventStreamProvider": {
@@ -4806,7 +5300,8 @@
         "children": [
           "field/dart:html::EventStreamProvider._eventType",
           "function/dart:html::EventStreamProvider.forElement"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::EventTarget": {
         "id": "class/dart:html::EventTarget",
@@ -4821,6 +5316,9 @@
         "children": [
           "function/dart:html::EventTarget._addEventListener",
           "function/dart:html::EventTarget.addEventListener"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
         ]
       },
       "dart:html::ExtendableEvent": {
@@ -4833,7 +5331,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::ExtendableMessageEvent": {
         "id": "class/dart:html::ExtendableMessageEvent",
@@ -4845,7 +5346,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::FetchEvent": {
         "id": "class/dart:html::FetchEvent",
@@ -4857,7 +5361,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::FieldSetElement": {
         "id": "class/dart:html::FieldSetElement",
@@ -4869,7 +5376,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::FixedSizeListIterator": {
         "id": "class/dart:html::FixedSizeListIterator",
@@ -4889,6 +5399,9 @@
           "function/dart:html::FixedSizeListIterator.FixedSizeListIterator",
           "function/dart:html::FixedSizeListIterator.current",
           "function/dart:html::FixedSizeListIterator.moveNext"
+        ],
+        "supers": [
+          "class/dart:core::Iterator"
         ]
       },
       "dart:html::FocusEvent": {
@@ -4901,7 +5414,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::UIEvent"
+        ]
       },
       "dart:html::FontFaceSetLoadEvent": {
         "id": "class/dart:html::FontFaceSetLoadEvent",
@@ -4913,7 +5429,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::ForeignFetchEvent": {
         "id": "class/dart:html::ForeignFetchEvent",
@@ -4925,7 +5444,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::FormElement": {
         "id": "class/dart:html::FormElement",
@@ -4939,6 +5461,9 @@
         },
         "children": [
           "function/dart:html::FormElement.length"
+        ],
+        "supers": [
+          "class/dart:html::HtmlElement"
         ]
       },
       "dart:html::GamepadEvent": {
@@ -4951,7 +5476,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::HRElement": {
         "id": "class/dart:html::HRElement",
@@ -4963,7 +5491,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::HashChangeEvent": {
         "id": "class/dart:html::HashChangeEvent",
@@ -4975,7 +5506,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::HeadElement": {
         "id": "class/dart:html::HeadElement",
@@ -4987,7 +5521,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::HeadingElement": {
         "id": "class/dart:html::HeadingElement",
@@ -4999,7 +5536,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::HtmlDocument": {
         "id": "class/dart:html::HtmlDocument",
@@ -5013,6 +5553,9 @@
         },
         "children": [
           "function/dart:html::HtmlDocument.head"
+        ],
+        "supers": [
+          "class/dart:html::Document"
         ]
       },
       "dart:html::HtmlElement": {
@@ -5025,7 +5568,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Element"
+        ]
       },
       "dart:html::HtmlHtmlElement": {
         "id": "class/dart:html::HtmlHtmlElement",
@@ -5037,7 +5583,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::IFrameElement": {
         "id": "class/dart:html::IFrameElement",
@@ -5049,7 +5598,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::ImageElement": {
         "id": "class/dart:html::ImageElement",
@@ -5061,7 +5613,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::ImmutableListMixin": {
         "id": "class/dart:html::ImmutableListMixin",
@@ -5083,6 +5638,9 @@
           "function/dart:html::ImmutableListMixin.removeRange",
           "function/dart:html::ImmutableListMixin.setAll",
           "function/dart:html::ImmutableListMixin.setRange"
+        ],
+        "supers": [
+          "class/dart:core::List"
         ]
       },
       "dart:html::InputElement": {
@@ -5095,7 +5653,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::InstallEvent": {
         "id": "class/dart:html::InstallEvent",
@@ -5107,7 +5668,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::KeyboardEvent": {
         "id": "class/dart:html::KeyboardEvent",
@@ -5119,7 +5683,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::UIEvent"
+        ]
       },
       "dart:html::LIElement": {
         "id": "class/dart:html::LIElement",
@@ -5131,7 +5698,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::LabelElement": {
         "id": "class/dart:html::LabelElement",
@@ -5143,7 +5713,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::LegendElement": {
         "id": "class/dart:html::LegendElement",
@@ -5155,7 +5728,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::LinkElement": {
         "id": "class/dart:html::LinkElement",
@@ -5167,7 +5743,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::Location": {
         "id": "class/dart:html::Location",
@@ -5181,6 +5760,9 @@
         },
         "children": [
           "function/dart:html::Location.toString"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
         ]
       },
       "dart:html::MapElement": {
@@ -5193,7 +5775,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::MathMLElement": {
         "id": "class/dart:html::MathMLElement",
@@ -5205,7 +5790,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Element"
+        ]
       },
       "dart:html::MediaElement": {
         "id": "class/dart:html::MediaElement",
@@ -5217,7 +5805,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::MediaEncryptedEvent": {
         "id": "class/dart:html::MediaEncryptedEvent",
@@ -5229,7 +5820,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::MediaError": {
         "id": "class/dart:html::MediaError",
@@ -5241,7 +5835,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
+        ]
       },
       "dart:html::MediaKeyMessageEvent": {
         "id": "class/dart:html::MediaKeyMessageEvent",
@@ -5253,7 +5850,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::MediaQueryListEvent": {
         "id": "class/dart:html::MediaQueryListEvent",
@@ -5265,7 +5865,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::MediaStreamEvent": {
         "id": "class/dart:html::MediaStreamEvent",
@@ -5277,7 +5880,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::MediaStreamTrackEvent": {
         "id": "class/dart:html::MediaStreamTrackEvent",
@@ -5289,7 +5895,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::MenuElement": {
         "id": "class/dart:html::MenuElement",
@@ -5301,7 +5910,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::MessageEvent": {
         "id": "class/dart:html::MessageEvent",
@@ -5313,7 +5925,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::MetaElement": {
         "id": "class/dart:html::MetaElement",
@@ -5325,7 +5940,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::MeterElement": {
         "id": "class/dart:html::MeterElement",
@@ -5337,7 +5955,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::MidiConnectionEvent": {
         "id": "class/dart:html::MidiConnectionEvent",
@@ -5349,7 +5970,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::MidiMessageEvent": {
         "id": "class/dart:html::MidiMessageEvent",
@@ -5361,7 +5985,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::ModElement": {
         "id": "class/dart:html::ModElement",
@@ -5373,7 +6000,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::MouseEvent": {
         "id": "class/dart:html::MouseEvent",
@@ -5385,7 +6015,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::UIEvent"
+        ]
       },
       "dart:html::MutationEvent": {
         "id": "class/dart:html::MutationEvent",
@@ -5397,7 +6030,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::NavigatorUserMediaError": {
         "id": "class/dart:html::NavigatorUserMediaError",
@@ -5409,7 +6045,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
+        ]
       },
       "dart:html::Node": {
         "id": "class/dart:html::Node",
@@ -5424,6 +6063,9 @@
         "children": [
           "function/dart:html::Node.remove",
           "function/dart:html::Node.toString"
+        ],
+        "supers": [
+          "class/dart:html::EventTarget"
         ]
       },
       "dart:html::NodeList": {
@@ -5443,6 +6085,10 @@
           "function/dart:html::NodeList.first",
           "function/dart:html::NodeList.length",
           "function/dart:html::NodeList.length%0"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject",
+          "class/dart:core::List"
         ]
       },
       "dart:html::NodeValidatorBuilder": {
@@ -5463,7 +6109,8 @@
           "function/dart:html::NodeValidatorBuilder.allowTemplating",
           "function/dart:html::NodeValidatorBuilder.allowsAttribute",
           "function/dart:html::NodeValidatorBuilder.allowsElement"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::NotificationEvent": {
         "id": "class/dart:html::NotificationEvent",
@@ -5475,7 +6122,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::OListElement": {
         "id": "class/dart:html::OListElement",
@@ -5487,7 +6137,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::ObjectElement": {
         "id": "class/dart:html::ObjectElement",
@@ -5499,7 +6152,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::OptGroupElement": {
         "id": "class/dart:html::OptGroupElement",
@@ -5511,7 +6167,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::OptionElement": {
         "id": "class/dart:html::OptionElement",
@@ -5523,7 +6182,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::OutputElement": {
         "id": "class/dart:html::OutputElement",
@@ -5535,7 +6197,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::OverconstrainedError": {
         "id": "class/dart:html::OverconstrainedError",
@@ -5547,7 +6212,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
+        ]
       },
       "dart:html::PageTransitionEvent": {
         "id": "class/dart:html::PageTransitionEvent",
@@ -5559,7 +6227,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::ParagraphElement": {
         "id": "class/dart:html::ParagraphElement",
@@ -5571,7 +6242,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::ParamElement": {
         "id": "class/dart:html::ParamElement",
@@ -5583,7 +6257,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::PaymentRequestEvent": {
         "id": "class/dart:html::PaymentRequestEvent",
@@ -5595,7 +6272,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::PaymentRequestUpdateEvent": {
         "id": "class/dart:html::PaymentRequestUpdateEvent",
@@ -5607,7 +6287,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::PictureElement": {
         "id": "class/dart:html::PictureElement",
@@ -5619,7 +6302,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::PointerEvent": {
         "id": "class/dart:html::PointerEvent",
@@ -5631,7 +6317,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::MouseEvent"
+        ]
       },
       "dart:html::PopStateEvent": {
         "id": "class/dart:html::PopStateEvent",
@@ -5643,7 +6332,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::PositionError": {
         "id": "class/dart:html::PositionError",
@@ -5655,7 +6347,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
+        ]
       },
       "dart:html::PreElement": {
         "id": "class/dart:html::PreElement",
@@ -5667,7 +6362,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::PresentationConnectionAvailableEvent": {
         "id": "class/dart:html::PresentationConnectionAvailableEvent",
@@ -5679,7 +6377,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::PresentationConnectionCloseEvent": {
         "id": "class/dart:html::PresentationConnectionCloseEvent",
@@ -5691,7 +6392,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::ProcessingInstruction": {
         "id": "class/dart:html::ProcessingInstruction",
@@ -5703,7 +6407,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::CharacterData"
+        ]
       },
       "dart:html::ProgressElement": {
         "id": "class/dart:html::ProgressElement",
@@ -5715,7 +6422,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::ProgressEvent": {
         "id": "class/dart:html::ProgressEvent",
@@ -5727,7 +6437,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::PromiseRejectionEvent": {
         "id": "class/dart:html::PromiseRejectionEvent",
@@ -5739,7 +6452,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::PushEvent": {
         "id": "class/dart:html::PushEvent",
@@ -5751,7 +6467,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::QuoteElement": {
         "id": "class/dart:html::QuoteElement",
@@ -5763,7 +6482,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::Range": {
         "id": "class/dart:html::Range",
@@ -5777,6 +6499,9 @@
         },
         "children": [
           "function/dart:html::Range.supportsCreateContextualFragment"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
         ]
       },
       "dart:html::RtcDataChannelEvent": {
@@ -5789,7 +6514,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::RtcDtmfToneChangeEvent": {
         "id": "class/dart:html::RtcDtmfToneChangeEvent",
@@ -5801,7 +6529,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::RtcPeerConnectionIceEvent": {
         "id": "class/dart:html::RtcPeerConnectionIceEvent",
@@ -5813,7 +6544,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::RtcTrackEvent": {
         "id": "class/dart:html::RtcTrackEvent",
@@ -5825,7 +6559,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::ScriptElement": {
         "id": "class/dart:html::ScriptElement",
@@ -5837,7 +6574,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::SecurityPolicyViolationEvent": {
         "id": "class/dart:html::SecurityPolicyViolationEvent",
@@ -5849,7 +6589,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::SelectElement": {
         "id": "class/dart:html::SelectElement",
@@ -5863,6 +6606,9 @@
         },
         "children": [
           "function/dart:html::SelectElement.length"
+        ],
+        "supers": [
+          "class/dart:html::HtmlElement"
         ]
       },
       "dart:html::SensorErrorEvent": {
@@ -5875,7 +6621,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::ShadowElement": {
         "id": "class/dart:html::ShadowElement",
@@ -5887,7 +6636,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::ShadowRoot": {
         "id": "class/dart:html::ShadowRoot",
@@ -5899,7 +6651,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::DocumentFragment"
+        ]
       },
       "dart:html::SlotElement": {
         "id": "class/dart:html::SlotElement",
@@ -5911,7 +6666,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::SourceElement": {
         "id": "class/dart:html::SourceElement",
@@ -5923,7 +6681,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::SpanElement": {
         "id": "class/dart:html::SpanElement",
@@ -5935,7 +6696,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::SpeechRecognitionError": {
         "id": "class/dart:html::SpeechRecognitionError",
@@ -5947,7 +6711,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::SpeechRecognitionEvent": {
         "id": "class/dart:html::SpeechRecognitionEvent",
@@ -5959,7 +6726,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::SpeechSynthesisEvent": {
         "id": "class/dart:html::SpeechSynthesisEvent",
@@ -5971,7 +6741,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::Storage": {
         "id": "class/dart:html::Storage",
@@ -5989,6 +6762,9 @@
           "function/dart:html::Storage.forEach",
           "function/dart:html::Storage.keys",
           "function/dart:html::Storage.length"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject"
         ]
       },
       "dart:html::StorageEvent": {
@@ -6001,7 +6777,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::StyleElement": {
         "id": "class/dart:html::StyleElement",
@@ -6013,7 +6792,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::SyncEvent": {
         "id": "class/dart:html::SyncEvent",
@@ -6025,7 +6807,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ExtendableEvent"
+        ]
       },
       "dart:html::TableCaptionElement": {
         "id": "class/dart:html::TableCaptionElement",
@@ -6037,7 +6822,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TableCellElement": {
         "id": "class/dart:html::TableCellElement",
@@ -6049,7 +6837,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TableColElement": {
         "id": "class/dart:html::TableColElement",
@@ -6061,7 +6852,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TableElement": {
         "id": "class/dart:html::TableElement",
@@ -6073,7 +6867,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TableRowElement": {
         "id": "class/dart:html::TableRowElement",
@@ -6085,7 +6882,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TableSectionElement": {
         "id": "class/dart:html::TableSectionElement",
@@ -6097,7 +6897,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TemplateElement": {
         "id": "class/dart:html::TemplateElement",
@@ -6109,7 +6912,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::Text": {
         "id": "class/dart:html::Text",
@@ -6121,7 +6927,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::CharacterData"
+        ]
       },
       "dart:html::TextAreaElement": {
         "id": "class/dart:html::TextAreaElement",
@@ -6133,7 +6942,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TextEvent": {
         "id": "class/dart:html::TextEvent",
@@ -6145,7 +6957,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::UIEvent"
+        ]
       },
       "dart:html::TimeElement": {
         "id": "class/dart:html::TimeElement",
@@ -6157,7 +6972,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TitleElement": {
         "id": "class/dart:html::TitleElement",
@@ -6169,7 +6987,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TouchEvent": {
         "id": "class/dart:html::TouchEvent",
@@ -6181,7 +7002,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::UIEvent"
+        ]
       },
       "dart:html::TrackElement": {
         "id": "class/dart:html::TrackElement",
@@ -6193,7 +7017,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::TrackEvent": {
         "id": "class/dart:html::TrackEvent",
@@ -6205,7 +7032,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::TransitionEvent": {
         "id": "class/dart:html::TransitionEvent",
@@ -6217,7 +7047,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::UIEvent": {
         "id": "class/dart:html::UIEvent",
@@ -6229,7 +7062,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::UListElement": {
         "id": "class/dart:html::UListElement",
@@ -6241,7 +7077,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::UnknownElement": {
         "id": "class/dart:html::UnknownElement",
@@ -6253,7 +7092,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::UriPolicy": {
         "id": "class/dart:html::UriPolicy",
@@ -6267,7 +7109,8 @@
         },
         "children": [
           "function/dart:html::UriPolicy.UriPolicy"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::VRDeviceEvent": {
         "id": "class/dart:html::VRDeviceEvent",
@@ -6279,7 +7122,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::VRDisplayEvent": {
         "id": "class/dart:html::VRDisplayEvent",
@@ -6291,7 +7137,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::VRSessionEvent": {
         "id": "class/dart:html::VRSessionEvent",
@@ -6303,7 +7152,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::VideoElement": {
         "id": "class/dart:html::VideoElement",
@@ -6315,7 +7167,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::MediaElement"
+        ]
       },
       "dart:html::WheelEvent": {
         "id": "class/dart:html::WheelEvent",
@@ -6327,7 +7182,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::MouseEvent"
+        ]
       },
       "dart:html::Window": {
         "id": "class/dart:html::Window",
@@ -6343,6 +7201,9 @@
           "function/dart:html::Window._location",
           "function/dart:html::Window.console",
           "function/dart:html::Window.location"
+        ],
+        "supers": [
+          "class/dart:html::EventTarget"
         ]
       },
       "dart:html::XmlDocument": {
@@ -6355,7 +7216,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Document"
+        ]
       },
       "dart:html::_Attr": {
         "id": "class/dart:html::_Attr",
@@ -6367,7 +7231,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Node"
+        ]
       },
       "dart:html::_AttributeMap": {
         "id": "class/dart:html::_AttributeMap",
@@ -6383,6 +7250,9 @@
           "field/dart:html::_AttributeMap._element",
           "function/dart:html::_AttributeMap.forEach",
           "function/dart:html::_AttributeMap.keys"
+        ],
+        "supers": [
+          "class/dart:collection::MapBase"
         ]
       },
       "dart:html::_ChildNodeListLazy": {
@@ -6397,6 +7267,9 @@
         },
         "children": [
           "field/dart:html::_ChildNodeListLazy._this"
+        ],
+        "supers": [
+          "class/dart:collection::ListBase"
         ]
       },
       "dart:html::_DOMWindowCrossFrame": {
@@ -6413,7 +7286,8 @@
           "field/dart:html::_DOMWindowCrossFrame._window",
           "function/dart:html::_DOMWindowCrossFrame._DOMWindowCrossFrame",
           "function/dart:html::_DOMWindowCrossFrame._createSafe"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::_DocumentType": {
         "id": "class/dart:html::_DocumentType",
@@ -6425,7 +7299,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Node"
+        ]
       },
       "dart:html::_ElementAttributeMap": {
         "id": "class/dart:html::_ElementAttributeMap",
@@ -6446,6 +7323,9 @@
           "function/dart:html::_ElementAttributeMap.containsKey",
           "function/dart:html::_ElementAttributeMap.length",
           "function/dart:html::_ElementAttributeMap.remove"
+        ],
+        "supers": [
+          "class/dart:html::_AttributeMap"
         ]
       },
       "dart:html::_ElementEventStreamImpl": {
@@ -6460,6 +7340,9 @@
         },
         "children": [
           "function/dart:html::_ElementEventStreamImpl._ElementEventStreamImpl"
+        ],
+        "supers": [
+          "class/dart:html::_EventStream"
         ]
       },
       "dart:html::_EventStream": {
@@ -6477,7 +7360,8 @@
           "field/dart:html::_EventStream._target",
           "field/dart:html::_EventStream._useCapture",
           "function/dart:html::_EventStream.listen"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::_EventStreamSubscription": {
         "id": "class/dart:html::_EventStreamSubscription",
@@ -6498,6 +7382,9 @@
           "function/dart:html::_EventStreamSubscription._EventStreamSubscription",
           "function/dart:html::_EventStreamSubscription._tryResume",
           "function/dart:html::_EventStreamSubscription.isPaused"
+        ],
+        "supers": [
+          "class/dart:async::StreamSubscription"
         ]
       },
       "dart:html::_FrozenElementList": {
@@ -6518,6 +7405,9 @@
           "function/dart:html::_FrozenElementList.first",
           "function/dart:html::_FrozenElementList.length",
           "function/dart:html::_FrozenElementList.length%0"
+        ],
+        "supers": [
+          "class/dart:collection::ListBase"
         ]
       },
       "dart:html::_HTMLDirectoryElement": {
@@ -6530,7 +7420,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::_HTMLFontElement": {
         "id": "class/dart:html::_HTMLFontElement",
@@ -6542,7 +7435,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::_HTMLFrameElement": {
         "id": "class/dart:html::_HTMLFrameElement",
@@ -6554,7 +7450,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::_HTMLFrameSetElement": {
         "id": "class/dart:html::_HTMLFrameSetElement",
@@ -6566,7 +7465,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::_HTMLMarqueeElement": {
         "id": "class/dart:html::_HTMLMarqueeElement",
@@ -6578,7 +7480,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::HtmlElement"
+        ]
       },
       "dart:html::_Html5NodeValidator": {
         "id": "class/dart:html::_Html5NodeValidator",
@@ -6599,7 +7504,8 @@
           "function/dart:html::_Html5NodeValidator._uriAttributeValidator",
           "function/dart:html::_Html5NodeValidator.allowsAttribute",
           "function/dart:html::_Html5NodeValidator.allowsElement"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::_MojoInterfaceRequestEvent": {
         "id": "class/dart:html::_MojoInterfaceRequestEvent",
@@ -6611,7 +7517,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::_NamedNodeMap": {
         "id": "class/dart:html::_NamedNodeMap",
@@ -6630,6 +7539,10 @@
           "function/dart:html::_NamedNodeMap.first",
           "function/dart:html::_NamedNodeMap.length",
           "function/dart:html::_NamedNodeMap.length%0"
+        ],
+        "supers": [
+          "class/dart:_interceptors::JavaScriptObject",
+          "class/dart:core::List"
         ]
       },
       "dart:html::_ResourceProgressEvent": {
@@ -6642,7 +7555,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::ProgressEvent"
+        ]
       },
       "dart:html::_SameOriginUriPolicy": {
         "id": "class/dart:html::_SameOriginUriPolicy",
@@ -6659,6 +7575,9 @@
           "field/dart:html::_SameOriginUriPolicy._loc",
           "function/dart:html::_SameOriginUriPolicy._SameOriginUriPolicy",
           "function/dart:html::_SameOriginUriPolicy.allowsUri"
+        ],
+        "supers": [
+          "class/dart:html::UriPolicy"
         ]
       },
       "dart:html::_SimpleNodeValidator": {
@@ -6678,7 +7597,8 @@
           "field/dart:html::_SimpleNodeValidator.uriPolicy",
           "function/dart:html::_SimpleNodeValidator.allowsAttribute",
           "function/dart:html::_SimpleNodeValidator.allowsElement"
-        ]
+        ],
+        "supers": []
       },
       "dart:html::_TemplatingNodeValidator": {
         "id": "class/dart:html::_TemplatingNodeValidator",
@@ -6694,6 +7614,9 @@
           "field/dart:html::_TemplatingNodeValidator._templateAttrs",
           "function/dart:html::_TemplatingNodeValidator._TemplatingNodeValidator",
           "function/dart:html::_TemplatingNodeValidator.allowsAttribute"
+        ],
+        "supers": [
+          "class/dart:html::_SimpleNodeValidator"
         ]
       },
       "dart:html::_USBConnectionEvent": {
@@ -6706,7 +7629,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:html::_ValidatingTreeSanitizer": {
         "id": "class/dart:html::_ValidatingTreeSanitizer",
@@ -6727,7 +7653,8 @@
           "function/dart:html::_ValidatingTreeSanitizer._sanitizeUntrustedElement",
           "function/dart:html::_ValidatingTreeSanitizer.sanitizeNode",
           "function/dart:html::_ValidatingTreeSanitizer.sanitizeTree"
-        ]
+        ],
+        "supers": []
       },
       "dart:indexed_db::VersionChangeEvent": {
         "id": "class/dart:indexed_db::VersionChangeEvent",
@@ -6739,7 +7666,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:svg::AElement": {
         "id": "class/dart:svg::AElement",
@@ -6751,7 +7681,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::AnimateElement": {
         "id": "class/dart:svg::AnimateElement",
@@ -6763,7 +7696,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::AnimationElement"
+        ]
       },
       "dart:svg::AnimateMotionElement": {
         "id": "class/dart:svg::AnimateMotionElement",
@@ -6775,7 +7711,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::AnimationElement"
+        ]
       },
       "dart:svg::AnimateTransformElement": {
         "id": "class/dart:svg::AnimateTransformElement",
@@ -6787,7 +7726,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::AnimationElement"
+        ]
       },
       "dart:svg::AnimationElement": {
         "id": "class/dart:svg::AnimationElement",
@@ -6799,7 +7741,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::CircleElement": {
         "id": "class/dart:svg::CircleElement",
@@ -6811,7 +7756,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GeometryElement"
+        ]
       },
       "dart:svg::ClipPathElement": {
         "id": "class/dart:svg::ClipPathElement",
@@ -6823,7 +7771,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::DefsElement": {
         "id": "class/dart:svg::DefsElement",
@@ -6835,7 +7786,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::DescElement": {
         "id": "class/dart:svg::DescElement",
@@ -6847,7 +7801,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::DiscardElement": {
         "id": "class/dart:svg::DiscardElement",
@@ -6859,7 +7816,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::EllipseElement": {
         "id": "class/dart:svg::EllipseElement",
@@ -6871,7 +7831,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GeometryElement"
+        ]
       },
       "dart:svg::FEBlendElement": {
         "id": "class/dart:svg::FEBlendElement",
@@ -6883,7 +7846,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEColorMatrixElement": {
         "id": "class/dart:svg::FEColorMatrixElement",
@@ -6895,7 +7861,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEComponentTransferElement": {
         "id": "class/dart:svg::FEComponentTransferElement",
@@ -6907,7 +7876,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FECompositeElement": {
         "id": "class/dart:svg::FECompositeElement",
@@ -6919,7 +7891,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEConvolveMatrixElement": {
         "id": "class/dart:svg::FEConvolveMatrixElement",
@@ -6931,7 +7906,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEDiffuseLightingElement": {
         "id": "class/dart:svg::FEDiffuseLightingElement",
@@ -6943,7 +7921,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEDisplacementMapElement": {
         "id": "class/dart:svg::FEDisplacementMapElement",
@@ -6955,7 +7936,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEDistantLightElement": {
         "id": "class/dart:svg::FEDistantLightElement",
@@ -6967,7 +7951,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEFloodElement": {
         "id": "class/dart:svg::FEFloodElement",
@@ -6979,7 +7966,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEFuncAElement": {
         "id": "class/dart:svg::FEFuncAElement",
@@ -6991,7 +7981,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::_SVGComponentTransferFunctionElement"
+        ]
       },
       "dart:svg::FEFuncBElement": {
         "id": "class/dart:svg::FEFuncBElement",
@@ -7003,7 +7996,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::_SVGComponentTransferFunctionElement"
+        ]
       },
       "dart:svg::FEFuncGElement": {
         "id": "class/dart:svg::FEFuncGElement",
@@ -7015,7 +8011,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::_SVGComponentTransferFunctionElement"
+        ]
       },
       "dart:svg::FEFuncRElement": {
         "id": "class/dart:svg::FEFuncRElement",
@@ -7027,7 +8026,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::_SVGComponentTransferFunctionElement"
+        ]
       },
       "dart:svg::FEGaussianBlurElement": {
         "id": "class/dart:svg::FEGaussianBlurElement",
@@ -7039,7 +8041,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEImageElement": {
         "id": "class/dart:svg::FEImageElement",
@@ -7051,7 +8056,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEMergeElement": {
         "id": "class/dart:svg::FEMergeElement",
@@ -7063,7 +8071,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEMergeNodeElement": {
         "id": "class/dart:svg::FEMergeNodeElement",
@@ -7075,7 +8086,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEMorphologyElement": {
         "id": "class/dart:svg::FEMorphologyElement",
@@ -7087,7 +8101,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEOffsetElement": {
         "id": "class/dart:svg::FEOffsetElement",
@@ -7099,7 +8116,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FEPointLightElement": {
         "id": "class/dart:svg::FEPointLightElement",
@@ -7111,7 +8131,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FESpecularLightingElement": {
         "id": "class/dart:svg::FESpecularLightingElement",
@@ -7123,7 +8146,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FESpotLightElement": {
         "id": "class/dart:svg::FESpotLightElement",
@@ -7135,7 +8161,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FETileElement": {
         "id": "class/dart:svg::FETileElement",
@@ -7147,7 +8176,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FETurbulenceElement": {
         "id": "class/dart:svg::FETurbulenceElement",
@@ -7159,7 +8191,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::FilterElement": {
         "id": "class/dart:svg::FilterElement",
@@ -7171,7 +8206,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::ForeignObjectElement": {
         "id": "class/dart:svg::ForeignObjectElement",
@@ -7183,7 +8221,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::GElement": {
         "id": "class/dart:svg::GElement",
@@ -7195,7 +8236,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::GeometryElement": {
         "id": "class/dart:svg::GeometryElement",
@@ -7207,7 +8251,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::GraphicsElement": {
         "id": "class/dart:svg::GraphicsElement",
@@ -7219,7 +8266,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::ImageElement": {
         "id": "class/dart:svg::ImageElement",
@@ -7231,7 +8281,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::LineElement": {
         "id": "class/dart:svg::LineElement",
@@ -7243,7 +8296,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GeometryElement"
+        ]
       },
       "dart:svg::LinearGradientElement": {
         "id": "class/dart:svg::LinearGradientElement",
@@ -7255,7 +8311,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::_GradientElement"
+        ]
       },
       "dart:svg::MarkerElement": {
         "id": "class/dart:svg::MarkerElement",
@@ -7267,7 +8326,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::MaskElement": {
         "id": "class/dart:svg::MaskElement",
@@ -7279,7 +8341,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::MetadataElement": {
         "id": "class/dart:svg::MetadataElement",
@@ -7291,7 +8356,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::PathElement": {
         "id": "class/dart:svg::PathElement",
@@ -7303,7 +8371,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GeometryElement"
+        ]
       },
       "dart:svg::PatternElement": {
         "id": "class/dart:svg::PatternElement",
@@ -7315,7 +8386,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::PolygonElement": {
         "id": "class/dart:svg::PolygonElement",
@@ -7327,7 +8401,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GeometryElement"
+        ]
       },
       "dart:svg::PolylineElement": {
         "id": "class/dart:svg::PolylineElement",
@@ -7339,7 +8416,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GeometryElement"
+        ]
       },
       "dart:svg::RadialGradientElement": {
         "id": "class/dart:svg::RadialGradientElement",
@@ -7351,7 +8431,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::_GradientElement"
+        ]
       },
       "dart:svg::RectElement": {
         "id": "class/dart:svg::RectElement",
@@ -7363,7 +8446,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GeometryElement"
+        ]
       },
       "dart:svg::ScriptElement": {
         "id": "class/dart:svg::ScriptElement",
@@ -7375,7 +8461,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::SetElement": {
         "id": "class/dart:svg::SetElement",
@@ -7387,7 +8476,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::AnimationElement"
+        ]
       },
       "dart:svg::StopElement": {
         "id": "class/dart:svg::StopElement",
@@ -7399,7 +8491,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::StyleElement": {
         "id": "class/dart:svg::StyleElement",
@@ -7411,7 +8506,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::SvgElement": {
         "id": "class/dart:svg::SvgElement",
@@ -7423,7 +8521,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Element"
+        ]
       },
       "dart:svg::SvgSvgElement": {
         "id": "class/dart:svg::SvgSvgElement",
@@ -7435,7 +8536,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::SwitchElement": {
         "id": "class/dart:svg::SwitchElement",
@@ -7447,7 +8551,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::SymbolElement": {
         "id": "class/dart:svg::SymbolElement",
@@ -7459,7 +8566,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::TSpanElement": {
         "id": "class/dart:svg::TSpanElement",
@@ -7471,7 +8581,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::TextPositioningElement"
+        ]
       },
       "dart:svg::TextContentElement": {
         "id": "class/dart:svg::TextContentElement",
@@ -7483,7 +8596,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::TextElement": {
         "id": "class/dart:svg::TextElement",
@@ -7495,7 +8611,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::TextPositioningElement"
+        ]
       },
       "dart:svg::TextPathElement": {
         "id": "class/dart:svg::TextPathElement",
@@ -7507,7 +8626,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::TextContentElement"
+        ]
       },
       "dart:svg::TextPositioningElement": {
         "id": "class/dart:svg::TextPositioningElement",
@@ -7519,7 +8641,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::TextContentElement"
+        ]
       },
       "dart:svg::TitleElement": {
         "id": "class/dart:svg::TitleElement",
@@ -7531,7 +8656,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::UseElement": {
         "id": "class/dart:svg::UseElement",
@@ -7543,7 +8671,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::GraphicsElement"
+        ]
       },
       "dart:svg::ViewElement": {
         "id": "class/dart:svg::ViewElement",
@@ -7555,7 +8686,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::_GradientElement": {
         "id": "class/dart:svg::_GradientElement",
@@ -7567,7 +8701,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::_SVGComponentTransferFunctionElement": {
         "id": "class/dart:svg::_SVGComponentTransferFunctionElement",
@@ -7579,7 +8716,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::_SVGFEDropShadowElement": {
         "id": "class/dart:svg::_SVGFEDropShadowElement",
@@ -7591,7 +8731,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:svg::_SVGMPathElement": {
         "id": "class/dart:svg::_SVGMPathElement",
@@ -7603,7 +8746,10 @@
         "modifiers": {
           "abstract": true
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:svg::SvgElement"
+        ]
       },
       "dart:web_audio::AudioProcessingEvent": {
         "id": "class/dart:web_audio::AudioProcessingEvent",
@@ -7615,7 +8761,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:web_audio::OfflineAudioCompletionEvent": {
         "id": "class/dart:web_audio::OfflineAudioCompletionEvent",
@@ -7627,7 +8776,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "dart:web_gl::ContextEvent": {
         "id": "class/dart:web_gl::ContextEvent",
@@ -7639,7 +8791,10 @@
         "modifiers": {
           "abstract": false
         },
-        "children": []
+        "children": [],
+        "supers": [
+          "class/dart:html::Event"
+        ]
       },
       "org-dartlang-app:///example/app.dart::NullTreeSanitizer": {
         "id": "class/org-dartlang-app:///example/app.dart::NullTreeSanitizer",
@@ -7654,7 +8809,8 @@
         "children": [
           "function/org-dartlang-app:///example/app.dart::NullTreeSanitizer.NullTreeSanitizer",
           "function/org-dartlang-app:///example/app.dart::NullTreeSanitizer.sanitizeTree"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/ast.dart::Element": {
         "id": "class/package:markdown/src/ast.dart::Element",
@@ -7678,7 +8834,8 @@
           "function/package:markdown/src/ast.dart::Element.accept",
           "function/package:markdown/src/ast.dart::Element.isEmpty",
           "function/package:markdown/src/ast.dart::Element.textContent"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/ast.dart::Text": {
         "id": "class/package:markdown/src/ast.dart::Text",
@@ -7695,7 +8852,8 @@
           "function/package:markdown/src/ast.dart::Text.Text",
           "function/package:markdown/src/ast.dart::Text.accept",
           "function/package:markdown/src/ast.dart::Text.textContent"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/ast.dart::UnparsedContent": {
         "id": "class/package:markdown/src/ast.dart::UnparsedContent",
@@ -7711,7 +8869,8 @@
           "field/package:markdown/src/ast.dart::UnparsedContent.textContent",
           "function/package:markdown/src/ast.dart::UnparsedContent.UnparsedContent",
           "function/package:markdown/src/ast.dart::UnparsedContent.accept"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/block_parser.dart::BlockParser": {
         "id": "class/package:markdown/src/block_parser.dart::BlockParser",
@@ -7739,7 +8898,8 @@
           "function/package:markdown/src/block_parser.dart::BlockParser.next",
           "function/package:markdown/src/block_parser.dart::BlockParser.parseLines",
           "function/package:markdown/src/block_parser.dart::BlockParser.peek"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/block_syntaxes/block_html_syntax.dart::BlockHtmlSyntax": {
         "id": "class/package:markdown/src/block_syntaxes/block_html_syntax.dart::BlockHtmlSyntax",
@@ -7753,6 +8913,9 @@
         },
         "children": [
           "function/package:markdown/src/block_syntaxes/block_html_syntax.dart::BlockHtmlSyntax.canEndBlock"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax": {
@@ -7770,7 +8933,8 @@
           "function/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax.canParse",
           "function/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax.generateAnchorHash",
           "function/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax.isAtBlockEnd"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/block_syntaxes/block_tag_block_html_syntax.dart::BlockTagBlockHtmlSyntax": {
         "id": "class/package:markdown/src/block_syntaxes/block_tag_block_html_syntax.dart::BlockTagBlockHtmlSyntax",
@@ -7788,6 +8952,9 @@
           "function/package:markdown/src/block_syntaxes/block_tag_block_html_syntax.dart::BlockTagBlockHtmlSyntax.canParse",
           "function/package:markdown/src/block_syntaxes/block_tag_block_html_syntax.dart::BlockTagBlockHtmlSyntax.parse",
           "function/package:markdown/src/block_syntaxes/block_tag_block_html_syntax.dart::BlockTagBlockHtmlSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_html_syntax.dart::BlockHtmlSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax": {
@@ -7804,6 +8971,9 @@
           "function/package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax.parse",
           "function/package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax.parseChildLines",
           "function/package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/code_block_syntax.dart::CodeBlockSyntax": {
@@ -7821,6 +8991,9 @@
           "function/package:markdown/src/block_syntaxes/code_block_syntax.dart::CodeBlockSyntax.parse",
           "function/package:markdown/src/block_syntaxes/code_block_syntax.dart::CodeBlockSyntax.parseChildLines",
           "function/package:markdown/src/block_syntaxes/code_block_syntax.dart::CodeBlockSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/empty_block_syntax.dart::EmptyBlockSyntax": {
@@ -7836,6 +9009,9 @@
         "children": [
           "function/package:markdown/src/block_syntaxes/empty_block_syntax.dart::EmptyBlockSyntax.parse",
           "function/package:markdown/src/block_syntaxes/empty_block_syntax.dart::EmptyBlockSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/fenced_code_block_syntax.dart::FencedCodeBlockSyntax": {
@@ -7853,6 +9029,9 @@
           "function/package:markdown/src/block_syntaxes/fenced_code_block_syntax.dart::FencedCodeBlockSyntax.parse",
           "function/package:markdown/src/block_syntaxes/fenced_code_block_syntax.dart::FencedCodeBlockSyntax.parseChildLines",
           "function/package:markdown/src/block_syntaxes/fenced_code_block_syntax.dart::FencedCodeBlockSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/header_syntax.dart::HeaderSyntax": {
@@ -7868,6 +9047,9 @@
         "children": [
           "function/package:markdown/src/block_syntaxes/header_syntax.dart::HeaderSyntax.parse",
           "function/package:markdown/src/block_syntaxes/header_syntax.dart::HeaderSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/header_with_id_syntax.dart::HeaderWithIdSyntax": {
@@ -7882,6 +9064,9 @@
         },
         "children": [
           "function/package:markdown/src/block_syntaxes/header_with_id_syntax.dart::HeaderWithIdSyntax.parse"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/header_syntax.dart::HeaderSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/horizontal_rule_syntax.dart::HorizontalRuleSyntax": {
@@ -7897,6 +9082,9 @@
         "children": [
           "function/package:markdown/src/block_syntaxes/horizontal_rule_syntax.dart::HorizontalRuleSyntax.parse",
           "function/package:markdown/src/block_syntaxes/horizontal_rule_syntax.dart::HorizontalRuleSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/list_syntax.dart::ListItem": {
@@ -7913,7 +9101,8 @@
           "field/package:markdown/src/block_syntaxes/list_syntax.dart::ListItem.forceBlock",
           "field/package:markdown/src/block_syntaxes/list_syntax.dart::ListItem.lines",
           "function/package:markdown/src/block_syntaxes/list_syntax.dart::ListItem.ListItem"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax": {
         "id": "class/package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax",
@@ -7932,6 +9121,9 @@
           "function/package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax._removeTrailingEmptyLines",
           "function/package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax.canEndBlock",
           "function/package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax.parse"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/long_block_html_syntax.dart::LongBlockHtmlSyntax": {
@@ -7949,6 +9141,9 @@
           "field/package:markdown/src/block_syntaxes/long_block_html_syntax.dart::LongBlockHtmlSyntax.pattern",
           "function/package:markdown/src/block_syntaxes/long_block_html_syntax.dart::LongBlockHtmlSyntax.LongBlockHtmlSyntax",
           "function/package:markdown/src/block_syntaxes/long_block_html_syntax.dart::LongBlockHtmlSyntax.parse"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_html_syntax.dart::BlockHtmlSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/ordered_list_syntax.dart::OrderedListSyntax": {
@@ -7964,6 +9159,9 @@
         "children": [
           "function/package:markdown/src/block_syntaxes/ordered_list_syntax.dart::OrderedListSyntax.listTag",
           "function/package:markdown/src/block_syntaxes/ordered_list_syntax.dart::OrderedListSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/ordered_list_with_checkbox_syntax.dart::OrderedListWithCheckBoxSyntax": {
@@ -7979,6 +9177,9 @@
         "children": [
           "function/package:markdown/src/block_syntaxes/ordered_list_with_checkbox_syntax.dart::OrderedListWithCheckBoxSyntax.listTag",
           "function/package:markdown/src/block_syntaxes/ordered_list_with_checkbox_syntax.dart::OrderedListWithCheckBoxSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/other_tag_block_html_syntax.dart::OtherTagBlockHtmlSyntax": {
@@ -7994,6 +9195,9 @@
         "children": [
           "function/package:markdown/src/block_syntaxes/other_tag_block_html_syntax.dart::OtherTagBlockHtmlSyntax.canEndBlock",
           "function/package:markdown/src/block_syntaxes/other_tag_block_html_syntax.dart::OtherTagBlockHtmlSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_tag_block_html_syntax.dart::BlockTagBlockHtmlSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/paragraph_syntax.dart::ParagraphSyntax": {
@@ -8015,6 +9219,9 @@
           "function/package:markdown/src/block_syntaxes/paragraph_syntax.dart::ParagraphSyntax.canParse",
           "function/package:markdown/src/block_syntaxes/paragraph_syntax.dart::ParagraphSyntax.parse",
           "function/package:markdown/src/block_syntaxes/paragraph_syntax.dart::ParagraphSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/setext_header_syntax.dart::SetextHeaderSyntax": {
@@ -8032,6 +9239,9 @@
           "function/package:markdown/src/block_syntaxes/setext_header_syntax.dart::SetextHeaderSyntax.canParse",
           "function/package:markdown/src/block_syntaxes/setext_header_syntax.dart::SetextHeaderSyntax.parse",
           "function/package:markdown/src/block_syntaxes/setext_header_syntax.dart::SetextHeaderSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/setext_header_with_id_syntax.dart::SetextHeaderWithIdSyntax": {
@@ -8046,6 +9256,9 @@
         },
         "children": [
           "function/package:markdown/src/block_syntaxes/setext_header_with_id_syntax.dart::SetextHeaderWithIdSyntax.parse"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/setext_header_syntax.dart::SetextHeaderSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/table_syntax.dart::TableSyntax": {
@@ -8067,6 +9280,9 @@
           "function/package:markdown/src/block_syntaxes/table_syntax.dart::TableSyntax.canParse",
           "function/package:markdown/src/block_syntaxes/table_syntax.dart::TableSyntax.parse",
           "function/package:markdown/src/block_syntaxes/table_syntax.dart::TableSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/block_syntax.dart::BlockSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/unordered_list_syntax.dart::UnorderedListSyntax": {
@@ -8082,6 +9298,9 @@
         "children": [
           "function/package:markdown/src/block_syntaxes/unordered_list_syntax.dart::UnorderedListSyntax.listTag",
           "function/package:markdown/src/block_syntaxes/unordered_list_syntax.dart::UnorderedListSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax"
         ]
       },
       "package:markdown/src/block_syntaxes/unordered_list_with_checkbox_syntax.dart::UnorderedListWithCheckBoxSyntax": {
@@ -8097,6 +9316,9 @@
         "children": [
           "function/package:markdown/src/block_syntaxes/unordered_list_with_checkbox_syntax.dart::UnorderedListWithCheckBoxSyntax.listTag",
           "function/package:markdown/src/block_syntaxes/unordered_list_with_checkbox_syntax.dart::UnorderedListWithCheckBoxSyntax.pattern"
+        ],
+        "supers": [
+          "class/package:markdown/src/block_syntaxes/list_syntax.dart::ListSyntax"
         ]
       },
       "package:markdown/src/document.dart::Document": {
@@ -8125,7 +9347,8 @@
           "function/package:markdown/src/document.dart::Document.inlineSyntaxes",
           "function/package:markdown/src/document.dart::Document.parseInline",
           "function/package:markdown/src/document.dart::Document.parseLines"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/document.dart::LinkReference": {
         "id": "class/package:markdown/src/document.dart::LinkReference",
@@ -8142,7 +9365,8 @@
           "field/package:markdown/src/document.dart::LinkReference.label",
           "field/package:markdown/src/document.dart::LinkReference.title",
           "function/package:markdown/src/document.dart::LinkReference.LinkReference"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/extension_set.dart::ExtensionSet": {
         "id": "class/package:markdown/src/extension_set.dart::ExtensionSet",
@@ -8161,7 +9385,8 @@
           "field/package:markdown/src/extension_set.dart::ExtensionSet.inlineSyntaxes",
           "field/package:markdown/src/extension_set.dart::ExtensionSet.none",
           "function/package:markdown/src/extension_set.dart::ExtensionSet.ExtensionSet"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/html_renderer.dart::HtmlRenderer": {
         "id": "class/package:markdown/src/html_renderer.dart::HtmlRenderer",
@@ -8188,7 +9413,8 @@
           "function/package:markdown/src/html_renderer.dart::HtmlRenderer.visitElementAfter",
           "function/package:markdown/src/html_renderer.dart::HtmlRenderer.visitElementBefore",
           "function/package:markdown/src/html_renderer.dart::HtmlRenderer.visitText"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/inline_parser.dart::InlineParser": {
         "id": "class/package:markdown/src/inline_parser.dart::InlineParser",
@@ -8224,7 +9450,8 @@
           "function/package:markdown/src/inline_parser.dart::InlineParser.parse",
           "function/package:markdown/src/inline_parser.dart::InlineParser.pushDelimiter",
           "function/package:markdown/src/inline_parser.dart::InlineParser.writeText"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax": {
         "id": "class/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax",
@@ -8244,6 +9471,9 @@
           "function/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax._countChars",
           "function/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax.onMatch",
           "function/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax.tryMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/autolink_syntax.dart::AutolinkSyntax": {
@@ -8259,6 +9489,9 @@
         "children": [
           "function/package:markdown/src/inline_syntaxes/autolink_syntax.dart::AutolinkSyntax.AutolinkSyntax",
           "function/package:markdown/src/inline_syntaxes/autolink_syntax.dart::AutolinkSyntax.onMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/code_syntax.dart::CodeSyntax": {
@@ -8276,6 +9509,9 @@
           "function/package:markdown/src/inline_syntaxes/code_syntax.dart::CodeSyntax.CodeSyntax",
           "function/package:markdown/src/inline_syntaxes/code_syntax.dart::CodeSyntax.onMatch",
           "function/package:markdown/src/inline_syntaxes/code_syntax.dart::CodeSyntax.tryMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/color_swatch_syntax.dart::ColorSwatchSyntax": {
@@ -8293,6 +9529,9 @@
           "function/package:markdown/src/inline_syntaxes/color_swatch_syntax.dart::ColorSwatchSyntax.ColorSwatchSyntax",
           "function/package:markdown/src/inline_syntaxes/color_swatch_syntax.dart::ColorSwatchSyntax.onMatch",
           "function/package:markdown/src/inline_syntaxes/color_swatch_syntax.dart::ColorSwatchSyntax.tryMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterRun": {
@@ -8320,7 +9559,8 @@
           "function/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterRun.length",
           "function/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterRun.toString",
           "function/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterRun.tryParse"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterSyntax": {
         "id": "class/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterSyntax",
@@ -8338,6 +9578,9 @@
           "field/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterSyntax.tags",
           "function/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterSyntax.close",
           "function/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterSyntax.onMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterTag": {
@@ -8354,7 +9597,8 @@
           "field/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterTag.indicatorLength",
           "field/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterTag.tag",
           "function/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterTag.DelimiterTag"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/inline_syntaxes/delimiter_syntax.dart::SimpleDelimiter": {
         "id": "class/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::SimpleDelimiter",
@@ -8376,7 +9620,8 @@
           "field/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::SimpleDelimiter.node",
           "field/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::SimpleDelimiter.syntax",
           "function/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::SimpleDelimiter.SimpleDelimiter"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/inline_syntaxes/email_autolink_syntax.dart::EmailAutolinkSyntax": {
         "id": "class/package:markdown/src/inline_syntaxes/email_autolink_syntax.dart::EmailAutolinkSyntax",
@@ -8392,6 +9637,9 @@
           "field/package:markdown/src/inline_syntaxes/email_autolink_syntax.dart::EmailAutolinkSyntax._email",
           "function/package:markdown/src/inline_syntaxes/email_autolink_syntax.dart::EmailAutolinkSyntax.EmailAutolinkSyntax",
           "function/package:markdown/src/inline_syntaxes/email_autolink_syntax.dart::EmailAutolinkSyntax.onMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/emoji_syntax.dart::EmojiSyntax": {
@@ -8407,6 +9655,9 @@
         "children": [
           "function/package:markdown/src/inline_syntaxes/emoji_syntax.dart::EmojiSyntax.EmojiSyntax",
           "function/package:markdown/src/inline_syntaxes/emoji_syntax.dart::EmojiSyntax.onMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/emphasis_syntax.dart::EmphasisSyntax": {
@@ -8423,6 +9674,9 @@
           "field/package:markdown/src/inline_syntaxes/emphasis_syntax.dart::EmphasisSyntax._tags",
           "function/package:markdown/src/inline_syntaxes/emphasis_syntax.dart::EmphasisSyntax.EmphasisSyntax.asterisk",
           "function/package:markdown/src/inline_syntaxes/emphasis_syntax.dart::EmphasisSyntax.EmphasisSyntax.underscore"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/escape_syntax.dart::EscapeSyntax": {
@@ -8438,6 +9692,9 @@
         "children": [
           "function/package:markdown/src/inline_syntaxes/escape_syntax.dart::EscapeSyntax.EscapeSyntax",
           "function/package:markdown/src/inline_syntaxes/escape_syntax.dart::EscapeSyntax.onMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/image_syntax.dart::ImageSyntax": {
@@ -8453,6 +9710,9 @@
         "children": [
           "function/package:markdown/src/inline_syntaxes/image_syntax.dart::ImageSyntax.ImageSyntax",
           "function/package:markdown/src/inline_syntaxes/image_syntax.dart::ImageSyntax.createNode"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/link_syntax.dart::LinkSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/inline_html_syntax.dart::InlineHtmlSyntax": {
@@ -8467,6 +9727,9 @@
         },
         "children": [
           "function/package:markdown/src/inline_syntaxes/inline_html_syntax.dart::InlineHtmlSyntax.InlineHtmlSyntax"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/text_syntax.dart::TextSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax": {
@@ -8483,7 +9746,8 @@
           "field/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax._startCharacter",
           "field/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax.pattern",
           "function/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax.tryMatch"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/inline_syntaxes/line_break_syntax.dart::LineBreakSyntax": {
         "id": "class/package:markdown/src/inline_syntaxes/line_break_syntax.dart::LineBreakSyntax",
@@ -8498,6 +9762,9 @@
         "children": [
           "function/package:markdown/src/inline_syntaxes/line_break_syntax.dart::LineBreakSyntax.LineBreakSyntax",
           "function/package:markdown/src/inline_syntaxes/line_break_syntax.dart::LineBreakSyntax.onMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/link_syntax.dart::InlineLink": {
@@ -8514,7 +9781,8 @@
           "field/package:markdown/src/inline_syntaxes/link_syntax.dart::InlineLink.destination",
           "field/package:markdown/src/inline_syntaxes/link_syntax.dart::InlineLink.title",
           "function/package:markdown/src/inline_syntaxes/link_syntax.dart::InlineLink.InlineLink"
-        ]
+        ],
+        "supers": []
       },
       "package:markdown/src/inline_syntaxes/link_syntax.dart::LinkSyntax": {
         "id": "class/package:markdown/src/inline_syntaxes/link_syntax.dart::LinkSyntax",
@@ -8541,6 +9809,9 @@
           "function/package:markdown/src/inline_syntaxes/link_syntax.dart::LinkSyntax._tryCreateReferenceLink",
           "function/package:markdown/src/inline_syntaxes/link_syntax.dart::LinkSyntax.close",
           "function/package:markdown/src/inline_syntaxes/link_syntax.dart::LinkSyntax.createNode"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/strikethrough_syntax.dart::StrikethroughSyntax": {
@@ -8555,6 +9826,9 @@
         },
         "children": [
           "function/package:markdown/src/inline_syntaxes/strikethrough_syntax.dart::StrikethroughSyntax.StrikethroughSyntax"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/delimiter_syntax.dart::DelimiterSyntax"
         ]
       },
       "package:markdown/src/inline_syntaxes/text_syntax.dart::TextSyntax": {
@@ -8571,6 +9845,9 @@
           "field/package:markdown/src/inline_syntaxes/text_syntax.dart::TextSyntax.substitute",
           "function/package:markdown/src/inline_syntaxes/text_syntax.dart::TextSyntax.TextSyntax",
           "function/package:markdown/src/inline_syntaxes/text_syntax.dart::TextSyntax.onMatch"
+        ],
+        "supers": [
+          "class/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax"
         ]
       }
     },
@@ -78696,11 +79973,11 @@
       },
       {
         "id": "function/dart:html::AnchorElement.toString",
-        "mask": "[subclass=Node]"
+        "mask": "[subclass=Element]"
       },
       {
         "id": "function/dart:html::AreaElement.toString",
-        "mask": "[subclass=Node]"
+        "mask": "[subclass=Element]"
       },
       {
         "id": "function/dart:html::Console._isConsoleDefined",
@@ -78744,11 +80021,7 @@
       },
       {
         "id": "function/dart:html::Element.toString",
-        "mask": "[subclass=Node]"
-      },
-      {
-        "id": "function/dart:html::Node.toString",
-        "mask": "[subclass=Node]"
+        "mask": "[subclass=Element]"
       },
       {
         "id": "function/dart:html::Window.console",
@@ -87867,9 +89140,10 @@
   "program": {
     "entrypoint": "function/org-dartlang-app:///example/app.dart::main",
     "size": 236863,
-    "dart2jsVersion": "2.18.0-256.0.dev",
-    "compilationMoment": "2022-07-05 12:27:34.622844",
-    "compilationDuration": 1005047,
+    "ramUsage": "227.406 MB",
+    "dart2jsVersion": "2.19.0-13.0.dev",
+    "compilationMoment": "2022-07-21 10:17:14.396982",
+    "compilationDuration": 984204,
     "toJsonDuration": 6000,
     "dumpInfoDuration": 0,
     "noSuchMethodEnabled": false,
