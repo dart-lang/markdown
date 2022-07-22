@@ -24,7 +24,7 @@ final indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');
 final codeFencePattern = RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
 
 /// Fenced tex block.
-final texFencePattern = RegExp(r'^[ ]{0,3}(\${2,})(.*)$');
+final texFencePattern = RegExp(r'^[ ]{0,3}(\${2,})$');
 
 /// Fenced blockquotes.
 final blockquoteFencePattern = RegExp(r'^>{3}\s*$');
