@@ -41,8 +41,17 @@ class ParagraphSyntax extends BlockSyntax {
       // Paragraph consisted solely of reference link definitions.
       return Text('');
     } else {
-      final contents = UnparsedContent(paragraphLines.join('\n').trimRight());
-      return Element('p', [contents]);
+      final contents = <Node>[];
+      // final contents = UnparsedContent(paragraphLines.join('\n').trimRight());
+      for (int i = 0; i < paragraphLines.length; i++) {
+        contents.add(UnparsedContent(paragraphLines[i].trimRight()));
+        if (i != paragraphLines.length - 1) {
+          contents.add(Element.empty('linebreak'));
+        }
+      }
+
+      return Element('p', contents);
+      // return Element('p', [contents]);
     }
   }
 
