@@ -47,14 +47,6 @@ class FencedBoxBlockSyntax extends BlockSyntax {
 
     /// canParse 조건을 만족한 라인 매치 결과
     final match = pattern.firstMatch(parser.current)!;
-    final document = Document(
-      blockSyntaxes: [
-        ...parser.blockSyntaxes,
-        ...parser.document.blockSyntaxes
-      ],
-      inlineSyntaxes: parser.document.inlineSyntaxes,
-      encodeHtml: false,
-    );
 
     /// 박스 블록 끝 문자열 :::
     final endBlock = match.group(1);
@@ -76,22 +68,23 @@ class FencedBoxBlockSyntax extends BlockSyntax {
     final parsedChildlines = parseChildLines(parser, endBlock);
 
     final childrenLines = parsedChildlines
-        .where((element) => element != null && element.isNotEmpty)
+        .where((element) => element != null)
         .cast<String>()
         .toList();
 
-    final astNodes = document.parseLines(childrenLines);
+    final nodes = BlockParser(childrenLines, parser.document).parseLines();
+
     if (boxType == 'checked') {
       /// 첫번재 h1 인덱스
-      final titleH1Index = astNodes
+      final titleH1Index = nodes
           .indexWhere((element) => element is Element && element.tag == 'h1');
 
       /// 첫번째 h1이 존재한다면
       if (titleH1Index != -1) {
-        final titleH1 = astNodes[titleH1Index];
+        final titleH1 = nodes[titleH1Index];
 
-        /// astNodes에서 삭제가 성공하면
-        if (astNodes.remove(titleH1)) {
+        /// nodes에서 삭제가 성공하면
+        if (nodes.remove(titleH1)) {
           /// checked 블록의 타이틀을 첫번재 h1의 text로 설정
           element.attributes['title'] = titleH1.textContent;
         }
@@ -105,7 +98,7 @@ class FencedBoxBlockSyntax extends BlockSyntax {
     }
 
     return element
-      ..children?.addAll(astNodes)
+      ..children?.addAll(nodes)
       ..attributes['type'] = boxType;
   }
 }
