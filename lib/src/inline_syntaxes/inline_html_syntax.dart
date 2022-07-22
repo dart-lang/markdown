@@ -28,18 +28,9 @@ class InlineHtmlSyntax extends TextSyntax {
   bool onMatch(InlineParser parser, Match match) {
     if (brPattern.firstMatch(match.match) != null) {
       parser.addNode(Element.empty('br'));
-    } else {
-      if (substitute.isEmpty ||
-          (match.start > 0 &&
-              match.input.substring(match.start - 1, match.start) == '/')) {
-        // Just use the original matched text.
-        parser.advanceBy(match.match.length);
-        return false;
-      }
-      // Insert the substitution.
-      parser.addNode(Text(substitute));
+      return true;
     }
 
-    return true;
+    return super.onMatch(parser, match);
   }
 }
