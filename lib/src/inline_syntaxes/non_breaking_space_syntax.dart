@@ -4,16 +4,27 @@ import 'package:markdown/src/inline_syntaxes/inline_syntax.dart';
 import '../ast.dart';
 
 class NonBreakingSpace extends InlineSyntax {
-  NonBreakingSpace() : super('(&nbsp;)');
+  NonBreakingSpace() : super('(&nbsp;|&ensp;|&emsp;)');
 
   @override
   bool onMatch(InlineParser parser, Match match) {
     final hasMatch = match.groupCount > 0;
 
     if (hasMatch) {
-      parser.addNode(
-        Text(' '),
-      );
+      final matchedString = match.group(1);
+      if (matchedString!.contains('ensp')) {
+        parser.addNode(
+          Text('  '),
+        );
+      } else if (matchedString.contains('emsp')) {
+        parser.addNode(
+          Text('   '),
+        );
+      } else {
+        parser.addNode(
+          Text(' '),
+        );
+      }
     }
 
     return hasMatch;
