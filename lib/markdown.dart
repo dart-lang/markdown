@@ -45,6 +45,7 @@ export 'src/block_syntaxes/blockquote_syntax.dart';
 export 'src/block_syntaxes/code_block_syntax.dart';
 export 'src/block_syntaxes/dummy_block_syntax.dart';
 export 'src/block_syntaxes/empty_block_syntax.dart';
+export 'src/block_syntaxes/fenced_align_block_syntax.dart';
 export 'src/block_syntaxes/fenced_blockquote_syntax.dart';
 export 'src/block_syntaxes/fenced_box_block_syntax.dart';
 export 'src/block_syntaxes/fenced_code_block_syntax.dart';

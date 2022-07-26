@@ -33,6 +33,8 @@ final largeBoxFencePattern = RegExp(r'^(\:{4,4})(.*)$');
 
 final boxFencePattern = RegExp(r'^(\:{3,3})(.*)$');
 
+final alignFencePattern = RegExp(r'^(\:{3,3})(left|middle|right)(.*)$');
+
 /// Three or more hyphens, asterisks or underscores by themselves. Note that
 /// a line like `----` is valid as both HR and SETEXT. In case of a tie,
 /// SETEXT should win.
