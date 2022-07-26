@@ -7,6 +7,7 @@ class FencedBoxBlockSyntax extends BlockSyntax {
   @override
   RegExp get pattern => boxFencePattern;
   final _boxTypePattern = RegExp('(boxed|voca|checked)(.*)');
+  final fencePattern = RegExp(r'^(\:{3,3})(.*)$');
 
   @override
   List<String?> parseChildLines(BlockParser parser, [String? endBlock]) {
@@ -21,7 +22,7 @@ class FencedBoxBlockSyntax extends BlockSyntax {
     /// 파싱이 끝날때까지
     while (!parser.isDone) {
       /// 현재 라인에 같은 패턴이 존재하는 확인
-      final match = pattern.firstMatch(parser.current);
+      final match = fencePattern.firstMatch(parser.current);
 
       /// 같은 패턴이 존재하지 않거나 :::으로 시작하지 않는다
       if (match == null || !match[1]!.startsWith(endBlock)) {
