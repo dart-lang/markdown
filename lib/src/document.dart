@@ -14,6 +14,10 @@ import 'util.dart';
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = {};
+  // keys are case sensitive
+  final footnoteReferences = <String, int>{};
+  // labels are case insensitive
+  final footnoteLabels = <String>[];
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;
   final bool encodeHtml;
@@ -78,6 +82,8 @@ class Document {
   List<Node> parseLineList(List<Line> lines) {
     final nodes = BlockParser(lines, this).parseLines();
     _parseInlineContent(nodes);
+    // Do filter after parsing inline as we need ref count.
+    _filterFootnotes(nodes);
     return nodes;
   }
 
@@ -94,6 +100,79 @@ class Document {
         i += inlineNodes.length - 1;
       } else if (node is Element && node.children != null) {
         _parseInlineContent(node.children!);
+      }
+    }
+  }
+
+  void _filterFootnotes(List<Node> nodes) {
+    final footnotes = <Element>[];
+    final blocks = <Node>[];
+    for (final node in nodes) {
+      if (node is Element &&
+          node.tag == 'li' &&
+          footnoteReferences.containsKey(node.attributes['_label_'])) {
+        final label = node.attributes.remove('_label_');
+        int count = 0;
+        if (label != null && (count = (footnoteReferences[label] ?? 0)) > 0) {
+          footnotes.add(node);
+          final children = node.children;
+          if (children != null) {
+            _appendAnchor(children, Uri.encodeComponent(label), count);
+          }
+        }
+      } else {
+        blocks.add(node);
+      }
+    }
+    nodes
+      ..clear()
+      ..addAll(blocks);
+
+    if (footnotes.isNotEmpty) {
+      // sort footnotes by appeared order
+      final ordinal = <String, int>{
+        for (int i = 0; i < footnoteLabels.length; i++)
+          'fn-${footnoteLabels[i]}': i,
+      };
+      footnotes.sort((l, r) {
+        final idl = l.attributes['id']?.toLowerCase() ?? '';
+        final idr = r.attributes['id']?.toLowerCase() ?? '';
+        return (ordinal[idl] ?? 0) - (ordinal[idr] ?? 0);
+      });
+      final list = Element('ol', footnotes);
+
+      // Ignore github's attribute: <data-footnotes>.
+      final section = Element('section', [list])
+        ..attributes['class'] = 'footnotes';
+      nodes.add(section);
+    }
+  }
+
+  void _appendAnchor(List<Node> children, String ref, int count) {
+    final anchors = () sync* {
+      for (int i = 0; i < count; i++) {
+        yield Text(' ');
+        final num = '${i + 1}';
+        final suffix = i > 0 ? '-$num' : '';
+        yield Element('a', [
+          Text('\u21a9'),
+          if (i > 0)
+            Element('sup', [Text(num)])..attributes['class'] = 'footnote-ref',
+        ])
+
+          // Ignore github's attributes: <data-footnote-backref aria-label="Back to content">.
+          ..attributes['href'] = '#fnref-$ref$suffix'
+          ..attributes['class'] = 'footnote-backref';
+      }
+    }();
+    if (children.isEmpty) {
+      children.addAll(anchors);
+    } else {
+      final last = children.last;
+      if (last is Element) {
+        last.children?.addAll(anchors);
+      } else {
+        children.last = Element('p', [last, ...anchors]);
       }
     }
   }

@@ -50,6 +50,9 @@ final listPattern =
 final tablePattern = RegExp(
     r'^[ ]{0,3}\|?([ \t]*:?\-+:?[ \t]*\|)+([ \t]|[ \t]*:?\-+:?[ \t]*)?$');
 
+/// Just keep the same with github.
+final footnotePattern = RegExp(r'(^[ ]{0,3})\[\^([^\] \r\n\x00\t]+)\]:[ \t]*');
+
 /// A pattern which should never be used. It just satisfies non-nullability of
 /// pattern fields.
 final dummyPattern = RegExp('');

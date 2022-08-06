@@ -53,6 +53,10 @@ void main() async {
     'extensions/strikethrough.unit',
     inlineSyntaxes: [StrikethroughSyntax()],
   );
+  testFile(
+    'extensions/footnote_block.unit',
+    blockSyntaxes: [FootnoteDefSyntax()],
+  );
 
   testDirectory('common_mark');
   testDirectory('gfm');

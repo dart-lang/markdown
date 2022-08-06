@@ -8,6 +8,17 @@ import '../document.dart';
 import '../inline_parser.dart';
 import '../util.dart';
 import 'delimiter_syntax.dart';
+import 'footnote_ref_syntax.dart';
+
+enum RefLinkCase {
+  pair, // [...]
+  pairParen, // [...](
+  pairBracket, // [...][
+  exclamationPair, // ![...]
+  exclamationPairParen, // ![...](
+  exclamationPairBracket, // ![...][
+  pairCaret, // !?[...][^
+}
 
 /// A helper class holds params of link context.
 /// Footnote creation needs other info in [_tryCreateReferenceLink].

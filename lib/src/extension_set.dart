@@ -1,5 +1,6 @@
 import 'block_syntaxes/block_syntax.dart';
 import 'block_syntaxes/fenced_code_block_syntax.dart';
+import 'block_syntaxes/footnote_def_syntax.dart';
 import 'block_syntaxes/header_with_id_syntax.dart';
 import 'block_syntaxes/ordered_list_with_checkbox_syntax.dart';
 import 'block_syntaxes/setext_header_with_id_syntax.dart';
@@ -58,6 +59,7 @@ class ExtensionSet {
         const TableSyntax(),
         const UnorderedListWithCheckboxSyntax(),
         const OrderedListWithCheckboxSyntax(),
+        const FootnoteDefSyntax(),
       ],
     ),
     List<InlineSyntax>.unmodifiable(
@@ -80,6 +82,7 @@ class ExtensionSet {
         const TableSyntax(),
         const UnorderedListWithCheckboxSyntax(),
         const OrderedListWithCheckboxSyntax(),
+        const FootnoteDefSyntax(),
       ],
     ),
     List<InlineSyntax>.unmodifiable(
