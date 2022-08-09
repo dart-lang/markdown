@@ -15,24 +15,15 @@ analyzer:
     unsafe_html: ignore
 linter:
   rules:
-    - camel_case_types
     # https://github.com/dart-lang/linter/issues/574
     #- comment_references
-    - control_flow_in_finally
     - directives_ordering
-    - empty_statements
-    - hash_and_equals
-    - implementation_imports
-    - iterable_contains_unrelated_type
-    - list_remove_unrelated_type
-    - non_constant_identifier_names
     - only_throw_errors
-    - overridden_fields
     - package_api_docs
     - test_types_in_equals
     - throw_in_finally
     - prefer_final_locals
     - use_if_null_to_convert_nulls_to_bools
     - use_raw_strings
+    - use_super_parameters
     - unnecessary_raw_strings
-    - prefer_interpolation_to_compose_strings

@@ -29,12 +29,12 @@ class DelimiterSyntax extends InlineSyntax {
   /// emphasis delimiters.  If [startCharacter] is passed, it is used as a
   /// pre-matching check which is faster than matching against [pattern].
   DelimiterSyntax(
-    String pattern, {
+    super.pattern, {
     this.requiresDelimiterRun = false,
-    int? startCharacter,
+    super.startCharacter,
     this.allowIntraWord = false,
     this.tags,
-  }) : super(pattern, startCharacter: startCharacter);
+  });
 
   @override
   bool onMatch(InlineParser parser, Match match) {
