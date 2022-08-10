@@ -1,4 +1,4 @@
-## 6.0.0-dev
+## 6.0.0
 
 * Require Dart 2.17
 * Add support to GFM extension for GitHub task lists (aka checkboxes).  These
