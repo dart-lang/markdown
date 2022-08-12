@@ -253,7 +253,7 @@
         "id": "library/dart:_rti::",
         "kind": "library",
         "name": "rti",
-        "size": 16024,
+        "size": 16036,
         "children": [
           "class/dart:_rti::Rti",
           "class/dart:_rti::TypeRule",
@@ -816,7 +816,7 @@
         "id": "library/org-dartlang-app:///example/app.dart::",
         "kind": "library",
         "name": "<unnamed>",
-        "size": 2547,
+        "size": 2543,
         "children": [
           "class/org-dartlang-app:///example/app.dart::NullTreeSanitizer",
           "field/org-dartlang-app:///example/app.dart::basicRadio",
@@ -24047,8 +24047,8 @@
           "factory": false,
           "external": false
         },
-        "returnType": "Rti",
-        "inferredReturnType": "[exact=Rti]",
+        "returnType": "Rti?",
+        "inferredReturnType": "[null|exact=Rti]",
         "parameters": [
           {
             "name": "parser",
@@ -24059,7 +24059,7 @@
         "sideEffects": "SideEffects(reads anything; writes nothing)",
         "inlinedCount": 12,
         "code": "",
-        "type": "Rti Function(Object?)",
+        "type": "Rti? Function(Object?)",
         "functionKind": 0
       },
       "dart:_rti::_Parser.handleDigit": {
@@ -24678,7 +24678,7 @@
         "id": "function/dart:_rti::_Parser.toType",
         "kind": "function",
         "name": "toType",
-        "size": 115,
+        "size": 127,
         "outputUnit": "outputUnit/main",
         "parent": "class/dart:_rti::_Parser",
         "children": [],
@@ -24698,8 +24698,8 @@
           },
           {
             "name": "environment",
-            "type": "[exact=Rti]",
-            "declaredType": "Rti"
+            "type": "[null|exact=Rti]",
+            "declaredType": "Rti?"
           },
           {
             "name": "item",
@@ -24709,8 +24709,8 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "KQ(a,b,c){if(typeof c==\"string\")return A.Q2(a,c,a.sEA)\nelse if(typeof c==\"number\")return A.TV(a,b,c)\nelse return c}",
-        "type": "Rti Function(Object?,Rti,Object?)",
+        "code": "KQ(a,b,c){if(typeof c==\"string\")return A.Q2(a,c,a.sEA)\nelse if(typeof c==\"number\"){b.toString\nreturn A.TV(a,b,c)}else return c}",
+        "type": "Rti Function(Object?,Rti?,Object?)",
         "functionKind": 0
       },
       "dart:_rti::_Parser.toTypes": {
@@ -24737,8 +24737,8 @@
           },
           {
             "name": "environment",
-            "type": "[exact=Rti]",
-            "declaredType": "Rti"
+            "type": "[null|exact=Rti]",
+            "declaredType": "Rti?"
           },
           {
             "name": "items",
@@ -24749,7 +24749,7 @@
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
         "code": "rT(a,b,c){var t,s=c.length\nfor(t=0;t<s;++t)c[t]=A.KQ(a,b,c[t])}",
-        "type": "void Function(Object?,Rti,Object?)",
+        "type": "void Function(Object?,Rti?,Object?)",
         "functionKind": 0
       },
       "dart:_rti::_Parser.toTypesNamed": {
@@ -24776,8 +24776,8 @@
           },
           {
             "name": "environment",
-            "type": "[exact=Rti]",
-            "declaredType": "Rti"
+            "type": "[null|exact=Rti]",
+            "declaredType": "Rti?"
           },
           {
             "name": "items",
@@ -24788,7 +24788,7 @@
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
         "code": "Be(a,b,c){var t,s=c.length\nfor(t=2;t<s;t+=3)c[t]=A.KQ(a,b,c[t])}",
-        "type": "void Function(Object?,Rti,Object?)",
+        "type": "void Function(Object?,Rti?,Object?)",
         "functionKind": 0
       },
       "dart:_rti::_Parser.universe": {
@@ -40233,7 +40233,7 @@
         "id": "function/org-dartlang-app:///example/app.dart::main",
         "kind": "function",
         "name": "main",
-        "size": 533,
+        "size": 529,
         "outputUnit": "outputUnit/main",
         "parent": "library/org-dartlang-app:///example/app.dart::",
         "children": [],
@@ -40248,7 +40248,7 @@
         "parameters": [],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "E2(){var t,s,r,q,p=\"Markdown is the **best**!\\n\\n* It has lists.\\n* It has [links](https://dart.dev).\\n* It has _so much more_...\",o=\"click\"\n$.J().textContent=\"v6.0.0-dev\"\nt=$.a()\nA.B(t,\"keyup\",A.z(),!1)\ns=window.localStorage.getItem(\"markdown\")\nif(s!=null&&s.length!==0&&s!==p){t.value=s\nt.focus()\nA.h(null)}else A.p(p,82)\nt=$.l()\nt.setAttribute(\"checked\",\"\")\nt.querySelector(\".glyph\").textContent=\"radio_button_checked\"\nr=$.v()\nq=t.id\nq.toString\n$.n=r.q(0,q)\nA.h(null)\nA.B($.G(),o,A.C(),!1)\nA.B($.f(),o,A.C(),!1)\nA.B(t,o,A.C(),!1)}",
+        "code": "E2(){var t,s,r,q,p=\"Markdown is the **best**!\\n\\n* It has lists.\\n* It has [links](https://dart.dev).\\n* It has _so much more_...\",o=\"click\"\n$.J().textContent=\"v6.0.0\"\nt=$.a()\nA.B(t,\"keyup\",A.z(),!1)\ns=window.localStorage.getItem(\"markdown\")\nif(s!=null&&s.length!==0&&s!==p){t.value=s\nt.focus()\nA.h(null)}else A.p(p,82)\nt=$.l()\nt.setAttribute(\"checked\",\"\")\nt.querySelector(\".glyph\").textContent=\"radio_button_checked\"\nr=$.v()\nq=t.id\nq.toString\n$.n=r.q(0,q)\nA.h(null)\nA.B($.G(),o,A.C(),!1)\nA.B($.f(),o,A.C(),!1)\nA.B(t,o,A.C(),!1)}",
         "type": "void Function()",
         "functionKind": 0
       },
@@ -89129,7 +89129,7 @@
       "id": "outputUnit/main",
       "kind": "outputUnit",
       "name": "main",
-      "size": 236863,
+      "size": 236871,
       "filename": "app.dart.js",
       "imports": []
     }
@@ -89139,12 +89139,12 @@
   "dump_minor_version": 1,
   "program": {
     "entrypoint": "function/org-dartlang-app:///example/app.dart::main",
-    "size": 236863,
-    "ramUsage": "230.344 MB",
-    "dart2jsVersion": "2.19.0-32.0.dev",
-    "compilationMoment": "2022-07-26 10:44:50.287603",
-    "compilationDuration": 1043433,
-    "toJsonDuration": 9000,
+    "size": 236871,
+    "ramUsage": "225.578 MB",
+    "dart2jsVersion": "2.19.0-81.0.dev",
+    "compilationMoment": "2022-08-12 14:48:39.575968",
+    "compilationDuration": 986609,
+    "toJsonDuration": 6000,
     "dumpInfoDuration": 0,
     "noSuchMethodEnabled": false,
     "isRuntimeTypeUsed": false,

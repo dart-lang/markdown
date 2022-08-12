@@ -1133,8 +1133,8 @@ if(0===t){b.push(A.mZ(a.u,1,"0&"))
 return}if(1===t){b.push(A.mZ(a.u,4,"1&"))
 return}throw A.b(A.hV("Unexpected extended operation "+A.Ej(t)))},
 KQ(a,b,c){if(typeof c=="string")return A.Q2(a,c,a.sEA)
-else if(typeof c=="number")return A.TV(a,b,c)
-else return c},
+else if(typeof c=="number"){b.toString
+return A.TV(a,b,c)}else return c},
 rT(a,b,c){var t,s=c.length
 for(t=0;t<s;++t)c[t]=A.KQ(a,b,c[t])},
 Be(a,b,c){var t,s=c.length
@@ -1909,7 +1909,7 @@ tA:function tA(a,b,c){this.c=a
 this.a=b
 this.b=c},
 E2(){var t,s,r,q,p="Markdown is the **best**!\n\n* It has lists.\n* It has [links](https://dart.dev).\n* It has _so much more_...",o="click"
-$.J().textContent="v6.0.0-dev"
+$.J().textContent="v6.0.0"
 t=$.a()
 A.B(t,"keyup",A.z(),!1)
 s=window.localStorage.getItem("markdown")
