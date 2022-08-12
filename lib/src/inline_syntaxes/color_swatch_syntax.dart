@@ -35,7 +35,7 @@ class ColorSwatchSyntax extends InlineSyntax {
   /// * `hsl(540,70%,50%)`
   /// * `HSLA(540,70%,50%,0.3)`
   /// * `Hsla(540,70%,50%,0.3)`
-  static final String _pattern =
+  static const _pattern =
       '`((#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8}))|'
       r'([Rr][Gg][Bb][Aa]?\((\d+[%]?),(\d+[%]?),(\d+[%]?),?(\d+\.?\d+[%]?)?\))|'
       r'([Hh][Ss][Ll][Aa]?\((\d+[%]?),(\d+[%]?),(\d+[%]?),?(\d+\.?\d+[%]?)?\)))`';

@@ -9,9 +9,9 @@ import 'dart:io';
 // update_github_emojis.dart now generates the emoji list using the GitHub API
 // to retrieve the emoji list.  It uses this emoji source as a source to keep
 // binary compatibility with the Unicode sequences for each emoji found here.
-final _emojisJsonRawUrl =
+const _emojisJsonRawUrl =
     'https://raw.githubusercontent.com/muan/emojilib/v2.4.0/emojis.json';
-final _emojisFilePath = 'lib/src/legacy_emojis.dart';
+const _emojisFilePath = 'lib/src/legacy_emojis.dart';
 
 Future<void> main() async {
   final client = HttpClient();

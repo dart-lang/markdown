@@ -121,7 +121,7 @@ class DartdocCompare {
       }
       final out = Directory.systemTemp
           .createTempSync('dartdoc-compare-${markdownRef}__');
-      final cmd = 'dart';
+      const cmd = 'dart';
       final args = [dartdocBin, '--output=${out.path}'];
 
       if (sdk) {

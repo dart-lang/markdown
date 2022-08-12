@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:html';
+
 import 'package:markdown/markdown.dart' as md;
 
 import 'highlight.dart';
@@ -14,7 +15,7 @@ final versionSpan = querySelector('.version') as SpanElement;
 
 final nullSanitizer = NullTreeSanitizer();
 const typing = Duration(milliseconds: 150);
-final introText = '''Markdown is the **best**!
+const introText = '''Markdown is the **best**!
 
 * It has lists.
 * It has [links](https://dart.dev).

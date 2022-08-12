@@ -54,7 +54,7 @@ void main() {
 
       test('encodeHtml spaces are preserved in text', () {
         // Example to get a <p> tag rendered before a text node.
-        final contents = 'Sample\n\n<pre>\n A\n B\n</pre>';
+        const contents = 'Sample\n\n<pre>\n A\n B\n</pre>';
         final document = Document(encodeHtml: true);
         final lines = LineSplitter.split(contents).toList();
         final nodes = BlockParser(lines, document).parseLines();
@@ -64,7 +64,7 @@ void main() {
 
       test('encode double quotes, greater than, and less than when escaped',
           () {
-        final contents = r'\>\"\< Hello';
+        const contents = r'\>\"\< Hello';
         final document = Document(encodeHtml: true);
         final nodes = document.parseInline(contents);
         expect(nodes, hasLength(1));
@@ -113,7 +113,7 @@ void main() {
       });
 
       test('leave double quotes, greater than, and less than when escaped', () {
-        final contents = r'\>\"\< Hello';
+        const contents = r'\>\"\< Hello';
         final document = Document(encodeHtml: false);
         final nodes = document.parseInline(contents);
         expect(nodes, hasLength(1));

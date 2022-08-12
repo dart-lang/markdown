@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-final _blnsJsonRawUrl =
+const _blnsJsonRawUrl =
     'https://github.com/minimaxir/big-list-of-naughty-strings/raw/master/blns.json';
-final _blnsFilePath = 'test/blns.dart';
+const _blnsFilePath = 'test/blns.dart';
 
 Future<void> main() async {
   final client = HttpClient();
