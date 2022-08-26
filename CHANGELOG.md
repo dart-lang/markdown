@@ -1,3 +1,8 @@
+## 6.0.1-dev
+
+* Fix a crash in checkbox lists when mixing checkbox items with
+  non-checkbox items.
+
 ## 6.0.0
 
 * Require Dart 2.17

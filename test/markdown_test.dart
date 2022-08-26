@@ -10,7 +10,11 @@ import 'util.dart';
 void main() async {
   await testDirectory('original');
 
-  // Block syntax extensions
+  // Block syntax extensions.
+  testFile(
+    'extensions/fenced_blockquotes.unit',
+    blockSyntaxes: [const FencedBlockquoteSyntax()],
+  );
   testFile(
     'extensions/fenced_code_blocks.unit',
     blockSyntaxes: [const FencedCodeBlockSyntax()],
@@ -18,6 +22,10 @@ void main() async {
   testFile(
     'extensions/headers_with_ids.unit',
     blockSyntaxes: [const HeaderWithIdSyntax()],
+  );
+  testFile(
+    'extensions/ordered_list_with_checkboxes.unit',
+    blockSyntaxes: [const OrderedListWithCheckBoxSyntax()],
   );
   testFile(
     'extensions/setext_headers_with_ids.unit',
@@ -28,8 +36,8 @@ void main() async {
     blockSyntaxes: [const TableSyntax()],
   );
   testFile(
-    'extensions/fenced_blockquotes.unit',
-    blockSyntaxes: [const FencedBlockquoteSyntax()],
+    'extensions/unordered_list_with_checkboxes.unit',
+    blockSyntaxes: [const UnorderedListWithCheckBoxSyntax()],
   );
 
   // Inline syntax extensions
