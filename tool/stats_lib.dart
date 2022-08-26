@@ -128,6 +128,14 @@ CompareResult compareResult(
   bool verboseLooseMatch = false,
   Set<String> extensions = const {},
 }) {
+  var enableTagfilter = false;
+
+  for (final extension in testCase.extensions ?? []) {
+    if (extension == 'tagfilter') {
+      enableTagfilter = true;
+    }
+  }
+
   String output;
   final inlineSyntaxes = <InlineSyntax>[];
   final blockSyntaxes = <BlockSyntax>[];

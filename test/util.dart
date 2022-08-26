@@ -17,6 +17,7 @@ void testDirectory(String name, {ExtensionSet? extensionSet}) {
 
     final inlineSyntaxes = <InlineSyntax>[];
     final blockSyntaxes = <BlockSyntax>[];
+    var enableTagfilter = false;
 
     if (dataCase.file.endsWith('_extension')) {
       final extension = dataCase.file.substring(
@@ -34,7 +35,7 @@ void testDirectory(String name, {ExtensionSet? extensionSet}) {
           blockSyntaxes.add(const TableSyntax());
           break;
         case 'disallowed_raw_html':
-          // TODO(Zhiguang): https://github.com/dart-lang/markdown/pull/447
+          enableTagfilter = true;
           break;
         default:
           throw UnimplementedError('Unimplemented extension "$extension"');
@@ -48,6 +49,7 @@ void testDirectory(String name, {ExtensionSet? extensionSet}) {
       extensionSet: extensionSet,
       inlineSyntaxes: inlineSyntaxes,
       blockSyntaxes: blockSyntaxes,
+      enableTagfilter: enableTagfilter,
     );
   }
 }
@@ -81,6 +83,7 @@ void validateCore(
   Resolver? linkResolver,
   Resolver? imageLinkResolver,
   bool inlineOnly = false,
+  bool enableTagfilter = false,
 }) {
   test(description, () {
     final result = markdownToHtml(
@@ -91,6 +94,7 @@ void validateCore(
       linkResolver: linkResolver,
       imageLinkResolver: imageLinkResolver,
       inlineOnly: inlineOnly,
+      enableTagfilter: enableTagfilter,
     );
 
     markdownPrintOnFailure(markdown, html, result);

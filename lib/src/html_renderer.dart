@@ -20,6 +20,7 @@ String markdownToHtml(
   Resolver? imageLinkResolver,
   bool inlineOnly = false,
   bool encodeHtml = true,
+  bool enableTagfilter = false,
   bool withDefaultBlockSyntaxes = true,
   bool withDefaultInlineSyntaxes = true,
 }) {
@@ -41,11 +42,14 @@ String markdownToHtml(
 
   final nodes = document.parseLines(lines);
 
-  return '${renderToHtml(nodes)}\n';
+  return '${renderToHtml(nodes, enableTagfilter: enableTagfilter)}\n';
 }
 
 /// Renders [nodes] to HTML.
-String renderToHtml(List<Node> nodes) => HtmlRenderer().render(nodes);
+String renderToHtml(List<Node> nodes, {bool enableTagfilter = false}) =>
+    HtmlRenderer(
+      enableTagfilter: enableTagfilter,
+    ).render(nodes);
 
 const _blockTags = [
   'blockquote',
@@ -92,8 +96,11 @@ class HtmlRenderer implements NodeVisitor {
 
   final _elementStack = <Element>[];
   String? _lastVisitedTag;
+  final bool _tagfilterEnabled;
 
-  HtmlRenderer();
+  HtmlRenderer({
+    bool enableTagfilter = false,
+  }) : _tagfilterEnabled = enableTagfilter;
 
   String render(List<Node> nodes) {
     buffer = StringBuffer();
@@ -109,6 +116,10 @@ class HtmlRenderer implements NodeVisitor {
   @override
   void visitText(Text text) {
     var content = text.textContent;
+
+    if (_tagfilterEnabled) {
+      content = _filterTags(content);
+    }
     if (const ['br', 'p', 'li'].contains(_lastVisitedTag)) {
       final lines = LineSplitter.split(content);
       content = content.contains('<pre>')
@@ -193,4 +204,18 @@ class HtmlRenderer implements NodeVisitor {
     uniqueIds.add(suffixedId);
     return suffixedId;
   }
+
+  /// Filters some particular tags, see:
+  /// https://github.github.com/gfm/#disallowed-raw-html-extension-
+  // As said in the specification, this process should happen when rendering
+  // HTML output, so there should not be a dedicated syntax for this extension.
+  String _filterTags(String content) => content.replaceAll(
+      RegExp(
+        '<(?=(?:'
+        'title|textarea|style|xmp|iframe|noembed|noframes|script|plaintext'
+        ')>)',
+        caseSensitive: false,
+        multiLine: true,
+      ),
+      '&lt;');
 }
