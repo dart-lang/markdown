@@ -13,6 +13,12 @@ class UnorderedListSyntax extends ListSyntax {
 
   @override
   bool canParse(BlockParser parser) {
+    // Check if it matches `hrPattern`, otherwise it will produce an infinite
+    // loop if put `UnorderedListSyntax` or `UnorderedListWithCheckBoxSyntax`
+    // bofore `HorizontalRuleSyntax` and parse:
+    // ```
+    // * * *
+    // ```
     if (hrPattern.hasMatch(parser.current)) {
       return false;
     }
