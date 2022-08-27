@@ -5,6 +5,6 @@
 import 'ordered_list_syntax.dart';
 
 /// Parses ordered lists with checkboxes.
-class OrderedListWithCheckBoxSyntax extends OrderedListSyntax {
-  const OrderedListWithCheckBoxSyntax() : super(enableCheckbox: true);
+class OrderedListWithCheckboxSyntax extends OrderedListSyntax {
+  const OrderedListWithCheckboxSyntax();
 }

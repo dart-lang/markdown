@@ -5,6 +5,6 @@
 import 'unordered_list_syntax.dart';
 
 /// Parses unordered lists with checkboxes.
-class UnorderedListWithCheckBoxSyntax extends UnorderedListSyntax {
-  const UnorderedListWithCheckBoxSyntax() : super(enableCheckbox: true);
+class UnOrderedListWithCheckboxSyntax extends UnorderedListSyntax {
+  const UnOrderedListWithCheckboxSyntax();
 }

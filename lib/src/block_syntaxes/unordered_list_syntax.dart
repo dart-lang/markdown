@@ -14,7 +14,7 @@ class UnorderedListSyntax extends ListSyntax {
   @override
   bool canParse(BlockParser parser) {
     // Check if it matches `hrPattern`, otherwise it will produce an infinite
-    // loop if put `UnorderedListSyntax` or `UnorderedListWithCheckBoxSyntax`
+    // loop if put `UnorderedListSyntax` or `UnOrderedListWithCheckboxSyntax`
     // bofore `HorizontalRuleSyntax` and parse:
     // ```
     // * * *
@@ -29,5 +29,5 @@ class UnorderedListSyntax extends ListSyntax {
   @override
   String get listTag => 'ul';
 
-  const UnorderedListSyntax({super.enableCheckbox = false});
+  const UnorderedListSyntax();
 }

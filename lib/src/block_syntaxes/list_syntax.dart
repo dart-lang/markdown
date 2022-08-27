@@ -6,6 +6,8 @@ import '../ast.dart';
 import '../block_parser.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
+import 'ordered_list_with_checkbox_syntax.dart';
+import 'unordered_list_with_checkbox_syntax.dart';
 
 class ListItem {
   const ListItem(
@@ -35,10 +37,8 @@ abstract class ListSyntax extends BlockSyntax {
   }
 
   String get listTag;
-  final bool _checkboxEnabled;
 
-  const ListSyntax({bool enableCheckbox = false})
-      : _checkboxEnabled = enableCheckbox;
+  const ListSyntax();
 
   /// A list of patterns that can start a valid block within a list item.
   static final blocksInList = [
@@ -54,6 +54,8 @@ abstract class ListSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
+    final taskListParserEnabled = this is UnOrderedListWithCheckboxSyntax ||
+        this is OrderedListWithCheckboxSyntax;
     final items = <ListItem>[];
     var childLines = <String>[];
     TaskListItemStatus? taskListItemStatus;
@@ -68,7 +70,7 @@ abstract class ListSyntax extends BlockSyntax {
     String parseTastListItem(String text) {
       final pattern = RegExp(r'^ {0,3}\[([ xX])\][ \t]');
 
-      if (!_checkboxEnabled || !pattern.hasMatch(text)) {
+      if (!taskListParserEnabled || !pattern.hasMatch(text)) {
         taskListItemStatus = null;
         return text;
       }
