@@ -8,11 +8,16 @@ import '../patterns.dart';
 import 'block_syntax.dart';
 
 class ListItem {
-  ListItem(this.lines);
+  const ListItem(
+    this.lines, {
+    this.taskListItemStatus,
+  });
 
-  bool forceBlock = false;
   final List<String> lines;
+  final TaskListItemStatus? taskListItemStatus;
 }
+
+enum TaskListItemStatus { checked, unchecked }
 
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
@@ -30,8 +35,10 @@ abstract class ListSyntax extends BlockSyntax {
   }
 
   String get listTag;
+  final bool _checkboxEnabled;
 
-  const ListSyntax();
+  const ListSyntax({bool enableCheckbox = false})
+      : _checkboxEnabled = enableCheckbox;
 
   /// A list of patterns that can start a valid block within a list item.
   static final blocksInList = [
@@ -49,12 +56,30 @@ abstract class ListSyntax extends BlockSyntax {
   Node parse(BlockParser parser) {
     final items = <ListItem>[];
     var childLines = <String>[];
+    TaskListItemStatus? taskListItemStatus;
 
     void endItem() {
       if (childLines.isNotEmpty) {
-        items.add(ListItem(childLines));
+        items.add(ListItem(childLines, taskListItemStatus: taskListItemStatus));
         childLines = <String>[];
       }
+    }
+
+    String parseTastListItem(String text) {
+      final pattern = RegExp(r'^ {0,3}\[([ xX])\][ \t]');
+
+      if (!_checkboxEnabled || !pattern.hasMatch(text)) {
+        taskListItemStatus = null;
+        return text;
+      }
+
+      return text.replaceFirstMapped(pattern, ((match) {
+        taskListItemStatus = match[1] == ' '
+            ? TaskListItemStatus.unchecked
+            : TaskListItemStatus.checked;
+
+        return '';
+      }));
     }
 
     late Match? match;
@@ -85,8 +110,8 @@ abstract class ListSyntax extends BlockSyntax {
         final line = parser.current
             .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
             .replaceFirst(indent, '');
-        childLines.add(line);
-      } else if (hrPattern.hasMatch(parser.current)) {
+        childLines.add(parseTastListItem(line));
+      } else if (tryMatch(hrPattern)) {
         // Horizontal rule takes precedence to a new list item.
         break;
       } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
@@ -128,7 +153,7 @@ abstract class ListSyntax extends BlockSyntax {
         }
         // End the current list item and start a new one.
         endItem();
-        childLines.add(restWhitespace + content);
+        childLines.add(parseTastListItem(restWhitespace + content));
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
@@ -152,11 +177,27 @@ abstract class ListSyntax extends BlockSyntax {
     items.forEach(_removeLeadingEmptyLine);
     final anyEmptyLines = _removeTrailingEmptyLines(items);
     var anyEmptyLinesBetweenBlocks = false;
+    var containsTaskList = false;
 
     for (final item in items) {
+      Element? checkboxToInsert;
+      if (item.taskListItemStatus != null) {
+        containsTaskList = true;
+        checkboxToInsert = Element.withTag('input')
+          ..attributes['type'] = 'checkbox';
+        if (item.taskListItemStatus == TaskListItemStatus.checked) {
+          checkboxToInsert.attributes['checked'] = 'true';
+        }
+      }
+
       final itemParser = BlockParser(item.lines, parser.document);
       final children = itemParser.parseLines();
-      itemNodes.add(Element('li', children));
+      final itemElement = checkboxToInsert == null
+          ? Element('li', children)
+          : (Element('li', [checkboxToInsert, ...children])
+            ..attributes['class'] = 'task-list-item');
+
+      itemNodes.add(itemElement);
       anyEmptyLinesBetweenBlocks =
           anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
@@ -182,11 +223,15 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
 
+    final listElement = Element(listTag, itemNodes);
     if (listTag == 'ol' && startNumber != 1) {
-      return Element(listTag, itemNodes)..attributes['start'] = '$startNumber';
-    } else {
-      return Element(listTag, itemNodes);
+      listElement.attributes['start'] = '$startNumber';
     }
+
+    if (containsTaskList) {
+      listElement.attributes['class'] = 'contains-task-list';
+    }
+    return listElement;
   }
 
   void _removeLeadingEmptyLine(ListItem item) {

@@ -13,5 +13,5 @@ class OrderedListSyntax extends ListSyntax {
   @override
   String get listTag => 'ol';
 
-  const OrderedListSyntax();
+  const OrderedListSyntax({super.enableCheckbox = false});
 }
