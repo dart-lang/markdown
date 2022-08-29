@@ -170,7 +170,7 @@ class InlineParser {
             if (d.char == $lbracket) d.isActive = false;
           }
         }
-        _tree[nodeIndex] = linkNode;
+        _tree.replaceRange(nodeIndex, _tree.length, linkNode);
         advanceBy(1);
         start = pos;
       } else {
@@ -255,7 +255,7 @@ class InlineParser {
         _tree.replaceRange(
           openerTextNodeIndex + 1,
           closerTextNodeIndex,
-          [node!],
+          node!,
         );
         // Slide [closerTextNodeIndex] back accordingly.
         closerTextNodeIndex = openerTextNodeIndex + 2;
