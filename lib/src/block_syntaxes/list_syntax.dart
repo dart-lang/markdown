@@ -155,7 +155,7 @@ abstract class ListSyntax extends BlockSyntax {
         }
         // End the current list item and start a new one.
         endItem();
-        childLines.add(parseTastListItem(restWhitespace + content));
+        childLines.add(parseTastListItem('$restWhitespace$content'));
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
