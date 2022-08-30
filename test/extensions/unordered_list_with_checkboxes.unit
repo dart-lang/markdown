@@ -22,6 +22,14 @@
 <li class="task-list-item"><input type="checkbox" checked="true"></input>one</li>
 <li class="task-list-item"><input type="checkbox" checked="true"></input>two</li>
 </ul>
+>>> checkbox with X
+* [X] one
+* [X] two
+<<<
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" checked="true"></input>one</li>
+<li class="task-list-item"><input type="checkbox" checked="true"></input>two</li>
+</ul>
 >>> mixed checkboxes
 * [ ] one
 * [] two
