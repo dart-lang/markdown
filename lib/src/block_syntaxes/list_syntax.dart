@@ -54,7 +54,7 @@ abstract class ListSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
-    final taskListParserEnabled = this is UnOrderedListWithCheckboxSyntax ||
+    final taskListParserEnabled = this is UnorderedListWithCheckboxSyntax ||
         this is OrderedListWithCheckboxSyntax;
     final items = <ListItem>[];
     var childLines = <String>[];

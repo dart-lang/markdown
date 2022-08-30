@@ -37,7 +37,7 @@ void main() async {
   );
   testFile(
     'extensions/unordered_list_with_checkboxes.unit',
-    blockSyntaxes: [const UnOrderedListWithCheckboxSyntax()],
+    blockSyntaxes: [const UnorderedListWithCheckboxSyntax()],
   );
 
   // Inline syntax extensions

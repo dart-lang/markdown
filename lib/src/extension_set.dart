@@ -60,7 +60,7 @@ class ExtensionSet {
         const HeaderWithIdSyntax(),
         const SetextHeaderWithIdSyntax(),
         const TableSyntax(),
-        const UnOrderedListWithCheckboxSyntax(),
+        const UnorderedListWithCheckboxSyntax(),
         const OrderedListWithCheckboxSyntax(),
       ],
     ),
@@ -82,7 +82,7 @@ class ExtensionSet {
       <BlockSyntax>[
         const FencedCodeBlockSyntax(),
         const TableSyntax(),
-        const UnOrderedListWithCheckboxSyntax(),
+        const UnorderedListWithCheckboxSyntax(),
         const OrderedListWithCheckboxSyntax(),
       ],
     ),

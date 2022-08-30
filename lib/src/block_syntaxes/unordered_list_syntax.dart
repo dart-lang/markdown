@@ -14,7 +14,7 @@ class UnorderedListSyntax extends ListSyntax {
   @override
   bool canParse(BlockParser parser) {
     // Check if it matches `hrPattern`, otherwise it will produce an infinite
-    // loop if put `UnorderedListSyntax` or `UnOrderedListWithCheckboxSyntax`
+    // loop if put `UnorderedListSyntax` or `UnorderedListWithCheckboxSyntax`
     // bofore `HorizontalRuleSyntax` and parse:
     // ```
     // * * *
