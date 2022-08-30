@@ -3,8 +3,8 @@
 2. [ ] two
 <<<
 <ol class="contains-task-list">
-<li class="task-list-item"><input type="checkbox"></input>​one</li>
-<li class="task-list-item"><input type="checkbox"></input>​two</li>
+<li class="task-list-item"><input type="checkbox"></input>one</li>
+<li class="task-list-item"><input type="checkbox"></input>two</li>
 </ol>
 >>> empty checkbox
 1. [] one
@@ -19,16 +19,16 @@
 2. [x] two
 <<<
 <ol class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" checked="true"></input>​​one</li>
-<li class="task-list-item"><input type="checkbox" checked="true"></input>​​two</li>
+<li class="task-list-item"><input type="checkbox" checked="true"></input>one</li>
+<li class="task-list-item"><input type="checkbox" checked="true"></input>two</li>
 </ol>
 >>> checkbox with X
 1. [X] one
 2. [X] two
 <<<
 <ol class="contains-task-list">
-<li class="task-list-item"><input type="checkbox" checked="true"></input>​​one</li>
-<li class="task-list-item"><input type="checkbox" checked="true"></input>​​two</li>
+<li class="task-list-item"><input type="checkbox" checked="true"></input>one</li>
+<li class="task-list-item"><input type="checkbox" checked="true"></input>two</li>
 </ol>
 >>> mixed checkboxes
 1. [ ] one
@@ -38,10 +38,10 @@
 5. five
 <<<
 <ol class="contains-task-list">
-<li class="task-list-item"><input type="checkbox"></input>​one</li>
+<li class="task-list-item"><input type="checkbox"></input>one</li>
 <li>[] two</li>
-<li class="task-list-item"><input type="checkbox" checked="true"></input>​​three</li>
-<li class="task-list-item"><input type="checkbox" checked="true"></input>​​four</li>
+<li class="task-list-item"><input type="checkbox" checked="true"></input>three</li>
+<li class="task-list-item"><input type="checkbox" checked="true"></input>four</li>
 <li>five</li>
 </ol>
 >>> mixed leading spaces
@@ -52,12 +52,12 @@
 5.    [ ] four
 6.     [ ] five
 <<<
-<ol class="contains-task-list">
-<li class="task-list-item"><input type="checkbox"></input>​zero</li>
-<li class="task-list-item"><input type="checkbox"></input>​one</li>
-<li class="task-list-item"><input type="checkbox"></input>​two</li>
-<li class="task-list-item"><input type="checkbox"></input>​three</li>
-<li class="task-list-item"><input type="checkbox"></input>​four</li>
+<p>1.[ ] zero</p>
+<ol start="2" class="contains-task-list">
+<li class="task-list-item"><input type="checkbox"></input>one</li>
+<li class="task-list-item"><input type="checkbox"></input>two</li>
+<li class="task-list-item"><input type="checkbox"></input>three</li>
+<li class="task-list-item"><input type="checkbox"></input>four</li>
 <li>
 <pre><code>[ ] five
 </code></pre>

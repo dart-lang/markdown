@@ -60,8 +60,8 @@ class ExtensionSet {
         const HeaderWithIdSyntax(),
         const SetextHeaderWithIdSyntax(),
         const TableSyntax(),
-        const UnorderedListWithCheckBoxSyntax(),
-        const OrderedListWithCheckBoxSyntax(),
+        const UnorderedListWithCheckboxSyntax(),
+        const OrderedListWithCheckboxSyntax(),
       ],
     ),
     List<InlineSyntax>.unmodifiable(
@@ -82,8 +82,8 @@ class ExtensionSet {
       <BlockSyntax>[
         const FencedCodeBlockSyntax(),
         const TableSyntax(),
-        const UnorderedListWithCheckBoxSyntax(),
-        const OrderedListWithCheckBoxSyntax(),
+        const UnorderedListWithCheckboxSyntax(),
+        const OrderedListWithCheckboxSyntax(),
       ],
     ),
     List<InlineSyntax>.unmodifiable(

@@ -25,7 +25,7 @@ void main() async {
   );
   testFile(
     'extensions/ordered_list_with_checkboxes.unit',
-    blockSyntaxes: [const OrderedListWithCheckBoxSyntax()],
+    blockSyntaxes: [const OrderedListWithCheckboxSyntax()],
   );
   testFile(
     'extensions/setext_headers_with_ids.unit',
@@ -37,7 +37,7 @@ void main() async {
   );
   testFile(
     'extensions/unordered_list_with_checkboxes.unit',
-    blockSyntaxes: [const UnorderedListWithCheckBoxSyntax()],
+    blockSyntaxes: [const UnorderedListWithCheckboxSyntax()],
   );
 
   // Inline syntax extensions
