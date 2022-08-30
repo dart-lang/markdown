@@ -12,14 +12,14 @@ import 'unordered_list_with_checkbox_syntax.dart';
 class ListItem {
   const ListItem(
     this.lines, {
-    this.taskListItemStatus,
+    this.taskListItemState,
   });
 
   final List<String> lines;
-  final TaskListItemStatus? taskListItemStatus;
+  final TaskListItemState? taskListItemState;
 }
 
-enum TaskListItemStatus { checked, unchecked }
+enum TaskListItemState { checked, unchecked }
 
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
@@ -58,36 +58,36 @@ abstract class ListSyntax extends BlockSyntax {
         this is OrderedListWithCheckboxSyntax;
     final items = <ListItem>[];
     var childLines = <String>[];
-    TaskListItemStatus? taskListItemStatus;
+    TaskListItemState? taskListItemState;
 
     void endItem() {
       if (childLines.isNotEmpty) {
-        items.add(ListItem(childLines, taskListItemStatus: taskListItemStatus));
+        items.add(ListItem(childLines, taskListItemState: taskListItemState));
         childLines = <String>[];
       }
     }
 
-    String parseTastListItem(String text) {
+    String parseTaskListItem(String text) {
       final pattern = RegExp(r'^ {0,3}\[([ xX])\][ \t]');
 
-      if (!taskListParserEnabled || !pattern.hasMatch(text)) {
-        taskListItemStatus = null;
+      if (taskListParserEnabled && pattern.hasMatch(text)) {
+        return text.replaceFirstMapped(pattern, ((match) {
+          taskListItemState = match[1] == ' '
+              ? TaskListItemState.unchecked
+              : TaskListItemState.checked;
+
+          return '';
+        }));
+      } else {
+        taskListItemState = null;
         return text;
       }
-
-      return text.replaceFirstMapped(pattern, ((match) {
-        taskListItemStatus = match[1] == ' '
-            ? TaskListItemStatus.unchecked
-            : TaskListItemStatus.checked;
-
-        return '';
-      }));
     }
 
-    late Match? match;
+    late Match? possibleMatch;
     bool tryMatch(RegExp pattern) {
-      match = pattern.firstMatch(parser.current);
-      return match != null;
+      possibleMatch = pattern.firstMatch(parser.current);
+      return possibleMatch != null;
     }
 
     String? listMarker;
@@ -112,20 +112,22 @@ abstract class ListSyntax extends BlockSyntax {
         final line = parser.current
             .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
             .replaceFirst(indent, '');
-        childLines.add(parseTastListItem(line));
+        childLines.add(parseTaskListItem(line));
       } else if (tryMatch(hrPattern)) {
         // Horizontal rule takes precedence to a new list item.
         break;
       } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
-        final precedingWhitespace = match![1]!;
-        final digits = match![2] ?? '';
+        // We know we have a valid [possibleMatch] now, so capture it.
+        final successfulMatch = possibleMatch!;
+        final precedingWhitespace = successfulMatch[1]!;
+        final digits = successfulMatch[2] ?? '';
         if (startNumber == null && digits.isNotEmpty) {
           startNumber = int.parse(digits);
         }
-        final marker = match![3]!;
-        final firstWhitespace = match![5] ?? '';
-        final restWhitespace = match![6] ?? '';
-        final content = match![7] ?? '';
+        final marker = successfulMatch[3]!;
+        final firstWhitespace = successfulMatch[5] ?? '';
+        final restWhitespace = successfulMatch[6] ?? '';
+        final content = successfulMatch[7] ?? '';
         final isBlank = content.isEmpty;
         if (listMarker != null && listMarker != marker) {
           // Changing the bullet or ordered list delimiter starts a new list.
@@ -155,7 +157,7 @@ abstract class ListSyntax extends BlockSyntax {
         }
         // End the current list item and start a new one.
         endItem();
-        childLines.add(parseTastListItem('$restWhitespace$content'));
+        childLines.add(parseTaskListItem('$restWhitespace$content'));
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
@@ -183,11 +185,11 @@ abstract class ListSyntax extends BlockSyntax {
 
     for (final item in items) {
       Element? checkboxToInsert;
-      if (item.taskListItemStatus != null) {
+      if (item.taskListItemState != null) {
         containsTaskList = true;
         checkboxToInsert = Element.withTag('input')
           ..attributes['type'] = 'checkbox';
-        if (item.taskListItemStatus == TaskListItemStatus.checked) {
+        if (item.taskListItemState == TaskListItemState.checked) {
           checkboxToInsert.attributes['checked'] = 'true';
         }
       }
