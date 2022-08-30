@@ -117,17 +117,16 @@ abstract class ListSyntax extends BlockSyntax {
         // Horizontal rule takes precedence to a new list item.
         break;
       } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
-        // We know we have a valid [possibleMatch] now, so capture it.
-        final successfulMatch = possibleMatch!;
-        final precedingWhitespace = successfulMatch[1]!;
-        final digits = successfulMatch[2] ?? '';
+        final match = possibleMatch!;
+        final precedingWhitespace = match[1]!;
+        final digits = match[2] ?? '';
         if (startNumber == null && digits.isNotEmpty) {
           startNumber = int.parse(digits);
         }
-        final marker = successfulMatch[3]!;
-        final firstWhitespace = successfulMatch[5] ?? '';
-        final restWhitespace = successfulMatch[6] ?? '';
-        final content = successfulMatch[7] ?? '';
+        final marker = match[3]!;
+        final firstWhitespace = match[5] ?? '';
+        final restWhitespace = match[6] ?? '';
+        final content = match[7] ?? '';
         final isBlank = content.isEmpty;
         if (listMarker != null && listMarker != marker) {
           // Changing the bullet or ordered list delimiter starts a new list.
