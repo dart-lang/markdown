@@ -1,5 +1,11 @@
-## 6.0.0-dev
+## 6.0.1-dev
 
+* Fix a crash in checkbox lists when mixing checkbox items with
+  non-checkbox items.
+
+## 6.0.0
+
+* Require Dart 2.17
 * Add support to GFM extension for GitHub task lists (aka checkboxes).  These
   are only active in the `gitHubFlavored` and `gitHubWeb` extension sets.
 * Add support for `#ff0000` color swatches.
