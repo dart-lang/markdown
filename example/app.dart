@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:html';
+
 import 'package:markdown/markdown.dart' as md;
 
 import 'highlight.dart';
@@ -14,11 +15,15 @@ final versionSpan = querySelector('.version') as SpanElement;
 
 final nullSanitizer = NullTreeSanitizer();
 const typing = Duration(milliseconds: 150);
-final introText = '''Markdown is the **best**!
+const introText = '''Markdown is the **best**!
 
 * It has lists.
 * It has [links](https://dart.dev).
-* It has _so much more_...''';
+* It has...
+  ```dart
+  void sourceCode() {}
+  ```
+* ...and _so much more_...''';
 
 // Flavor support.
 final basicRadio = querySelector('#basic-radio') as HtmlElement;
