@@ -220,7 +220,7 @@ Future<void> _printRaw(
     sink = stdout;
   }
 
-  final encoder = const JsonEncoder.withIndent(' ', _convert);
+  const encoder = JsonEncoder.withIndent(' ', _convert);
   try {
     sink.writeln(encoder.convert(scores));
   } on JsonUnsupportedObjectError catch (e) {

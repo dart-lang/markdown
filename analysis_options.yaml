@@ -20,10 +20,12 @@ linter:
     - directives_ordering
     - only_throw_errors
     - package_api_docs
+    - prefer_const_declarations
+    - prefer_final_locals
+    - prefer_single_quotes
     - test_types_in_equals
     - throw_in_finally
-    - prefer_final_locals
+    - unnecessary_raw_strings
     - use_if_null_to_convert_nulls_to_bools
     - use_raw_strings
     - use_super_parameters
-    - unnecessary_raw_strings

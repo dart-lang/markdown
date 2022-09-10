@@ -217,7 +217,7 @@ class DelimiterRun implements Delimiter {
       ']');
 
   // TODO(srawlins): Unicode whitespace
-  static final String whitespace = ' \t\r\n';
+  static const whitespace = ' \t\r\n';
 
   @override
   Text node;
