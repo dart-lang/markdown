@@ -127,19 +127,20 @@ final dummyPattern = RegExp('');
 
 /// A [String] pattern to match a named tag like `<table>` or `</table>`.
 const _namedTagDefinition =
-    // Open tag begins.
+    // Opening tag begins.
     '<'
 
     // Tag name.
     '[a-z][a-z0-9-]*'
 
-    // Attribute begin, see
+    // Attribute begins, see
     // https://spec.commonmark.org/0.30/#attribute.
     r'(?:\s+'
 
     // Attribute name, see
     // https://spec.commonmark.org/0.30/#attribute-name.
     '[a-z_:][a-z0-9._:-]*'
+
     //
     '(?:'
     // Attribute value specification, see
@@ -150,10 +151,10 @@ const _namedTagDefinition =
     // https://spec.commonmark.org/0.30/#unquoted-attribute-value.
     r'''(?:[^\s"'=<>`]+?|'[^']*?'|"[^"]*?")'''
 
-    //  Attribute end.
+    // Attribute ends.
     ')?)*'
 
-    // Tag end
+    // Opening tag ends.
     r'\s*/?>'
 
     //
