@@ -7,7 +7,7 @@ import '../block_parser.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 
-/// Parse HTML block.
+/// Parse HTML blocks.
 class HtmlBlockSyntax extends BlockSyntax {
   @override
   RegExp get pattern => htmlBlockPattern;
