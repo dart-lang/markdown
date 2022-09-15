@@ -333,7 +333,7 @@
   "168": "strict",
   "169": "strict",
   "170": "strict",
-  "171": "loose",
+  "171": "strict",
   "172": "strict",
   "173": "strict",
   "174": "loose",
@@ -352,7 +352,7 @@
   "187": "strict",
   "188": "loose",
   "189": "strict",
-  "190": "loose",
+  "190": "strict",
   "191": "loose"
  },
  "Images": {
@@ -620,7 +620,7 @@
   "620": "fail",
   "621": "fail",
   "622": "strict",
-  "623": "fail",
+  "623": "loose",
   "624": "loose",
   "625": "strict",
   "626": "strict",
