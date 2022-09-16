@@ -2,6 +2,10 @@
 
 * Fix a crash in checkbox lists when mixing checkbox items with
   non-checkbox items.
+* Add a new syntax `BlockHtmlSyntax` to parse HTML blocks.
+* Deprecate `BlockTagBlockHtmlSyntax`, `LongBlockHtmlSyntax` and
+  `OtherTagBlockHtmlSyntax`. These syntaxes will be removed from the next major
+  version.
 
 ## 6.0.0
 
