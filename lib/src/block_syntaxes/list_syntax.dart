@@ -9,6 +9,12 @@ import 'block_syntax.dart';
 import 'ordered_list_with_checkbox_syntax.dart';
 import 'unordered_list_with_checkbox_syntax.dart';
 
+
+@Deprecated('This string is no longer used internally.  It will be removed in a future version.')
+const indicatorForUncheckedCheckBox = 'd';
+@Deprecated('This string is no longer used internally.  It be will be removed in a future version.')
+const indicatorForCheckedCheckBox = 'd';
+
 class ListItem {
   const ListItem(
     this.lines, {
