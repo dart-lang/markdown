@@ -1,4 +1,4 @@
-## 6.0.1-dev
+## 6.0.1
 
 * Fix a crash in checkbox lists when mixing checkbox items with
   non-checkbox items.
