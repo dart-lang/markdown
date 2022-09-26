@@ -9,6 +9,18 @@ import 'block_syntax.dart';
 import 'ordered_list_with_checkbox_syntax.dart';
 import 'unordered_list_with_checkbox_syntax.dart';
 
+/// As of Markdown 6.0.1 invisible indicators for checked/unchecked checkboxes are
+/// no longer used.  These constants are now empty strings to reflect that.
+@Deprecated(
+    'This string is no longer used internally.  It will be removed in a future version.')
+const indicatorForUncheckedCheckBox = '';
+
+/// As of Markdown 6.0.1 invisible indicators for checked/unchecked checkboxes are
+/// no longer used.  These constants are now empty strings to reflect that.
+@Deprecated(
+    'This string is no longer used internally.  It be will be removed in a future version.')
+const indicatorForCheckedCheckBox = '';
+
 class ListItem {
   const ListItem(
     this.lines, {
