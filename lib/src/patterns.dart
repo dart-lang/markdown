@@ -166,7 +166,7 @@ const _namedTagDefinition =
 
 /// A pattern to match the start of an HTML block.
 ///
-/// The 7 conditions here correspond to the 7 conditions in the Commonmark
+/// The 7 conditions here correspond to the 7 start conditions in the Commonmark
 /// specification one by one: https://spec.commonmark.org/0.30/#html-block.
 final htmlBlockPattern = RegExp(
     '^ {0,3}(?:'
