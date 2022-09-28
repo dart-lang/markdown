@@ -64,7 +64,7 @@ class HtmlBlockSyntax extends BlockSyntax {
       parser.advance();
     }
 
-    // If the following lines start a HTML block again, put them together with
+    // If the following lines start an HTML block again, put them together with
     // current HTML block.
     if (!parser.isDone &&
         parser.next != null &&

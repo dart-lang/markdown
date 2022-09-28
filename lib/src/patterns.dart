@@ -157,13 +157,17 @@ const _namedTagDefinition =
     // Opening tag ends.
     r'\s*/?>'
 
-    //
+    // Or
     '|'
 
     // Closing tag, see
     // https://spec.commonmark.org/0.30/#closing-tag.
     r'</[a-z][a-z0-9-]*\s*>';
 
+/// A pattern to match the start of an HTML block.
+///
+/// The 7 conditions here correspond to the 7 conditions in the Commonmark
+/// specification one by one: https://spec.commonmark.org/0.30/#html-block.
 final htmlBlockPattern = RegExp(
     '^ {0,3}(?:'
     '<(?<condition_1>pre|script|style|textarea)'
@@ -186,10 +190,10 @@ final htmlBlockPattern = RegExp(
     r'(?:\s|>|/>|$)'
     '|'
 
-    // Here is more restricted than the commonmark definition(Rule #7).
+    // Here we are more restrictive than the Commonmark definition (Rule #7).
     // Otherwise some raw HTML test cases will fail, for example:
     // https://spec.commonmark.org/0.30/#example-618.
-    // Because if a line is treated as a HTML block, it will output as Text node
+    // Because if a line is treated as an HTML block, it will output as Text node
     // directly, the RawHtmlSyntax does not have a chance to validate if this
     // HTML tag is legal or not.
     '(?<condition_7>(?:$_namedTagDefinition)\\s*\$))',
