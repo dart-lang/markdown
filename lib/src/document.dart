@@ -11,7 +11,7 @@ import 'inline_syntaxes/inline_syntax.dart';
 
 /// Maintains the context needed to parse a Markdown document.
 class Document {
-  final Map<String, LinkReference> linkReferences = <String, LinkReference>{};
+  final Map<String, LinkReference> linkReferences = {};
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;
   final bool encodeHtml;
@@ -44,8 +44,12 @@ class Document {
     this.withDefaultInlineSyntaxes = true,
   }) : hasCustomInlineSyntaxes = (inlineSyntaxes?.isNotEmpty ?? false) ||
             (extensionSet?.inlineSyntaxes.isNotEmpty ?? false) {
-    _blockSyntaxes.addAll(blockSyntaxes ?? []);
-    _inlineSyntaxes.addAll(inlineSyntaxes ?? []);
+    if (blockSyntaxes != null) {
+      _blockSyntaxes.addAll(blockSyntaxes);
+    }
+    if (inlineSyntaxes != null) {
+      _inlineSyntaxes.addAll(inlineSyntaxes);
+    }
 
     if (extensionSet == null) {
       if (withDefaultBlockSyntaxes) {

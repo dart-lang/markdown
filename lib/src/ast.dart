@@ -21,7 +21,7 @@ class Element implements Node {
   String? generatedId;
 
   /// Instantiates a [tag] Element with [children].
-  Element(this.tag, this.children) : attributes = <String, String>{};
+  Element(this.tag, this.children) : attributes = {};
 
   /// Instantiates an empty, self-closing [tag] Element.
   Element.empty(this.tag)
@@ -30,7 +30,7 @@ class Element implements Node {
 
   /// Instantiates a [tag] Element with no [children].
   Element.withTag(this.tag)
-      : children = [],
+      : children = const [],
         attributes = {};
 
   /// Instantiates a [tag] Element with a single Text child.
@@ -55,7 +55,10 @@ class Element implements Node {
 
   @override
   String get textContent {
-    return (children ?? []).map((child) => child.textContent).join('');
+    final children = this.children;
+    return children == null
+        ? ''
+        : children.map((child) => child.textContent).join('');
   }
 }
 
