@@ -8,11 +8,17 @@ import '../patterns.dart';
 import 'block_syntax.dart';
 
 /// Parse HTML blocks.
+// There are seven kinds of HTML block defined in the CommonMark spec:
+// https://spec.commonmark.org/0.30/#html-blocks.
+// These matching conditions and HTML block types mentioned in this syntax
+// correspond to these ones in the CommonMark spec.
 class HtmlBlockSyntax extends BlockSyntax {
   @override
   RegExp get pattern => htmlBlockPattern;
 
-  // All types of HTML blocks except type 7 may interrupt a paragraph.
+  // All types of HTML blocks except type 7 may interrupt a paragraph, see the
+  // second paragraph after https://spec.commonmark.org/0.30/#example-148 for
+  // more detail.
   @override
   bool canEndBlock(BlockParser parser) =>
       pattern.firstMatch(parser.current)!.namedGroup('condition_7') == null;
