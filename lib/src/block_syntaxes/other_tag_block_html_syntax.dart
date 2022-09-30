@@ -5,6 +5,7 @@
 import '../block_parser.dart';
 import 'block_tag_block_html_syntax.dart';
 
+@Deprecated('Use HtmlBlockSyntax instead')
 class OtherTagBlockHtmlSyntax extends BlockTagBlockHtmlSyntax {
   @override
   bool canEndBlock(BlockParser parser) => false;

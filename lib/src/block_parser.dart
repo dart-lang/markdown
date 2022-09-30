@@ -4,16 +4,14 @@
 
 import 'ast.dart';
 import 'block_syntaxes/block_syntax.dart';
-import 'block_syntaxes/block_tag_block_html_syntax.dart';
 import 'block_syntaxes/blockquote_syntax.dart';
 import 'block_syntaxes/code_block_syntax.dart';
 import 'block_syntaxes/dummy_block_syntax.dart';
 import 'block_syntaxes/empty_block_syntax.dart';
 import 'block_syntaxes/header_syntax.dart';
 import 'block_syntaxes/horizontal_rule_syntax.dart';
-import 'block_syntaxes/long_block_html_syntax.dart';
+import 'block_syntaxes/html_block_syntax.dart';
 import 'block_syntaxes/ordered_list_syntax.dart';
-import 'block_syntaxes/other_tag_block_html_syntax.dart';
 import 'block_syntaxes/paragraph_syntax.dart';
 import 'block_syntaxes/setext_header_syntax.dart';
 import 'block_syntaxes/unordered_list_syntax.dart';
@@ -43,15 +41,7 @@ class BlockParser {
   /// The collection of built-in block parsers.
   final List<BlockSyntax> standardBlockSyntaxes = [
     const EmptyBlockSyntax(),
-    const BlockTagBlockHtmlSyntax(),
-    LongBlockHtmlSyntax(r'^ {0,3}<pre(?:\s|>|$)', '</pre>'),
-    LongBlockHtmlSyntax(r'^ {0,3}<script(?:\s|>|$)', '</script>'),
-    LongBlockHtmlSyntax(r'^ {0,3}<style(?:\s|>|$)', '</style>'),
-    LongBlockHtmlSyntax('^ {0,3}<!--', '-->'),
-    LongBlockHtmlSyntax(r'^ {0,3}<\?', r'\?>'),
-    LongBlockHtmlSyntax('^ {0,3}<![A-Z]', '>'),
-    LongBlockHtmlSyntax(r'^ {0,3}<!\[CDATA\[', r'\]\]>'),
-    const OtherTagBlockHtmlSyntax(),
+    const HtmlBlockSyntax(),
     const SetextHeaderSyntax(),
     const HeaderSyntax(),
     const CodeBlockSyntax(),

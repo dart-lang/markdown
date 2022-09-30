@@ -395,9 +395,13 @@ Hi
 
 </table>
 <<<
-<table><tr><td>
+<table>
+<tr>
+<td>
 Hi
-</td></tr></table>
+</td>
+</tr>
+</table>
 >>> HTML blocks - 160
 <table>
 
@@ -411,8 +415,10 @@ Hi
 
 </table>
 <<<
-<table>  <tr>
+<table>
+  <tr>
 <pre><code>&lt;td&gt;
   Hi
 &lt;/td&gt;
-</code></pre>  </tr></table>
+</code></pre>  </tr>
+</table>

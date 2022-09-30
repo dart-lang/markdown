@@ -10,6 +10,7 @@ import 'block_html_syntax.dart';
 ///
 /// In practice this means that the syntax dominates; it is allowed to eat
 /// many lines, including blank lines, before matching its `endPattern`.
+@Deprecated('Use HtmlBlockSyntax instead')
 class LongBlockHtmlSyntax extends BlockHtmlSyntax {
   @override
   final RegExp pattern;

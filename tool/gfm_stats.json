@@ -367,7 +367,7 @@
   "156": "strict",
   "157": "loose",
   "158": "strict",
-  "159": "loose",
+  "159": "strict",
   "160": "loose"
  },
  "Images": {
@@ -633,7 +633,7 @@
   "640": "fail",
   "641": "fail",
   "642": "strict",
-  "643": "fail",
+  "643": "loose",
   "644": "loose",
   "645": "strict",
   "646": "strict",

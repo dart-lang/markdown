@@ -7,6 +7,7 @@ import '../block_parser.dart';
 import '../patterns.dart';
 import 'block_html_syntax.dart';
 
+@Deprecated('Use HtmlBlockSyntax instead')
 class BlockTagBlockHtmlSyntax extends BlockHtmlSyntax {
   static final _pattern = RegExp(
       '^ {0,3}</?(?:address|article|aside|base|basefont|blockquote|body|'
