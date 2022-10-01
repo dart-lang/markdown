@@ -6,6 +6,7 @@
 * Deprecate `BlockTagBlockHtmlSyntax`, `LongBlockHtmlSyntax` and
   `OtherTagBlockHtmlSyntax`. These syntaxes will be removed from the next major
   version.
+* Add an option `caseSensitive` to `TextSyntax`.
 
 ## 6.0.0
 
