@@ -280,7 +280,7 @@ bar>)</p>
 
 [SS]: /url
 <<<
-<p>[ẞ]</p>
+<p><a href="/url">ẞ</a></p>
 >>> Links - 540
 [Foo
   bar]: /url
