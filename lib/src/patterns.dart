@@ -126,7 +126,7 @@ final tablePattern = RegExp(
 final dummyPattern = RegExp('');
 
 /// A [String] pattern to match a named tag like `<table>` or `</table>`.
-const _namedTagDefinition =
+const namedTagDefinition =
     // Opening tag begins.
     '<'
 
@@ -196,5 +196,5 @@ final htmlBlockPattern = RegExp(
     // Because if a line is treated as an HTML block, it will output as Text node
     // directly, the RawHtmlSyntax does not have a chance to validate if this
     // HTML tag is legal or not.
-    '(?<condition_7>(?:$_namedTagDefinition)\\s*\$))',
+    '(?<condition_7>(?:$namedTagDefinition)\\s*\$))',
     caseSensitive: false);

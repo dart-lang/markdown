@@ -16,8 +16,12 @@ class TextSyntax extends InlineSyntax {
   /// If [sub] is passed, it is used as a simple replacement for [pattern]. If
   /// [startCharacter] is passed, it is used as a pre-matching check which is
   /// faster than matching against [pattern].
-  TextSyntax(super.pattern, {String sub = '', super.startCharacter})
-      : substitute = sub;
+  TextSyntax(
+    super.pattern, {
+    String sub = '',
+    super.startCharacter,
+    super.caseSensitive,
+  }) : substitute = sub;
 
   /// Adds a [Text] node to [parser] and returns `true` if there is a
   /// [substitute], as long as the preceding character (if any) is not a `/`.

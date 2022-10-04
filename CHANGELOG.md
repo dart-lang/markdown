@@ -1,4 +1,4 @@
-## 6.0.1
+## 6.0.2-dev
 
 * Fix a crash in checkbox lists when mixing checkbox items with
   non-checkbox items.
@@ -6,6 +6,7 @@
 * Deprecate `BlockTagBlockHtmlSyntax`, `LongBlockHtmlSyntax` and
   `OtherTagBlockHtmlSyntax`. These syntaxes will be removed from the next major
   version.
+* Add an option `caseSensitive` to `TextSyntax`.
 
 ## 6.0.0
 
