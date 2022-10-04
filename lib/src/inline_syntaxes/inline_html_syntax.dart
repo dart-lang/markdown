@@ -30,7 +30,7 @@ class InlineHtmlSyntax extends TextSyntax {
       r'<\?.*?\?>'
       '|'
 
-      // Peclaration, see
+      // Declaration, see
       // https://spec.commonmark.org/0.30/#declaration.
       '(<![a-z]+.*?>)'
       '|'
