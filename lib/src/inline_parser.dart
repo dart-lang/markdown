@@ -7,6 +7,7 @@ import 'charcode.dart';
 import 'document.dart';
 import 'inline_syntaxes/autolink_syntax.dart';
 import 'inline_syntaxes/code_syntax.dart';
+import 'inline_syntaxes/decode_html_syntax.dart';
 import 'inline_syntaxes/delimiter_syntax.dart';
 import 'inline_syntaxes/email_autolink_syntax.dart';
 import 'inline_syntaxes/emphasis_syntax.dart';
@@ -92,6 +93,7 @@ class InlineParser {
     if (document.withDefaultInlineSyntaxes) {
       // Custom link resolvers go after the generic text syntax.
       syntaxes.addAll([
+        DecodeHtmlSyntax(),
         LinkSyntax(linkResolver: document.linkResolver),
         ImageSyntax(linkResolver: document.imageLinkResolver)
       ]);

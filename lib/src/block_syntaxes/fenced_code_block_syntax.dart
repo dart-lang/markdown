@@ -81,6 +81,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       if (firstSpace >= 0) {
         infoString = infoString.substring(0, firstSpace);
       }
+      infoString = decodeHtmlCharacters(infoString);
       if (parser.document.encodeHtml) {
         infoString = escapeHtmlAttribute(infoString);
       }
