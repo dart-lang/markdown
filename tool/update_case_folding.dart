@@ -37,7 +37,7 @@ void main() {
     result[key] = value;
   }
 
-  final outputPath = '$root/lib/assets/case_folding.dart';
+  final outputPath = '$root/lib/src/assets/case_folding.dart';
   final stringMap = JsonEncoder.withIndent('  ').convert(result);
   final output = '''
 // Generated file. do not edit.

@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import '../assets/case_folding.dart';
+import 'assets/case_folding.dart';
 import 'charcode.dart';
 
 String escapeHtml(String html) =>
