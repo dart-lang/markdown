@@ -4,6 +4,7 @@
 
 import 'dart:convert';
 
+import 'assets/case_folding.dart';
 import 'charcode.dart';
 
 String escapeHtml(String html) =>
@@ -83,9 +84,17 @@ final _oneOrMoreWhitespacePattern = RegExp('[ \n\r\t]+');
 
 /// "Normalizes" a link label, according to the [CommonMark spec].
 ///
-/// [CommonMark spec] https://spec.commonmark.org/0.29/#link-label
-String normalizeLinkLabel(String label) =>
-    label.trim().replaceAll(_oneOrMoreWhitespacePattern, ' ').toLowerCase();
+/// [CommonMark spec] https://spec.commonmark.org/0.30/#link-label
+String normalizeLinkLabel(String label) {
+  var text = label.trim().replaceAll(_oneOrMoreWhitespacePattern, ' ');
+  for (var i = 0; i < text.length; i++) {
+    final mapped = caseFoldingMap[text[i]];
+    if (mapped != null) {
+      text = text.replaceRange(i, i + 1, mapped);
+    }
+  }
+  return text;
+}
 
 extension MatchExtensions on Match {
   /// Returns the whole match String

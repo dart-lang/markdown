@@ -13,7 +13,7 @@
   11 of   12 –  91.7%  Indented code blocks
    1 of    1 – 100.0%  Inlines
   20 of   27 –  74.1%  Link reference definitions
-  84 of   90 –  93.3%  Links
+  85 of   90 –  94.4%  Links
   45 of   48 –  93.8%  List items
   22 of   26 –  84.6%  Lists
    8 of    8 – 100.0%  Paragraphs
@@ -24,5 +24,5 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 620 of  652 –  95.1%  TOTAL
- 553 of  620 –  89.2%  TOTAL Strict
+ 621 of  652 –  95.2%  TOTAL
+ 554 of  621 –  89.2%  TOTAL Strict
