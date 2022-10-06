@@ -86,12 +86,14 @@ final _oneOrMoreWhitespacePattern = RegExp('[ \n\r\t]+');
 ///
 /// [CommonMark spec] https://spec.commonmark.org/0.30/#link-label
 String normalizeLinkLabel(String label) {
-  final text = label.trim().replaceAll(_oneOrMoreWhitespacePattern, ' ');
-  final buffer = StringBuffer();
+  var text = label.trim().replaceAll(_oneOrMoreWhitespacePattern, ' ');
   for (var i = 0; i < text.length; i++) {
-    buffer.write(caseFoldingMap[text[i]] ?? text[i]);
+    final mapped = caseFoldingMap[text[i]];
+    if (mapped != null) {
+      text = text.replaceRange(i, i + 1, mapped);
+    }
   }
-  return buffer.toString();
+  return text;
 }
 
 extension MatchExtensions on Match {
