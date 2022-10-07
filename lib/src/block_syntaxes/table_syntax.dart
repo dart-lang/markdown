@@ -93,7 +93,7 @@ class TableSyntax extends BlockSyntax {
       if (column.startsWith(':')) return 'left';
       if (column.endsWith(':')) return 'right';
       return null;
-    }).toList();
+    }).toList(growable: false);
   }
 
   /// Parses a table row at the current line into a table row element, with

@@ -27,10 +27,7 @@ class ExtensionSet {
   /// fenced code blocks, or inline HTML.
   ///
   /// [Markdown.pl]: http://daringfireball.net/projects/markdown/syntax
-  static final ExtensionSet none = ExtensionSet(
-    List<BlockSyntax>.unmodifiable(<BlockSyntax>[]),
-    List<InlineSyntax>.unmodifiable(<InlineSyntax>[]),
-  );
+  static final ExtensionSet none = ExtensionSet(const [], const []);
 
   /// The [commonMark] extension set is close to compliance with [CommonMark].
   ///

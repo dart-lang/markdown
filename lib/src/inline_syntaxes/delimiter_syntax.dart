@@ -63,7 +63,7 @@ class DelimiterSyntax extends InlineSyntax {
       syntax: this,
       node: text,
       allowIntraWord: allowIntraWord,
-      tags: tags ?? [],
+      tags: tags ?? const [],
     );
     if (delimiterRun != null) {
       parser.pushDelimiter(delimiterRun);
