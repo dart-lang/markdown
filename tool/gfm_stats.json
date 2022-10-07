@@ -275,7 +275,7 @@
   "334": "strict",
   "335": "strict",
   "336": "loose",
-  "337": "loose"
+  "337": "strict"
  },
  "Fenced code blocks": {
   "89": "strict",

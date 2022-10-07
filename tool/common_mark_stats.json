@@ -259,7 +259,7 @@
   "38": "strict",
   "39": "strict",
   "40": "loose",
-  "41": "loose"
+  "41": "strict"
  },
  "Fenced code blocks": {
   "119": "strict",

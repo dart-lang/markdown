@@ -10,8 +10,7 @@ import '../patterns.dart';
 import '../util.dart';
 import 'inline_syntax.dart';
 
-/// Decodes HTML entity and numeric character references, for example decode
-/// `&#35;` to `#`.
+/// Decodes numeric character references, for example decode `&#35;` to `#`.
 // https://spec.commonmark.org/0.30/#entity-and-numeric-character-references
 class DecodeHtmlSyntax extends InlineSyntax {
   DecodeHtmlSyntax()
@@ -25,7 +24,8 @@ class DecodeHtmlSyntax extends InlineSyntax {
     }
     final match = pattern.matchAsPrefix(parser.source, parser.pos);
     if (match == null ||
-        (match[1] == null && match[2] == null && match[3] == null)) {
+        match[1] != null ||
+        (match[2] == null && match[3] == null)) {
       return false;
     }
 

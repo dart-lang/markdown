@@ -3,9 +3,9 @@
 &frac34; &HilbertSpace; &DifferentialD;
 &ClockwiseContourIntegral; &ngE;
 <<<
-<p>& © Æ Ď
-¾ ℋ ⅆ
-∲ ≧̸</p>
+<p>&nbsp; &amp; &copy; &AElig; &Dcaron;
+&frac34; &HilbertSpace; &DifferentialD;
+&ClockwiseContourIntegral; &ngE;</p>
 >>> Entity and numeric character references - 322
 &#35; &#1234; &#992; &#0;
 <<<
@@ -90,4 +90,4 @@ bar</p>
 >>> Entity and numeric character references - 337
 [a](url &quot;tit&quot;)
 <<<
-<p>[a](url "tit")</p>
+<p>[a](url &quot;tit&quot;)</p>
