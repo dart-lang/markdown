@@ -28,8 +28,8 @@ void testFile(
   Iterable<BlockSyntax> blockSyntaxes = const [],
   Iterable<InlineSyntax> inlineSyntaxes = const [],
 }) {
-  final directory = p.join(p.current, 'test');
-  for (final dataCase in dataCasesInFile(path: p.join(directory, file))) {
+  for (final dataCase
+      in dataCasesInFile(path: p.join(p.current, 'test', file))) {
     final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
     validateCore(

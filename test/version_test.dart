@@ -10,7 +10,7 @@ import 'package:yaml/yaml.dart';
 
 void main() {
   test('check versions', () async {
-    final binary = p.normalize(p.join(p.current, 'bin', 'markdown.dart'));
+    final binary = p.join(p.current, 'bin', 'markdown.dart');
     final dartBin = Platform.executable;
     final result = Process.runSync(dartBin, [binary, '--version']);
     expect(
@@ -23,7 +23,7 @@ void main() {
 
     final binVersion = (result.stdout as String).trim();
 
-    final pubspecFile = p.normalize(p.join(p.current, 'pubspec.yaml'));
+    final pubspecFile = p.join(p.current, 'pubspec.yaml');
 
     final pubspecContent =
         loadYaml(File(pubspecFile).readAsStringSync()) as YamlMap;
