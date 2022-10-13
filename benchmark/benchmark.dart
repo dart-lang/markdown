@@ -38,7 +38,8 @@ void main() {
     // the VM doesn't optimize "dead" code away.
     if (result != expected) {
       print('Incorrect output:\n$result');
-      exit(1);
+      exitCode = 1;
+      return;
     }
 
     // Don't print the first run. It's always terrible since the VM hasn't

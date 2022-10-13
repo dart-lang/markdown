@@ -48,5 +48,4 @@ Future<void> main() async {
       'emoji recognized by the markdown package, execute `update_github_emojis.dart`.\n');
   print('Wrote data to $_emojisFilePath for $emojiCount emoji, '
       'ignoring ${ignored.length}: ${ignored.join(', ')}.');
-  exit(0);
 }

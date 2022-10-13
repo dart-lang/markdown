@@ -215,13 +215,14 @@ Future<void> main(List<String> args) async {
   try {
     results = parser.parse(args);
   } catch (e) {
+    print(e);
     printUsage(parser);
-    exit(0);
+    return;
   }
 
   if (results['help'] as bool) {
     printUsage(parser);
-    exit(0);
+    return;
   }
 
   var totalEmojiWithDifferentUnicodeSequences = 0;
@@ -242,14 +243,12 @@ Future<void> main(List<String> args) async {
         'The following emoji have different Unicode sequences from those of legacy versions:');
   }
   final shortcodeToEmoji =
-      (await downloadJson(_emojisJsonRawUrl) as Map<String, dynamic>)
-          .map(
-            (String alias, dynamic filename) => MapEntry(
-              alias,
-              parseGitHubFilenameIntoUnicodeString(filename as String),
-            ),
-          )
-          .cast<String, String>();
+      (await downloadJson(_emojisJsonRawUrl) as Map<String, dynamic>).map(
+    (String alias, dynamic filename) => MapEntry(
+      alias,
+      parseGitHubFilenameIntoUnicodeString(filename as String),
+    ),
+  );
 
   // Now before we proceed we need to 'mix in' any legacy emoji alias shortcodes that
   // are missing from the GitHub emoji list.
@@ -314,14 +313,13 @@ Future<void> main(List<String> args) async {
     // is being captured, so we exit now to exclude the summary
     // report from being included in the emoji markdown we have
     // been outputing.
-    exit(0);
+    return;
   }
 
   print('''Wrote data to $_emojisFilePath for $emojiCount emoji,
 $totalEmojiWithDifferentUnicodeSequences emoji's Unicode sequences differ from legacy versions${!visualizeUnicodeDiffs ? " (run with -v flag to visualize)" : ""},
 ignoring ${ignored.length}: ${ignored.join(', ')},
 errored: ${errored.length} ${errored.join(', ')}.''');
-  exit(0);
 }
 
 void printUsage(ArgParser parser) {
