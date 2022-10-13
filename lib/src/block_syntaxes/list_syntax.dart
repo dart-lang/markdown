@@ -83,13 +83,13 @@ abstract class ListSyntax extends BlockSyntax {
       final pattern = RegExp(r'^ {0,3}\[([ xX])\][ \t]');
 
       if (taskListParserEnabled && pattern.hasMatch(text)) {
-        return text.replaceFirstMapped(pattern, ((match) {
+        return text.replaceFirstMapped(pattern, (match) {
           taskListItemState = match[1] == ' '
               ? TaskListItemState.unchecked
               : TaskListItemState.checked;
 
           return '';
-        }));
+        });
       } else {
         taskListItemState = null;
         return text;

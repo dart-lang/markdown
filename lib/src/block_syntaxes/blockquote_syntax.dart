@@ -21,7 +21,7 @@ class BlockquoteSyntax extends BlockSyntax {
     // Grab all of the lines that form the blockquote, stripping off the ">".
     final childLines = <String>[];
 
-    bool encounteredCodeBlock = false;
+    var encounteredCodeBlock = false;
     while (!parser.isDone) {
       final match = pattern.firstMatch(parser.current);
       if (match != null) {

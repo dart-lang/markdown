@@ -27,7 +27,6 @@ void main(List<String> arguments) {
     )
     ..addFlag(
       _sdk,
-      defaultsTo: false,
       negatable: false,
       help: 'Is the package the SDK?',
     )
@@ -146,12 +145,14 @@ class DartdocCompare {
     // make modifiable copy
     dartdocPubspec = jsonDecode(jsonEncode(dartdocPubspec)) as Map;
 
+    final dependencies = dartdocPubspec['dependencies'] as Map;
+
     if (markdownRef == 'local') {
-      dartdocPubspec['dependencies']['markdown'] = {
+      dependencies['markdown'] = {
         'path': markdownPath,
       };
     } else {
-      dartdocPubspec['dependencies']['markdown'] = {
+      dependencies['markdown'] = {
         'git': {
           'url': 'git://github.com/dart-lang/markdown.git',
           'ref': markdownRef

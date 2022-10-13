@@ -20,7 +20,7 @@ void main() {
     });
 
     group('with encodeHtml enabled', () {
-      final document = Document(encodeHtml: true);
+      final document = Document();
 
       test('encodes HTML in an inline code snippet', () {
         final result =
@@ -55,7 +55,7 @@ void main() {
       test('encodeHtml spaces are preserved in text', () {
         // Example to get a <p> tag rendered before a text node.
         const contents = 'Sample\n\n<pre>\n A\n B\n</pre>';
-        final document = Document(encodeHtml: true);
+        final document = Document();
         final lines = LineSplitter.split(contents).toList();
         final nodes = BlockParser(lines, document).parseLines();
         final result = HtmlRenderer().render(nodes);
@@ -65,7 +65,7 @@ void main() {
       test('encode double quotes, greater than, and less than when escaped',
           () {
         const contents = r'\>\"\< Hello';
-        final document = Document(encodeHtml: true);
+        final document = Document();
         final nodes = document.parseInline(contents);
         expect(nodes, hasLength(1));
         expect(

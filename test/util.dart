@@ -8,6 +8,7 @@ import 'package:io/ansi.dart' as ansi;
 import 'package:markdown/markdown.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
+
 import '../tool/expected_output.dart';
 
 /// Runs tests defined in "*.unit" files inside directory [name].
@@ -24,13 +25,13 @@ Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
   }
 }
 
-Future<String> get markdownPackageRoot async {
+final Future<String> markdownPackageRoot = (() async {
   final packageUri = Uri.parse('package:markdown/markdown.dart');
   final isolateUri = await Isolate.resolvePackageUri(packageUri);
   return p.dirname(p.dirname(isolateUri!.toFilePath()));
-}
+})();
 
-void testFile(
+Future<void> testFile(
   String file, {
   Iterable<BlockSyntax> blockSyntaxes = const [],
   Iterable<InlineSyntax> inlineSyntaxes = const [],

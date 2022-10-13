@@ -12,7 +12,7 @@ void main() {
   // Downloaded from http://www.unicode.org/Public/14.0.0/ucd/CaseFolding.txt
   final file = File('$root/tool/case_folding.txt');
   final text = file.readAsStringSync();
-  final lines = LineSplitter().convert(text);
+  final lines = const LineSplitter().convert(text);
 
   final result = <String, String>{};
 
@@ -38,7 +38,7 @@ void main() {
   }
 
   final outputPath = '$root/lib/src/assets/case_folding.dart';
-  final stringMap = JsonEncoder.withIndent('  ').convert(result);
+  final stringMap = const JsonEncoder.withIndent('  ').convert(result);
   final output = '''
 // Generated file. do not edit.
 //

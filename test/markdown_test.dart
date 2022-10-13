@@ -11,45 +11,45 @@ void main() async {
   await testDirectory('original');
 
   // Block syntax extensions.
-  testFile(
+  await testFile(
     'extensions/fenced_blockquotes.unit',
     blockSyntaxes: [const FencedBlockquoteSyntax()],
   );
-  testFile(
+  await testFile(
     'extensions/fenced_code_blocks.unit',
     blockSyntaxes: [const FencedCodeBlockSyntax()],
   );
-  testFile(
+  await testFile(
     'extensions/headers_with_ids.unit',
     blockSyntaxes: [const HeaderWithIdSyntax()],
   );
-  testFile(
+  await testFile(
     'extensions/ordered_list_with_checkboxes.unit',
     blockSyntaxes: [const OrderedListWithCheckboxSyntax()],
   );
-  testFile(
+  await testFile(
     'extensions/setext_headers_with_ids.unit',
     blockSyntaxes: [const SetextHeaderWithIdSyntax()],
   );
-  testFile(
+  await testFile(
     'extensions/tables.unit',
     blockSyntaxes: [const TableSyntax()],
   );
-  testFile(
+  await testFile(
     'extensions/unordered_list_with_checkboxes.unit',
     blockSyntaxes: [const UnorderedListWithCheckboxSyntax()],
   );
 
   // Inline syntax extensions
-  testFile(
+  await testFile(
     'extensions/emojis.unit',
     inlineSyntaxes: [EmojiSyntax()],
   );
-  testFile(
+  await testFile(
     'extensions/inline_html.unit',
     inlineSyntaxes: [InlineHtmlSyntax()],
   );
-  testFile(
+  await testFile(
     'extensions/strikethrough.unit',
     inlineSyntaxes: [StrikethroughSyntax()],
   );

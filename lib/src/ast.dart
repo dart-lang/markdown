@@ -58,7 +58,7 @@ class Element implements Node {
     final children = this.children;
     return children == null
         ? ''
-        : children.map((child) => child.textContent).join('');
+        : children.map((child) => child.textContent).join();
   }
 }
 
