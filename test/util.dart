@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:isolate';
-
 import 'package:io/ansi.dart' as ansi;
 import 'package:markdown/markdown.dart';
 import 'package:path/path.dart' as p;
@@ -12,8 +10,8 @@ import 'package:test/test.dart';
 import '../tool/expected_output.dart';
 
 /// Runs tests defined in "*.unit" files inside directory [name].
-Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
-  await for (final dataCase in dataCasesUnder(testDirectory: name)) {
+void testDirectory(String name, {ExtensionSet? extensionSet}) {
+  for (final dataCase in dataCasesUnder(testDirectory: name)) {
     final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
     validateCore(
@@ -25,18 +23,12 @@ Future<void> testDirectory(String name, {ExtensionSet? extensionSet}) async {
   }
 }
 
-final Future<String> markdownPackageRoot = (() async {
-  final packageUri = Uri.parse('package:markdown/markdown.dart');
-  final isolateUri = await Isolate.resolvePackageUri(packageUri);
-  return p.dirname(p.dirname(isolateUri!.toFilePath()));
-})();
-
-Future<void> testFile(
+void testFile(
   String file, {
   Iterable<BlockSyntax> blockSyntaxes = const [],
   Iterable<InlineSyntax> inlineSyntaxes = const [],
-}) async {
-  final directory = p.join(await markdownPackageRoot, 'test');
+}) {
+  final directory = p.join(p.current, 'test');
   for (final dataCase in dataCasesInFile(path: p.join(directory, file))) {
     final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';

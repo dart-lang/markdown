@@ -6,8 +6,6 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
-import '../test/util.dart';
-
 /// Parse and yield data cases (each a [DataCase]) from [path].
 Iterable<DataCase> dataCasesInFile({
   required String path,
@@ -117,13 +115,12 @@ Iterable<DataCase> _dataCases({
 ///   }
 /// }
 /// ```
-Stream<DataCase> dataCasesUnder({
+Iterable<DataCase> dataCasesUnder({
   required String testDirectory,
   String extension = 'unit',
   bool recursive = true,
-}) async* {
-  final markdownLibRoot = await markdownPackageRoot;
-  final directory = p.join(markdownLibRoot, 'test', testDirectory);
+}) sync* {
+  final directory = p.join(p.current, 'test', testDirectory);
   for (final dataCase in _dataCases(
     directory: directory,
     extension: extension,

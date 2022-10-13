@@ -8,54 +8,54 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() async {
-  await testDirectory('original');
+  testDirectory('original');
 
   // Block syntax extensions.
-  await testFile(
+  testFile(
     'extensions/fenced_blockquotes.unit',
     blockSyntaxes: [const FencedBlockquoteSyntax()],
   );
-  await testFile(
+  testFile(
     'extensions/fenced_code_blocks.unit',
     blockSyntaxes: [const FencedCodeBlockSyntax()],
   );
-  await testFile(
+  testFile(
     'extensions/headers_with_ids.unit',
     blockSyntaxes: [const HeaderWithIdSyntax()],
   );
-  await testFile(
+  testFile(
     'extensions/ordered_list_with_checkboxes.unit',
     blockSyntaxes: [const OrderedListWithCheckboxSyntax()],
   );
-  await testFile(
+  testFile(
     'extensions/setext_headers_with_ids.unit',
     blockSyntaxes: [const SetextHeaderWithIdSyntax()],
   );
-  await testFile(
+  testFile(
     'extensions/tables.unit',
     blockSyntaxes: [const TableSyntax()],
   );
-  await testFile(
+  testFile(
     'extensions/unordered_list_with_checkboxes.unit',
     blockSyntaxes: [const UnorderedListWithCheckboxSyntax()],
   );
 
   // Inline syntax extensions
-  await testFile(
+  testFile(
     'extensions/emojis.unit',
     inlineSyntaxes: [EmojiSyntax()],
   );
-  await testFile(
+  testFile(
     'extensions/inline_html.unit',
     inlineSyntaxes: [InlineHtmlSyntax()],
   );
-  await testFile(
+  testFile(
     'extensions/strikethrough.unit',
     inlineSyntaxes: [StrikethroughSyntax()],
   );
 
-  await testDirectory('common_mark');
-  await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
+  testDirectory('common_mark');
+  testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
 
   group('Corner cases', () {
     validateCore('Incorrect Links', '''
