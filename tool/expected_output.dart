@@ -123,8 +123,7 @@ Stream<DataCase> dataCasesUnder({
   bool recursive = true,
 }) async* {
   final markdownLibRoot = await markdownPackageRoot;
-  final directory =
-      p.joinAll([p.dirname(markdownLibRoot), 'test', testDirectory]);
+  final directory = p.join(markdownLibRoot, 'test', testDirectory);
   for (final dataCase in _dataCases(
     directory: directory,
     extension: extension,
