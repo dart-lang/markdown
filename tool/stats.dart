@@ -27,30 +27,26 @@ Future<void> main(List<String> args) async {
     )
     ..addFlag(
       'raw',
-      defaultsTo: false,
       help: 'raw JSON format',
       negatable: false,
     )
     ..addFlag(
       'update-files',
-      defaultsTo: false,
       help: 'Update stats files in $toolDir',
       negatable: false,
     )
     ..addFlag(
       'verbose',
-      defaultsTo: false,
       help: 'Print details for failures and errors.',
       negatable: false,
     )
     ..addFlag(
       'verbose-loose',
-      defaultsTo: false,
       help: 'Print details for "loose" matches.',
       negatable: false,
     )
     ..addOption('flavor', allowed: _configs.map((c) => c.prefix))
-    ..addFlag('help', defaultsTo: false, negatable: false);
+    ..addFlag('help', negatable: false);
 
   ArgResults options;
 
@@ -153,7 +149,7 @@ Future<void> _processConfig(
 
       final nestedMap = scores.putIfAbsent(
         entry.key,
-        () => SplayTreeMap<int, CompareLevel>(),
+        SplayTreeMap<int, CompareLevel>.new,
       );
       nestedMap[e.example] = result.compareLevel;
     }
@@ -223,6 +219,7 @@ Future<void> _printRaw(
   const encoder = JsonEncoder.withIndent(' ', _convert);
   try {
     sink.writeln(encoder.convert(scores));
+    // ignore: avoid_catching_errors
   } on JsonUnsupportedObjectError catch (e) {
     stderr.writeln(e.cause);
     stderr.writeln(e.unsupportedObject.runtimeType);

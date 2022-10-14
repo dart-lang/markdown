@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() async {
-  await testDirectory('original');
+  testDirectory('original');
 
   // Block syntax extensions.
   testFile(
@@ -54,8 +54,8 @@ void main() async {
     inlineSyntaxes: [StrikethroughSyntax()],
   );
 
-  await testDirectory('common_mark');
-  await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
+  testDirectory('common_mark');
+  testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
 
   group('Corner cases', () {
     validateCore('Incorrect Links', '''

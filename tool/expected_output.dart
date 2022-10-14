@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:path/path.dart' as p;
 
@@ -35,14 +34,14 @@ Iterable<DataCase> dataCasesInFile({
       description = 'line ${i + 1}: $description';
     }
 
-    var input = '';
+    final input = StringBuffer();
     while (!lines[i].startsWith('<<<')) {
-      input += '${lines[i++]}\n';
+      input.writeln(lines[i++]);
     }
 
-    var expectedOutput = '';
+    final expectedOutput = StringBuffer();
     while (++i < lines.length && !lines[i].startsWith('>>>')) {
-      expectedOutput += '${lines[i]}\n';
+      expectedOutput.writeln(lines[i]);
     }
 
     final dataCase = DataCase(
@@ -51,8 +50,8 @@ Iterable<DataCase> dataCasesInFile({
       front_matter: frontMatter.toString(),
       description: description,
       skip: skip,
-      input: input,
-      expectedOutput: expectedOutput,
+      input: input.toString(),
+      expectedOutput: expectedOutput.toString(),
     );
     yield dataCase;
   }
@@ -116,16 +115,12 @@ Iterable<DataCase> _dataCases({
 ///   }
 /// }
 /// ```
-Stream<DataCase> dataCasesUnder({
+Iterable<DataCase> dataCasesUnder({
   required String testDirectory,
   String extension = 'unit',
   bool recursive = true,
-}) async* {
-  final packageUri = Uri.parse('package:markdown/markdown.dart');
-  final isolateUri = await Isolate.resolvePackageUri(packageUri);
-  final markdownLibRoot = p.dirname(isolateUri!.toFilePath());
-  final directory =
-      p.joinAll([p.dirname(markdownLibRoot), 'test', testDirectory]);
+}) sync* {
+  final directory = p.join(p.current, 'test', testDirectory);
   for (final dataCase in _dataCases(
     directory: directory,
     extension: extension,

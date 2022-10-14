@@ -28,8 +28,8 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     //
     // > If the info string comes after a backtick fence, it may not contain
     // > any backtick characters.
-    return (codeFence.codeUnitAt(0) != $backquote ||
-        !infoString!.codeUnits.contains($backquote));
+    return codeFence.codeUnitAt(0) != $backquote ||
+        !infoString!.codeUnits.contains($backquote);
   }
 
   @override

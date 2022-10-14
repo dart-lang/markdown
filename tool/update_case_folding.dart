@@ -5,18 +5,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path/path.dart' as p;
+
 // Generates and updates unicode case folding map.
 // Here only extract status C + F capital letters.
 void main() {
-  final root = File(Platform.script.path).parent.parent.path;
   // Downloaded from http://www.unicode.org/Public/14.0.0/ucd/CaseFolding.txt
-  final file = File('$root/tool/case_folding.txt');
-  final text = file.readAsStringSync();
-  final lines = LineSplitter().convert(text);
+  final file = File('${p.current}/tool/case_folding.txt');
 
   final result = <String, String>{};
 
-  for (final line in lines) {
+  for (final line in file.readAsLinesSync()) {
     if (line.startsWith('#') ||
         line.trim().isEmpty ||
         !line.contains('CAPITAL LETTER')) {
@@ -37,8 +36,8 @@ void main() {
     result[key] = value;
   }
 
-  final outputPath = '$root/lib/src/assets/case_folding.dart';
-  final stringMap = JsonEncoder.withIndent('  ').convert(result);
+  final outputPath = '${p.current}/lib/src/assets/case_folding.dart';
+  final stringMap = const JsonEncoder.withIndent('  ').convert(result);
   final output = '''
 // Generated file. do not edit.
 //

@@ -153,7 +153,7 @@ class InlineParser {
       return;
     }
     final syntax = delimiter.syntax;
-    if (syntax is LinkSyntax && syntaxes.any(((e) => e is LinkSyntax))) {
+    if (syntax is LinkSyntax && syntaxes.any((e) => e is LinkSyntax)) {
       final nodeIndex = _tree.lastIndexWhere((n) => n == delimiter.node);
       final linkNode = syntax.close(this, delimiter, null, getChildren: () {
         _processDelimiterRun(index);

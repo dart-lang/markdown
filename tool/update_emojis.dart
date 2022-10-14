@@ -3,8 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
+
+import 'update_shared.dart';
 
 // update_github_emojis.dart now generates the emoji list using the GitHub API
 // to retrieve the emoji list.  It uses this emoji source as a source to keep
@@ -14,14 +15,11 @@ const _emojisJsonRawUrl =
 const _emojisFilePath = 'lib/src/legacy_emojis.dart';
 
 Future<void> main() async {
-  final client = HttpClient();
-  final request = await client.getUrl(Uri.parse(_emojisJsonRawUrl));
-  final response = await request.close();
-  final json = jsonDecode(
-          await response.cast<List<int>>().transform(utf8.decoder).join(''))
-      .map((String alias, dynamic info) =>
-          MapEntry(alias, info.cast<String, dynamic>()))
-      .cast<String, Map<String, dynamic>>();
+  final json =
+      (await downloadJson(_emojisJsonRawUrl) as Map<String, dynamic>).map(
+    (String alias, dynamic info) =>
+        MapEntry(alias, info as Map<String, dynamic>),
+  );
   final emojisContent = StringBuffer('''
 // GENERATED FILE. DO NOT EDIT.
 //
@@ -35,7 +33,7 @@ Future<void> main() async {
   final ignored = <String>[];
   // Dump in sorted order now to facilitate comparison with new GitHub emoji.
   final sortedKeys = json.keys.toList()..sort();
-  for (final String alias in sortedKeys) {
+  for (final alias in sortedKeys) {
     final info = json[alias] as Map<String, dynamic>;
     if (info['char'] != null) {
       emojisContent.writeln("  '$alias': '${info['char']}',");
@@ -50,5 +48,4 @@ Future<void> main() async {
       'emoji recognized by the markdown package, execute `update_github_emojis.dart`.\n');
   print('Wrote data to $_emojisFilePath for $emojiCount emoji, '
       'ignoring ${ignored.length}: ${ignored.join(', ')}.');
-  exit(0);
 }

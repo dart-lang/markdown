@@ -3,12 +3,12 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
-
 import 'package:markdown/src/legacy_emojis.dart' as legacy;
+
+import 'update_shared.dart';
 
 /// Regular expression to match GitHub emoji API output filenames.
 RegExp gitHubEmojiApiPattern =
@@ -140,7 +140,7 @@ String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
   const zeroWidthJoiner = 0x200D;
 
   try {
-    final String? rawHexList = gitHubEmojiUnicodeFromFilenamePattern
+    final rawHexList = gitHubEmojiUnicodeFromFilenamePattern
         .firstMatch(emojiFilename)
         ?.group(1);
     if (rawHexList == null) {
@@ -183,7 +183,7 @@ String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
   } catch (e) {
     print(
         'Invalid/Non-Conformant emoji filename encountered "$emojiFilename"!');
-    return (errorSpecialReplacement);
+    return errorSpecialReplacement;
   }
 }
 
@@ -215,22 +215,24 @@ Future<void> main(List<String> args) async {
   try {
     results = parser.parse(args);
   } catch (e) {
+    print(e);
     printUsage(parser);
-    exit(0);
+    return;
   }
 
   if (results['help'] as bool) {
     printUsage(parser);
-    exit(0);
+    return;
   }
 
   var totalEmojiWithDifferentUnicodeSequences = 0;
   final useLegacyUnicodeSequences = !(results['useGitHubUnicodes'] as bool);
   final visualizeUnicodeDiffs = results['visualizeDifferentUnicodes'] as bool;
-  final dumpMarkdownShortCodes =
-      (results['dumpMarkdownShortCodes'].toLowerCase() == 'plain');
-  final dumpMarkdownToolTipShortCodes =
-      (results['dumpMarkdownShortCodes'].toLowerCase() == 'tooltip');
+
+  final shortCodes =
+      (results['dumpMarkdownShortCodes'] as String).toLowerCase();
+  final dumpMarkdownShortCodes = shortCodes == 'plain';
+  final dumpMarkdownToolTipShortCodes = shortCodes == 'tooltip';
 
   if (!useLegacyUnicodeSequences) {
     // Issue warning of the implications of using full GitHub emjoi Unicode sequences.
@@ -240,14 +242,13 @@ Future<void> main(List<String> args) async {
     print(
         'The following emoji have different Unicode sequences from those of legacy versions:');
   }
-  final client = HttpClient();
-  final request = await client.getUrl(Uri.parse(_emojisJsonRawUrl));
-  final response = await request.close();
-  final shortcodeToEmoji = jsonDecode(
-          await response.cast<List<int>>().transform(utf8.decoder).join(''))
-      .map((String alias, dynamic filename) => MapEntry(
-          alias, parseGitHubFilenameIntoUnicodeString(filename as String)))
-      .cast<String, String>() as Map<String, String>;
+  final shortcodeToEmoji =
+      (await downloadJson(_emojisJsonRawUrl) as Map<String, dynamic>).map(
+    (String alias, dynamic filename) => MapEntry(
+      alias,
+      parseGitHubFilenameIntoUnicodeString(filename as String),
+    ),
+  );
 
   // Now before we proceed we need to 'mix in' any legacy emoji alias shortcodes that
   // are missing from the GitHub emoji list.
@@ -271,8 +272,8 @@ Future<void> main(List<String> args) async {
   final errored = <String>[];
   // Dump in sorted order now to facilitate comparison with new GitHub emoji.
   final sortedKeys = shortcodeToEmoji.keys.toList()..sort();
-  for (final String shortCodeAlias in sortedKeys) {
-    String emojiUnicode = shortcodeToEmoji[shortCodeAlias]!;
+  for (final shortCodeAlias in sortedKeys) {
+    var emojiUnicode = shortcodeToEmoji[shortCodeAlias]!;
     if (useLegacyUnicodeSequences &&
         legacyEmojis.containsKey(shortCodeAlias) &&
         shortCodeAlias != 'cricket' &&
@@ -312,14 +313,13 @@ Future<void> main(List<String> args) async {
     // is being captured, so we exit now to exclude the summary
     // report from being included in the emoji markdown we have
     // been outputing.
-    exit(0);
+    return;
   }
 
   print('''Wrote data to $_emojisFilePath for $emojiCount emoji,
 $totalEmojiWithDifferentUnicodeSequences emoji's Unicode sequences differ from legacy versions${!visualizeUnicodeDiffs ? " (run with -v flag to visualize)" : ""},
 ignoring ${ignored.length}: ${ignored.join(', ')},
 errored: ${errored.length} ${errored.join(', ')}.''');
-  exit(0);
 }
 
 void printUsage(ArgParser parser) {
