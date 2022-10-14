@@ -4,12 +4,12 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
 // Generates and updates HTML entities.
 void main() {
-  final root = File(Platform.script.path).parent.parent.path;
   // Original file: https://html.spec.whatwg.org/entities.json
-  final file = File('$root/tool/entities.json');
+  final file = File('${p.current}/tool/entities.json');
   final json = file.readAsStringSync();
   final map = jsonDecode(json) as Map<String, dynamic>;
 
@@ -21,8 +21,8 @@ void main() {
     }
   }
 
-  final outputPath = '$root/lib/src/assets/html_entities.dart';
-  final stringMap = JsonEncoder.withIndent('  ')
+  final outputPath = '${p.current}/lib/src/assets/html_entities.dart';
+  final stringMap = const JsonEncoder.withIndent('  ')
       .convert(result)
       .replaceAll(r'"$"', r'r"$"')
       .replaceAll(r'"\\"', r'r"\"');
