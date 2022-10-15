@@ -11,7 +11,7 @@ void main() {
   // Original file: https://html.spec.whatwg.org/entities.json
   final file = File('${p.current}/tool/entities.json');
   final json = file.readAsStringSync();
-  final map = jsonDecode(json) as Map<String, dynamic>;
+  final map = Map<String, Map<String, dynamic>>.from(jsonDecode(json) as Map);
 
   final result = <String, String>{};
   for (var name in map.keys) {
