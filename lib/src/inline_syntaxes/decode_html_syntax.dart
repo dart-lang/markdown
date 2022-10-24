@@ -29,8 +29,7 @@ class DecodeHtmlSyntax extends InlineSyntax {
 
     // TODO(Zhiguang): Enable HTML entity decoding when working on HTML escape
     // issues.
-    final isEntity = match[1] != null;
-    if (isEntity) {
+    if (match[1] != null) {
       return false;
     }
 
