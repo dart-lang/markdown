@@ -6,7 +6,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 
-// Generates and updates HTML entities.
+/// Generates and updates HTML entities.
 void main() {
   // Original file: https://html.spec.whatwg.org/entities.json
   final file = File('${p.current}/tool/entities.json');

@@ -2,7 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import '../assets/html_entities.dart';
 import '../ast.dart';
 import '../charcode.dart';
 import '../inline_parser.dart';
@@ -22,14 +21,16 @@ class DecodeHtmlSyntax extends InlineSyntax {
     if (parser.pos > 0 && parser.charAt(parser.pos - 1) == $backquote) {
       return false;
     }
+
     final match = pattern.matchAsPrefix(parser.source, parser.pos);
-    if (match == null ||
-        match[1] != null ||
-        (match[2] == null && match[3] == null)) {
+    if (match == null) {
       return false;
     }
 
-    if (match[1] != null && htmlEntitiesMap[match.match] == null) {
+    // TODO(Zhiguang): Enable HTML entity decoding when working on HTML escape
+    // issues.
+    final isEntity = match[1] != null;
+    if (isEntity) {
       return false;
     }
 
