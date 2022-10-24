@@ -106,17 +106,20 @@ String decodeHtmlCharacters(String input) =>
 /// Decodes HTML entity and numeric character references from the given [match].
 String decodeHtmlCharacterFromMatch(Match match) {
   final text = match.match;
+  final isEntity = match[1] != null;
+  final isDecimal = match[2] != null;
+  final isHexadecimal = match[3] != null;
   String? decodedText;
 
   // Entity references, see
   // https://spec.commonmark.org/0.30/#entity-references.
-  if (match[1] != null) {
+  if (isEntity) {
     decodedText = htmlEntitiesMap[text];
   }
 
   // Decimal numeric character references, see
   // https://spec.commonmark.org/0.30/#decimal-numeric-character-references.
-  else if (match[2] != null) {
+  else if (isDecimal) {
     final decimalValue = int.parse(match[2]!);
     int hexValue;
     if (decimalValue < 1114112 && decimalValue > 1) {
@@ -130,7 +133,7 @@ String decodeHtmlCharacterFromMatch(Match match) {
 
   // Hexadecimal numeric character references, see
   // https://spec.commonmark.org/0.30/#hexadecimal-numeric-character-references.
-  else if (match[3] != null) {
+  else if (isHexadecimal) {
     var hexValue = int.parse(match[3]!, radix: 16);
     if (hexValue > 0x10ffff || hexValue == 0) {
       hexValue = 0xFFFd;
