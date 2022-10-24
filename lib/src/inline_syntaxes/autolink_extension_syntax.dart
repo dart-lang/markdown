@@ -63,19 +63,18 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   bool onMatch(InlineParser parser, Match match) {
     int consumeLength;
 
-    var isEmail = false;
-    if (match[2] == null) {
-      consumeLength = _getConsumeLength(match.match);
-    } else {
+    final isEmailLink = match[2] != null;
+    if (isEmailLink) {
       consumeLength = match.match.length;
-      isEmail = true;
+    } else {
+      consumeLength = _getConsumeLength(match.match);
     }
 
     var text = match.match.substring(0, consumeLength);
     text = parser.encodeHtml ? escapeHtml(text) : text;
 
     var destination = text;
-    if (isEmail) {
+    if (isEmailLink) {
       destination = 'mailto:$destination';
     } else if (!destination.startsWith(RegExp(r'(https?|ftp):\/\/'))) {
       destination = 'http://$destination';
