@@ -55,7 +55,7 @@ void main() async {
   );
 
   testDirectory('common_mark');
-  testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
+  testDirectory('gfm');
 
   group('Corner cases', () {
     validateCore('Incorrect Links', '''

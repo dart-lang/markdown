@@ -14,11 +14,35 @@ void testDirectory(String name, {ExtensionSet? extensionSet}) {
   for (final dataCase in dataCasesUnder(testDirectory: name)) {
     final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
+
+    final inlineSyntaxes = <InlineSyntax>[];
+    final blockSyntaxes = <BlockSyntax>[];
+
+    if (dataCase.file.endsWith('_extension')) {
+      final syntaxName = dataCase.file.substring(
+        0,
+        dataCase.file.lastIndexOf('_extension'),
+      );
+      switch (syntaxName) {
+        case 'autolinks':
+          inlineSyntaxes.add(AutolinkExtensionSyntax());
+          break;
+        case 'strikethrough':
+          inlineSyntaxes.add(StrikethroughSyntax());
+          break;
+        case 'tables':
+          blockSyntaxes.add(const TableSyntax());
+          break;
+      }
+    }
+
     validateCore(
       description,
       dataCase.input,
       dataCase.expectedOutput,
       extensionSet: extensionSet,
+      inlineSyntaxes: inlineSyntaxes,
+      blockSyntaxes: blockSyntaxes,
     );
   }
 }

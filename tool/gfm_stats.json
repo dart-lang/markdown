@@ -34,24 +34,24 @@
   "613": "strict",
   "614": "strict",
   "615": "strict",
-  "616": "fail",
+  "616": "strict",
   "617": "strict",
   "618": "strict",
-  "619": "fail",
+  "619": "strict",
   "620": "strict"
  },
  "Autolinks (extension)": {
   "621": "strict",
   "622": "strict",
   "623": "strict",
-  "624": "fail",
+  "624": "strict",
   "625": "strict",
   "626": "loose",
   "627": "strict",
   "628": "strict",
-  "629": "fail",
-  "630": "fail",
-  "631": "fail"
+  "629": "strict",
+  "630": "strict",
+  "631": "strict"
  },
  "Backslash escapes": {
   "308": "loose",
