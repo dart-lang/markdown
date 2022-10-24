@@ -92,7 +92,7 @@ class LinkSyntax extends DelimiterSyntax {
       }
       final label = _parseReferenceLinkLabel(parser);
       if (label != null) {
-        return _tryCreateReferenceLink(context, label, secondary: true);
+        return _tryCreateReferenceLink(context, label);
       }
       return null;
     }
@@ -160,14 +160,12 @@ class LinkSyntax extends DelimiterSyntax {
   }
 
   /// Tries to create a reference link node.
-  /// [secondary] indicates whether [label] is inside secondary `[]`
   ///
   /// Returns the nodes if it was successfully created, `null` otherwise.
   Iterable<Node>? _tryCreateReferenceLink(
     LinkContext context,
-    String label, {
-    bool? secondary,
-  }) {
+    String label,
+  ) {
     final parser = context.parser;
     final getChildren = context.getChildren;
     final link = _resolveReferenceLink(
