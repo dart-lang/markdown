@@ -101,10 +101,9 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       if (match[1] == null) {
         excludedLength = match[2]!.length;
       } else {
-        final segment = match.match;
         var parenCount = 0;
-        for (var i = 0; i < segment.length; i++) {
-          final char = segment.codeUnitAt(i);
+        for (var i = 0; i < text.length; i++) {
+          final char = text.codeUnitAt(i);
           if (char == $lparen) {
             parenCount++;
           } else if (char == $rparen) {
