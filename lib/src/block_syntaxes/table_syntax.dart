@@ -36,6 +36,7 @@ class TableSyntax extends BlockSyntax {
     final columnCount = alignments.length;
     final headRow = _parseRow(parser, alignments, 'th');
     if (headRow.children!.length != columnCount) {
+      parser.retreat();
       return null;
     }
     final head = Element('thead', [headRow]);
@@ -50,7 +51,7 @@ class TableSyntax extends BlockSyntax {
       if (children != null) {
         while (children.length < columnCount) {
           // Insert synthetic empty cells.
-          children.add(Element.empty('td'));
+          children.add(Element('td', const []));
         }
         while (children.length > columnCount) {
           children.removeLast();
@@ -71,29 +72,18 @@ class TableSyntax extends BlockSyntax {
   }
 
   List<String?> _parseAlignments(String line) {
-    final startIndex = _walkPastOpeningPipe(line);
+    final columns = line.replaceAll(RegExp(r'^\s*\||\|\s*$'), '').split('|');
 
-    var endIndex = line.length - 1;
-    while (endIndex > 0) {
-      final ch = line.codeUnitAt(endIndex);
-      if (ch == $pipe) {
-        endIndex--;
-        break;
-      }
-      if (ch != $space && ch != $tab) {
-        break;
-      }
-      endIndex--;
-    }
-
-    // Optimization: We walk [line] too many times. One lap should do it.
-    return line.substring(startIndex, endIndex + 1).split('|').map((column) {
+    return columns.map((column) {
       column = column.trim();
-      if (column.startsWith(':') && column.endsWith(':')) return 'center';
-      if (column.startsWith(':')) return 'left';
-      if (column.endsWith(':')) return 'right';
+      final matchLeft = column.startsWith(':');
+      final matchRight = column.endsWith(':');
+
+      if (matchLeft && matchRight) return 'center';
+      if (matchLeft) return 'left';
+      if (matchRight) return 'right';
       return null;
-    }).toList(growable: false);
+    }).toList();
   }
 
   /// Parses a table row at the current line into a table row element, with
@@ -166,7 +156,7 @@ class TableSyntax extends BlockSyntax {
 
     for (var i = 0; i < row.length && i < alignments.length; i++) {
       if (alignments[i] == null) continue;
-      row[i].attributes['style'] = 'text-align: ${alignments[i]};';
+      row[i].attributes['align'] = '${alignments[i]}';
     }
 
     return Element('tr', row);
