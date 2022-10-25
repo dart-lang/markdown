@@ -112,13 +112,13 @@ class BlockParser {
   List<Node> parseLines() {
     final blocks = <Node>[];
 
-    // If the `_pos` does not change before and after `parse()`, never try to
-    // parse this `_pos` with the same syntax again.
-    BlockSyntax? neverMatch;
+    // If the `_pos` does not change before and after parse(), never try to
+    // match this `_pos` again.
+    final neverMatch = <BlockSyntax>[];
 
     while (!isDone) {
       for (final syntax in blockSyntaxes) {
-        if (neverMatch != null && neverMatch == syntax) {
+        if (neverMatch.contains(syntax)) {
           continue;
         }
 
@@ -128,8 +128,12 @@ class BlockParser {
           if (block != null) {
             blocks.add(block);
           }
-          neverMatch = _pos != positionBefore ? null : syntax;
 
+          if (_pos == positionBefore) {
+            neverMatch.add(syntax);
+          } else {
+            neverMatch.clear();
+          }
           break;
         }
       }
