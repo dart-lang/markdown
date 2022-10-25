@@ -11,12 +11,12 @@ import 'delimiter_syntax.dart';
 
 /// A helper class holds params of link context.
 /// Footnote creation needs other info in [_tryCreateReferenceLink].
-class LinkContext {
+class _LinkContext {
   final InlineParser parser;
   final SimpleDelimiter opener;
   final List<Node> Function() getChildren;
 
-  const LinkContext(this.parser, this.opener, this.getChildren);
+  const _LinkContext(this.parser, this.opener, this.getChildren);
 }
 
 /// Matches links like `[blah][label]` and `[blah](url)`.
@@ -40,7 +40,7 @@ class LinkSyntax extends DelimiterSyntax {
     String? tag,
     required List<Node> Function() getChildren,
   }) {
-    final context = LinkContext(parser, opener, getChildren);
+    final context = _LinkContext(parser, opener, getChildren);
     final text = parser.source.substring(opener.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('
@@ -163,7 +163,7 @@ class LinkSyntax extends DelimiterSyntax {
   ///
   /// Returns the nodes if it was successfully created, `null` otherwise.
   Iterable<Node>? _tryCreateReferenceLink(
-    LinkContext context,
+    _LinkContext context,
     String label,
   ) {
     final parser = context.parser;
