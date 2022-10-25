@@ -1,3 +1,8 @@
+## 7.0.0-dev
+
+* **Breaking change**: `close()` of `DelimiterSyntax` and `LinkSyntax`
+  returns multiple nodes instead of single one.
+
 ## 6.0.2-dev
 
 * Fix a crash in checkbox lists when mixing checkbox items with

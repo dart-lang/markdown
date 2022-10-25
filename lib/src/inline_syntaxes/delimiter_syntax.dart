@@ -83,15 +83,15 @@ class DelimiterSyntax extends InlineSyntax {
   ///
   /// If a tag can be closed at the current position, then this method calls
   /// [getChildren], in which [parser] parses any nested text into child nodes.
-  /// The returned [Node] incorpororates these child nodes.
-  Node? close(
+  /// The returned [Iterable] includes these children nodes.
+  Iterable<Node>? close(
     InlineParser parser,
     Delimiter opener,
     Delimiter closer, {
     required String tag,
     required List<Node> Function() getChildren,
   }) {
-    return Element(tag, getChildren());
+    return [Element(tag, getChildren())];
   }
 }
 

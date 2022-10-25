@@ -157,7 +157,7 @@ class InlineParser {
     final syntax = delimiter.syntax;
     if (syntax is LinkSyntax && syntaxes.any((e) => e is LinkSyntax)) {
       final nodeIndex = _tree.lastIndexWhere((n) => n == delimiter.node);
-      final linkNode = syntax.close(this, delimiter, null, getChildren: () {
+      final linkNodes = syntax.close(this, delimiter, null, getChildren: () {
         _processDelimiterRun(index);
         // All of the nodes which lie past [index] are children of this
         // link/image.
@@ -165,14 +165,14 @@ class InlineParser {
         _tree.removeRange(nodeIndex + 1, _tree.length);
         return children;
       });
-      if (linkNode != null) {
+      if (linkNodes != null) {
         _delimiterStack.removeAt(index);
         if (delimiter.char == $lbracket) {
           for (final d in _delimiterStack.sublist(0, index)) {
             if (d.char == $lbracket) d.isActive = false;
           }
         }
-        _tree[nodeIndex] = linkNode;
+        _tree.replaceRange(nodeIndex, _tree.length, linkNodes);
         advanceBy(1);
         start = pos;
       } else {
@@ -242,7 +242,7 @@ class InlineParser {
         final openerTextNodeIndex = _tree.indexOf(openerTextNode);
         final closerTextNode = closer.node;
         var closerTextNodeIndex = _tree.indexOf(closerTextNode);
-        final node = opener.syntax.close(
+        final nodes = opener.syntax.close(
           this,
           opener,
           closer,
@@ -257,7 +257,7 @@ class InlineParser {
         _tree.replaceRange(
           openerTextNodeIndex + 1,
           closerTextNodeIndex,
-          [node!],
+          nodes!,
         );
         // Slide [closerTextNodeIndex] back accordingly.
         closerTextNodeIndex = openerTextNodeIndex + 2;
