@@ -113,7 +113,7 @@ class BlockParser {
     final blocks = <Node>[];
 
     // If the `_pos` does not change before and after parse(), never try to
-    // match this `_pos` again.
+    // match this `_pos` with the same syntax again.
     final neverMatch = <BlockSyntax>[];
 
     while (!isDone) {
