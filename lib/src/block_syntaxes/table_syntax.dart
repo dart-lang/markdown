@@ -83,7 +83,7 @@ class TableSyntax extends BlockSyntax {
       if (matchLeft) return 'left';
       if (matchRight) return 'right';
       return null;
-    }).toList();
+    }).toList(growable: false);
   }
 
   /// Parses a table row at the current line into a table row element, with
