@@ -386,7 +386,7 @@
   "592": "strict",
   "593": "strict",
   "594": "strict",
-  "595": "loose",
+  "595": "strict",
   "596": "strict",
   "597": "strict",
   "598": "loose",
@@ -513,7 +513,7 @@
   "561": "strict",
   "562": "strict",
   "563": "strict",
-  "564": "loose",
+  "564": "strict",
   "565": "strict",
   "566": "strict",
   "567": "strict",
@@ -675,7 +675,7 @@
  },
  "Soft line breaks": {
   "669": "strict",
-  "670": "loose"
+  "670": "strict"
  },
  "Strikethrough (extension)": {
   "491": "strict",
