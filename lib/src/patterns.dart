@@ -198,3 +198,10 @@ final htmlBlockPattern = RegExp(
     // HTML tag is legal or not.
     '(?<condition_7>(?:$namedTagDefinition)\\s*\$))',
     caseSensitive: false);
+
+/// A pattern to match HTML entity references and numeric character references.
+// https://spec.commonmark.org/0.30/#entity-and-numeric-character-references
+final htmlCharactersPattern = RegExp(
+  '&(?:([a-z0-9]+)|#([0-9]{1,7})|#x([a-f0-9]{1,6}));',
+  caseSensitive: false,
+);

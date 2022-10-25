@@ -5,7 +5,9 @@
 import 'dart:convert';
 
 import 'assets/case_folding.dart';
+import 'assets/html_entities.dart';
 import 'charcode.dart';
+import 'patterns.dart';
 
 String escapeHtml(String html) =>
     const HtmlEscape(HtmlEscapeMode.element).convert(html);
@@ -93,6 +95,51 @@ String normalizeLinkLabel(String label) {
       text = text.replaceRange(i, i + 1, mapped);
     }
   }
+  return text;
+}
+
+///  Decodes HTML entity and numeric character references, for example decode
+/// `&#35` to `#`.
+String decodeHtmlCharacters(String input) =>
+    input.replaceAllMapped(htmlCharactersPattern, decodeHtmlCharacterFromMatch);
+
+/// Decodes HTML entity and numeric character references from the given [match].
+String decodeHtmlCharacterFromMatch(Match match) {
+  final text = match.match;
+  final entity = match[1];
+  final decimalNumber = match[2];
+  final hexadecimalNumber = match[3];
+
+  // Entity references, see
+  // https://spec.commonmark.org/0.30/#entity-references.
+  if (entity != null) {
+    return htmlEntitiesMap[text] ?? text;
+  }
+
+  // Decimal numeric character references, see
+  // https://spec.commonmark.org/0.30/#decimal-numeric-character-references.
+  else if (decimalNumber != null) {
+    final decimalValue = int.parse(decimalNumber);
+    int hexValue;
+    if (decimalValue < 1114112 && decimalValue > 1) {
+      hexValue = int.parse(decimalValue.toRadixString(16), radix: 16);
+    } else {
+      hexValue = 0xFFFd;
+    }
+
+    return String.fromCharCode(hexValue);
+  }
+
+  // Hexadecimal numeric character references, see
+  // https://spec.commonmark.org/0.30/#hexadecimal-numeric-character-references.
+  else if (hexadecimalNumber != null) {
+    var hexValue = int.parse(hexadecimalNumber, radix: 16);
+    if (hexValue > 0x10ffff || hexValue == 0) {
+      hexValue = 0xFFFd;
+    }
+    return String.fromCharCode(hexValue);
+  }
+
   return text;
 }
 

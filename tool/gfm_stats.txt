@@ -7,7 +7,7 @@
   22 of   22 – 100.0%  Code spans
    0 of    1 –   0.0%  Disallowed Raw HTML (extension)
  130 of  131 –  99.2%  Emphasis and strong emphasis
-  14 of   17 –  82.4%  Entity and numeric character references
+  15 of   17 –  88.2%  Entity and numeric character references
   28 of   29 –  96.6%  Fenced code blocks
   15 of   15 – 100.0%  Hard line breaks
   43 of   43 – 100.0%  HTML blocks
@@ -28,5 +28,5 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 632 of  671 –  94.2%  TOTAL
- 556 of  632 –  88.0%  TOTAL Strict
+ 633 of  671 –  94.3%  TOTAL
+ 561 of  633 –  88.6%  TOTAL Strict

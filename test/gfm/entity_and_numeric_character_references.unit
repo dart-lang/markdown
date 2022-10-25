@@ -9,11 +9,11 @@
 >>> Entity and numeric character references - 322
 &#35; &#1234; &#992; &#0;
 <<<
-<p>&#35; &#1234; &#992; &#0;</p>
+<p># Ӓ Ϡ �</p>
 >>> Entity and numeric character references - 323
 &#X22; &#XD06; &#xcab;
 <<<
-<p>&#X22; &#XD06; &#xcab;</p>
+<p>" ആ ಫ</p>
 >>> Entity and numeric character references - 324
 &nbsp &x; &#; &#x;
 &#987654321;
@@ -51,7 +51,7 @@
 foo
 ```
 <<<
-<pre><code class="language-f&amp;ouml;&amp;ouml;">foo
+<pre><code class="language-föö">foo
 </code></pre>
 >>> Entity and numeric character references - 331
 `f&ouml;&ouml;`
@@ -66,25 +66,27 @@ foo
 &#42;foo&#42;
 *foo*
 <<<
-<p>&#42;foo&#42;
+<p>*foo*
 <em>foo</em></p>
 >>> Entity and numeric character references - 334
 &#42; foo
 
 * foo
 <<<
-<p>&#42; foo</p>
+<p>* foo</p>
 <ul>
 <li>foo</li>
 </ul>
 >>> Entity and numeric character references - 335
 foo&#10;&#10;bar
 <<<
-<p>foo&#10;&#10;bar</p>
+<p>foo
+
+bar</p>
 >>> Entity and numeric character references - 336
 &#9;foo
 <<<
-<p>&#9;foo</p>
+<p>foo</p>
 >>> Entity and numeric character references - 337
 [a](url &quot;tit&quot;)
 <<<
