@@ -78,6 +78,7 @@ export 'src/inline_syntaxes/inline_html_syntax.dart';
 export 'src/inline_syntaxes/inline_syntax.dart';
 export 'src/inline_syntaxes/line_break_syntax.dart';
 export 'src/inline_syntaxes/link_syntax.dart';
+export 'src/inline_syntaxes/soft_line_break_syntax.dart';
 export 'src/inline_syntaxes/strikethrough_syntax.dart';
 export 'src/inline_syntaxes/tag_syntax.dart';
 export 'src/inline_syntaxes/text_syntax.dart';
