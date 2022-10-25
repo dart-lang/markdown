@@ -1,5 +1,7 @@
 [![Build Status](https://github.com/dart-lang/markdown/workflows/Dart%20CI/badge.svg)](https://github.com/dart-lang/markdown/actions?query=workflow%3A"Dart+CI"+branch%3Amaster)
 [![Pub](https://img.shields.io/pub/v/markdown.svg)](https://pub.dev/packages/markdown)
+[![package publisher](https://img.shields.io/pub/publisher/markdown.svg)](https://pub.dev/packages/markdown/publisher)
+[![Coverage Status](https://coveralls.io/repos/github/dart-lang/markdown/badge.svg?branch=master)](https://coveralls.io/github/dart-lang/markdown?branch=master)
 
 A portable Markdown library written in Dart. It can parse Markdown into
 HTML on both the client and server.

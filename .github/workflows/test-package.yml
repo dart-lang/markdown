@@ -59,3 +59,23 @@ jobs:
       - name: Run VM tests
         run: dart test --platform vm
         if: always() && steps.install.outcome == 'success'
+
+  coverage:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+    - uses: dart-lang/setup-dart@6a218f2413a3e78e9087f638a238f6b40893203d
+      with:
+        sdk: dev
+    - name: Install dependencies
+      run: dart pub get
+    - name: Install coverage
+      run: dart pub global activate coverage
+    - name: Collect and report coverage
+      run: dart pub global run coverage:test_with_coverage
+    - name: Upload coverage
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: coverage/lcov.info
