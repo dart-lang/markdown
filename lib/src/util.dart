@@ -106,21 +106,20 @@ String decodeHtmlCharacters(String input) =>
 /// Decodes HTML entity and numeric character references from the given [match].
 String decodeHtmlCharacterFromMatch(Match match) {
   final text = match.match;
-  final isEntity = match[1] != null;
-  final isDecimal = match[2] != null;
-  final isHexadecimal = match[3] != null;
-  String? decodedText;
+  final entity = match[1];
+  final decimalNumber = match[2];
+  final hexadecimalNumber = match[3];
 
   // Entity references, see
   // https://spec.commonmark.org/0.30/#entity-references.
-  if (isEntity) {
-    decodedText = htmlEntitiesMap[text];
+  if (entity != null) {
+    return htmlEntitiesMap[text] ?? text;
   }
 
   // Decimal numeric character references, see
   // https://spec.commonmark.org/0.30/#decimal-numeric-character-references.
-  else if (isDecimal) {
-    final decimalValue = int.parse(match[2]!);
+  else if (decimalNumber != null) {
+    final decimalValue = int.parse(decimalNumber);
     int hexValue;
     if (decimalValue < 1114112 && decimalValue > 1) {
       hexValue = int.parse(decimalValue.toRadixString(16), radix: 16);
@@ -128,20 +127,20 @@ String decodeHtmlCharacterFromMatch(Match match) {
       hexValue = 0xFFFd;
     }
 
-    decodedText = String.fromCharCode(hexValue);
+    return String.fromCharCode(hexValue);
   }
 
   // Hexadecimal numeric character references, see
   // https://spec.commonmark.org/0.30/#hexadecimal-numeric-character-references.
-  else if (isHexadecimal) {
-    var hexValue = int.parse(match[3]!, radix: 16);
+  else if (hexadecimalNumber != null) {
+    var hexValue = int.parse(hexadecimalNumber, radix: 16);
     if (hexValue > 0x10ffff || hexValue == 0) {
       hexValue = 0xFFFd;
     }
-    decodedText = String.fromCharCode(hexValue);
+    return String.fromCharCode(hexValue);
   }
 
-  return decodedText ?? text;
+  return text;
 }
 
 extension MatchExtensions on Match {
