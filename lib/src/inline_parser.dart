@@ -58,12 +58,6 @@ class InlineParser {
   /// The tree of parsed HTML nodes.
   final _tree = <Node>[];
 
-  /// Tell parser if reparse after link syntax parsed.
-  /// If reparse, top of delimiter stack and tree should be cleared.
-  bool _needReparse = false;
-
-  set reparse(bool value) => _needReparse = value;
-
   InlineParser(this.source, this.document) {
     // User specified syntaxes are the first syntaxes to be evaluated.
     syntaxes.addAll(document.inlineSyntaxes);
@@ -171,13 +165,6 @@ class InlineParser {
         _tree.replaceRange(nodeIndex, _tree.length, linkNodes);
         advanceBy(1);
         start = pos;
-      } else if (_needReparse) {
-        // In case of `![^...]`, we need re-parse and clear stack top.
-        _delimiterStack.removeRange(index, _delimiterStack.length);
-        _tree[nodeIndex] = Text(delimiter.node.textContent[0]);
-        _tree.removeRange(nodeIndex + 1, _tree.length);
-        pos = start = delimiter.endPos - delimiter.length + 1;
-        _needReparse = false;
       } else {
         _delimiterStack.removeAt(index);
         pos = start;
