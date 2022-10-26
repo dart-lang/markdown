@@ -14,9 +14,9 @@ import 'util.dart';
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = {};
-  // keys are case sensitive
+  // keys are case sensitive.
   final footnoteReferences = <String, int>{};
-  // labels are case insensitive
+  // Keep footnotes appearing order, and labels are case insensitive.
   final footnoteLabels = <String>[];
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;

@@ -1,7 +1,7 @@
 import '../ast.dart' show Element, Node, Text;
 import '../charcode.dart';
 import '../inline_parser.dart' show InlineParser;
-import 'link_syntax.dart' show RefLinkCase;
+import 'link_syntax.dart' show LinkContext;
 
 // Footnotes syntax share the same heading '[' with Reference Link, this makes
 // a lot of mass, if extends `LinkSyntax`, it will have to override
@@ -19,14 +19,12 @@ class FootnoteRefSyntax {
     return key;
   }
 
-  /// Some cases of github consider footnote's priority is higher than
-  /// reference link, so wrap `_resolveReferenceLink` as a callback.
-  static Node? tryCreateFootnoteLink(
-      InlineParser parser,
-      String text,
-      List<Node> Function() getChildren,
-      RefLinkCase refCase,
-      Node? Function() makeLink) {
+  static Iterable<Node>? tryCreateFootnoteLink(
+    LinkContext context,
+    String text,
+    bool secondary,
+  ) {
+    final parser = context.parser;
     final key = _footnoteLabel(parser, text);
     final refs = parser.document.footnoteReferences;
     // `label` is what footnoteReferences stored, it is case sensitive.
@@ -34,54 +32,38 @@ class FootnoteRefSyntax {
         refs.keys.firstWhere((k) => k.toLowerCase() == key, orElse: () => '');
     // `count != null` means footnote was valid
     var count = refs[label];
-    // For `[$text][^label]`, check if label could match a footnote.
-    // In this case, footnote's priority is higher.
-    if (refCase == RefLinkCase.pairCaret && count != null) {
-      parser.reparse = true;
-      return null;
-    }
-
-    // In most cases, link's priority is higher.
-    final linkNode = makeLink();
-    if (linkNode != null) {
-      return linkNode;
-    }
-
     // And then check if footnote was matched
     if (key == null || count == null) {
       return null;
     }
+    final result = <Node>[];
     // There are 4 cases here: ![^...], [^...], ![...][^...], [...][^...]
-    // If make footnote here, after LinkSyntax's `close()` parser could not
-    // distinguish which type of link node it is, e.g. (`![^...]` or `[^...]`)
-    // and if then '!' text would be lost
-    if (_reparseCases.contains(refCase)) {
-      parser.reparse = true;
-      return null;
+    if (context.opener.char == $exclamation) {
+      result.add(Text('!'));
     }
     refs[label] = ++count;
     final labels = parser.document.footnoteLabels;
-    int pos = labels.indexOf(key);
+    var pos = labels.indexOf(key);
     if (pos < 0) {
       pos = labels.length;
       labels.add(key);
     }
 
-    // `children` are text segments after '[^' before ']',
-    // now useless but we need clear _delimiterStack.
-    getChildren();
+    // `children` are text segments after '[^' before ']'.
+    final children = context.getChildren();
+    if (secondary) {
+      result.add(Text('['));
+      result.addAll(children);
+      result.add(Text(']'));
+    }
     final id = Uri.encodeComponent(label);
     final suffix = count > 1 ? '-$count' : '';
     final link = Element('a', [Text('${pos + 1}')])
       // Ignore github's attribute: <data-footnote-ref>.
       ..attributes['href'] = '#fn-$id'
       ..attributes['id'] = 'fnref-$id$suffix';
-    return Element('sup', [link])..attributes['class'] = 'footnote-ref';
+    final sup = Element('sup', [link])..attributes['class'] = 'footnote-ref';
+    result.add(sup);
+    return result;
   }
-
-  static const _reparseCases = [
-    RefLinkCase.exclamationPair,
-    RefLinkCase.exclamationPairParen,
-    RefLinkCase.exclamationPairBracket,
-  ];
 }
