@@ -55,7 +55,7 @@ void main() async {
   );
   testFile(
     'extensions/footnote_block.unit',
-    blockSyntaxes: [FootnoteDefSyntax()],
+    blockSyntaxes: [const FootnoteDefSyntax()],
   );
 
   testDirectory('common_mark');

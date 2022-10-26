@@ -112,8 +112,8 @@ class Document {
           node.tag == 'li' &&
           footnoteReferences.containsKey(node.attributes['_label_'])) {
         final label = node.attributes.remove('_label_');
-        int count = 0;
-        if (label != null && (count = (footnoteReferences[label] ?? 0)) > 0) {
+        var count = 0;
+        if (label != null && (count = footnoteReferences[label] ?? 0) > 0) {
           footnotes.add(node);
           final children = node.children;
           if (children != null) {
@@ -150,7 +150,7 @@ class Document {
 
   void _appendAnchor(List<Node> children, String ref, int count) {
     final anchors = () sync* {
-      for (int i = 0; i < count; i++) {
+      for (var i = 0; i < count; i++) {
         yield Text(' ');
         final num = '${i + 1}';
         final suffix = i > 0 ? '-$num' : '';
