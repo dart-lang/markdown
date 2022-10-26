@@ -80,7 +80,7 @@ class CommonMarkTestCase {
   final String html;
   final int startLine;
   final int endLine;
-  final List<String> extensions;
+  final Set<String> extensions;
 
   CommonMarkTestCase(
     this.example,
@@ -101,8 +101,8 @@ class CommonMarkTestCase {
       json['markdown'] as String /*!*/,
       json['html'] as String,
       json['extensions'] == null
-          ? const []
-          : List<String>.from(json['extensions'] as List),
+          ? const {}
+          : Set.from(json['extensions'] as List),
     );
   }
 
@@ -126,7 +126,7 @@ CompareResult compareResult(
   bool throwOnError = false,
   bool verboseFail = false,
   bool verboseLooseMatch = false,
-  List<String> extensions = const [],
+  Set<String> extensions = const {},
 }) {
   String output;
   final inlineSyntaxes = <InlineSyntax>[];
@@ -142,6 +142,12 @@ CompareResult compareResult(
         break;
       case 'table':
         blockSyntaxes.add(const TableSyntax());
+        break;
+      case 'tagfilter':
+        // TODO(Zhiguang): https://github.com/dart-lang/markdown/pull/447
+        break;
+      default:
+        throw UnimplementedError('Unimplemented extension "$extension"');
     }
   }
 

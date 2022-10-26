@@ -19,11 +19,11 @@ void testDirectory(String name, {ExtensionSet? extensionSet}) {
     final blockSyntaxes = <BlockSyntax>[];
 
     if (dataCase.file.endsWith('_extension')) {
-      final syntaxName = dataCase.file.substring(
+      final extension = dataCase.file.substring(
         0,
         dataCase.file.lastIndexOf('_extension'),
       );
-      switch (syntaxName) {
+      switch (extension) {
         case 'autolinks':
           inlineSyntaxes.add(AutolinkExtensionSyntax());
           break;
@@ -33,6 +33,11 @@ void testDirectory(String name, {ExtensionSet? extensionSet}) {
         case 'tables':
           blockSyntaxes.add(const TableSyntax());
           break;
+        case 'disallowed_raw_html':
+          // TODO(Zhiguang): https://github.com/dart-lang/markdown/pull/447
+          break;
+        default:
+          throw UnimplementedError('Unimplemented extension "$extension"');
       }
     }
 
