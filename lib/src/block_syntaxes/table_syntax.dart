@@ -77,7 +77,7 @@ class TableSyntax extends BlockSyntax {
     // than the first pipe character.
     var started = false;
     var hitDash = false;
-    String? align;
+    String? alignment;
 
     for (var i = 0; i < line.length; i++) {
       final char = line.codeUnitAt(i);
@@ -88,23 +88,23 @@ class TableSyntax extends BlockSyntax {
 
       if (char == $colon) {
         if (hitDash) {
-          align = align == 'left' ? 'center' : 'right';
+          alignment = alignment == 'left' ? 'center' : 'right';
         } else {
-          align = 'left';
+          alignment = 'left';
         }
       }
 
       if (char == $pipe) {
-        columns.add(align);
+        columns.add(alignment);
         hitDash = false;
-        align = null;
+        alignment = null;
       } else {
         hitDash = true;
       }
     }
 
     if (hitDash) {
-      columns.add(align);
+      columns.add(alignment);
     }
 
     return columns;
