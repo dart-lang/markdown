@@ -75,5 +75,5 @@ bar</p>
 foo
 ```
 <<<
-<pre><code class="language-foo\+bar">foo
+<pre><code class="language-foo+bar">foo
 </code></pre>

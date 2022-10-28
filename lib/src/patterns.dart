@@ -21,7 +21,9 @@ final blockquotePattern = RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
 final indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');
 
 /// Fenced code block.
-final codeFencePattern = RegExp(r'^[ ]{0,3}(`{3,}|~{3,})(.*)$');
+final codeFencePattern = RegExp(
+  r'^([ ]{0,3})(?:(?<backtick>`{3,})(?<backtickInfo>[^`]*)|(?<tilde>~{3,})(?<tildeInfo>.*))$',
+);
 
 /// Fenced blockquotes.
 final blockquoteFencePattern = RegExp(r'^>{3}\s*$');
@@ -198,6 +200,10 @@ final htmlBlockPattern = RegExp(
     // HTML tag is legal or not.
     '(?<condition_7>(?:$namedTagDefinition)\\s*\$))',
     caseSensitive: false);
+
+/// ASCII punctuation characters.
+// see https://spec.commonmark.org/0.30/#unicode-whitespace-character.
+const asciiPunctuationCharacters = r'''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~''';
 
 /// A pattern to match HTML entity references and numeric character references.
 // https://spec.commonmark.org/0.30/#entity-and-numeric-character-references

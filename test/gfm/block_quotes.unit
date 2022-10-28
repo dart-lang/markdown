@@ -96,8 +96,7 @@ foo
 <pre><code>foo
 </code></pre>
 </blockquote>
-<pre><code>
-</code></pre>
+<pre><code></code></pre>
 >>> Block quotes - 216
 > foo
     - bar

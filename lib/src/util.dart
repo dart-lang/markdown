@@ -147,3 +147,20 @@ extension MatchExtensions on Match {
   /// Returns the whole match String
   String get match => this[0]!;
 }
+
+/// Escapes the ASCII punctuation characters after backslash(`\`).
+String escapePunctuation(String input) {
+  final buffer = StringBuffer();
+
+  for (var i = 0; i < input.length; i++) {
+    if (input.codeUnitAt(i) == $backslash) {
+      final next = i + 1 < input.length ? input[i + 1] : null;
+      if (next != null && asciiPunctuationCharacters.contains(next)) {
+        i++;
+      }
+    }
+    buffer.write(input[i]);
+  }
+
+  return buffer.toString();
+}

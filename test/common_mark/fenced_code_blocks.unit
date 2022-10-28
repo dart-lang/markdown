@@ -61,8 +61,7 @@ aaa
 >>> Fenced code blocks - 126
 ```
 <<<
-<pre><code>
-</code></pre>
+<pre><code></code></pre>
 >>> Fenced code blocks - 127
 `````
 
@@ -72,7 +71,6 @@ aaa
 <pre><code>
 ```
 aaa
-
 </code></pre>
 >>> Fenced code blocks - 128
 > ```
@@ -105,7 +103,7 @@ bbb
 aaa
 ```
 <<<
-<pre><code> aaa
+<pre><code>aaa
 aaa
 </code></pre>
 >>> Fenced code blocks - 132
@@ -116,7 +114,7 @@ aaa
   ```
 <<<
 <pre><code>aaa
-  aaa
+aaa
 aaa
 </code></pre>
 >>> Fenced code blocks - 133
@@ -126,9 +124,9 @@ aaa
   aaa
    ```
 <<<
-<pre><code>   aaa
-    aaa
-  aaa
+<pre><code>aaa
+ aaa
+aaa
 </code></pre>
 >>> Fenced code blocks - 134
     ```
@@ -160,7 +158,6 @@ aaa
 <<<
 <pre><code>aaa
     ```
-
 </code></pre>
 >>> Fenced code blocks - 138
 ``` ```
@@ -175,7 +172,6 @@ aaa
 <<<
 <pre><code>aaa
 ~~~ ~~
-
 </code></pre>
 >>> Fenced code blocks - 140
 foo
@@ -245,6 +241,5 @@ foo
 ``` aaa
 ```
 <<<
-<pre><code></code></pre>
-<pre><code>
+<pre><code>``` aaa
 </code></pre>

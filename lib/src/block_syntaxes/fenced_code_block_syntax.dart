@@ -4,7 +4,6 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
-import '../charcode.dart';
 import '../patterns.dart';
 import '../util.dart';
 import 'block_syntax.dart';
@@ -19,30 +18,62 @@ class FencedCodeBlockSyntax extends BlockSyntax {
   const FencedCodeBlockSyntax();
 
   @override
-  bool canParse(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current);
-    if (match == null) return false;
-    final codeFence = match.group(1)!;
-    final infoString = match.group(2);
-    // From the CommonMark spec:
-    //
-    // > If the info string comes after a backtick fence, it may not contain
-    // > any backtick characters.
-    return codeFence.codeUnitAt(0) != $backquote ||
-        !infoString!.codeUnits.contains($backquote);
+  Node parse(BlockParser parser) {
+    final openingFence = _FenceMatch.fromMatch(pattern.firstMatch(
+      escapePunctuation(parser.current),
+    )!);
+
+    var text = parseChildLines(
+      parser,
+      openingFence.marker,
+      openingFence.indent,
+    ).join('\n');
+
+    if (parser.document.encodeHtml) {
+      text = escapeHtml(text);
+    }
+    if (text.isNotEmpty) {
+      text = '$text\n';
+    }
+
+    final code = Element.text('code', text);
+    if (openingFence.hasLanguage) {
+      var language = decodeHtmlCharacters(openingFence.language);
+      if (parser.document.encodeHtml) {
+        language = escapeHtmlAttribute(language);
+      }
+      code.attributes['class'] = 'language-$language';
+    }
+
+    return Element('pre', [code]);
+  }
+
+  String _removeIndentation(String content, int length) {
+    final text = content.replaceFirst(RegExp('^\\s{0,$length}'), '');
+    return content.substring(content.length - text.length);
   }
 
   @override
-  List<String> parseChildLines(BlockParser parser, [String? endBlock]) {
-    endBlock ??= '';
-
+  List<String> parseChildLines(
+    BlockParser parser, [
+    String openingMarker = '',
+    int indent = 0,
+  ]) {
     final childLines = <String>[];
+
     parser.advance();
 
+    _FenceMatch? closingFence;
     while (!parser.isDone) {
       final match = pattern.firstMatch(parser.current);
-      if (match == null || !match[1]!.startsWith(endBlock)) {
-        childLines.add(parser.current);
+      closingFence = match == null ? null : _FenceMatch.fromMatch(match);
+
+      // Closing code fences cannot have info strings:
+      // https://spec.commonmark.org/0.30/#example-147
+      if (closingFence == null ||
+          !closingFence.marker.startsWith(openingMarker) ||
+          closingFence.hasInfo) {
+        childLines.add(_removeIndentation(parser.current, indent));
         parser.advance();
       } else {
         parser.advance();
@@ -50,46 +81,41 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       }
     }
 
+    // https://spec.commonmark.org/0.30/#example-127
+    // https://spec.commonmark.org/0.30/#example-128
+    if (closingFence == null && childLines.last.trim().isEmpty) {
+      childLines.removeLast();
+    }
+
     return childLines;
   }
+}
 
-  @override
-  Node parse(BlockParser parser) {
-    // Get the syntax identifier, if there is one.
-    final match = pattern.firstMatch(parser.current)!;
-    final endBlock = match.group(1);
-    var infoString = match.group(2)!;
-
-    final childLines = parseChildLines(parser, endBlock);
-
-    // The Markdown tests expect a trailing newline.
-    childLines.add('');
-
-    var text = childLines.join('\n');
-    if (parser.document.encodeHtml) {
-      text = escapeHtml(text);
+class _FenceMatch {
+  _FenceMatch.fromMatch(RegExpMatch match) : indent = match[1]!.length {
+    if (match.namedGroup('backtick') != null) {
+      marker = match.namedGroup('backtick')!;
+      _info = match.namedGroup('backtickInfo')!;
+    } else {
+      marker = match.namedGroup('tilde')!;
+      _info = match.namedGroup('tildeInfo')!;
     }
-    final code = Element.text('code', text);
-
-    // the info-string should be trimmed
-    // http://spec.commonmark.org/0.22/#example-100
-    infoString = infoString.trim();
-    if (infoString.isNotEmpty) {
-      // only use the first word in the syntax
-      // http://spec.commonmark.org/0.22/#example-100
-      final firstSpace = infoString.indexOf(' ');
-      if (firstSpace >= 0) {
-        infoString = infoString.substring(0, firstSpace);
-      }
-      infoString = decodeHtmlCharacters(infoString);
-      if (parser.document.encodeHtml) {
-        infoString = escapeHtmlAttribute(infoString);
-      }
-      code.attributes['class'] = 'language-$infoString';
-    }
-
-    final element = Element('pre', [code]);
-
-    return element;
   }
+
+  final int indent;
+  late final String marker;
+  late final String _info;
+
+  // The info-string should be trimmed,
+  // https://spec.commonmark.org/0.30/#info-string.
+  String get info => _info.trim();
+
+  // The first word of the info string is typically used to specify the language
+  // of the code sample,
+  // https://spec.commonmark.org/0.30/#example-143.
+  String get language => info.split(' ').first;
+
+  bool get hasInfo => info.isNotEmpty;
+
+  bool get hasLanguage => language.isNotEmpty;
 }
