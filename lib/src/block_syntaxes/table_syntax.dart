@@ -73,6 +73,8 @@ class TableSyntax extends BlockSyntax {
 
   List<String?> _parseAlignments(String line) {
     final columns = <String?>[];
+    // Set the value to `true` when hitting a non whitespace character other
+    // than the first pipe character.
     var started = false;
     var hitDash = false;
     String? align;
@@ -90,16 +92,17 @@ class TableSyntax extends BlockSyntax {
         } else {
           align = 'left';
         }
-      } else {
-        hitDash = true;
       }
 
       if (char == $pipe) {
         columns.add(align);
         hitDash = false;
         align = null;
+      } else {
+        hitDash = true;
       }
     }
+
     if (hitDash) {
       columns.add(align);
     }
