@@ -72,16 +72,32 @@ class TableSyntax extends BlockSyntax {
   }
 
   List<String?> _parseAlignments(String line) {
-    final columns = line.replaceAll(RegExp(r'^\s*\||\|\s*$'), '').split('|');
+    var started = false;
+    final columns = <String>[];
+    final buffer = StringBuffer();
+
+    for (var i = 0; i < line.length; i++) {
+      final char = line.codeUnitAt(i);
+      if (char == $space || char == $tab || (!started && char == $pipe)) {
+        continue;
+      }
+      started = true;
+      if (char == $pipe) {
+        columns.add(buffer.toString());
+        buffer.clear();
+        continue;
+      }
+      buffer.writeCharCode(char);
+    }
+
+    if (buffer.isNotEmpty) {
+      columns.add(buffer.toString());
+    }
 
     return columns.map((column) {
-      column = column.trim();
-      final matchLeft = column.startsWith(':');
-      final matchRight = column.endsWith(':');
-
-      if (matchLeft && matchRight) return 'center';
-      if (matchLeft) return 'left';
-      if (matchRight) return 'right';
+      if (column.startsWith(':') && column.endsWith(':')) return 'center';
+      if (column.startsWith(':')) return 'left';
+      if (column.endsWith(':')) return 'right';
       return null;
     }).toList(growable: false);
   }
