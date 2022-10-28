@@ -113,7 +113,10 @@ class BlockParser {
     final blocks = <Node>[];
 
     // If the `_pos` does not change before and after `parse()`, never try to
-    // parse this `_pos` with the same syntax again.
+    // parse the line at `_pos` with the same syntax again.
+    // For example the `TableSyntax` might not advance the `_pos` in `parse`
+    // method, beause of the header row does not match the delimiter row in the
+    // number of cells, which makes a table like structure not be recognized.
     BlockSyntax? neverMatch;
 
     while (!isDone) {
