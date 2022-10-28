@@ -72,9 +72,10 @@ class TableSyntax extends BlockSyntax {
   }
 
   List<String?> _parseAlignments(String line) {
+    final columns = <String?>[];
     var started = false;
-    final columns = <String>[];
-    final buffer = StringBuffer();
+    var hitDash = false;
+    String? align;
 
     for (var i = 0; i < line.length; i++) {
       final char = line.codeUnitAt(i);
@@ -82,24 +83,28 @@ class TableSyntax extends BlockSyntax {
         continue;
       }
       started = true;
-      if (char == $pipe) {
-        columns.add(buffer.toString());
-        buffer.clear();
-        continue;
+
+      if (char == $colon) {
+        if (hitDash) {
+          align = align == 'left' ? 'center' : 'right';
+        } else {
+          align = 'left';
+        }
+      } else {
+        hitDash = true;
       }
-      buffer.writeCharCode(char);
+
+      if (char == $pipe) {
+        columns.add(align);
+        hitDash = false;
+        align = null;
+      }
+    }
+    if (hitDash) {
+      columns.add(align);
     }
 
-    if (buffer.isNotEmpty) {
-      columns.add(buffer.toString());
-    }
-
-    return columns.map((column) {
-      if (column.startsWith(':') && column.endsWith(':')) return 'center';
-      if (column.startsWith(':')) return 'left';
-      if (column.endsWith(':')) return 'right';
-      return null;
-    }).toList(growable: false);
+    return columns;
   }
 
   /// Parses a table row at the current line into a table row element, with
