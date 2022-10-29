@@ -682,14 +682,14 @@
   "492": "strict"
  },
  "Tables (extension)": {
-  "198": "loose",
-  "199": "fail",
-  "200": "loose",
-  "201": "loose",
-  "202": "loose",
-  "203": "loose",
-  "204": "loose",
-  "205": "loose"
+  "198": "strict",
+  "199": "strict",
+  "200": "strict",
+  "201": "strict",
+  "202": "strict",
+  "203": "strict",
+  "204": "strict",
+  "205": "strict"
  },
  "Tabs": {
   "1": "strict",

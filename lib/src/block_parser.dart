@@ -91,6 +91,10 @@ class BlockParser {
     _pos++;
   }
 
+  void retreat() {
+    _pos--;
+  }
+
   bool get isDone => _pos >= lines.length;
 
   /// Gets whether or not the current line matches the given pattern.
@@ -107,11 +111,28 @@ class BlockParser {
 
   List<Node> parseLines() {
     final blocks = <Node>[];
+
+    // If the `_pos` does not change before and after `parse()`, never try to
+    // parse the line at `_pos` with the same syntax again.
+    // For example the `TableSyntax` might not advance the `_pos` in `parse`
+    // method, beause of the header row does not match the delimiter row in the
+    // number of cells, which makes a table like structure not be recognized.
+    BlockSyntax? neverMatch;
+
     while (!isDone) {
       for (final syntax in blockSyntaxes) {
+        if (neverMatch == syntax) {
+          continue;
+        }
+
         if (syntax.canParse(this)) {
+          final positionBefore = _pos;
           final block = syntax.parse(this);
-          if (block != null) blocks.add(block);
+          if (block != null) {
+            blocks.add(block);
+          }
+          neverMatch = _pos != positionBefore ? null : syntax;
+
           break;
         }
       }
