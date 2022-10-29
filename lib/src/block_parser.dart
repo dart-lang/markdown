@@ -121,7 +121,7 @@ class BlockParser {
 
     while (!isDone) {
       for (final syntax in blockSyntaxes) {
-        if (neverMatch != null && neverMatch == syntax) {
+        if (neverMatch == syntax) {
           continue;
         }
 
