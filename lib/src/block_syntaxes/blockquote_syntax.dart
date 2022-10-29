@@ -27,7 +27,7 @@ class BlockquoteSyntax extends BlockSyntax {
       final currentLine = parser.current;
       final match = pattern.firstMatch(parser.current);
       if (match != null) {
-        // A block quote marker consists of a `>` together with a optional
+        // A block quote marker consists of a `>` together with an optional
         // following space of indentation, see
         // https://spec.commonmark.org/0.30/#block-quote-marker.
         final markerStart = match.match.indexOf('>');
