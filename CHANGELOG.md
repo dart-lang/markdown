@@ -7,6 +7,8 @@
 * **Breaking change**: Removed `BlockHtmlSyntax`, `BlockTagBlockHtmlSyntax`,
   `LongBlockHtmlSyntax`, and `OtherTagBlockHtmlSyntax`.
 * Add a new syntax `HtmlBlockSyntax` to parse HTML blocks.
+* Add an `enableTagfilter` option to `HtmlRenderer` to eanble GFM `tagfilter`
+  extension.
 * Add a new syntax `DecodeHtmlSyntax` to decode HTML entity and numeric
   character references.
 * Add a new syntax `SoftLineBreakSyntax` to remove the single space before the
