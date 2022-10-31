@@ -57,7 +57,7 @@
 >>> Autolinks - 616
 < http://foo.bar >
 <<<
-<p>&lt; <a href="http://foo.bar">http://foo.bar</a> &gt;</p>
+<p>&lt; http://foo.bar &gt;</p>
 >>> Autolinks - 617
 <m:abc>
 <<<
@@ -69,7 +69,7 @@
 >>> Autolinks - 619
 http://example.com
 <<<
-<p><a href="http://example.com">http://example.com</a></p>
+<p>http://example.com</p>
 >>> Autolinks - 620
 foo@bar.example.com
 <<<

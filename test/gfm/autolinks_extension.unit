@@ -23,9 +23,9 @@ www.google.com/search?q=Markup+(business)))
 (www.google.com/search?q=Markup+(business)
 <<<
 <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
-<p><a href="http://www.google.com/search?q=Markup+(business))">www.google.com/search?q=Markup+(business))</a>)</p>
 <p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>))</p>
-<p><a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
+<p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a>)</p>
+<p>(<a href="http://www.google.com/search?q=Markup+(business)">www.google.com/search?q=Markup+(business)</a></p>
 >>> Autolinks (extension) - 625
 www.google.com/search?q=(business))+ok
 <<<
@@ -35,7 +35,7 @@ www.google.com/search?q=commonmark&hl=en
 
 www.google.com/search?q=commonmark&hl;
 <<<
-<p><a href="http://www.google.com/search?q=commonmark&hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
+<p><a href="http://www.google.com/search?q=commonmark&amp;hl=en">www.google.com/search?q=commonmark&amp;hl=en</a></p>
 <p><a href="http://www.google.com/search?q=commonmark">www.google.com/search?q=commonmark</a>&hl;</p>
 >>> Autolinks (extension) - 627
 www.commonmark.org/he<lp
@@ -54,11 +54,11 @@ Anonymous FTP is available at ftp://foo.bar.baz.
 >>> Autolinks (extension) - 629
 foo@bar.baz
 <<<
-<p>foo@bar.baz</p>
+<p><a href="mailto:foo@bar.baz">foo@bar.baz</a></p>
 >>> Autolinks (extension) - 630
 hello@mail+xyz.example isn't valid, but hello+xyz@mail.example is.
 <<<
-<p>hello@mail+xyz.example isn't valid, but hello+xyz@mail.example is.</p>
+<p>hello@mail+xyz.example isn't valid, but <a href="mailto:hello+xyz@mail.example">hello+xyz@mail.example</a> is.</p>
 >>> Autolinks (extension) - 631
 a.b-c_d@a.b
 
@@ -68,7 +68,7 @@ a.b-c_d@a.b-
 
 a.b-c_d@a.b_
 <<<
-<p>a.b-c_d@a.b</p>
-<p>a.b-c_d@a.b.</p>
+<p><a href="mailto:a.b-c_d@a.b">a.b-c_d@a.b</a></p>
+<p><a href="mailto:a.b-c_d@a.b">a.b-c_d@a.b</a>.</p>
 <p>a.b-c_d@a.b-</p>
 <p>a.b-c_d@a.b_</p>

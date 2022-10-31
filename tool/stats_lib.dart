@@ -8,7 +8,14 @@ import 'dart:mirrors';
 
 import 'package:html/dom.dart' show Element;
 import 'package:html/parser.dart' show parseFragment;
-import 'package:markdown/markdown.dart' show markdownToHtml, ExtensionSet;
+import 'package:markdown/markdown.dart'
+    show
+        markdownToHtml,
+        InlineSyntax,
+        BlockSyntax,
+        AutolinkExtensionSyntax,
+        StrikethroughSyntax,
+        TableSyntax;
 import 'package:path/path.dart' as p;
 
 import '../test/util.dart';
@@ -54,19 +61,16 @@ class Config {
   static final Config commonMarkConfig = Config._(
     'common_mark',
     'http://spec.commonmark.org/0.28/',
-    null,
   );
   static final Config gfmConfig = Config._(
     'gfm',
     'https://github.github.com/gfm/',
-    ExtensionSet.gitHubFlavored,
   );
 
   final String prefix;
   final String baseUrl;
-  final ExtensionSet? extensionSet;
 
-  Config._(this.prefix, this.baseUrl, this.extensionSet);
+  Config._(this.prefix, this.baseUrl);
 }
 
 class CommonMarkTestCase {
@@ -76,6 +80,7 @@ class CommonMarkTestCase {
   final String html;
   final int startLine;
   final int endLine;
+  final Set<String> extensions;
 
   CommonMarkTestCase(
     this.example,
@@ -84,6 +89,7 @@ class CommonMarkTestCase {
     this.endLine,
     this.markdown,
     this.html,
+    this.extensions,
   );
 
   factory CommonMarkTestCase.fromJson(Map<String, dynamic> json) {
@@ -94,6 +100,9 @@ class CommonMarkTestCase {
       json['end_line'] as int,
       json['markdown'] as String /*!*/,
       json['html'] as String,
+      json['extensions'] == null
+          ? const {}
+          : Set.from(json['extensions'] as List),
     );
   }
 
@@ -117,11 +126,37 @@ CompareResult compareResult(
   bool throwOnError = false,
   bool verboseFail = false,
   bool verboseLooseMatch = false,
+  Set<String> extensions = const {},
 }) {
   String output;
+  final inlineSyntaxes = <InlineSyntax>[];
+  final blockSyntaxes = <BlockSyntax>[];
+
+  for (final extension in extensions) {
+    switch (extension) {
+      case 'autolink':
+        inlineSyntaxes.add(AutolinkExtensionSyntax());
+        break;
+      case 'strikethrough':
+        inlineSyntaxes.add(StrikethroughSyntax());
+        break;
+      case 'table':
+        blockSyntaxes.add(const TableSyntax());
+        break;
+      case 'tagfilter':
+        // TODO(Zhiguang): https://github.com/dart-lang/markdown/pull/447
+        break;
+      default:
+        throw UnimplementedError('Unimplemented extension "$extension"');
+    }
+  }
+
   try {
-    output =
-        markdownToHtml(testCase.markdown, extensionSet: config.extensionSet);
+    output = markdownToHtml(
+      testCase.markdown,
+      inlineSyntaxes: inlineSyntaxes,
+      blockSyntaxes: blockSyntaxes,
+    );
   } catch (err, stackTrace) {
     if (throwOnError) {
       rethrow;
