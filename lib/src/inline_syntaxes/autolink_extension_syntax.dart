@@ -76,7 +76,8 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     var destination = text;
     if (isEmailLink) {
       destination = 'mailto:$destination';
-    } else if (!destination.startsWith(RegExp(r'(https?|ftp):\/\/'))) {
+    } else if (destination[0] == 'w') {
+      // When there is no scheme specified, insert the scheme `http`.
       destination = 'http://$destination';
     }
 
