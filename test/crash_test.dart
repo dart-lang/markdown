@@ -1,4 +1,4 @@
-// Copyright (c) 2017, the Dart project authors.  Please see the AUTHORS file
+// Copyright (c) 2022, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
@@ -79,15 +79,18 @@ void main() async {
           try {
             await TarReader.forEach(Stream.value(archive), (entry) async {
               if (entry.name.endsWith('.md')) {
-                late String str;
+                late String contents;
                 try {
                   final bytes = await http.ByteStream(entry.contents).toBytes();
-                  str = utf8.decode(bytes);
+                  contents = utf8.decode(bytes);
                 } on FormatException {
                   return; // ignore invalid utf8
                 }
                 try {
-                  markdownToHtml(str, extensionSet: ExtensionSet.gitHubWeb);
+                  markdownToHtml(
+                    contents,
+                    extensionSet: ExtensionSet.gitHubWeb,
+                  );
                 } catch (err, st) {
                   errors
                       .add('package:$package/${entry.name}, throws: $err\n$st');
@@ -117,6 +120,6 @@ void main() async {
       }
     },
     timeout: Timeout(Duration(hours: 1)),
-    tags: 'crashtest', // skipped by default, see: dart_test.yaml
+    tags: 'crash_test', // skipped by default, see: dart_test.yaml
   );
 }
