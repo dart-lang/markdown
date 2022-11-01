@@ -37,7 +37,7 @@ jobs:
       - name: create pubspec_overrides.yaml
         working-directory: flutter_packages/packages/flutter_markdown
         run: |
-          echo "dependency_overrides:"       > pubspec_overrides.yaml
+          echo "dependency_overrides:"        > pubspec_overrides.yaml
           echo "  markdown:"                 >> pubspec_overrides.yaml
           echo "    path: ../../../markdown" >> pubspec_overrides.yaml
 
