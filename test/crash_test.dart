@@ -12,6 +12,8 @@ import 'package:pool/pool.dart';
 import 'package:tar/tar.dart';
 import 'package:test/test.dart';
 
+// ignore_for_file: avoid_dynamic_calls
+
 void main() async {
   // This test is a really dumb and very slow crash-test.
   // It downloads the latest package version for each package on pub.dev
@@ -103,7 +105,8 @@ void main() async {
           }
         });
         count++;
-        if (DateTime.now().difference(lastStatus) > Duration(seconds: 30)) {
+        if (DateTime.now().difference(lastStatus) >
+            const Duration(seconds: 30)) {
           lastStatus = DateTime.now();
           print('Scanned $count / ${packages.length} (skipped $skipped),'
               ' found ${errors.length} issues');
@@ -119,7 +122,7 @@ void main() async {
         fail('Found ${errors.length} cases where markdownToHtml threw!');
       }
     },
-    timeout: Timeout(Duration(hours: 1)),
+    timeout: const Timeout(Duration(hours: 1)),
     tags: 'crash_test', // skipped by default, see: dart_test.yaml
   );
 }
