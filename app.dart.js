@@ -1052,7 +1052,7 @@ ow(a,b,c,d){return{u:a,e:b,r:c,s:[],p:0,n:d}},
 eT(a){var t,s,r,q,p,o,n,m,l,k=a.r,j=a.s
 for(t=k.length,s=0;s<t;){r=k.charCodeAt(s)
 if(r>=48&&r<=57)s=A.Al(s+1,r,k,j)
-else if((((r|32)>>>0)-97&65535)<26||r===95||r===36)s=A.R8(a,s,k,j,!1)
+else if((((r|32)>>>0)-97&65535)<26||r===95||r===36||r===124)s=A.R8(a,s,k,j,!1)
 else if(r===46)s=A.R8(a,s,k,j,!0)
 else{++s
 switch(r){case 44:break
@@ -1136,7 +1136,7 @@ return a},
 R8(a,b,c,d,e){var t,s,r,q,p,o,n=b+1
 for(t=c.length;n<t;++n){s=c.charCodeAt(n)
 if(s===46){if(e)break
-e=!0}else{if(!((((s|32)>>>0)-97&65535)<26||s===95||s===36))r=s>=48&&s<=57
+e=!0}else{if(!((((s|32)>>>0)-97&65535)<26||s===95||s===36||s===124))r=s>=48&&s<=57
 else r=!0
 if(!r)break}}q=c.substring(b,n)
 if(e){t=a.u

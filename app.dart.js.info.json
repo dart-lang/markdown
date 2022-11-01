@@ -197,6 +197,7 @@
         "name": "dart._js_names",
         "size": 0,
         "children": [
+          "function/dart:_js_names::getSpecializedTestTag",
           "function/dart:_js_names::unmangleGlobalNameIfPreservedAnyways"
         ],
         "canonicalUri": "dart:_js_names"
@@ -254,7 +255,7 @@
         "id": "library/dart:_rti::",
         "kind": "library",
         "name": "rti",
-        "size": 17067,
+        "size": 17085,
         "children": [
           "class/dart:_rti::Rti",
           "class/dart:_rti::TypeRule",
@@ -12487,7 +12488,7 @@
         "parameters": [
           {
             "name": "pattern",
-            "type": "Value([exact=JSString], value: \" \")",
+            "type": "[exact=JSString]",
             "declaredType": "Pattern"
           }
         ],
@@ -21631,6 +21632,35 @@
         "type": "dynamic Function(dynamic)",
         "functionKind": 0
       },
+      "dart:_js_names::getSpecializedTestTag": {
+        "id": "function/dart:_js_names::getSpecializedTestTag",
+        "kind": "function",
+        "name": "getSpecializedTestTag",
+        "size": 0,
+        "outputUnit": "outputUnit/main",
+        "parent": "library/dart:_js_names::",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "Object",
+        "inferredReturnType": "[exact=JSString]",
+        "parameters": [
+          {
+            "name": "name",
+            "type": "[exact=JSString]",
+            "declaredType": "String"
+          }
+        ],
+        "sideEffects": "SideEffects(reads nothing; writes nothing)",
+        "inlinedCount": 1,
+        "code": "",
+        "type": "Object Function(String)",
+        "functionKind": 0
+      },
       "dart:_js_names::unmangleGlobalNameIfPreservedAnyways": {
         "id": "function/dart:_js_names::unmangleGlobalNameIfPreservedAnyways",
         "kind": "function",
@@ -24332,7 +24362,7 @@
         "id": "function/dart:_rti::_Parser.handleIdentifier",
         "kind": "function",
         "name": "handleIdentifier",
-        "size": 359,
+        "size": 368,
         "outputUnit": "outputUnit/main",
         "parent": "class/dart:_rti::_Parser",
         "children": [],
@@ -24373,7 +24403,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "R8(a,b,c,d,e){var t,s,r,q,p,o,n=b+1\nfor(t=c.length;n<t;++n){s=c.charCodeAt(n)\nif(s===46){if(e)break\ne=!0}else{if(!((((s|32)>>>0)-97&65535)<26||s===95||s===36))r=s>=48&&s<=57\nelse r=!0\nif(!r)break}}q=c.substring(b,n)\nif(e){t=a.u\np=a.e\nif(p.x===10)p=p.y\no=A.Qo(t,p.y)[q]\nif(o==null)A.x('No \"'+q+'\" in \"'+A.mD(p)+'\"')\nd.push(A.cE(t,p,o))}else d.push(q)\nreturn n}",
+        "code": "R8(a,b,c,d,e){var t,s,r,q,p,o,n=b+1\nfor(t=c.length;n<t;++n){s=c.charCodeAt(n)\nif(s===46){if(e)break\ne=!0}else{if(!((((s|32)>>>0)-97&65535)<26||s===95||s===36||s===124))r=s>=48&&s<=57\nelse r=!0\nif(!r)break}}q=c.substring(b,n)\nif(e){t=a.u\np=a.e\nif(p.x===10)p=p.y\no=A.Qo(t,p.y)[q]\nif(o==null)A.x('No \"'+q+'\" in \"'+A.mD(p)+'\"')\nd.push(A.cE(t,p,o))}else d.push(q)\nreturn n}",
         "type": "int Function(Object?,int,String,Object?,bool)",
         "functionKind": 0
       },
@@ -24595,7 +24625,7 @@
         "id": "function/dart:_rti::_Parser.parse",
         "kind": "function",
         "name": "parse",
-        "size": 1447,
+        "size": 1456,
         "outputUnit": "outputUnit/main",
         "parent": "class/dart:_rti::_Parser",
         "children": [],
@@ -24616,7 +24646,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "eT(a){var t,s,r,q,p,o,n,m,l,k=a.r,j=a.s\nfor(t=k.length,s=0;s<t;){r=k.charCodeAt(s)\nif(r>=48&&r<=57)s=A.Al(s+1,r,k,j)\nelse if((((r|32)>>>0)-97&65535)<26||r===95||r===36)s=A.R8(a,s,k,j,!1)\nelse if(r===46)s=A.R8(a,s,k,j,!0)\nelse{++s\nswitch(r){case 44:break\ncase 58:j.push(!1)\nbreak\ncase 33:j.push(!0)\nbreak\ncase 59:j.push(A.KQ(a.u,a.e,j.pop()))\nbreak\ncase 94:j.push(A.Hc(a.u,j.pop()))\nbreak\ncase 35:j.push(A.mZ(a.u,5,\"#\"))\nbreak\ncase 64:j.push(A.mZ(a.u,2,\"@\"))\nbreak\ncase 126:j.push(A.mZ(a.u,3,\"~\"))\nbreak\ncase 60:j.push(a.p)\na.p=j.length\nbreak\ncase 62:q=a.u\np=j.splice(a.p)\nA.rT(a.u,a.e,p)\na.p=j.pop()\no=j.pop()\nif(typeof o==\"string\")j.push(A.Q2(q,o,p))\nelse{n=A.KQ(q,a.e,o)\nswitch(n.x){case 12:j.push(A.DS(q,n,p,a.n))\nbreak\ndefault:j.push(A.ap(q,n,p))\nbreak}}break\ncase 38:A.I3(a,j)\nbreak\ncase 42:q=a.u\nj.push(A.SO(q,A.KQ(q,a.e,j.pop()),a.n))\nbreak\ncase 63:q=a.u\nj.push(A.Bc(q,A.KQ(q,a.e,j.pop()),a.n))\nbreak\ncase 47:q=a.u\nj.push(A.LN(q,A.KQ(q,a.e,j.pop()),a.n))\nbreak\ncase 40:j.push(-3)\nj.push(a.p)\na.p=j.length\nbreak\ncase 41:A.Mt(a,j)\nbreak\ncase 91:j.push(a.p)\na.p=j.length\nbreak\ncase 93:p=j.splice(a.p)\nA.rT(a.u,a.e,p)\na.p=j.pop()\nj.push(p)\nj.push(-1)\nbreak\ncase 123:j.push(a.p)\na.p=j.length\nbreak\ncase 125:p=j.splice(a.p)\nA.Be(a.u,a.e,p)\na.p=j.pop()\nj.push(p)\nj.push(-2)\nbreak\ncase 43:m=k.indexOf(\"(\",s)\nj.push(k.substring(s,m))\nj.push(-4)\nj.push(a.p)\na.p=j.length\ns=m+1\nbreak\ndefault:throw\"Bad character \"+r}}}l=j.pop()\nreturn A.KQ(a.u,a.e,l)}",
+        "code": "eT(a){var t,s,r,q,p,o,n,m,l,k=a.r,j=a.s\nfor(t=k.length,s=0;s<t;){r=k.charCodeAt(s)\nif(r>=48&&r<=57)s=A.Al(s+1,r,k,j)\nelse if((((r|32)>>>0)-97&65535)<26||r===95||r===36||r===124)s=A.R8(a,s,k,j,!1)\nelse if(r===46)s=A.R8(a,s,k,j,!0)\nelse{++s\nswitch(r){case 44:break\ncase 58:j.push(!1)\nbreak\ncase 33:j.push(!0)\nbreak\ncase 59:j.push(A.KQ(a.u,a.e,j.pop()))\nbreak\ncase 94:j.push(A.Hc(a.u,j.pop()))\nbreak\ncase 35:j.push(A.mZ(a.u,5,\"#\"))\nbreak\ncase 64:j.push(A.mZ(a.u,2,\"@\"))\nbreak\ncase 126:j.push(A.mZ(a.u,3,\"~\"))\nbreak\ncase 60:j.push(a.p)\na.p=j.length\nbreak\ncase 62:q=a.u\np=j.splice(a.p)\nA.rT(a.u,a.e,p)\na.p=j.pop()\no=j.pop()\nif(typeof o==\"string\")j.push(A.Q2(q,o,p))\nelse{n=A.KQ(q,a.e,o)\nswitch(n.x){case 12:j.push(A.DS(q,n,p,a.n))\nbreak\ndefault:j.push(A.ap(q,n,p))\nbreak}}break\ncase 38:A.I3(a,j)\nbreak\ncase 42:q=a.u\nj.push(A.SO(q,A.KQ(q,a.e,j.pop()),a.n))\nbreak\ncase 63:q=a.u\nj.push(A.Bc(q,A.KQ(q,a.e,j.pop()),a.n))\nbreak\ncase 47:q=a.u\nj.push(A.LN(q,A.KQ(q,a.e,j.pop()),a.n))\nbreak\ncase 40:j.push(-3)\nj.push(a.p)\na.p=j.length\nbreak\ncase 41:A.Mt(a,j)\nbreak\ncase 91:j.push(a.p)\na.p=j.length\nbreak\ncase 93:p=j.splice(a.p)\nA.rT(a.u,a.e,p)\na.p=j.pop()\nj.push(p)\nj.push(-1)\nbreak\ncase 123:j.push(a.p)\na.p=j.length\nbreak\ncase 125:p=j.splice(a.p)\nA.Be(a.u,a.e,p)\na.p=j.pop()\nj.push(p)\nj.push(-2)\nbreak\ncase 43:m=k.indexOf(\"(\",s)\nj.push(k.substring(s,m))\nj.push(-4)\nj.push(a.p)\na.p=j.length\ns=m+1\nbreak\ndefault:throw\"Bad character \"+r}}}l=j.pop()\nreturn A.KQ(a.u,a.e,l)}",
         "type": "Rti Function(Object?)",
         "functionKind": 0
       },
@@ -30130,7 +30160,7 @@
         "inferredReturnType": "[null|subclass=Object]",
         "parameters": [],
         "sideEffects": "SideEffects(reads nothing; writes nothing)",
-        "inlinedCount": 9,
+        "inlinedCount": 10,
         "code": "",
         "type": "Object? Function()",
         "functionKind": 0
@@ -30251,7 +30281,7 @@
           }
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
-        "inlinedCount": 1,
+        "inlinedCount": 2,
         "code": "q7(a){return A.Ew(v.typeUniverse,a,!1)}",
         "type": "Rti Function(String)",
         "functionKind": 0
@@ -70152,12 +70182,20 @@
         "mask": null
       },
       {
-        "id": "function/dart:_rti::Rti._getInterfaceName",
+        "id": "function/dart:_js_names::getSpecializedTestTag",
         "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_js_names::getSpecializedTestTag",
+        "mask": null
       },
       {
         "id": "function/dart:_rti::Rti._getInterfaceName",
         "mask": null
+      },
+      {
+        "id": "function/dart:_rti::Rti._getInterfaceName",
+        "mask": "inlined"
       },
       {
         "id": "function/dart:_rti::Rti._getInterfaceTypeArguments",
@@ -70169,11 +70207,11 @@
       },
       {
         "id": "function/dart:_rti::Rti._getKind",
-        "mask": null
+        "mask": "inlined"
       },
       {
         "id": "function/dart:_rti::Rti._getKind",
-        "mask": "inlined"
+        "mask": null
       },
       {
         "id": "function/dart:_rti::Rti._getKind",
@@ -70193,11 +70231,11 @@
       },
       {
         "id": "function/dart:_rti::Rti._getStarArgument",
-        "mask": "inlined"
+        "mask": null
       },
       {
         "id": "function/dart:_rti::Rti._getStarArgument",
-        "mask": null
+        "mask": "inlined"
       },
       {
         "id": "function/dart:_rti::Rti._setSpecializedTestResource",
@@ -70367,6 +70405,14 @@
       },
       {
         "id": "function/dart:_rti::_theUniverse",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_rti::findType",
+        "mask": null
+      },
+      {
+        "id": "function/dart:_rti::findType",
         "mask": "inlined"
       }
     ],
@@ -72150,6 +72196,10 @@
       {
         "id": "function/dart:_rti::_theUniverse",
         "mask": null
+      },
+      {
+        "id": "function/dart:_rti::_theUniverse",
+        "mask": "inlined"
       },
       {
         "id": "function/dart:_rti::_theUniverse",
@@ -90449,7 +90499,7 @@
       "id": "outputUnit/main",
       "kind": "outputUnit",
       "name": "main",
-      "size": 238008,
+      "size": 238026,
       "filename": "app.dart.js",
       "imports": []
     }
@@ -90459,11 +90509,11 @@
   "dump_minor_version": 1,
   "program": {
     "entrypoint": "function/org-dartlang-app:///example/app.dart::main",
-    "size": 238008,
-    "ramUsage": "226.406 MB",
-    "dart2jsVersion": "2.19.0-331.0.dev",
-    "compilationMoment": "2022-10-30 13:09:49.678755",
-    "compilationDuration": 980395,
+    "size": 238026,
+    "ramUsage": "226.172 MB",
+    "dart2jsVersion": "2.19.0-353.0.dev",
+    "compilationMoment": "2022-11-01 11:21:48.482436",
+    "compilationDuration": 973969,
     "toJsonDuration": 6000,
     "dumpInfoDuration": 0,
     "noSuchMethodEnabled": false,
