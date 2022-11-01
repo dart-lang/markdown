@@ -33,7 +33,7 @@ jobs:
       - name: get flutter
         uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
-          channel: 'dev'
+          channel: 'beta'
       
       - name: flutter --version
         run: flutter --version
