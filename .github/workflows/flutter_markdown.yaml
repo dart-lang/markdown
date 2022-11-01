@@ -14,7 +14,7 @@ on:
 permissions: read-all
 
 jobs:
-  build:
+  smoke-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +32,8 @@ jobs:
         uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           channel: 'dev'
+      
+      - name: flutter --version
         run: flutter --version
 
       - name: create pubspec_overrides.yaml
