@@ -25,7 +25,7 @@ void main() async {
     'crash test',
     () async {
       final c = http.RetryClient(http.Client());
-      Future<dynamic> _getJson(String url) async {
+      Future<dynamic> getJson(String url) async {
         final u = Uri.tryParse(url);
         if (u == null) {
           return null;
@@ -45,7 +45,7 @@ void main() async {
       }
 
       final packages =
-          ((await _getJson('https://pub.dev/api/package-names'))['packages']
+          ((await getJson('https://pub.dev/api/package-names'))['packages']
                   as List)
               .cast<String>();
       print('Found ${packages.length} packages to scan');
@@ -58,7 +58,7 @@ void main() async {
       await Future.wait(packages.map((package) async {
         await pool.withResource(() async {
           final versionsResponse =
-              await _getJson('https://pub.dev/api/packages/$package');
+              await getJson('https://pub.dev/api/packages/$package');
           final archiveUrl = Uri.tryParse(
             versionsResponse['latest']?['archive_url'] as String? ?? '',
           );
