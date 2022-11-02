@@ -30,7 +30,8 @@ jobs:
           repository: flutter/packages
           path: flutter_packages
 
-      - name: get flutter
+      # Install the Flutter SDK using the subosito/flutter-action GitHub action.
+      - name: install the flutter sdk
         uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
         with:
           channel: 'beta'
