@@ -16,8 +16,6 @@ permissions: read-all
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
-    # TODO(devoncarew): Remove this 'continue-on-error' setting once this job starts passing.
-    continue-on-error: true
 
     steps:
       - name: clone dart-lang/markdown
