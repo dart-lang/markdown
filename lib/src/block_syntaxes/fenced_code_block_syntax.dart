@@ -92,23 +92,37 @@ class FencedCodeBlockSyntax extends BlockSyntax {
 }
 
 class _FenceMatch {
-  _FenceMatch.fromMatch(RegExpMatch match) : indent = match[1]!.length {
+  _FenceMatch._({
+    required this.indent,
+    required this.marker,
+    required this.info,
+  });
+
+  factory _FenceMatch.fromMatch(RegExpMatch match) {
+    String marker;
+    String info;
+
     if (match.namedGroup('backtick') != null) {
       marker = match.namedGroup('backtick')!;
-      _info = match.namedGroup('backtickInfo')!;
+      info = match.namedGroup('backtickInfo')!;
     } else {
       marker = match.namedGroup('tilde')!;
-      _info = match.namedGroup('tildeInfo')!;
+      info = match.namedGroup('tildeInfo')!;
     }
+
+    return _FenceMatch._(
+      indent: match[1]!.length,
+      marker: marker,
+      info: info.trim(),
+    );
   }
 
   final int indent;
-  late final String marker;
-  late final String _info;
+  final String marker;
 
   // The info-string should be trimmed,
   // https://spec.commonmark.org/0.30/#info-string.
-  String get info => _info.trim();
+  final String info;
 
   // The first word of the info string is typically used to specify the language
   // of the code sample,
