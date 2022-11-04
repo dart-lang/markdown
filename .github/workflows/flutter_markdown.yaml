@@ -1,0 +1,59 @@
+# Run a smoke test against package:flutter_markdown.
+
+name: flutter_markdown
+
+on:
+  schedule:
+    # “At 00:00 (UTC) on Sunday.”
+    - cron: '0 0 * * 0'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+permissions: read-all
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: clone dart-lang/markdown
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        with:
+          repository: dart-lang/markdown
+          path: markdown
+
+      - name: clone flutter/packages
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+        with:
+          repository: flutter/packages
+          path: flutter_packages
+
+      # Install the Flutter SDK using the subosito/flutter-action GitHub action.
+      - name: install the flutter sdk
+        uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+        with:
+          channel: 'beta'
+      
+      - name: flutter --version
+        run: flutter --version
+
+      - name: create pubspec_overrides.yaml
+        working-directory: flutter_packages/packages/flutter_markdown
+        run: |
+          echo "dependency_overrides:"        > pubspec_overrides.yaml
+          echo "  markdown:"                 >> pubspec_overrides.yaml
+          echo "    path: ../../../markdown" >> pubspec_overrides.yaml
+
+      - name: flutter pub get
+        working-directory: flutter_packages/packages/flutter_markdown
+        run: flutter pub get
+  
+      - name: flutter analyze package:flutter_markdown
+        working-directory: flutter_packages/packages/flutter_markdown
+        run: flutter analyze
+
+      - name: flutter test package:flutter_markdown
+        working-directory: flutter_packages/packages/flutter_markdown
+        run: flutter test

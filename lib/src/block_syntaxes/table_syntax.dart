@@ -51,7 +51,7 @@ class TableSyntax extends BlockSyntax {
       if (children != null) {
         while (children.length < columnCount) {
           // Insert synthetic empty cells.
-          children.add(Element('td', const []));
+          children.add(Element('td', []));
         }
         while (children.length > columnCount) {
           children.removeLast();
