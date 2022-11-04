@@ -378,7 +378,7 @@ bar>)</p>
 
 [foo]: /url "title"
 <<<
-<p><a href="/url" title="title">foo</a> 
+<p><a href="/url" title="title">foo</a>
 []</p>
 >>> Links - 565
 [foo]

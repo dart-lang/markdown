@@ -10,6 +10,8 @@
 * Add a new syntax `BlockHtmlSyntax` to parse HTML blocks.
 * Add a new syntax `DecodeHtmlSyntax` to decode HTML entity and numeric
   character references.
+* Add a new syntax `SoftLineBreakSyntax` to remove the single space before the
+  line ending.
 * Deprecate `BlockTagBlockHtmlSyntax`, `LongBlockHtmlSyntax` and
   `OtherTagBlockHtmlSyntax`. These syntaxes will be removed from the next major
   version.

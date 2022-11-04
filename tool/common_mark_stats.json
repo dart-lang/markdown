@@ -371,7 +371,7 @@
   "583": "strict",
   "584": "strict",
   "585": "strict",
-  "586": "loose",
+  "586": "strict",
   "587": "strict",
   "588": "strict",
   "589": "loose",
@@ -500,7 +500,7 @@
   "552": "strict",
   "553": "strict",
   "554": "strict",
-  "555": "loose",
+  "555": "strict",
   "556": "strict",
   "557": "strict",
   "558": "strict",
@@ -662,7 +662,7 @@
  },
  "Soft line breaks": {
   "648": "strict",
-  "649": "loose"
+  "649": "strict"
  },
  "Tabs": {
   "1": "strict",

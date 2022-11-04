@@ -80,7 +80,7 @@ My ![foo bar](/path/to/train.jpg  "title"   )
 
 [foo]: /url "title"
 <<<
-<p><img src="/url" alt="foo" title="title" /> 
+<p><img src="/url" alt="foo" title="title" />
 []</p>
 >>> Images - 596
 ![foo]
