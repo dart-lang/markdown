@@ -2,20 +2,21 @@
 
 * **Breaking change**: `close()` of `DelimiterSyntax` and `LinkSyntax`
   returns multiple nodes instead of single one.
-
-## 6.0.2-dev
-
-* Fix a crash in checkbox lists when mixing checkbox items with
-  non-checkbox items.
-* Add a new syntax `BlockHtmlSyntax` to parse HTML blocks.
+* **Breaking change**: Remove deprecated APIs, including `TagSyntax`,
+  `indicatorForCheckedCheckBox`, and `indicatorForUncheckedCheckBox`.
+* **Breaking change**: Removed `BlockHtmlSyntax`, `BlockTagBlockHtmlSyntax`,
+  `LongBlockHtmlSyntax`, and `OtherTagBlockHtmlSyntax`.
+* Add a new syntax `HtmlBlockSyntax` to parse HTML blocks.
 * Add a new syntax `DecodeHtmlSyntax` to decode HTML entity and numeric
   character references.
 * Add a new syntax `SoftLineBreakSyntax` to remove the single space before the
   line ending.
-* Deprecate `BlockTagBlockHtmlSyntax`, `LongBlockHtmlSyntax` and
-  `OtherTagBlockHtmlSyntax`. These syntaxes will be removed from the next major
-  version.
 * Add an option `caseSensitive` to `TextSyntax`.
+
+## 6.0.1
+
+* Fix a crash in checkbox lists when mixing checkbox items with
+  non-checkbox items.
 
 ## 6.0.0
 
