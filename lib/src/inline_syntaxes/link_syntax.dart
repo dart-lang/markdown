@@ -152,9 +152,13 @@ class LinkSyntax extends DelimiterSyntax {
   }) {
     final children = getChildren();
     final element = Element('a', children);
-    element.attributes['href'] = escapeAttribute(destination);
+    element.attributes['href'] = normalizeLinkDestination(
+      escapePunctuation(destination),
+    );
     if (title != null && title.isNotEmpty) {
-      element.attributes['title'] = escapeAttribute(title);
+      element.attributes['title'] = normalizeLinkTitle(
+        escapePunctuation(title),
+      );
     }
     return element;
   }

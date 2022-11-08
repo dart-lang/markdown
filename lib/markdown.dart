@@ -72,6 +72,7 @@ export 'src/inline_syntaxes/delimiter_syntax.dart';
 export 'src/inline_syntaxes/email_autolink_syntax.dart';
 export 'src/inline_syntaxes/emoji_syntax.dart';
 export 'src/inline_syntaxes/emphasis_syntax.dart';
+export 'src/inline_syntaxes/escape_html_syntax.dart';
 export 'src/inline_syntaxes/escape_syntax.dart';
 export 'src/inline_syntaxes/image_syntax.dart';
 export 'src/inline_syntaxes/inline_html_syntax.dart';

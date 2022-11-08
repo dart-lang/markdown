@@ -72,7 +72,7 @@ with blank line'
 
 [foo]
 <<<
-<p><a href="<>">foo</a></p>
+<p><a href="%3C%3E">foo</a></p>
 >>> Link reference definitions - 170
 [foo]: <bar>(baz)
 
@@ -84,7 +84,7 @@ with blank line'
 
 [foo]
 <<<
-<p>[foo]: /url\bar*baz "foo&quot;bar\baz"</p>
+<p>[foo]: /url\bar*baz &quot;foo&quot;bar\baz&quot;</p>
 <p>[foo]</p>
 >>> Link reference definitions - 172
 [foo]
@@ -110,7 +110,7 @@ with blank line'
 
 [αγω]
 <<<
-<p><a href="/φου">αγω</a></p>
+<p><a href="/%CF%86%CE%BF%CF%85">αγω</a></p>
 >>> Link reference definitions - 176
 [foo]: /url
 <<<
@@ -125,18 +125,18 @@ bar
 >>> Link reference definitions - 178
 [foo]: /url "title" ok
 <<<
-<p>[foo]: /url "title" ok</p>
+<p>[foo]: /url &quot;title&quot; ok</p>
 >>> Link reference definitions - 179
 [foo]: /url
 "title" ok
 <<<
-<p>"title" ok</p>
+<p>&quot;title&quot; ok</p>
 >>> Link reference definitions - 180
     [foo]: /url "title"
 
 [foo]
 <<<
-<pre><code>[foo]: /url "title"
+<pre><code>[foo]: /url &quot;title&quot;
 </code></pre>
 <p>[foo]</p>
 >>> Link reference definitions - 181

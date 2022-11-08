@@ -74,7 +74,7 @@ void main() async {
     validateCore('Unicode ellipsis as punctuation', '''
 "Connecting dot **A** to **B.**…"
 ''', '''
-<p>"Connecting dot <strong>A</strong> to <strong>B.</strong>…"</p>
+<p>&quot;Connecting dot <strong>A</strong> to <strong>B.</strong>…&quot;</p>
 ''');
   });
 

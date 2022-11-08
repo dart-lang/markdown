@@ -11,6 +11,7 @@
   character references.
 * Add a new syntax `SoftLineBreakSyntax` to remove the single space before the
   line ending.
+* Add a new syntax `EscapeHtmlSyntax` to encode (`"`), (`<`), (`>`) and (`&`).
 * Add an option `caseSensitive` to `TextSyntax`.
 
 ## 6.0.1

@@ -3,9 +3,9 @@
 &frac34; &HilbertSpace; &DifferentialD;
 &ClockwiseContourIntegral; &ngE;
 <<<
-<p>&nbsp; &amp; &copy; &AElig; &Dcaron;
-&frac34; &HilbertSpace; &DifferentialD;
-&ClockwiseContourIntegral; &ngE;</p>
+<p>&amp; © Æ Ď
+¾ ℋ ⅆ
+∲ ≧̸</p>
 >>> Entity and numeric character references - 322
 &#35; &#1234; &#992; &#0;
 <<<
@@ -13,17 +13,17 @@
 >>> Entity and numeric character references - 323
 &#X22; &#XD06; &#xcab;
 <<<
-<p>" ആ ಫ</p>
+<p>&quot; ആ ಫ</p>
 >>> Entity and numeric character references - 324
 &nbsp &x; &#; &#x;
 &#987654321;
 &#abcdef0;
 &ThisIsNotDefined; &hi?;
 <<<
-<p>&amp;nbsp &x; &#; &#x;
-&#987654321;
-&#abcdef0;
-&ThisIsNotDefined; &amp;hi?;</p>
+<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
+&amp;#987654321;
+&amp;#abcdef0;
+&amp;ThisIsNotDefined; &amp;hi?;</p>
 >>> Entity and numeric character references - 325
 &copy
 <<<
@@ -31,7 +31,7 @@
 >>> Entity and numeric character references - 326
 &MadeUpEntity;
 <<<
-<p>&MadeUpEntity;</p>
+<p>&amp;MadeUpEntity;</p>
 >>> Entity and numeric character references - 327
 <a href="&ouml;&ouml;.html">
 <<<
@@ -39,13 +39,13 @@
 >>> Entity and numeric character references - 328
 [foo](/f&ouml;&ouml; "f&ouml;&ouml;")
 <<<
-<p><a href="/f&ouml;&ouml;" title="f&ouml;&ouml;">foo</a></p>
+<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
 >>> Entity and numeric character references - 329
 [foo]
 
 [foo]: /f&ouml;&ouml; "f&ouml;&ouml;"
 <<<
-<p><a href="/f&ouml;&ouml;" title="f&ouml;&ouml;">foo</a></p>
+<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>
 >>> Entity and numeric character references - 330
 ``` f&ouml;&ouml;
 foo

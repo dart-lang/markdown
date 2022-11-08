@@ -201,9 +201,13 @@ final htmlBlockPattern = RegExp(
     '(?<condition_7>(?:$namedTagDefinition)\\s*\$))',
     caseSensitive: false);
 
-/// ASCII punctuation characters.
-// see https://spec.commonmark.org/0.30/#unicode-whitespace-character.
+// ASCII punctuation characters, see
+// https://spec.commonmark.org/0.30/#unicode-whitespace-character.
 const asciiPunctuationCharacters = r'''!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~''';
+
+// ASCII punctuation characters with some characters escaped, in order to be
+// used in the RegExp character set.
+const asciiPunctuationEscaped = r'''!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~''';
 
 /// A pattern to match HTML entity references and numeric character references.
 // https://spec.commonmark.org/0.30/#entity-and-numeric-character-references
