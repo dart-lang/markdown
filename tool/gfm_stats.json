@@ -66,7 +66,7 @@
   "317": "strict",
   "318": "strict",
   "319": "strict",
-  "320": "fail"
+  "320": "strict"
  },
  "Blank lines": {
   "197": "strict"
@@ -285,20 +285,20 @@
   "93": "strict",
   "94": "strict",
   "95": "strict",
-  "96": "loose",
-  "97": "loose",
+  "96": "strict",
+  "97": "strict",
   "98": "strict",
   "99": "strict",
   "100": "strict",
-  "101": "loose",
-  "102": "loose",
-  "103": "loose",
+  "101": "strict",
+  "102": "strict",
+  "103": "strict",
   "104": "strict",
   "105": "strict",
   "106": "strict",
-  "107": "loose",
+  "107": "strict",
   "108": "loose",
-  "109": "loose",
+  "109": "strict",
   "110": "strict",
   "111": "strict",
   "112": "strict",
@@ -306,7 +306,7 @@
   "114": "strict",
   "115": "strict",
   "116": "strict",
-  "117": "fail"
+  "117": "strict"
  },
  "Hard line breaks": {
   "654": "strict",
