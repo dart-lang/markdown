@@ -83,7 +83,9 @@ class FencedCodeBlockSyntax extends BlockSyntax {
 
     // https://spec.commonmark.org/0.30/#example-127
     // https://spec.commonmark.org/0.30/#example-128
-    if (closingFence == null && childLines.last.trim().isEmpty) {
+    if (closingFence == null &&
+        childLines.isNotEmpty &&
+        childLines.last.trim().isEmpty) {
       childLines.removeLast();
     }
 
