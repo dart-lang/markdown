@@ -28,6 +28,10 @@ class InlineParser {
     EmailAutolinkSyntax(),
     AutolinkSyntax(),
     LineBreakSyntax(),
+    // "*" surrounded by spaces is left alone.
+    TextSyntax(r' \* ', startCharacter: $space),
+    // "_" surrounded by spaces is left alone.
+    TextSyntax(' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
     EmphasisSyntax.asterisk(),
     // Parse "__strong__" and "_emphasis_" tags.
