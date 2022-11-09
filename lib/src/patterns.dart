@@ -15,7 +15,7 @@ final setextPattern = RegExp(r'^[ ]{0,3}(=+|-+)\s*$');
 final headerPattern = RegExp(r'^ {0,3}(#{1,6})[ \x09\x0b\x0c](.*?)#*$');
 
 /// The line starts with `>` with one optional space after.
-final blockquotePattern = RegExp(r'^[ ]{0,3}>[ ]?(.*)$');
+final blockquotePattern = RegExp(r'^[ ]{0,3}>[ \t]?.*$');
 
 /// A line indented four spaces. Used for code blocks and lists.
 final indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');

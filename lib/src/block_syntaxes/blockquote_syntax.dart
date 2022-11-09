@@ -4,7 +4,9 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../charcode.dart';
 import '../patterns.dart';
+import '../util.dart';
 import 'block_syntax.dart';
 import 'code_block_syntax.dart';
 import 'paragraph_syntax.dart';
@@ -21,16 +23,28 @@ class BlockquoteSyntax extends BlockSyntax {
     // Grab all of the lines that form the blockquote, stripping off the ">".
     final childLines = <String>[];
 
-    var encounteredCodeBlock = false;
     while (!parser.isDone) {
+      final currentLine = parser.current;
       final match = pattern.firstMatch(parser.current);
       if (match != null) {
-        final line = match[1]!;
-        childLines.add(line);
-        encounteredCodeBlock = indentPattern.hasMatch(line);
+        // A block quote marker consists of a `>` together with an optional
+        // following space of indentation, see
+        // https://spec.commonmark.org/0.30/#block-quote-marker.
+        final markerStart = match.match.indexOf('>');
+        int markerEnd;
+        if (currentLine.length > 1) {
+          final nextChar = currentLine.codeUnitAt(markerStart + 1);
+          final hasSpace = nextChar == $tab || nextChar == $space;
+          markerEnd = markerStart + (hasSpace ? 2 : 1);
+        } else {
+          markerEnd = markerStart + 1;
+        }
+        childLines.add(currentLine.substring(markerEnd));
         parser.advance();
         continue;
       }
+
+      final lastLine = childLines.last;
 
       // A paragraph continuation is OK. This is content that cannot be parsed
       // as any other syntax except Paragraph, and it doesn't match the bar in
@@ -39,8 +53,11 @@ class BlockquoteSyntax extends BlockSyntax {
       // matched CodeBlockSyntax is also paragraph continuation text.
       final otherMatched =
           parser.blockSyntaxes.firstWhere((s) => s.canParse(parser));
-      if (otherMatched is ParagraphSyntax ||
-          (!encounteredCodeBlock && otherMatched is CodeBlockSyntax)) {
+      if ((otherMatched is ParagraphSyntax &&
+              lastLine.isNotEmpty &&
+              !codeFencePattern.hasMatch(lastLine)) ||
+          (otherMatched is CodeBlockSyntax &&
+              !indentPattern.hasMatch(lastLine))) {
         childLines.add(parser.current);
         parser.advance();
       } else {

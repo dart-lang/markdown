@@ -42,7 +42,7 @@
 >		foo
 <<<
 <blockquote>
-<pre><code>	foo
+<pre><code>foo
 </code></pre>
 </blockquote>
 >>> Tabs - 7
