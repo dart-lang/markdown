@@ -12,18 +12,14 @@ import 'patterns.dart';
 /// One or more whitespace, for compressing.
 final _oneOrMoreWhitespacePattern = RegExp('[ \n\r\t]+');
 
-String escapeHtml(
-  String html, {
-  bool escapeApos = true,
-  bool escapeLtGt = true,
-  bool escapeQuot = true,
-}) =>
-    HtmlEscape(HtmlEscapeMode(
-      escapeApos: escapeApos,
-      escapeLtGt: escapeLtGt,
-      escapeQuot: escapeQuot,
+/// Escapes (`'`), (`"`), (`<`), (`>`) and (`&`) characters.
+String escapeHtml(String html) => const HtmlEscape(HtmlEscapeMode(
+      escapeApos: true,
+      escapeLtGt: true,
+      escapeQuot: true,
     )).convert(html);
 
+/// Escapes (`"`), (`<`) and (`>`) characters.
 String escapeHtmlAttribute(String text) =>
     const HtmlEscape(HtmlEscapeMode.attribute).convert(text);
 
