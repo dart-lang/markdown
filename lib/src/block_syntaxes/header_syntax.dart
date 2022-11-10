@@ -25,11 +25,10 @@ class HeaderSyntax extends BlockSyntax {
     final openMarkerEnd = openMarkerStart + level;
 
     String? content;
-    int? closeMarkerStart;
     if (closeMarker == null) {
       content = parser.current.substring(openMarkerEnd);
     } else {
-      closeMarkerStart = matchedText.lastIndexOf(closeMarker);
+      final closeMarkerStart = matchedText.lastIndexOf(closeMarker);
       content = parser.current.substring(openMarkerEnd, closeMarkerStart);
     }
     content = content.trim();
