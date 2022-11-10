@@ -52,8 +52,10 @@
 <pre><code>chunk1
 
 chunk2
-</code></pre>
-<pre><code>chunk3
+
+
+
+chunk3
 </code></pre>
 >>> Indented code blocks - 82
     chunk1
@@ -108,7 +110,6 @@ bar
 
 <<<
 <pre><code>foo
-
 </code></pre>
 >>> Indented code blocks - 88
     foo  

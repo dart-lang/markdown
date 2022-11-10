@@ -131,3 +131,55 @@ String escapePunctuation(String input) {
 
   return buffer.toString();
 }
+
+extension StringExtensions on String {
+  /// Removes leading whitespace by the length of [length].
+  // The way of handling tabs: https://spec.commonmark.org/0.30/#tabs
+  IndentedText indent([int length = 4]) {
+    final whitespaceMatch = RegExp('^[ \t]{0,$length}').firstMatch(this);
+    const tabSize = 4;
+
+    int? tabRemaining;
+    var start = 0;
+    final whitespaces = whitespaceMatch?[0];
+    if (whitespaces != null) {
+      var indentLength = 0;
+      for (start; start < whitespaces.length; start++) {
+        final isTab = whitespaces[start] == '\t';
+        if (isTab) {
+          indentLength += tabSize;
+          tabRemaining = 4;
+        } else {
+          indentLength += 1;
+        }
+        if (indentLength >= length) {
+          if (tabRemaining != null) {
+            tabRemaining = indentLength - length;
+          }
+          if (indentLength == length || isTab) {
+            start += 1;
+          }
+          break;
+        }
+        if (tabRemaining != null) {
+          tabRemaining = 0;
+        }
+      }
+    }
+    return IndentedText(substring(start), tabRemaining);
+  }
+
+  /// Whether this string contains only whitespaces.
+  bool get isBlank => trim().isEmpty;
+}
+
+class IndentedText {
+  final String text;
+
+  /// How many spaces of a tab that remains after part of it has been consumed.
+  ///
+  /// `null` means it did not hit a `tab`.
+  final int? tabRemaining;
+
+  IndentedText(this.text, this.tabRemaining);
+}
