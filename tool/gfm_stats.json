@@ -11,13 +11,13 @@
   "40": "strict",
   "41": "strict",
   "42": "strict",
-  "43": "loose",
+  "43": "strict",
   "44": "strict",
-  "45": "loose",
-  "46": "loose",
+  "45": "strict",
+  "46": "strict",
   "47": "strict",
   "48": "strict",
-  "49": "fail"
+  "49": "strict"
  },
  "Autolinks": {
   "602": "strict",

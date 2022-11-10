@@ -69,7 +69,7 @@ foo
 >>> ATX headings - 43
 ### foo ###     
 <<<
-<h3>foo ###</h3>
+<h3>foo</h3>
 >>> ATX headings - 44
 ### foo ### b
 <<<
@@ -77,15 +77,15 @@ foo
 >>> ATX headings - 45
 # foo#
 <<<
-<h1>foo</h1>
+<h1>foo#</h1>
 >>> ATX headings - 46
 ### foo \###
 ## foo #\##
 # foo \#
 <<<
-<h3>foo \</h3>
-<h2>foo #\</h2>
-<h1>foo \</h1>
+<h3>foo ###</h3>
+<h2>foo ###</h2>
+<h1>foo #</h1>
 >>> ATX headings - 47
 ****
 ## foo
@@ -108,5 +108,5 @@ Bar foo
 ### ###
 <<<
 <h2></h2>
-<p>#</p>
+<h1></h1>
 <h3></h3>

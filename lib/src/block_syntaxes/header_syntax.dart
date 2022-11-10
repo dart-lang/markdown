@@ -17,9 +17,29 @@ class HeaderSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     final match = pattern.firstMatch(parser.current)!;
+    final matchedText = match[0]!;
+    final openMarker = match[1]!;
+    final closeMarker = match[2];
+    final level = openMarker.length;
+    final openMarkerStart = matchedText.indexOf(openMarker);
+    final openMarkerEnd = openMarkerStart + level;
+
+    String? content;
+    int? closeMarkerStart;
+    if (closeMarker == null) {
+      content = parser.current.substring(openMarkerEnd);
+    } else {
+      closeMarkerStart = matchedText.lastIndexOf(closeMarker);
+      content = parser.current.substring(openMarkerEnd, closeMarkerStart);
+    }
+    content = content.trim();
+
+    // https://github.github.com/gfm/#example-49.
+    if (closeMarker == null && RegExp(r'^#+$').hasMatch(content)) {
+      content = null;
+    }
+
     parser.advance();
-    final level = match[1]!.length;
-    final contents = UnparsedContent(match[2]!.trim());
-    return Element('h$level', [contents]);
+    return Element('h$level', [if (content != null) UnparsedContent(content)]);
   }
 }
