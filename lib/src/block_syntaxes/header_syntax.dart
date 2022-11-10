@@ -34,7 +34,7 @@ class HeaderSyntax extends BlockSyntax {
     }
     content = content.trim();
 
-    // https://github.github.com/gfm/#example-49.
+    // https://spec.commonmark.org/0.30/#example-79
     if (closeMarker == null && RegExp(r'^#+$').hasMatch(content)) {
       content = null;
     }
