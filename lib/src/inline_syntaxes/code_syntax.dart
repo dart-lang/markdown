@@ -46,9 +46,42 @@ class CodeSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    var code = match[2]!.trim().replaceAll('\n', ' ');
-    if (parser.encodeHtml) code = escapeHtml(code);
+    final markerLength = match[1]!.length;
+    final contentLength = match.match.length - markerLength * 2;
+    final contentStart = parser.pos + markerLength;
+    final contentEnd = contentStart + contentLength;
+
+    var code = parser.source.substring(contentStart, contentEnd);
+    if (_shouldStrip(code)) {
+      code = code.substring(1, code.length - 1);
+    }
+    code = code.replaceAll('\n', ' ');
+
+    if (parser.encodeHtml) {
+      code = escapeHtml(code);
+    }
+
     parser.addNode(Element.text('code', code));
+    return true;
+  }
+
+  bool _shouldStrip(String code) {
+    // No stripping occurs if the code span contains only spaces:
+    // https://spec.commonmark.org/0.30/#example-334.
+    if (code.trim().isEmpty) {
+      return false;
+    }
+
+    // Only spaces, and not unicode whitespace in general, are stripped in this
+    // way, see https://spec.commonmark.org/0.30/#example-333.
+    final startsWithSpace = code.startsWith(' ') || code.startsWith('\n');
+    final endsWithSpace = code.endsWith(' ') || code.endsWith('\n');
+
+    // The stripping only happens if the space is on both sides of the string:
+    // https://spec.commonmark.org/0.30/#example-332.
+    if (!startsWithSpace || !endsWithSpace) {
+      return false;
+    }
 
     return true;
   }

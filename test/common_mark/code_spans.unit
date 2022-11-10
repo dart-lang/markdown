@@ -13,21 +13,21 @@
 >>> Code spans - 331
 `  ``  `
 <<<
-<p><code>``</code></p>
+<p><code> `` </code></p>
 >>> Code spans - 332
 ` a`
 <<<
-<p><code>a</code></p>
+<p><code> a</code></p>
 >>> Code spans - 333
 ` b `
 <<<
-<p><code>b</code></p>
+<p><code> b </code></p>
 >>> Code spans - 334
 ` `
 `  `
 <<<
-<p><code></code>
-<code></code></p>
+<p><code> </code>
+<code>  </code></p>
 >>> Code spans - 335
 ``
 foo
@@ -41,7 +41,7 @@ baz
 foo 
 ``
 <<<
-<p><code>foo</code></p>
+<p><code>foo </code></p>
 >>> Code spans - 337
 `foo   bar 
 baz`
