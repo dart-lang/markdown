@@ -16,7 +16,10 @@ class AutolinkSyntax extends InlineSyntax {
     final url = match[1]!;
     final text = parser.encodeHtml ? escapeHtml(url) : url;
     final anchor = Element.text('a', text);
-    anchor.attributes['href'] = Uri.encodeFull(url);
+
+    final destination = normalizeLinkDestination(url);
+    anchor.attributes['href'] =
+        parser.encodeHtml ? escapeHtml(destination) : destination;
     parser.addNode(anchor);
 
     return true;

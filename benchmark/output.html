@@ -7,58 +7,58 @@
 sample of real-world markdown:</p>
 <p>Tests are specified using the top-level <a href="https://pub.dev/documentation/test_core/latest/test_core/test.html"><code>test()</code></a> function, and test
 assertions are made using <a href="https://pub.dev/documentation/test_api/latest/test_api/expect.html"><code>expect()</code></a>:</p>
-<pre><code class="language-dart">import "package:test/test.dart";
+<pre><code class="language-dart">import &quot;package:test/test.dart&quot;;
 
 void main() {
-  test("String.split() splits the string on the delimiter", () {
-    var string = "foo,bar,baz";
-    expect(string.split(","), equals(["foo", "bar", "baz"]));
+  test(&quot;String.split() splits the string on the delimiter&quot;, () {
+    var string = &quot;foo,bar,baz&quot;;
+    expect(string.split(&quot;,&quot;), equals([&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]));
   });
 
-  test("String.trim() removes surrounding whitespace", () {
-    var string = "  foo ";
-    expect(string.trim(), equals("foo"));
+  test(&quot;String.trim() removes surrounding whitespace&quot;, () {
+    var string = &quot;  foo &quot;;
+    expect(string.trim(), equals(&quot;foo&quot;));
   });
 }
 </code></pre>
 <p>Tests can be grouped together using the [<code>group()</code>] function. Each group's
 description is added to the beginning of its test's descriptions.</p>
-<pre><code class="language-dart">import "package:test/test.dart";
+<pre><code class="language-dart">import &quot;package:test/test.dart&quot;;
 
 void main() {
-  group("String", () {
-    test(".split() splits the string on the delimiter", () {
-      var string = "foo,bar,baz";
-      expect(string.split(","), equals(["foo", "bar", "baz"]));
+  group(&quot;String&quot;, () {
+    test(&quot;.split() splits the string on the delimiter&quot;, () {
+      var string = &quot;foo,bar,baz&quot;;
+      expect(string.split(&quot;,&quot;), equals([&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]));
     });
 
-    test(".trim() removes surrounding whitespace", () {
-      var string = "  foo ";
-      expect(string.trim(), equals("foo"));
+    test(&quot;.trim() removes surrounding whitespace&quot;, () {
+      var string = &quot;  foo &quot;;
+      expect(string.trim(), equals(&quot;foo&quot;));
     });
   });
 
-  group("int", () {
-    test(".remainder() returns the remainder of division", () {
+  group(&quot;int&quot;, () {
+    test(&quot;.remainder() returns the remainder of division&quot;, () {
       expect(11.remainder(3), equals(2));
     });
 
-    test(".toRadixString() returns a hex string", () {
-      expect(11.toRadixString(16), equals("b"));
+    test(&quot;.toRadixString() returns a hex string&quot;, () {
+      expect(11.toRadixString(16), equals(&quot;b&quot;));
     });
   });
 }
 </code></pre>
 <p>Any matchers from the <a href="https://pub.dev/documentation/matcher/latest/matcher/matcher-library.html"><code>matcher</code></a> package can be used with <code>expect()</code>
 to do complex validations:</p>
-<pre><code class="language-dart">import "package:test/test.dart";
+<pre><code class="language-dart">import &quot;package:test/test.dart&quot;;
 
 void main() {
-  test(".split() splits the string on the delimiter", () {
-    expect("foo,bar,baz", allOf([
-      contains("foo"),
-      isNot(startsWith("bar")),
-      endsWith("baz")
+  test(&quot;.split() splits the string on the delimiter&quot;, () {
+    expect(&quot;foo,bar,baz&quot;, allOf([
+      contains(&quot;foo&quot;),
+      isNot(startsWith(&quot;bar&quot;)),
+      endsWith(&quot;baz&quot;)
     ]));
   });
 }
@@ -66,9 +66,9 @@ void main() {
 <h2>Running Tests</h2>
 <p>A single test file can be run just using <code>pub run test:test path/to/test.dart</code>
 (on Dart 1.10, this can be shortened to <code>pub run test path/to/test.dart</code>).</p>
-<p><img src="https://raw.githubusercontent.com/dart-lang/test/master/image/test1.gif" alt="Single file being run via pub run"" /></p>
+<p><img src="https://raw.githubusercontent.com/dart-lang/test/master/image/test1.gif" alt="Single file being run via pub run&quot;" /></p>
 <p>Many tests can be run at a time using <code>pub run test:test path/to/dir</code>.</p>
-<p><img src="https://raw.githubusercontent.com/dart-lang/test/master/image/test2.gif" alt="Directory being run via "pub run"." /></p>
+<p><img src="https://raw.githubusercontent.com/dart-lang/test/master/image/test2.gif" alt="Directory being run via &quot;pub run&quot;." /></p>
 <p>It's also possible to run a test on the Dart VM only by invoking it using <code>dart path/to/test.dart</code>, but this doesn't load the full test runner and will be
 missing some features.</p>
 <p>The test runner considers any file that ends with <code>_test.dart</code> to be a test
@@ -78,7 +78,7 @@ file. If you don't pass any paths, it will run all the test files in your
 well by passing <code>pub run test:test -p chrome path/to/test.dart</code>.
 <code>test</code> will take care of starting the browser and loading the tests, and all
 the results will be reported on the command line just like for VM tests. In
-fact, you can even run tests on both platforms with a single command: <code>pub run test:test -p "chrome,vm" path/to/test.dart</code>.</p>
+fact, you can even run tests on both platforms with a single command: <code>pub run test:test -p &quot;chrome,vm&quot; path/to/test.dart</code>.</p>
 <h3>Restricting Tests to Certain Platforms</h3>
 <p>Some test files only make sense to run on particular platforms. They may use
 <code>dart:html</code> or <code>dart:io</code>, they might test Windows' particular filesystem
@@ -86,17 +86,17 @@ behavior, or they might use a feature that's only available in Chrome. The
 <a href="https://pub.dev/documentation/test_api/latest/test_api/TestOn-class.html"><code>@TestOn</code></a> annotation makes it easy to declare exactly which platforms
 a test file should run on. Just put it at the top of your file, before any
 <code>library</code> or <code>import</code> declarations:</p>
-<pre><code class="language-dart">@TestOn("vm")
+<pre><code class="language-dart">@TestOn(&quot;vm&quot;)
 
-import "dart:io";
+import &quot;dart:io&quot;;
 
-import "package:test/test.dart";
+import &quot;package:test/test.dart&quot;;
 
 void main() {
   // ...
 }
 </code></pre>
-<p>The string you pass to <code>@TestOn</code> is what's called a "platform selector", and it
+<p>The string you pass to <code>@TestOn</code> is what's called a &quot;platform selector&quot;, and it
 specifies exactly which platforms a test can run on. It can be as simple as the
 name of a platform, or a more complex Dart-like boolean expression involving
 these platform names.</p>
@@ -171,16 +171,16 @@ equivalent to <code>!windows</code>.</p>
 </li>
 </ul>
 <p>For example, if you wanted to run a test on every browser but Chrome, you would
-write <code>@TestOn("browser &amp;&amp; !chrome")</code>.</p>
+write <code>@TestOn(&quot;browser &amp;&amp; !chrome&quot;)</code>.</p>
 <h2>Asynchronous Tests</h2>
 <p>Tests written with <code>async</code>/<code>await</code> will work automatically. The test runner
 won't consider the test finished until the returned <code>Future</code> completes.</p>
-<pre><code class="language-dart">import "dart:async";
+<pre><code class="language-dart">import &quot;dart:async&quot;;
 
-import "package:test/test.dart";
+import &quot;package:test/test.dart&quot;;
 
 void main() {
-  test("new Future.value() returns the value", () async {
+  test(&quot;new Future.value() returns the value&quot;, () async {
     var value = await new Future.value(10);
     expect(value, equals(10));
   });
@@ -190,12 +190,12 @@ void main() {
 asynchrony. The <a href="https://pub.dev/documentation/test_api/latest/test_api/completion.html"><code>completion()</code></a> matcher can be used to test
 <code>Futures</code>; it ensures that the test doesn't finish until the <code>Future</code> completes,
 and runs a matcher against that <code>Future</code>'s value.</p>
-<pre><code class="language-dart">import "dart:async";
+<pre><code class="language-dart">import &quot;dart:async&quot;;
 
-import "package:test/test.dart";
+import &quot;package:test/test.dart&quot;;
 
 void main() {
-  test("new Future.value() returns the value", () {
+  test(&quot;new Future.value() returns the value&quot;, () {
     expect(new Future.value(10), completion(equals(10)));
   });
 }
@@ -203,14 +203,14 @@ void main() {
 <p>The <a href="https://pub.dev/documentation/test_api/latest/test_api/throwsA.html"><code>throwsA()</code></a> matcher and the various <code>throwsExceptionType</code>
 matchers work with both synchronous callbacks and asynchronous <code>Future</code>s. They
 ensure that a particular type of exception is thrown:</p>
-<pre><code class="language-dart">import "dart:async";
+<pre><code class="language-dart">import &quot;dart:async&quot;;
 
-import "package:test/test.dart";
+import &quot;package:test/test.dart&quot;;
 
 void main() {
-  test("new Future.error() throws the error", () {
-    expect(new Future.error("oh no"), throwsA(equals("oh no")));
-    expect(new Future.error(new StateError("bad state")), throwsStateError);
+  test(&quot;new Future.error() throws the error&quot;, () {
+    expect(new Future.error(&quot;oh no&quot;), throwsA(equals(&quot;oh no&quot;)));
+    expect(new Future.error(new StateError(&quot;bad state&quot;)), throwsStateError);
   });
 }
 </code></pre>
@@ -219,12 +219,12 @@ jobs. First, it asserts that the wrapped function is called a certain number of
 times, and will cause the test to fail if it's called too often; second, it
 keeps the test from finishing until the function is called the requisite number
 of times.</p>
-<pre><code class="language-dart">import "dart:async";
+<pre><code class="language-dart">import &quot;dart:async&quot;;
 
-import "package:test/test.dart";
+import &quot;package:test/test.dart&quot;;
 
 void main() {
-  test("Stream.fromIterable() emits the values in the iterable", () {
+  test(&quot;Stream.fromIterable() emits the values in the iterable&quot;, () {
     var stream = new Stream.fromIterable([1, 2, 3]);
 
     stream.listen(expectAsync((number) {
@@ -242,11 +242,11 @@ files have three requirements:</p>
 <p>They must have the same name as the test, with <code>.dart</code> replaced by <code>.html</code>.</p>
 </li>
 <li>
-<p>They must contain a <code>link</code> tag with <code>rel="x-dart-test"</code> and an <code>href</code>
+<p>They must contain a <code>link</code> tag with <code>rel=&quot;x-dart-test&quot;</code> and an <code>href</code>
 attribute pointing to the test script.</p>
 </li>
 <li>
-<p>They must contain <code>&lt;script src="packages/test/dart.js"&gt;&lt;/script&gt;</code>.</p>
+<p>They must contain <code>&lt;script src=&quot;packages/test/dart.js&quot;&gt;&lt;/script&gt;</code>.</p>
 </li>
 </ul>
 <p>For example, if you had a test called <code>custom_html_test.dart</code>, you might write
@@ -256,8 +256,8 @@ the following HTML file:</p>
 &lt;html&gt;
   &lt;head&gt;
     &lt;title&gt;Custom HTML Test&lt;/title&gt;
-    &lt;link rel="x-dart-test" href="custom_html_test.dart"&gt;
-    &lt;script src="packages/test/dart.js"&gt;&lt;/script&gt;
+    &lt;link rel=&quot;x-dart-test&quot; href=&quot;custom_html_test.dart&quot;&gt;
+    &lt;script src=&quot;packages/test/dart.js&quot;&gt;&lt;/script&gt;
   &lt;/head&gt;
   &lt;body&gt;
     // ...
@@ -267,15 +267,15 @@ the following HTML file:</p>
 <h2>Configuring Tests</h2>
 <h3>Skipping Tests</h3>
 <p>If a test, group, or entire suite isn't working yet and you just want it to stop
-complaining, you can mark it as "skipped". The test or tests won't be run, and,
+complaining, you can mark it as &quot;skipped&quot;. The test or tests won't be run, and,
 if you supply a reason why, that reason will be printed. In general, skipping
 tests indicates that they should run but is temporarily not working. If they're
 is fundamentally incompatible with a platform, <a href="https://pub.dev/documentation/test_api/latest/test_api/TestOn-class.html"><code>@TestOn</code>/<code>testOn</code></a>
 should be used instead.</p>
 <p>To skip a test suite, put a <code>@Skip</code> annotation at the top of the file:</p>
-<pre><code class="language-dart">@Skip("currently failing (see issue 1234)")
+<pre><code class="language-dart">@Skip(&quot;currently failing (see issue 1234)&quot;)
 
-import "package:test/test.dart";
+import &quot;package:test/test.dart&quot;;
 
 void main() {
   // ...
@@ -285,16 +285,16 @@ void main() {
 include it, but it's a good idea to document why the test isn't running.</p>
 <p>Groups and individual tests can be skipped by passing the <code>skip</code> parameter. This
 can be either <code>true</code> or a String describing why the test is skipped. For example:</p>
-<pre><code class="language-dart">import "package:test/test.dart";
+<pre><code class="language-dart">import &quot;package:test/test.dart&quot;;
 
 void main() {
-  group("complicated algorithm tests", () {
+  group(&quot;complicated algorithm tests&quot;, () {
     // ...
-  }, skip: "the algorithm isn't quite right");
+  }, skip: &quot;the algorithm isn&#39;t quite right&quot;);
 
-  test("error-checking test", () {
+  test(&quot;error-checking test&quot;, () {
     // ...
-  }, skip: "TODO: add error-checking.");
+  }, skip: &quot;TODO: add error-checking.&quot;);
 }
 </code></pre>
 <h3>Timeouts</h3>
@@ -303,7 +303,7 @@ can be configured on a per-test, -group, or -suite basis. To change the timeout
 for a test suite, put a <code>@Timeout</code> annotation at the top of the file:</p>
 <pre><code class="language-dart">@Timeout(const Duration(seconds: 45))
 
-import "package:test/test.dart";
+import &quot;package:test/test.dart&quot;;
 
 void main() {
   // ...
@@ -314,20 +314,20 @@ the default using <code>@Timeout.factor</code>. For example, <code>@Timeout.fact
 set the timeout to one and a half times as long as the default—45 seconds.</p>
 <p>Timeouts can be set for tests and groups using the <code>timeout</code> parameter. This
 parameter takes a <code>Timeout</code> object just like the annotation. For example:</p>
-<pre><code class="language-dart">import "package:test/test.dart";
+<pre><code class="language-dart">import &quot;package:test/test.dart&quot;;
 
 void main() {
-  group("slow tests", () {
+  group(&quot;slow tests&quot;, () {
     // ...
 
-    test("even slower test", () {
+    test(&quot;even slower test&quot;, () {
       // ...
     }, timeout: new Timeout.factor(2))
   }, timeout: new Timeout(new Duration(minutes: 1)));
 }
 </code></pre>
 <p>Nested timeouts apply in order from outermost to innermost. That means that
-"even slower test" will take two minutes to time out, since it multiplies the
+&quot;even slower test&quot; will take two minutes to time out, since it multiplies the
 group's timeout by 2.</p>
 <h3>Platform-Specific Configuration</h3>
 <p>Sometimes a test may need to be configured differently for different platforms.
@@ -337,16 +337,16 @@ the <code>@OnPlatform</code> annotation and the <code>onPlatform</code> named pa
 and <code>group()</code>. For example:</p>
 <pre><code class="language-dart">@OnPlatform(const {
   // Give Windows some extra wiggle-room before timing out.
-  "windows": const Timeout.factor(2)
+  &quot;windows&quot;: const Timeout.factor(2)
 })
 
-import "package:test/test.dart";
+import &quot;package:test/test.dart&quot;;
 
 void main() {
-  test("do a thing", () {
+  test(&quot;do a thing&quot;, () {
     // ...
   }, onPlatform: {
-    "safari": new Skip("Safari is currently broken (see #1234)")
+    &quot;safari&quot;: new Skip(&quot;Safari is currently broken (see #1234)&quot;)
   });
 }
 </code></pre>

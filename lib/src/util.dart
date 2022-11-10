@@ -9,80 +9,19 @@ import 'assets/html_entities.dart';
 import 'charcode.dart';
 import 'patterns.dart';
 
-String escapeHtml(String html) =>
-    const HtmlEscape(HtmlEscapeMode.element).convert(html);
-
-String escapeHtmlAttribute(String text) =>
-    const HtmlEscape(HtmlEscapeMode.attribute).convert(text);
-
-/// Escapes the contents of [value], so that it may be used as an HTML
-/// attribute.
-///
-/// Based on http://spec.commonmark.org/0.28/#backslash-escapes.
-String escapeAttribute(String value) {
-  final result = StringBuffer();
-  int ch;
-  for (var i = 0; i < value.codeUnits.length; i++) {
-    ch = value.codeUnitAt(i);
-    if (ch == $backslash) {
-      i++;
-      if (i == value.codeUnits.length) {
-        result.writeCharCode(ch);
-        break;
-      }
-      ch = value.codeUnitAt(i);
-      switch (ch) {
-        case $quote:
-          result.write('&quot;');
-          break;
-        case $exclamation:
-        case $hash:
-        case $dollar:
-        case $percent:
-        case $ampersand:
-        case $apostrophe:
-        case $lparen:
-        case $rparen:
-        case $asterisk:
-        case $plus:
-        case $comma:
-        case $dash:
-        case $dot:
-        case $slash:
-        case $colon:
-        case $semicolon:
-        case $lt:
-        case $equal:
-        case $gt:
-        case $question:
-        case $at:
-        case $lbracket:
-        case $backslash:
-        case $rbracket:
-        case $caret:
-        case $underscore:
-        case $backquote:
-        case $lbrace:
-        case $bar:
-        case $rbrace:
-        case $tilde:
-          result.writeCharCode(ch);
-          break;
-        default:
-          result.write('%5C');
-          result.writeCharCode(ch);
-      }
-    } else if (ch == $quote) {
-      result.write('%22');
-    } else {
-      result.writeCharCode(ch);
-    }
-  }
-  return result.toString();
-}
-
 /// One or more whitespace, for compressing.
 final _oneOrMoreWhitespacePattern = RegExp('[ \n\r\t]+');
+
+/// Escapes (`'`), (`"`), (`<`), (`>`) and (`&`) characters.
+String escapeHtml(String html) => const HtmlEscape(HtmlEscapeMode(
+      escapeApos: true,
+      escapeLtGt: true,
+      escapeQuot: true,
+    )).convert(html);
+
+/// Escapes (`"`), (`<`) and (`>`) characters.
+String escapeHtmlAttribute(String text) =>
+    const HtmlEscape(HtmlEscapeMode.attribute).convert(text);
 
 /// "Normalizes" a link label, according to the [CommonMark spec].
 ///
@@ -97,6 +36,34 @@ String normalizeLinkLabel(String label) {
   }
   return text;
 }
+
+/// Normalizes a link destination, including the process of HTML characters
+/// decoding  and percent encoding.
+// See the description of these examples:
+// https://spec.commonmark.org/0.30/#example-501
+// https://spec.commonmark.org/0.30/#example-502
+String normalizeLinkDestination(String destination) {
+  // Decode first, because the destination might have been partly encoded.
+  // For example https://spec.commonmark.org/0.30/#example-502.
+  // With this function, `foo%20b&auml;` will be parsed in the following steps:
+  // 1. foo b&auml;
+  // 2. foo bä
+  // 3. foo%20b%C3%A4
+  try {
+    destination = Uri.decodeFull(destination);
+  } catch (_) {}
+  return Uri.encodeFull(decodeHtmlCharacters(destination));
+}
+
+/// Normalizes a link title, including the process of HTML characters decoding
+/// and HTML characters escaping.
+// See the description of these examples:
+// https://spec.commonmark.org/0.30/#example-505
+// https://spec.commonmark.org/0.30/#example-506
+// https://spec.commonmark.org/0.30/#example-507
+// https://spec.commonmark.org/0.30/#example-508
+String normalizeLinkTitle(String title) =>
+    escapeHtmlAttribute(decodeHtmlCharacters(title));
 
 ///  Decodes HTML entity and numeric character references, for example decode
 /// `&#35` to `#`.

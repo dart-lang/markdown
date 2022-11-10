@@ -11,6 +11,7 @@ import 'inline_syntaxes/decode_html_syntax.dart';
 import 'inline_syntaxes/delimiter_syntax.dart';
 import 'inline_syntaxes/email_autolink_syntax.dart';
 import 'inline_syntaxes/emphasis_syntax.dart';
+import 'inline_syntaxes/escape_html_syntax.dart';
 import 'inline_syntaxes/escape_syntax.dart';
 import 'inline_syntaxes/image_syntax.dart';
 import 'inline_syntaxes/inline_syntax.dart';
@@ -27,8 +28,6 @@ class InlineParser {
     EmailAutolinkSyntax(),
     AutolinkSyntax(),
     LineBreakSyntax(),
-    // Allow any punctuation to be escaped.
-    EscapeSyntax(),
     // "*" surrounded by spaces is left alone.
     TextSyntax(r' \* ', startCharacter: $space),
     // "_" surrounded by spaces is left alone.
@@ -47,12 +46,6 @@ class InlineParser {
     // Leave already-encoded HTML entities alone. Ensures we don't turn
     // "&amp;" into "&amp;amp;"
     TextSyntax('&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
-    // Encode "&".
-    TextSyntax('&', sub: '&amp;', startCharacter: $ampersand),
-    // Encode "<".
-    TextSyntax('<', sub: '&lt;', startCharacter: $lt),
-    // Encode ">".
-    TextSyntax('>', sub: '&gt;', startCharacter: $gt),
   ]);
 
   /// The string of Markdown being parsed.
@@ -95,12 +88,17 @@ class InlineParser {
     if (document.withDefaultInlineSyntaxes) {
       // Custom link resolvers go after the generic text syntax.
       syntaxes.addAll([
+        EscapeSyntax(),
         DecodeHtmlSyntax(),
         LinkSyntax(linkResolver: document.linkResolver),
         ImageSyntax(linkResolver: document.imageLinkResolver)
       ]);
 
       syntaxes.addAll(_defaultSyntaxes);
+    }
+
+    if (encodeHtml) {
+      syntaxes.add(EscapeHtmlSyntax());
     }
 
     if (encodeHtml) {

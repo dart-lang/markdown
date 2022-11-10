@@ -84,4 +84,4 @@ links [are *awesome*]
 links [are](<http://example.com> "title\") awesome
 
 <<<
-<p>links [are](<a href="http://example.com">http://example.com</a> "title&quot;) awesome</p>
+<p>links [are](<a href="http://example.com">http://example.com</a> &quot;title&quot;) awesome</p>

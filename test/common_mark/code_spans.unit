@@ -70,7 +70,7 @@ baz`
 >>> Code spans - 343
 `<a href="`">`
 <<<
-<p><code>&lt;a href="</code>"&gt;`</p>
+<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>
 >>> Code spans - 344
 <a href="`">`
 <<<

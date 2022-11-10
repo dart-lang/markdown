@@ -27,8 +27,7 @@ class ImageSyntax extends LinkSyntax {
     element.attributes['src'] = destination;
     element.attributes['alt'] = children.map((node) => node.textContent).join();
     if (title != null && title.isNotEmpty) {
-      element.attributes['title'] =
-          escapeAttribute(title.replaceAll('&', '&amp;'));
+      element.attributes['title'] = normalizeLinkTitle(title);
     }
     return element;
   }

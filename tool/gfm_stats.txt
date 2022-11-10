@@ -7,15 +7,15 @@
   22 of   22 – 100.0%  Code spans
    0 of    1 –   0.0%  Disallowed Raw HTML (extension)
  130 of  131 –  99.2%  Emphasis and strong emphasis
-  15 of   17 –  88.2%  Entity and numeric character references
+  17 of   17 – 100.0%  Entity and numeric character references
   29 of   29 – 100.0%  Fenced code blocks
   15 of   15 – 100.0%  Hard line breaks
   43 of   43 – 100.0%  HTML blocks
   21 of   22 –  95.5%  Images
   11 of   12 –  91.7%  Indented code blocks
    1 of    1 – 100.0%  Inlines
-  21 of   28 –  75.0%  Link reference definitions
-  82 of   87 –  94.3%  Links
+  22 of   28 –  78.6%  Link reference definitions
+  86 of   87 –  98.9%  Links
   45 of   48 –  93.8%  List items
   22 of   26 –  84.6%  Lists
    8 of    8 – 100.0%  Paragraphs
@@ -28,5 +28,5 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 644 of  671 –  96.0%  TOTAL
- 589 of  644 –  91.5%  TOTAL Strict
+ 651 of  671 –  97.0%  TOTAL
+ 621 of  651 –  95.4%  TOTAL Strict

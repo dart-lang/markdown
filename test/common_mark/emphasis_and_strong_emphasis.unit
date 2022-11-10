@@ -9,7 +9,7 @@ a * foo bar*
 >>> Emphasis and strong emphasis - 352
 a*"foo"*
 <<<
-<p>a*"foo"*</p>
+<p>a*&quot;foo&quot;*</p>
 >>> Emphasis and strong emphasis - 353
 * a *
 <<<
@@ -33,7 +33,7 @@ _ foo bar_
 >>> Emphasis and strong emphasis - 358
 a_"foo"_
 <<<
-<p>a_"foo"_</p>
+<p>a_&quot;foo&quot;_</p>
 >>> Emphasis and strong emphasis - 359
 foo_bar_
 <<<
@@ -49,7 +49,7 @@ foo_bar_
 >>> Emphasis and strong emphasis - 362
 aa_"bb"_cc
 <<<
-<p>aa_"bb"_cc</p>
+<p>aa_&quot;bb&quot;_cc</p>
 >>> Emphasis and strong emphasis - 363
 foo-_(bar)_
 <<<
@@ -119,7 +119,7 @@ _(bar)_.
 >>> Emphasis and strong emphasis - 379
 a**"foo"**
 <<<
-<p>a**"foo"**</p>
+<p>a**&quot;foo&quot;**</p>
 >>> Emphasis and strong emphasis - 380
 foo**bar**
 <<<
@@ -141,7 +141,7 @@ foo bar__</p>
 >>> Emphasis and strong emphasis - 384
 a__"foo"__
 <<<
-<p>a__"foo"__</p>
+<p>a__&quot;foo&quot;__</p>
 >>> Emphasis and strong emphasis - 385
 foo__bar__
 <<<
@@ -183,7 +183,7 @@ foo-__(bar)__
 >>> Emphasis and strong emphasis - 394
 **foo "*bar*" foo**
 <<<
-<p><strong>foo "<em>bar</em>" foo</strong></p>
+<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>
 >>> Emphasis and strong emphasis - 395
 **foo**bar
 <<<

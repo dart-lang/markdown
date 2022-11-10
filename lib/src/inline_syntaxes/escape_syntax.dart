@@ -5,34 +5,29 @@
 import '../ast.dart';
 import '../charcode.dart';
 import '../inline_parser.dart';
+import '../patterns.dart';
 import '../util.dart';
 import 'inline_syntax.dart';
 
-/// Escape punctuation preceded by a backslash.
+/// Escape ASCII punctuation preceded by a backslash.
+///
+/// Backslashes before other characters are treated as literal backslashes.
+// See https://spec.commonmark.org/0.30/#backslash-escapes.
 class EscapeSyntax extends InlineSyntax {
-  EscapeSyntax() : super(r'''\\[!"#$%&'()*+,\-./:;<=>?@\[\\\]^_`{|}~]''');
+  EscapeSyntax()
+      : super('\\\\([$asciiPunctuationEscaped])', startCharacter: $backslash);
 
   @override
   bool onMatch(InlineParser parser, Match match) {
     final chars = match.match;
-    final char = chars.codeUnitAt(1);
-    // Insert the substitution. Why these three charactes are replaced with
-    // their equivalent HTML entity referenced appears to be missing from the
-    // CommonMark spec, but is very present in all of the examples.
-    // https://talk.commonmark.org/t/entity-ification-of-quotes-and-brackets-missing-from-spec/3207
-    if (parser.encodeHtml) {
-      if (char == $double_quote) {
-        parser.addNode(Text('&quot;'));
-      } else if (char == $lt) {
-        parser.addNode(Text('&lt;'));
-      } else if (char == $gt) {
-        parser.addNode(Text('&gt;'));
-      } else {
-        parser.addNode(Text(chars[1]));
-      }
+
+    if ('&"<>'.contains(match[1]!) && parser.encodeHtml) {
+      final text = escapeHtml(match[1]!);
+      parser.addNode(Text(text));
+      return true;
     } else {
       parser.addNode(Text(chars[1]));
+      return true;
     }
-    return true;
   }
 }

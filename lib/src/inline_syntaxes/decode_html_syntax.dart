@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import '../assets/html_entities.dart';
 import '../ast.dart';
 import '../charcode.dart';
 import '../inline_parser.dart';
@@ -27,9 +28,7 @@ class DecodeHtmlSyntax extends InlineSyntax {
       return false;
     }
 
-    // TODO(Zhiguang): Enable HTML entity decoding when working on HTML escape
-    // issues.
-    if (match[1] != null) {
+    if (match[1] != null && htmlEntitiesMap[match.match] == null) {
       return false;
     }
 
@@ -40,7 +39,11 @@ class DecodeHtmlSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    final decodedText = decodeHtmlCharacterFromMatch(match);
+    var decodedText = decodeHtmlCharacterFromMatch(match);
+
+    if (parser.encodeHtml) {
+      decodedText = escapeHtml(decodedText);
+    }
 
     parser.addNode(Text(decodedText));
     return true;

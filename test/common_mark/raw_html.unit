@@ -29,11 +29,11 @@ Foo <responsive-image src="foo.jpg" />
 >>> Raw HTML - 618
 <a h*#ref="hi">
 <<<
-<p>&lt;a h*#ref="hi"&gt;</p>
+<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>
 >>> Raw HTML - 619
 <a href="hi'> <a href=hi'>
 <<<
-<p>&lt;a href="hi'&gt; &lt;a href=hi'&gt;</p>
+<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
 >>> Raw HTML - 620
 < a><
 foo><bar/ >
@@ -43,7 +43,7 @@ bim!bop />
 <p>&lt; a&gt;&lt;
 foo&gt;&lt;bar/ &gt;
 &lt;foo bar=baz
-bim!bop /></p>
+bim!bop /&gt;</p>
 >>> Raw HTML - 621
 <a href='bar'title=title>
 <<<
@@ -55,7 +55,7 @@ bim!bop /></p>
 >>> Raw HTML - 623
 </a href="foo">
 <<<
-<p>&lt;/a href="foo"&gt;</p>
+<p>&lt;/a href=&quot;foo&quot;&gt;</p>
 >>> Raw HTML - 624
 foo <!-- this is a
 comment - with hyphen -->
@@ -96,4 +96,4 @@ foo <a href="\*">
 >>> Raw HTML - 632
 <a href="\"">
 <<<
-<p>&lt;a href="&quot;"&gt;</p>
+<p>&lt;a href=&quot;&quot;&quot;&gt;</p>

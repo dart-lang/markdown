@@ -5,7 +5,7 @@
 >>> Autolinks - 603
 <http://foo.bar.baz/test?q=hello&id=22&boolean>
 <<<
-<p><a href="http://foo.bar.baz/test?q=hello&id=22&boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
+<p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>
 >>> Autolinks - 604
 <irc://foo.bar:2233/baz>
 <<<

@@ -87,7 +87,7 @@ bar>)</p>
 >>> Links - 511
 [link](foo%20b&auml;)
 <<<
-<p><a href="foo%20b&auml;">link</a></p>
+<p><a href="foo%20b%C3%A4">link</a></p>
 >>> Links - 512
 [link]("title")
 <<<
@@ -103,19 +103,19 @@ bar>)</p>
 >>> Links - 514
 [link](/url "title \"&quot;")
 <<<
-<p><a href="/url" title="title %22&quot;">link</a></p>
+<p><a href="/url" title="title &quot;&quot;">link</a></p>
 >>> Links - 515
 [link](/url "title")
 <<<
-<p><a href="/url %22title%22">link</a></p>
+<p><a href="/url%C2%A0%22title%22">link</a></p>
 >>> Links - 516
 [link](/url "title "and" title")
 <<<
-<p>[link](/url "title "and" title")</p>
+<p>[link](/url &quot;title &quot;and&quot; title&quot;)</p>
 >>> Links - 517
 [link](/url 'title "and" title')
 <<<
-<p><a href="/url" title="title %22and%22 title">link</a></p>
+<p><a href="/url" title="title &quot;and&quot; title">link</a></p>
 >>> Links - 518
 [link](   /uri
   "title"  )
