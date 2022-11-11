@@ -21,13 +21,14 @@ class EscapeSyntax extends InlineSyntax {
   bool onMatch(InlineParser parser, Match match) {
     final chars = match.match;
 
+    String text;
     if ('&"<>'.contains(match[1]!) && parser.encodeHtml) {
-      final text = escapeHtml(match[1]!);
-      parser.addNode(Text(text));
-      return true;
+      text = escapeHtml(match[1]!);
     } else {
-      parser.addNode(Text(chars[1]));
-      return true;
+      text = chars[1];
     }
+
+    parser.addNode(Text(text));
+    return true;
   }
 }

@@ -28,10 +28,6 @@ class InlineParser {
     EmailAutolinkSyntax(),
     AutolinkSyntax(),
     LineBreakSyntax(),
-    // "*" surrounded by spaces is left alone.
-    TextSyntax(r' \* ', startCharacter: $space),
-    // "_" surrounded by spaces is left alone.
-    TextSyntax(' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
     EmphasisSyntax.asterisk(),
     // Parse "__strong__" and "_emphasis_" tags.
@@ -41,20 +37,13 @@ class InlineParser {
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
 
-  static final List<InlineSyntax> _htmlSyntaxes =
-      List<InlineSyntax>.unmodifiable(<InlineSyntax>[
-    // Leave already-encoded HTML entities alone. Ensures we don't turn
-    // "&amp;" into "&amp;amp;"
-    TextSyntax('&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
-  ]);
-
   /// The string of Markdown being parsed.
   final String source;
 
   /// The Markdown document this parser is parsing.
   final Document document;
 
-  final List<InlineSyntax> syntaxes = <InlineSyntax>[];
+  final syntaxes = <InlineSyntax>[];
 
   /// The current read position.
   int pos = 0;
@@ -98,11 +87,12 @@ class InlineParser {
     }
 
     if (encodeHtml) {
-      syntaxes.add(EscapeHtmlSyntax());
-    }
-
-    if (encodeHtml) {
-      syntaxes.addAll(_htmlSyntaxes);
+      syntaxes.addAll([
+        EscapeHtmlSyntax(),
+        // Leave already-encoded HTML entities alone. Ensures we don't turn
+        // "&amp;" into "&amp;amp;"
+        TextSyntax('&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
+      ]);
     }
   }
 
