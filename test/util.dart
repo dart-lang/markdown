@@ -10,7 +10,8 @@ import 'package:test/test.dart';
 import '../tool/expected_output.dart';
 
 /// Runs tests defined in "*.unit" files inside directory [name].
-void testDirectory(String name, {ExtensionSet? extensionSet}) {
+// TODO(Zhiguang): Delete it when `Document` is removed.
+void testDirectoryDeprecated(String name, {ExtensionSet? extensionSet}) {
   for (final dataCase in dataCasesUnder(testDirectory: name)) {
     final description =
         '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
@@ -81,17 +82,33 @@ void validateCore(
   Resolver? linkResolver,
   Resolver? imageLinkResolver,
   bool inlineOnly = false,
+  //
+  bool isNewVersion = false,
+  bool enableTable = false,
+  bool enableStrikethrough = false,
+  bool enableAutolinkExtension = false,
+  bool enableHeadingId = false,
+  bool enableTaskList = false,
 }) {
   test(description, () {
-    final result = markdownToHtml(
-      markdown,
-      blockSyntaxes: blockSyntaxes,
-      inlineSyntaxes: inlineSyntaxes,
-      extensionSet: extensionSet,
-      linkResolver: linkResolver,
-      imageLinkResolver: imageLinkResolver,
-      inlineOnly: inlineOnly,
-    );
+    final String result;
+    if (isNewVersion) {
+      result = Markdown(
+        enableTable: enableTable,
+        enableStrikethrough: enableStrikethrough,
+        enableAutolinkExtension: enableAutolinkExtension,
+      ).parse(markdown).toHtml();
+    } else {
+      result = markdownToHtml(
+        markdown,
+        blockSyntaxes: blockSyntaxes,
+        inlineSyntaxes: inlineSyntaxes,
+        extensionSet: extensionSet,
+        linkResolver: linkResolver,
+        imageLinkResolver: imageLinkResolver,
+        inlineOnly: inlineOnly,
+      );
+    }
 
     markdownPrintOnFailure(markdown, html, result);
 
@@ -117,4 +134,42 @@ GOT:
 '''r
 ${whitespaceColor(actual)}'''
 """);
+}
+
+void testDirectory(String name) {
+  for (final dataCase in dataCasesUnder(testDirectory: name)) {
+    final description =
+        '${dataCase.directory}/${dataCase.file}.unit ${dataCase.description}';
+
+    var enableTable = false;
+    var enableStrikethrough = false;
+    var enableAutolinkExtension = false;
+
+    if (dataCase.file.endsWith('_extension')) {
+      final extension = dataCase.file.substring(
+        0,
+        dataCase.file.lastIndexOf('_extension'),
+      );
+
+      if (extension == 'tables') {
+        enableTable = true;
+      } else if (extension == 'strikethrough') {
+        enableStrikethrough = true;
+      } else if (extension == 'autolinks') {
+        enableAutolinkExtension = true;
+      } else if (extension == 'disallowed_raw_html') {
+        // TODO(Zhiguang): For https://github.com/dart-lang/markdown/pull/447
+      }
+    }
+
+    validateCore(
+      description,
+      dataCase.input,
+      dataCase.expectedOutput,
+      enableTable: enableTable,
+      enableStrikethrough: enableStrikethrough,
+      enableAutolinkExtension: enableAutolinkExtension,
+      isNewVersion: true,
+    );
+  }
 }

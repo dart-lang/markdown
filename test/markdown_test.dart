@@ -8,6 +8,7 @@ import 'package:test/test.dart';
 import 'util.dart';
 
 void main() async {
+  testDirectoryDeprecated('original');
   testDirectory('original');
 
   // Block syntax extensions.
@@ -53,6 +54,9 @@ void main() async {
     'extensions/strikethrough.unit',
     inlineSyntaxes: [StrikethroughSyntax()],
   );
+
+  testDirectoryDeprecated('common_mark');
+  testDirectoryDeprecated('gfm');
 
   testDirectory('common_mark');
   testDirectory('gfm');

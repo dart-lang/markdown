@@ -11,7 +11,7 @@ import 'extension_set.dart';
 import 'inline_syntaxes/inline_syntax.dart';
 
 /// Converts the given string of Markdown to HTML.
-@Deprecated('Markdown().toHtml() instead')
+@Deprecated('use List<Node>.toHtml() instead')
 String markdownToHtml(
   String markdown, {
   Iterable<BlockSyntax> blockSyntaxes = const [],
@@ -46,7 +46,7 @@ String markdownToHtml(
 }
 
 /// Renders [nodes] to HTML.
-@Deprecated('List<Node>.toHtml() instead')
+@Deprecated('use List<Node>.toHtml() instead')
 String renderToHtml(List<Node> nodes) => HtmlRenderer().render(nodes);
 
 const _blockTags = [
@@ -197,7 +197,7 @@ class HtmlRenderer implements NodeVisitor {
   }
 }
 
-extension NodesToHtmlExtensions on List<Node> {
+extension MarkdownNodesExtensions on List<Node> {
   /// Renders [Node] list to HTML.
-  String toHtml() => HtmlRenderer().render(this);
+  String toHtml() => '${HtmlRenderer().render(this)}\n';
 }

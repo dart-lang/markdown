@@ -6,6 +6,7 @@ import 'ast.dart';
 import 'block_syntaxes/block_syntax.dart';
 import 'block_syntaxes/blockquote_syntax.dart';
 import 'block_syntaxes/code_block_syntax.dart';
+import 'block_syntaxes/empty_block_syntax.dart';
 import 'block_syntaxes/fenced_blockquote_syntax.dart';
 import 'block_syntaxes/fenced_code_block_syntax.dart';
 import 'block_syntaxes/header_syntax.dart';
@@ -26,6 +27,8 @@ import 'inline_syntaxes/autolink_extension_syntax.dart';
 import 'inline_syntaxes/autolink_syntax.dart';
 import 'inline_syntaxes/code_syntax.dart';
 import 'inline_syntaxes/color_swatch_syntax.dart';
+import 'inline_syntaxes/decode_html_syntax.dart';
+import 'inline_syntaxes/email_autolink_syntax.dart';
 import 'inline_syntaxes/emoji_syntax.dart';
 import 'inline_syntaxes/emphasis_syntax.dart';
 import 'inline_syntaxes/escape_html_syntax.dart';
@@ -55,6 +58,7 @@ class Markdown {
 
   Markdown({
     bool enableAtxHeading = true,
+    bool enableBlankLine = true,
     bool enableHeadingId = false,
     bool enableBlockquote = true,
     bool enableIndentedCodeBlock = true,
@@ -79,6 +83,7 @@ class Markdown {
     bool enableSoftLineBreak = true,
     bool enableStrikethrough = false,
     bool enableTaskList = false,
+    bool enableDecodeHtml = true,
     Resolver? linkResolver,
     Resolver? imageLinkResolver,
     Iterable<Syntax> extensions = const [],
@@ -93,6 +98,7 @@ class Markdown {
     }
 
     _blockSyntaxes.addAll([
+      if (enableBlankLine) const EmptyBlockSyntax(),
       if (enableAtxHeading && !enableHeadingId) const HeaderSyntax(),
       if (enableAtxHeading && enableHeadingId) const HeaderWithIdSyntax(),
       if (enableSetextHeading && !enableHeadingId) const SetextHeaderSyntax(),
@@ -131,11 +137,7 @@ class Markdown {
       if (enableHardLineBreak) LineBreakSyntax(),
       if (enableSoftLineBreak) SoftLineBreakSyntax(),
       if (enableBackslashEscape) EscapeSyntax(),
-      // "*" surrounded by spaces is left alone.
-      TextSyntax(r' \* ', startCharacter: $space),
-
-      // "_" surrounded by spaces is left alone.
-      TextSyntax(' _ ', startCharacter: $space),
+      if (enableDecodeHtml) DecodeHtmlSyntax(),
       if (enableEmphasis) ...[
         // Parse "**strong**" and "*emphasis*" tags.
         EmphasisSyntax.asterisk(),
@@ -143,7 +145,10 @@ class Markdown {
         // Parse "__strong__" and "_emphasis_" tags.
         EmphasisSyntax.underscore()
       ],
-      if (enableAutolink) AutolinkSyntax(),
+      if (enableAutolink) ...[
+        EmailAutolinkSyntax(),
+        AutolinkSyntax(),
+      ],
       if (enableAutolinkExtension) AutolinkExtensionSyntax(),
       if (enableCodeSpan) CodeSyntax(),
       if (enableStrikethrough) StrikethroughSyntax(),

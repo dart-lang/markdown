@@ -60,7 +60,7 @@ class BlockParser {
   BlockParser(
     this.lines,
     this.document, {
-    @Deprecated('this option will be removed from the next major eversion')
+    @Deprecated('this option will be removed from the next release')
         this.markdown,
   }) {
     if (markdown != null) {
