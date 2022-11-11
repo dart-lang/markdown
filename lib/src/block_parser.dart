@@ -16,6 +16,7 @@ import 'block_syntaxes/paragraph_syntax.dart';
 import 'block_syntaxes/setext_header_syntax.dart';
 import 'block_syntaxes/unordered_list_syntax.dart';
 import 'document.dart';
+import 'markdown.dart';
 
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
@@ -23,7 +24,11 @@ class BlockParser {
   final List<String> lines;
 
   /// The Markdown document this parser is parsing.
+  // TODO(Zhiguang): change the type to Markdown.
   final Document document;
+
+  @Deprecated('Use `document` instead')
+  final Markdown? markdown;
 
   /// The enabled block syntaxes.
   ///
@@ -52,13 +57,22 @@ class BlockParser {
     const ParagraphSyntax()
   ];
 
-  BlockParser(this.lines, this.document) {
-    blockSyntaxes.addAll(document.blockSyntaxes);
-
-    if (document.withDefaultBlockSyntaxes) {
-      blockSyntaxes.addAll(standardBlockSyntaxes);
+  BlockParser(
+    this.lines,
+    this.document, {
+    @Deprecated('this option will be removed from the next major eversion')
+        this.markdown,
+  }) {
+    if (markdown != null) {
+      blockSyntaxes.addAll(markdown!.blockSyntaxes);
     } else {
-      blockSyntaxes.add(const DummyBlockSyntax());
+      blockSyntaxes.addAll(document.blockSyntaxes);
+
+      if (document.withDefaultBlockSyntaxes) {
+        blockSyntaxes.addAll(standardBlockSyntaxes);
+      } else {
+        blockSyntaxes.add(const DummyBlockSyntax());
+      }
     }
   }
 

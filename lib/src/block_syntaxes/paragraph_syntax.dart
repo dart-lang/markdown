@@ -174,8 +174,14 @@ class ParagraphSyntax extends BlockSyntax {
     // References are case-insensitive, and internal whitespace is compressed.
     label = normalizeLinkLabel(label);
 
-    parser.document.linkReferences
-        .putIfAbsent(label, () => LinkReference(label, destination, title));
+    final linkReferences = parser.markdown != null
+        ? parser.markdown!.linkReferences
+        : parser.document.linkReferences;
+
+    linkReferences.putIfAbsent(
+      label,
+      () => LinkReference(label, destination, title),
+    );
     return true;
   }
 }

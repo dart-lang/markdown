@@ -19,6 +19,7 @@ import 'inline_syntaxes/line_break_syntax.dart';
 import 'inline_syntaxes/link_syntax.dart';
 import 'inline_syntaxes/soft_line_break_syntax.dart';
 import 'inline_syntaxes/text_syntax.dart';
+import 'markdown.dart';
 
 /// Maintains the internal state needed to parse inline span elements in
 /// Markdown.
@@ -40,10 +41,14 @@ class InlineParser {
   /// The string of Markdown being parsed.
   final String source;
 
-  /// The Markdown document this parser is parsing.
+  // TODO(Zhiguang): change the type to Markdown.
   final Document document;
 
   final syntaxes = <InlineSyntax>[];
+
+  /// The Markdown document this parser is parsing.
+  @Deprecated('Use `document` instead')
+  final Markdown? markdown;
 
   /// The current read position.
   int pos = 0;
@@ -58,41 +63,50 @@ class InlineParser {
   /// The tree of parsed HTML nodes.
   final _tree = <Node>[];
 
-  InlineParser(this.source, this.document) {
-    // User specified syntaxes are the first syntaxes to be evaluated.
-    syntaxes.addAll(document.inlineSyntaxes);
-
-    // This first RegExp matches plain text to accelerate parsing. It's written
-    // so that it does not match any prefix of any following syntaxes. Most
-    // Markdown is plain text, so it's faster to match one RegExp per 'word'
-    // rather than fail to match all the following RegExps at each non-syntax
-    // character position.
-    if (document.hasCustomInlineSyntaxes) {
-      // We should be less aggressive in blowing past "words".
-      syntaxes.add(TextSyntax(r'[A-Za-z0-9]+(?=\s)'));
+  InlineParser(
+    this.source,
+    this.document, {
+    @Deprecated('this option will be removed from the next major eversion')
+        this.markdown,
+  }) {
+    if (markdown != null) {
+      syntaxes.addAll(markdown!.inlineSyntaxes);
     } else {
-      syntaxes.add(TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9](?=\s)'));
-    }
+      // User specified syntaxes are the first syntaxes to be evaluated.
+      syntaxes.addAll(document.inlineSyntaxes);
 
-    if (document.withDefaultInlineSyntaxes) {
-      // Custom link resolvers go after the generic text syntax.
-      syntaxes.addAll([
-        EscapeSyntax(),
-        DecodeHtmlSyntax(),
-        LinkSyntax(linkResolver: document.linkResolver),
-        ImageSyntax(linkResolver: document.imageLinkResolver)
-      ]);
+      // This first RegExp matches plain text to accelerate parsing. It's written
+      // so that it does not match any prefix of any following syntaxes. Most
+      // Markdown is plain text, so it's faster to match one RegExp per 'word'
+      // rather than fail to match all the following RegExps at each non-syntax
+      // character position.
+      if (document.hasCustomInlineSyntaxes) {
+        // We should be less aggressive in blowing past "words".
+        syntaxes.add(TextSyntax(r'[A-Za-z0-9]+(?=\s)'));
+      } else {
+        syntaxes.add(TextSyntax(r'[ \tA-Za-z0-9]*[A-Za-z0-9](?=\s)'));
+      }
 
-      syntaxes.addAll(_defaultSyntaxes);
-    }
+      if (document.withDefaultInlineSyntaxes) {
+        // Custom link resolvers go after the generic text syntax.
+        syntaxes.addAll([
+          EscapeSyntax(),
+          DecodeHtmlSyntax(),
+          LinkSyntax(linkResolver: document.linkResolver),
+          ImageSyntax(linkResolver: document.imageLinkResolver)
+        ]);
 
-    if (encodeHtml) {
-      syntaxes.addAll([
-        EscapeHtmlSyntax(),
-        // Leave already-encoded HTML entities alone. Ensures we don't turn
-        // "&amp;" into "&amp;amp;"
-        TextSyntax('&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
-      ]);
+        syntaxes.addAll(_defaultSyntaxes);
+      }
+
+      if (encodeHtml) {
+        syntaxes.addAll([
+          EscapeHtmlSyntax(),
+          // Leave already-encoded HTML entities alone. Ensures we don't turn
+          // "&amp;" into "&amp;amp;"
+          TextSyntax('&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
+        ]);
+      }
     }
   }
 
@@ -351,5 +365,7 @@ class InlineParser {
     start = pos;
   }
 
-  bool get encodeHtml => document.encodeHtml;
+  @Deprecated('Use `document.escapeHtml` instead')
+  bool get encodeHtml =>
+      markdown == null ? document.encodeHtml : markdown!.escapeHtml;
 }

@@ -15,6 +15,9 @@ analyzer:
     # The example app explicitly takes a String of user-generated HTML and
     # inserts it straight into a <div> using innerHtml.
     unsafe_html: ignore
+
+    # TODO(Zhiguang): remove it when the deprecated Document is deleted.
+    deprecated_member_use_from_same_package: ignore
 linter:
   rules:
     # https://github.com/dart-lang/linter/issues/574

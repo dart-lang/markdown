@@ -174,7 +174,9 @@ class LinkSyntax extends DelimiterSyntax {
     final getChildren = context.getChildren;
     final link = _resolveReferenceLink(
       label,
-      parser.document.linkReferences,
+      parser.markdown != null
+          ? parser.markdown!.linkReferences
+          : parser.document.linkReferences,
       getChildren: getChildren,
     );
     if (link != null) {

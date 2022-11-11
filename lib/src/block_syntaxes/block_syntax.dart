@@ -4,8 +4,9 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../syntax.dart';
 
-abstract class BlockSyntax {
+abstract class BlockSyntax extends Syntax {
   const BlockSyntax();
 
   /// Gets the regex used to identify the beginning of this block, if any.

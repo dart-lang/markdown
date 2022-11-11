@@ -31,6 +31,7 @@ class ExtensionSet {
   /// The [commonMark] extension set is close to compliance with [CommonMark].
   ///
   /// [CommonMark]: http://commonmark.org/
+  @Deprecated('Use Markdown.commonMark() instead')
   static final ExtensionSet commonMark = ExtensionSet(
     List<BlockSyntax>.unmodifiable(
       <BlockSyntax>[const FencedCodeBlockSyntax()],
@@ -49,6 +50,7 @@ class ExtensionSet {
   /// linkable IDs.)
   ///
   /// [GitHub flavored Markdown]: https://github.github.com/gfm/
+  @Deprecated('Use Markdown.gitHubWeb() instead')
   static final ExtensionSet gitHubWeb = ExtensionSet(
     List<BlockSyntax>.unmodifiable(
       <BlockSyntax>[
@@ -73,6 +75,7 @@ class ExtensionSet {
 
   /// The [gitHubFlavored] extension set is close to compliance with the
   /// [GitHub flavored Markdown spec](https://github.github.com/gfm/).
+  @Deprecated('Use Markdown.gitHubFlavored() instead')
   static final ExtensionSet gitHubFlavored = ExtensionSet(
     List<BlockSyntax>.unmodifiable(
       <BlockSyntax>[

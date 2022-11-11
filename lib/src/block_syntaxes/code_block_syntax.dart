@@ -53,7 +53,9 @@ class CodeBlockSyntax extends BlockSyntax {
     childLines.add('');
 
     var content = childLines.join('\n');
-    if (parser.document.encodeHtml) {
+    if (parser.markdown != null
+        ? parser.markdown!.escapeHtml
+        : parser.document.encodeHtml) {
       content = escapeHtml(content);
     }
 

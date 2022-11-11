@@ -29,7 +29,9 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       openingFence.indent,
     ).join('\n');
 
-    if (parser.document.encodeHtml) {
+    if (parser.markdown != null
+        ? parser.markdown!.escapeHtml
+        : parser.document.encodeHtml) {
       text = escapeHtml(text);
     }
     if (text.isNotEmpty) {
@@ -39,7 +41,9 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     final code = Element.text('code', text);
     if (openingFence.hasLanguage) {
       var language = decodeHtmlCharacters(openingFence.language);
-      if (parser.document.encodeHtml) {
+      if (parser.markdown != null
+          ? parser.markdown!.escapeHtml
+          : parser.document.encodeHtml) {
         language = escapeHtmlAttribute(language);
       }
       code.attributes['class'] = 'language-$language';

@@ -3,10 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import '../inline_parser.dart';
+import '../syntax.dart';
 import '../util.dart';
 
 /// Represents one kind of Markdown tag that can be parsed.
-abstract class InlineSyntax {
+abstract class InlineSyntax extends Syntax {
   final RegExp pattern;
 
   /// The first character of [pattern], to be used as an efficient first check
