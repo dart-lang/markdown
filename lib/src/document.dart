@@ -10,6 +10,7 @@ import 'inline_parser.dart';
 import 'inline_syntaxes/inline_syntax.dart';
 
 @Deprecated('Use Markdown instead')
+
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = {};
