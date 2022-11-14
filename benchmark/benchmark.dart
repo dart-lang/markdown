@@ -19,7 +19,7 @@ void main() {
   // Run the benchmark several times. This ensures the VM is warmed up and lets
   // us see how much variance there is.
   for (var i = 0; i <= numTrials; i++) {
-    final start = DateTime.now();
+    final stopwatch = Stopwatch()..start();
 
     // For a single benchmark, convert the source multiple times.
     late String result;
@@ -27,8 +27,8 @@ void main() {
       result = markdownToHtml(source);
     }
 
-    final elapsed =
-        DateTime.now().difference(start).inMilliseconds / runsPerTrial;
+    stopwatch.stop();
+    final elapsed = stopwatch.elapsedMilliseconds / runsPerTrial;
 
     // Keep track of the best run so far.
     if (elapsed >= best) continue;
@@ -45,7 +45,7 @@ void main() {
     // Don't print the first run. It's always terrible since the VM hasn't
     // warmed up yet.
     if (i == 0) continue;
-    _printResult("Run ${_padLeft('#$i', 3)}", elapsed);
+    _printResult("Run ${'#$i'.padLeft(3)}", elapsed);
   }
 
   _printResult('Best   ', best);
@@ -57,15 +57,8 @@ String _loadFile(String name) {
 }
 
 void _printResult(String label, double time) {
-  print('$label: ${_padLeft(time.toStringAsFixed(2), 4)}ms '
-      "${'=' * ((time * 20).toInt())}");
-}
-
-String _padLeft(String input, int length) {
-  var result = input.toString();
-  if (result.length < length) {
-    result = ' ' * (length - result.length) + result;
-  }
-
-  return result;
+  print(
+    '$label: ${time.toStringAsFixed(2).padLeft(4)}ms '
+    "${'=' * ((time * 20).toInt())}",
+  );
 }
