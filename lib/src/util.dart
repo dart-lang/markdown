@@ -131,3 +131,57 @@ String escapePunctuation(String input) {
 
   return buffer.toString();
 }
+
+extension StringExtensions on String {
+  /// Removes up to [length] characters of leading whitespace.
+  // The way of handling tabs: https://spec.commonmark.org/0.30/#tabs
+  DedentedText dedent([int length = 4]) {
+    final whitespaceMatch = RegExp('^[ \t]{0,$length}').firstMatch(this);
+    const tabSize = 4;
+
+    int? tabRemaining;
+    var start = 0;
+    final whitespaces = whitespaceMatch?[0];
+    if (whitespaces != null) {
+      var indentLength = 0;
+      for (start; start < whitespaces.length; start++) {
+        final isTab = whitespaces[start] == '\t';
+        if (isTab) {
+          indentLength += tabSize;
+          tabRemaining = 4;
+        } else {
+          indentLength += 1;
+        }
+        if (indentLength >= length) {
+          if (tabRemaining != null) {
+            tabRemaining = indentLength - length;
+          }
+          if (indentLength == length || isTab) {
+            start += 1;
+          }
+          break;
+        }
+        if (tabRemaining != null) {
+          tabRemaining = 0;
+        }
+      }
+    }
+    return DedentedText(substring(start), tabRemaining);
+  }
+
+  /// Whether this string contains only whitespaces.
+  bool get isBlank => trim().isEmpty;
+}
+
+/// A class that describes a dedented text.
+class DedentedText {
+  /// The dedented text.
+  final String text;
+
+  /// How many spaces of a tab that remains after part of it has been consumed.
+  ///
+  /// `null` means we did not read a `tab`.
+  final int? tabRemaining;
+
+  DedentedText(this.text, this.tabRemaining);
+}

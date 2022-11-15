@@ -399,13 +399,13 @@
   "78": "strict",
   "79": "strict",
   "80": "strict",
-  "81": "fail",
+  "81": "strict",
   "82": "strict",
   "83": "strict",
   "84": "strict",
   "85": "strict",
   "86": "strict",
-  "87": "loose",
+  "87": "strict",
   "88": "strict"
  },
  "Inlines": {

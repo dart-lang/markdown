@@ -45,10 +45,12 @@ three
 <<<
 <pre><code>zero
 one
-</code></pre>
-<pre><code>two
-</code></pre>
-<pre><code>three
+
+
+two
+
+
+three
 </code></pre>
 >>> escape HTML characters
     <&>

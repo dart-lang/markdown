@@ -23,25 +23,21 @@ class CodeBlockSyntax extends BlockSyntax {
     final childLines = <String?>[];
 
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
-      if (match != null) {
-        childLines.add(match[1]);
-        parser.advance();
-      } else {
-        // If there's a codeblock, then a newline, then a codeblock, keep the
-        // code blocks together.
-        final nextMatch =
-            parser.next != null ? pattern.firstMatch(parser.next!) : null;
-        if (parser.current.trim() == '' && nextMatch != null) {
-          childLines.add('');
-          childLines.add(nextMatch[1]);
-          parser.advance();
-          parser.advance();
-        } else {
-          break;
-        }
+      final isBlankLine = parser.current.isBlank;
+      if (isBlankLine && _shouldEnd(parser)) {
+        break;
       }
+
+      if (!isBlankLine &&
+          childLines.isNotEmpty &&
+          pattern.hasMatch(parser.current) != true) {
+        break;
+      }
+      childLines.add(parser.current.dedent().text);
+
+      parser.advance();
     }
+
     return childLines;
   }
 
@@ -58,5 +54,25 @@ class CodeBlockSyntax extends BlockSyntax {
     }
 
     return Element('pre', [Element.text('code', content)]);
+  }
+
+  bool _shouldEnd(BlockParser parser) {
+    var i = 1;
+    while (true) {
+      final nextLine = parser.peek(i);
+      // EOF
+      if (nextLine == null) {
+        return true;
+      }
+
+      // It does not matter how many blank lines between chunks:
+      // https://spec.commonmark.org/0.30/#example-111
+      if (nextLine.isBlank) {
+        i++;
+        continue;
+      }
+
+      return pattern.hasMatch(nextLine) == false;
+    }
   }
 }
