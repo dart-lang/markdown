@@ -33,7 +33,7 @@ class CodeBlockSyntax extends BlockSyntax {
           pattern.hasMatch(parser.current) != true) {
         break;
       }
-      childLines.add(parser.current.indent().text);
+      childLines.add(parser.current.dedent().text);
 
       parser.advance();
     }
@@ -60,6 +60,7 @@ class CodeBlockSyntax extends BlockSyntax {
     var i = 1;
     while (true) {
       final nextLine = parser.peek(i);
+      // EOF
       if (nextLine == null) {
         return true;
       }

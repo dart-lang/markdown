@@ -133,9 +133,9 @@ String escapePunctuation(String input) {
 }
 
 extension StringExtensions on String {
-  /// Removes leading whitespace by the length of [length].
+  /// Removes up to [length] characters of leading whitespace.
   // The way of handling tabs: https://spec.commonmark.org/0.30/#tabs
-  IndentedText indent([int length = 4]) {
+  DedentedText dedent([int length = 4]) {
     final whitespaceMatch = RegExp('^[ \t]{0,$length}').firstMatch(this);
     const tabSize = 4;
 
@@ -166,20 +166,22 @@ extension StringExtensions on String {
         }
       }
     }
-    return IndentedText(substring(start), tabRemaining);
+    return DedentedText(substring(start), tabRemaining);
   }
 
   /// Whether this string contains only whitespaces.
   bool get isBlank => trim().isEmpty;
 }
 
-class IndentedText {
+/// A class that describes a dedented text.
+class DedentedText {
+  /// The dedented text.
   final String text;
 
   /// How many spaces of a tab that remains after part of it has been consumed.
   ///
-  /// `null` means it did not hit a `tab`.
+  /// `null` means we did not read a `tab`.
   final int? tabRemaining;
 
-  IndentedText(this.text, this.tabRemaining);
+  DedentedText(this.text, this.tabRemaining);
 }
