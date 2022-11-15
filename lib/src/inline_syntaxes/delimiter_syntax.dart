@@ -191,9 +191,9 @@ class DelimiterRun implements Delimiter {
   /// > A punctuation character is an ASCII punctuation character or anything in
   /// > the general Unicode categories `Pc`, `Pd`, `Pe`, `Pf`, `Pi`, `Po`, or
   /// > `Ps`.
-// This RegExp is inspired by
-// https://github.com/commonmark/commonmark.js/blob/1f7d09099c20d7861a674674a5a88733f55ff729/lib/inlines.js#L39.
-// I don't know if there is any way to simplify it or maintain it.
+  // This RegExp is inspired by
+  // https://github.com/commonmark/commonmark.js/blob/1f7d09099c20d7861a674674a5a88733f55ff729/lib/inlines.js#L39.
+  // I don't know if there is any way to simplify it or maintain it.
   static final unicodePunctuationPattern = RegExp('['
       '$asciiPunctuationEscaped'
       r'\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE'
