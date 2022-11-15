@@ -6,7 +6,7 @@
   25 of   25 – 100.0%  Block quotes
   22 of   22 – 100.0%  Code spans
    0 of    1 –   0.0%  Disallowed Raw HTML (extension)
- 130 of  131 –  99.2%  Emphasis and strong emphasis
+ 131 of  131 – 100.0%  Emphasis and strong emphasis
   17 of   17 – 100.0%  Entity and numeric character references
   29 of   29 – 100.0%  Fenced code blocks
   15 of   15 – 100.0%  Hard line breaks

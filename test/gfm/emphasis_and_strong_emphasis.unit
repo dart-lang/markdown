@@ -13,7 +13,7 @@ a*"foo"*
 >>> Emphasis and strong emphasis - 363
 * a *
 <<<
-<p><em> a </em></p>
+<p>* a *</p>
 >>> Emphasis and strong emphasis - 364
 foo*bar*
 <<<
