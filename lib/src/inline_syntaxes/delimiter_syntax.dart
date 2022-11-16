@@ -303,14 +303,14 @@ class DelimiterRun implements Delimiter {
 
     // If it is a left-flanking delimiter run, see
     // http://spec.commonmark.org/0.30/#left-flanking-delimiter-run.
-    final leftFlanking = !followedByWhitespace &&
+    final isLeftFlanking = !followedByWhitespace &&
         (!followedByPunctuation ||
             precededByWhitespace ||
             precededByPunctuation);
 
     // If it is a right-flanking delimiter run, see
     // http://spec.commonmark.org/0.30/#right-flanking-delimiter-run.
-    final rightFlanking = !precededByWhitespace &&
+    final isRightFlanking = !precededByWhitespace &&
         (!precededByPunctuation ||
             followedByWhitespace ||
             followedByPunctuation);
@@ -323,8 +323,8 @@ class DelimiterRun implements Delimiter {
       char: parser.charAt(runStart),
       syntax: syntax,
       tags: tags,
-      isLeftFlanking: leftFlanking,
-      isRightFlanking: rightFlanking,
+      isLeftFlanking: isLeftFlanking,
+      isRightFlanking: isRightFlanking,
       isPrecededByPunctuation: precededByPunctuation,
       isFollowedByPunctuation: followedByPunctuation,
       allowIntraWord: allowIntraWord,
