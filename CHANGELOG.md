@@ -14,6 +14,11 @@
 * Add a new syntax `EscapeHtmlSyntax` to encode (`"`), (`<`), (`>`) and (`&`).
 * Add an option `caseSensitive` to `TextSyntax`.
 * Add a new public method `parse(String text)` for `Document`.
+* Add a new public method `parseLineList(List<Line> text)` for `Document`.
+* Add a new type: `Line`.
+* **Breaking change**: Change all the `String` type **_line_** to `Line` type.
+* **Breaking change**: Change all the `List<String>` type **_lines_** to
+  `List<Line>` type.
 
 ## 6.0.1
 
