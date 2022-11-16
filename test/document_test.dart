@@ -33,7 +33,7 @@ void main() {
 
       test('encodes HTML in a fenced code block', () {
         final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.toLines();
-        final result = document.parseLines(lines);
+        final result = document.parseLineList(lines);
         final codeBlock = result.single as Element;
         expect(
           codeBlock.textContent,
@@ -43,7 +43,7 @@ void main() {
 
       test('encodes HTML in an indented code block', () {
         final lines = '    <p>Hello <em>Markdown</em></p>\n'.toLines();
-        final result = document.parseLines(lines);
+        final result = document.parseLineList(lines);
         final codeBlock = result.single as Element;
         expect(
           codeBlock.textContent,
@@ -92,7 +92,7 @@ void main() {
 
       test('leaves HTML alone, in a fenced code block', () {
         final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.toLines();
-        final result = document.parseLines(lines);
+        final result = document.parseLineList(lines);
         final codeBlock = result.single as Element;
         expect(
           codeBlock.textContent,
@@ -102,7 +102,7 @@ void main() {
 
       test('leaves HTML alone, in an indented code block', () {
         final lines = '    <p>Hello <em>Markdown</em></p>\n'.toLines();
-        final result = document.parseLines(lines);
+        final result = document.parseLineList(lines);
         final codeBlock = result.single as Element;
         expect(
           codeBlock.textContent,

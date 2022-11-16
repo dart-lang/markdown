@@ -13,8 +13,6 @@
   line ending.
 * Add a new syntax `EscapeHtmlSyntax` to encode (`"`), (`<`), (`>`) and (`&`).
 * Add an option `caseSensitive` to `TextSyntax`.
-* **Breaking change**: Change the type of `parseLines`'s parameter from `String`
-  to `List<Line>`
 * Add a new public method `parse(String text)` for `Document`.
 
 ## 6.0.1

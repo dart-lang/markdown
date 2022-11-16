@@ -67,11 +67,15 @@ class Document {
     }
   }
 
-  /// Parses the given [text] to a series of AST nodes.
-  List<Node> parse(String text) => parseLines(text.toLines());
-
   /// Parses the given [lines] of Markdown to a series of AST nodes.
-  List<Node> parseLines(List<Line> lines) {
+  List<Node> parseLines(List<String> lines) =>
+      parseLineList(lines.map(Line.new).toList());
+
+  /// Parses the given [text] to a series of AST nodes.
+  List<Node> parse(String text) => parseLineList(text.toLines());
+
+  /// Parses the given [lines] of [Line] to a series of AST nodes.
+  List<Node> parseLineList(List<Line> lines) {
     final nodes = BlockParser(lines, this).parseLines();
     _parseInlineContent(nodes);
     return nodes;
