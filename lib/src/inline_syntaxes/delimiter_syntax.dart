@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../inline_parser.dart';
+import '../patterns.dart';
 import 'inline_syntax.dart';
 
 /// Matches syntax that has a pair of tags and becomes an element, like `*` for
@@ -185,7 +186,7 @@ class SimpleDelimiter implements Delimiter {
 /// also be used by other extensions of [DelimiterSyntax].
 class DelimiterRun implements Delimiter {
   /// According to
-  /// [CommonMark](https://spec.commonmark.org/0.29/#punctuation-character):
+  /// [CommonMark](https://spec.commonmark.org/0.30/#unicode-punctuation-character):
   ///
   /// > A punctuation character is an ASCII punctuation character or anything in
   /// > the general Unicode categories `Pc`, `Pd`, `Pe`, `Pf`, `Pi`, `Po`, or
@@ -193,8 +194,8 @@ class DelimiterRun implements Delimiter {
   // This RegExp is inspired by
   // https://github.com/commonmark/commonmark.js/blob/1f7d09099c20d7861a674674a5a88733f55ff729/lib/inlines.js#L39.
   // I don't know if there is any way to simplify it or maintain it.
-  static final RegExp punctuation = RegExp('['
-      r'''!"#$%&'()*+,\-./:;<=>?@\[\]\\^_`{|}~'''
+  static final unicodePunctuationPattern = RegExp('['
+      '$asciiPunctuationEscaped'
       r'\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE'
       r'\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E'
       r'\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E'
@@ -216,8 +217,12 @@ class DelimiterRun implements Delimiter {
       r'\uFF5B\uFF5D\uFF5F-\uFF65'
       ']');
 
-  // TODO(srawlins): Unicode whitespace
-  static const whitespace = ' \t\r\n';
+  /// Unicode whitespace.
+  // See https://spec.commonmark.org/0.30/#unicode-whitespace-character.
+  // Unicode Zs: https://www.compart.com/en/unicode/category.
+  static const unicodeWhitespace = '\u0020\u0009\u000A\u000C\u000D'
+      '\u00A0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008'
+      '\u2009\u200A\u202F\u205F\u3000';
 
   @override
   Text node;
@@ -271,50 +276,46 @@ class DelimiterRun implements Delimiter {
     required Text node,
     bool allowIntraWord = false,
   }) {
-    bool leftFlanking,
-        rightFlanking,
-        precededByPunctuation,
-        followedByPunctuation;
-    String preceding, following;
+    bool precededByWhitespace;
+    bool followedByWhitespace;
+    bool precededByPunctuation;
+    bool followedByPunctuation;
+
     if (runStart == 0) {
-      rightFlanking = false;
-      preceding = '\n';
+      precededByWhitespace = true;
+      precededByPunctuation = false;
     } else {
-      preceding = parser.source.substring(runStart - 1, runStart);
+      final preceding = parser.source.substring(runStart - 1, runStart);
+      precededByWhitespace = unicodeWhitespace.contains(preceding);
+      precededByPunctuation = !precededByWhitespace &&
+          unicodePunctuationPattern.hasMatch(preceding);
     }
-    precededByPunctuation = punctuation.hasMatch(preceding);
 
     if (runEnd == parser.source.length) {
-      leftFlanking = false;
-      following = '\n';
+      followedByWhitespace = true;
+      followedByPunctuation = false;
     } else {
-      following = parser.source.substring(runEnd, runEnd + 1);
-    }
-    followedByPunctuation = punctuation.hasMatch(following);
-
-    // http://spec.commonmark.org/0.30/#left-flanking-delimiter-run
-    if (whitespace.contains(following)) {
-      leftFlanking = false;
-    } else {
-      leftFlanking = !followedByPunctuation ||
-          whitespace.contains(preceding) ||
-          precededByPunctuation;
+      final following = parser.source.substring(runEnd, runEnd + 1);
+      followedByWhitespace = unicodeWhitespace.contains(following);
+      followedByPunctuation = !followedByWhitespace &&
+          unicodePunctuationPattern.hasMatch(following);
     }
 
-    // http://spec.commonmark.org/0.30/#right-flanking-delimiter-run
-    if (whitespace.contains(preceding)) {
-      rightFlanking = false;
-    } else {
-      rightFlanking = !precededByPunctuation ||
-          whitespace.contains(following) ||
-          followedByPunctuation;
-    }
+    // If it is a left-flanking delimiter run, see
+    // http://spec.commonmark.org/0.30/#left-flanking-delimiter-run.
+    final isLeftFlanking = !followedByWhitespace &&
+        (!followedByPunctuation ||
+            precededByWhitespace ||
+            precededByPunctuation);
 
-    if (!leftFlanking && !rightFlanking) {
-      // Could not parse a delimiter run.
-      return null;
-    }
+    // If it is a right-flanking delimiter run, see
+    // http://spec.commonmark.org/0.30/#right-flanking-delimiter-run.
+    final isRightFlanking = !precededByWhitespace &&
+        (!precededByPunctuation ||
+            followedByWhitespace ||
+            followedByPunctuation);
 
+    // Make sure the shorter delimiter takes precedence.
     tags.sort((a, b) => a.indicatorLength.compareTo(b.indicatorLength));
 
     return DelimiterRun._(
@@ -322,8 +323,8 @@ class DelimiterRun implements Delimiter {
       char: parser.charAt(runStart),
       syntax: syntax,
       tags: tags,
-      isLeftFlanking: leftFlanking,
-      isRightFlanking: rightFlanking,
+      isLeftFlanking: isLeftFlanking,
+      isRightFlanking: isRightFlanking,
       isPrecededByPunctuation: precededByPunctuation,
       isFollowedByPunctuation: followedByPunctuation,
       allowIntraWord: allowIntraWord,
