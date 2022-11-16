@@ -11,7 +11,7 @@
 >>> Images - 573
 ![foo ![bar](/url)](/url2)
 <<<
-<p><img src="/url2" alt="foo " /></p>
+<p><img src="/url2" alt="foo bar" /></p>
 >>> Images - 574
 ![foo [bar](/url)](/url2)
 <<<

@@ -9,7 +9,7 @@
   29 of   29 – 100.0%  Fenced code blocks
   15 of   15 – 100.0%  Hard line breaks
   44 of   44 – 100.0%  HTML blocks
-  21 of   22 –  95.5%  Images
+  22 of   22 – 100.0%  Images
   12 of   12 – 100.0%  Indented code blocks
    1 of    1 – 100.0%  Inlines
   21 of   27 –  77.8%  Link reference definitions
