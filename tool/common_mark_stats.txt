@@ -9,7 +9,7 @@
   29 of   29 – 100.0%  Fenced code blocks
   15 of   15 – 100.0%  Hard line breaks
   44 of   44 – 100.0%  HTML blocks
-  21 of   22 –  95.5%  Images
+  22 of   22 – 100.0%  Images
   12 of   12 – 100.0%  Indented code blocks
    1 of    1 – 100.0%  Inlines
   21 of   27 –  77.8%  Link reference definitions
@@ -24,5 +24,5 @@
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 635 of  652 –  97.4%  TOTAL
- 616 of  635 –  97.0%  TOTAL Strict
+ 636 of  652 –  97.5%  TOTAL
+ 617 of  636 –  97.0%  TOTAL Strict
