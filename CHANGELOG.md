@@ -16,9 +16,9 @@
 * Add a new public method `parse(String text)` for `Document`.
 * Add a new public method `parseLineList(List<Line> text)` for `Document`.
 * Add a new type: `Line`.
-* **Breaking change**: Change all the `String` type **_line_** to `Line` type.
-* **Breaking change**: Change all the `List<String>` type **_lines_** to
-  `List<Line>` type.
+* **Breaking change**: Change the `line` properties of type `String` to `Line`.
+* **Breaking change**: Change the `lines` properties of type `List<String>` to
+  `List<Line>`.
 
 ## 6.0.1
 
