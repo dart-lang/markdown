@@ -2,9 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
-
 import 'package:markdown/markdown.dart';
+import 'package:markdown/src/util.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -33,7 +32,7 @@ void main() {
       });
 
       test('encodes HTML in a fenced code block', () {
-        final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.split('\n');
+        final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.toLines();
         final result = document.parseLines(lines);
         final codeBlock = result.single as Element;
         expect(
@@ -43,7 +42,7 @@ void main() {
       });
 
       test('encodes HTML in an indented code block', () {
-        final lines = '    <p>Hello <em>Markdown</em></p>\n'.split('\n');
+        final lines = '    <p>Hello <em>Markdown</em></p>\n'.toLines();
         final result = document.parseLines(lines);
         final codeBlock = result.single as Element;
         expect(
@@ -56,8 +55,7 @@ void main() {
         // Example to get a <p> tag rendered before a text node.
         const contents = 'Sample\n\n<pre>\n A\n B\n</pre>';
         final document = Document();
-        final lines = LineSplitter.split(contents).toList();
-        final nodes = BlockParser(lines, document).parseLines();
+        final nodes = BlockParser(contents.toLines(), document).parseLines();
         final result = HtmlRenderer().render(nodes);
         expect(result, '<p>\n</p><pre>\n A\n B\n</pre>');
       });
@@ -93,7 +91,7 @@ void main() {
       });
 
       test('leaves HTML alone, in a fenced code block', () {
-        final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.split('\n');
+        final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.toLines();
         final result = document.parseLines(lines);
         final codeBlock = result.single as Element;
         expect(
@@ -103,7 +101,7 @@ void main() {
       });
 
       test('leaves HTML alone, in an indented code block', () {
-        final lines = '    <p>Hello <em>Markdown</em></p>\n'.split('\n');
+        final lines = '    <p>Hello <em>Markdown</em></p>\n'.toLines();
         final result = document.parseLines(lines);
         final codeBlock = result.single as Element;
         expect(

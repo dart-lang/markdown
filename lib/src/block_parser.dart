@@ -16,11 +16,12 @@ import 'block_syntaxes/paragraph_syntax.dart';
 import 'block_syntaxes/setext_header_syntax.dart';
 import 'block_syntaxes/unordered_list_syntax.dart';
 import 'document.dart';
+import 'line.dart';
 
 /// Maintains the internal state needed to parse a series of lines into blocks
 /// of Markdown suitable for further inline parsing.
 class BlockParser {
-  final List<String> lines;
+  final List<Line> lines;
 
   /// The Markdown document this parser is parsing.
   final Document document;
@@ -63,10 +64,10 @@ class BlockParser {
   }
 
   /// Gets the current line.
-  String get current => lines[_pos];
+  Line get current => lines[_pos];
 
   /// Gets the line after the current one or `null` if there is none.
-  String? get next {
+  Line? get next {
     // Don't read past the end.
     if (_pos >= lines.length - 1) return null;
     return lines[_pos + 1];
@@ -78,7 +79,7 @@ class BlockParser {
   /// `peek(0)` is equivalent to [current].
   ///
   /// `peek(1)` is equivalent to [next].
-  String? peek(int linesAhead) {
+  Line? peek(int linesAhead) {
     if (linesAhead < 0) {
       throw ArgumentError('Invalid linesAhead: $linesAhead; must be >= 0.');
     }
@@ -100,13 +101,13 @@ class BlockParser {
   /// Gets whether or not the current line matches the given pattern.
   bool matches(RegExp regex) {
     if (isDone) return false;
-    return regex.hasMatch(current);
+    return regex.hasMatch(current.content);
   }
 
   /// Gets whether or not the next line matches the given pattern.
   bool matchesNext(RegExp regex) {
     if (next == null) return false;
-    return regex.hasMatch(next!);
+    return regex.hasMatch(next!.content);
   }
 
   List<Node> parseLines() {

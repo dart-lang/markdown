@@ -16,7 +16,7 @@ class SetextHeaderSyntax extends BlockSyntax {
 
   @override
   bool canParse(BlockParser parser) {
-    if (!_interperableAsParagraph(parser.current)) return false;
+    if (!_interperableAsParagraph(parser.current.content)) return false;
     var i = 1;
     while (true) {
       final nextLine = parser.peek(i);
@@ -24,11 +24,11 @@ class SetextHeaderSyntax extends BlockSyntax {
         // We never reached an underline.
         return false;
       }
-      if (setextPattern.hasMatch(nextLine)) {
+      if (setextPattern.hasMatch(nextLine.content)) {
         return true;
       }
       // Ensure that we're still in something like paragraph text.
-      if (!_interperableAsParagraph(nextLine)) {
+      if (!_interperableAsParagraph(nextLine.content)) {
         return false;
       }
       i++;
@@ -40,10 +40,10 @@ class SetextHeaderSyntax extends BlockSyntax {
     final lines = <String>[];
     String? tag;
     while (!parser.isDone) {
-      final match = setextPattern.firstMatch(parser.current);
+      final match = setextPattern.firstMatch(parser.current.content);
       if (match == null) {
         // More text.
-        lines.add(parser.current);
+        lines.add(parser.current.content);
         parser.advance();
         continue;
       } else {

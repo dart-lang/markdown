@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'assets/case_folding.dart';
 import 'assets/html_entities.dart';
 import 'charcode.dart';
+import 'line.dart';
 import 'patterns.dart';
 
 /// One or more whitespace, for compressing.
@@ -171,6 +172,9 @@ extension StringExtensions on String {
 
   /// Whether this string contains only whitespaces.
   bool get isBlank => trim().isEmpty;
+
+  /// Converts this string to a list of [Line].
+  List<Line> toLines() => LineSplitter.split(this).map(Line.new).toList();
 }
 
 /// A class that describes a dedented text.

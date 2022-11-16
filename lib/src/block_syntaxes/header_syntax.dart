@@ -16,7 +16,7 @@ class HeaderSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
-    final match = pattern.firstMatch(parser.current)!;
+    final match = pattern.firstMatch(parser.current.content)!;
     final matchedText = match[0]!;
     final openMarker = match[1]!;
     final closeMarker = match[2];
@@ -26,10 +26,13 @@ class HeaderSyntax extends BlockSyntax {
 
     String? content;
     if (closeMarker == null) {
-      content = parser.current.substring(openMarkerEnd);
+      content = parser.current.content.substring(openMarkerEnd);
     } else {
       final closeMarkerStart = matchedText.lastIndexOf(closeMarker);
-      content = parser.current.substring(openMarkerEnd, closeMarkerStart);
+      content = parser.current.content.substring(
+        openMarkerEnd,
+        closeMarkerStart,
+      );
     }
     content = content.trim();
 

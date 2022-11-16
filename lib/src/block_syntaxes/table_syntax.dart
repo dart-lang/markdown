@@ -32,7 +32,7 @@ class TableSyntax extends BlockSyntax {
   /// * many body rows of body cells (`<td>` cells)
   @override
   Node? parse(BlockParser parser) {
-    final alignments = _parseAlignments(parser.next!);
+    final alignments = _parseAlignments(parser.next!.content);
     final columnCount = alignments.length;
     final headRow = _parseRow(parser, alignments, 'th');
     if (headRow.children!.length != columnCount) {
@@ -122,19 +122,19 @@ class TableSyntax extends BlockSyntax {
   ) {
     final line = parser.current;
     final cells = <String>[];
-    var index = _walkPastOpeningPipe(line);
+    var index = _walkPastOpeningPipe(line.content);
     final cellBuffer = StringBuffer();
 
     while (true) {
-      if (index >= line.length) {
+      if (index >= line.content.length) {
         // This row ended without a trailing pipe, which is fine.
         cells.add(cellBuffer.toString().trimRight());
         cellBuffer.clear();
         break;
       }
-      final ch = line.codeUnitAt(index);
+      final ch = line.content.codeUnitAt(index);
       if (ch == $backslash) {
-        if (index == line.length - 1) {
+        if (index == line.content.length - 1) {
           // A table row ending in a backslash is not well-specified, but it
           // looks like GitHub just allows the character as part of the text of
           // the last cell.
@@ -143,7 +143,7 @@ class TableSyntax extends BlockSyntax {
           cellBuffer.clear();
           break;
         }
-        final escaped = line.codeUnitAt(index + 1);
+        final escaped = line.content.codeUnitAt(index + 1);
         if (escaped == $pipe) {
           // GitHub Flavored Markdown has a strange bit here; the pipe is to be
           // escaped before any other inline processing. One consequence, for
@@ -163,8 +163,8 @@ class TableSyntax extends BlockSyntax {
         cellBuffer.clear();
         // Walk forward past any whitespace which leads the next cell.
         index++;
-        index = _walkPastWhitespace(line, index);
-        if (index >= line.length) {
+        index = _walkPastWhitespace(line.content, index);
+        if (index >= line.content.length) {
           // This row ended with a trailing pipe.
           break;
         }

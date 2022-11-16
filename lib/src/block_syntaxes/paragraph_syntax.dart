@@ -32,7 +32,7 @@ class ParagraphSyntax extends BlockSyntax {
 
     // Eat until we hit something that ends a paragraph.
     while (!BlockSyntax.isAtBlockEnd(parser)) {
-      childLines.add(parser.current);
+      childLines.add(parser.current.content);
       parser.advance();
     }
 

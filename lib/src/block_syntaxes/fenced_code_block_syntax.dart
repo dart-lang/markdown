@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../line.dart';
 import '../patterns.dart';
 import '../util.dart';
 import 'block_syntax.dart';
@@ -20,14 +21,14 @@ class FencedCodeBlockSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     final openingFence = _FenceMatch.fromMatch(pattern.firstMatch(
-      escapePunctuation(parser.current),
+      escapePunctuation(parser.current.content),
     )!);
 
     var text = parseChildLines(
       parser,
       openingFence.marker,
       openingFence.indent,
-    ).join('\n');
+    ).map((e) => e.content).join('\n');
 
     if (parser.document.encodeHtml) {
       text = escapeHtml(text);
@@ -54,18 +55,18 @@ class FencedCodeBlockSyntax extends BlockSyntax {
   }
 
   @override
-  List<String> parseChildLines(
+  List<Line> parseChildLines(
     BlockParser parser, [
     String openingMarker = '',
     int indent = 0,
   ]) {
-    final childLines = <String>[];
+    final childLines = <Line>[];
 
     parser.advance();
 
     _FenceMatch? closingFence;
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
+      final match = pattern.firstMatch(parser.current.content);
       closingFence = match == null ? null : _FenceMatch.fromMatch(match);
 
       // Closing code fences cannot have info strings:
@@ -73,7 +74,9 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       if (closingFence == null ||
           !closingFence.marker.startsWith(openingMarker) ||
           closingFence.hasInfo) {
-        childLines.add(_removeIndentation(parser.current, indent));
+        childLines.add(
+          Line(_removeIndentation(parser.current.content, indent)),
+        );
         parser.advance();
       } else {
         parser.advance();
@@ -85,7 +88,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     // https://spec.commonmark.org/0.30/#example-128
     if (closingFence == null &&
         childLines.isNotEmpty &&
-        childLines.last.trim().isEmpty) {
+        childLines.last.isBlankLine) {
       childLines.removeLast();
     }
 
