@@ -14,6 +14,25 @@ class Line {
 
   /// How many spaces of a tab that remains after part of it has been consumed.
   // See: https://spec.commonmark.org/0.30/#example-6
+  // We cannot simply expand the `tabRemaining` to spaces, for example
+  //
+  // `>\t\tfoo`
+  //
+  // If we expand the 2 space width `tabRemaining` from blockquote block into 2
+  // spaces, so the string segment for the indented code block is:
+  //
+  // `  \tfoo`,
+  //
+  // then the output will be:
+  // ```html
+  // <pre><code>foo
+  // </code></pre>
+  // ```
+  // instead of the expected:
+  // ```html
+  // <pre><code>  foo
+  // </code></pre>
+  // ```
   final int? tabRemaining;
 
   // A line containing no characters, or a line containing only spaces
