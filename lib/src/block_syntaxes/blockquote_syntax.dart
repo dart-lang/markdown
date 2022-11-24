@@ -33,8 +33,13 @@ class BlockquoteSyntax extends BlockSyntax {
         final markerStart = match.match.indexOf('>');
         int markerEnd;
         if (currentLine.length > 1) {
-          final nextChar = currentLine.codeUnitAt(markerStart + 1);
-          final hasSpace = nextChar == $tab || nextChar == $space;
+          var hasSpace = false;
+          // Check if there is a following space if the marker is not at the end
+          // of this line.
+          if (markerStart < currentLine.length - 1) {
+            final nextChar = currentLine.codeUnitAt(markerStart + 1);
+            hasSpace = nextChar == $tab || nextChar == $space;
+          }
           markerEnd = markerStart + (hasSpace ? 2 : 1);
         } else {
           markerEnd = markerStart + 1;
