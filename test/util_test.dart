@@ -54,7 +54,7 @@ void main() {
   });
 }
 
-extension LineX on Line {
+extension on Line {
   Map<String, dynamic> toMap() => {
         'content': content,
         'isBlankLine': isBlankLine,
