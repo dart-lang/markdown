@@ -8,6 +8,8 @@ import 'block_syntaxes/block_syntax.dart';
 import 'extension_set.dart';
 import 'inline_parser.dart';
 import 'inline_syntaxes/inline_syntax.dart';
+import 'line.dart';
+import 'util.dart';
 
 /// Maintains the context needed to parse a Markdown document.
 class Document {
@@ -66,7 +68,14 @@ class Document {
   }
 
   /// Parses the given [lines] of Markdown to a series of AST nodes.
-  List<Node> parseLines(List<String> lines) {
+  List<Node> parseLines(List<String> lines) =>
+      parseLineList(lines.map(Line.new).toList());
+
+  /// Parses the given [text] to a series of AST nodes.
+  List<Node> parse(String text) => parseLineList(text.toLines());
+
+  /// Parses the given [lines] of [Line] to a series of AST nodes.
+  List<Node> parseLineList(List<Line> lines) {
     final nodes = BlockParser(lines, this).parseLines();
     _parseInlineContent(nodes);
     return nodes;

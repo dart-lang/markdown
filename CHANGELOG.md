@@ -6,6 +6,9 @@
   `indicatorForCheckedCheckBox`, and `indicatorForUncheckedCheckBox`.
 * **Breaking change**: Removed `BlockHtmlSyntax`, `BlockTagBlockHtmlSyntax`,
   `LongBlockHtmlSyntax`, and `OtherTagBlockHtmlSyntax`.
+* **Breaking change**: Change the `line` properties of type `String` to `Line`.
+* **Breaking change**: Change the `lines` properties of type `List<String>` to
+  `List<Line>`.
 * Add a new syntax `HtmlBlockSyntax` to parse HTML blocks.
 * Add a new syntax `DecodeHtmlSyntax` to decode HTML entity and numeric
   character references.
@@ -13,6 +16,9 @@
   line ending.
 * Add a new syntax `EscapeHtmlSyntax` to encode (`"`), (`<`), (`>`) and (`&`).
 * Add an option `caseSensitive` to `TextSyntax`.
+* Add a new public method `parse(String text)` for `Document`.
+* Add a new public method `parseLineList(List<Line> text)` for `Document`.
+* Add a new type: `Line`.
 
 ## 6.0.1
 

@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../line.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 import 'ordered_list_with_checkbox_syntax.dart';
@@ -15,7 +16,7 @@ class ListItem {
     this.taskListItemState,
   });
 
-  final List<String> lines;
+  final List<Line> lines;
   final TaskListItemState? taskListItemState;
 }
 
@@ -30,7 +31,7 @@ abstract class ListSyntax extends BlockSyntax {
     // Ideally, [BlockSyntax.canEndBlock] should be changed to be a method
     // which accepts a [BlockParser], but this would be a breaking change,
     // so we're going with this temporarily.
-    final match = pattern.firstMatch(parser.current)!;
+    final match = pattern.firstMatch(parser.current.content)!;
     // The seventh group, in both [olPattern] and [ulPattern] is the text
     // after the delimiter.
     return match[7]?.isNotEmpty ?? false;
@@ -57,13 +58,13 @@ abstract class ListSyntax extends BlockSyntax {
     final taskListParserEnabled = this is UnorderedListWithCheckboxSyntax ||
         this is OrderedListWithCheckboxSyntax;
     final items = <ListItem>[];
-    var childLines = <String>[];
+    var childLines = <Line>[];
     TaskListItemState? taskListItemState;
 
     void endItem() {
       if (childLines.isNotEmpty) {
         items.add(ListItem(childLines, taskListItemState: taskListItemState));
-        childLines = <String>[];
+        childLines = <Line>[];
       }
     }
 
@@ -86,7 +87,7 @@ abstract class ListSyntax extends BlockSyntax {
 
     late Match? possibleMatch;
     bool tryMatch(RegExp pattern) {
-      possibleMatch = pattern.firstMatch(parser.current);
+      possibleMatch = pattern.firstMatch(parser.current.content);
       return possibleMatch != null;
     }
 
@@ -98,21 +99,21 @@ abstract class ListSyntax extends BlockSyntax {
 
     while (!parser.isDone) {
       final leadingSpace =
-          _whitespaceRe.matchAsPrefix(parser.current)!.group(0)!;
+          _whitespaceRe.matchAsPrefix(parser.current.content)!.group(0)!;
       final leadingExpandedTabLength = _expandedTabLength(leadingSpace);
-      if (emptyPattern.hasMatch(parser.current)) {
-        if (emptyPattern.hasMatch(parser.next ?? '')) {
+      if (parser.current.isBlankLine) {
+        if (parser.next?.isBlankLine ?? true) {
           // Two blank lines ends a list.
           break;
         }
         // Add a blank line to the current list item.
-        childLines.add('');
+        childLines.add(Line(''));
       } else if (indent != null && indent.length <= leadingExpandedTabLength) {
         // Strip off indent and add to current item.
-        final line = parser.current
+        final line = parser.current.content
             .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
             .replaceFirst(indent, '');
-        childLines.add(parseTaskListItem(line));
+        childLines.add(Line(parseTaskListItem(line)));
       } else if (tryMatch(hrPattern)) {
         // Horizontal rule takes precedence to a new list item.
         break;
@@ -156,14 +157,14 @@ abstract class ListSyntax extends BlockSyntax {
         }
         // End the current list item and start a new one.
         endItem();
-        childLines.add(parseTaskListItem('$restWhitespace$content'));
+        childLines.add(Line(parseTaskListItem('$restWhitespace$content')));
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
       } else {
         // If the previous item is a blank line, this means we're done with the
         // list and are starting a new top-level paragraph.
-        if ((childLines.isNotEmpty) && (childLines.last == '')) {
+        if (childLines.isNotEmpty && childLines.last.isBlankLine) {
           parser.encounteredBlankLine = true;
           break;
         }
@@ -238,7 +239,7 @@ abstract class ListSyntax extends BlockSyntax {
   }
 
   void _removeLeadingEmptyLine(ListItem item) {
-    if (item.lines.isNotEmpty && emptyPattern.hasMatch(item.lines.first)) {
+    if (item.lines.isNotEmpty && item.lines.first.isBlankLine) {
       item.lines.removeAt(0);
     }
   }
@@ -249,8 +250,7 @@ abstract class ListSyntax extends BlockSyntax {
     var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
       if (items[i].lines.length == 1) continue;
-      while (items[i].lines.isNotEmpty &&
-          emptyPattern.hasMatch(items[i].lines.last)) {
+      while (items[i].lines.isNotEmpty && items[i].lines.last.isBlankLine) {
         if (i < items.length - 1) {
           anyEmpty = true;
         }

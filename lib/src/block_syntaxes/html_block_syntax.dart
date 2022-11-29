@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../line.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 
@@ -21,7 +22,8 @@ class HtmlBlockSyntax extends BlockSyntax {
   // more detail.
   @override
   bool canEndBlock(BlockParser parser) =>
-      pattern.firstMatch(parser.current)!.namedGroup('condition_7') == null;
+      pattern.firstMatch(parser.current.content)!.namedGroup('condition_7') ==
+      null;
 
   static final _endConditions = [
     // For condition 1, it does not need to match the start tag, see
@@ -38,10 +40,10 @@ class HtmlBlockSyntax extends BlockSyntax {
   const HtmlBlockSyntax();
 
   @override
-  List<String> parseChildLines(BlockParser parser) {
-    final lines = <String>[];
+  List<Line> parseChildLines(BlockParser parser) {
+    final lines = <Line>[];
 
-    final match = pattern.firstMatch(parser.current);
+    final match = pattern.firstMatch(parser.current.content);
     var matchedCondition = 0;
     for (var i = 0; i < match!.groupCount; i++) {
       if (match.group(i + 1) != null) {
@@ -55,14 +57,14 @@ class HtmlBlockSyntax extends BlockSyntax {
       lines.add(parser.current);
       parser.advance();
 
-      while (!parser.isDone && !endCondition.hasMatch(parser.current)) {
+      while (!parser.isDone && !endCondition.hasMatch(parser.current.content)) {
         lines.add(parser.current);
         parser.advance();
       }
     } else {
       while (!parser.isDone) {
         lines.add(parser.current);
-        if (endCondition.hasMatch(parser.current)) {
+        if (endCondition.hasMatch(parser.current.content)) {
           break;
         }
         parser.advance();
@@ -74,7 +76,7 @@ class HtmlBlockSyntax extends BlockSyntax {
     // current HTML block.
     if (!parser.isDone &&
         parser.next != null &&
-        pattern.hasMatch(parser.next!)) {
+        pattern.hasMatch(parser.next!.content)) {
       parser.advance();
       lines.addAll(parseChildLines(parser));
     }
@@ -85,6 +87,6 @@ class HtmlBlockSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     final childLines = parseChildLines(parser);
-    return Text(childLines.join('\n').trimRight());
+    return Text(childLines.map((e) => e.content).join('\n').trimRight());
   }
 }

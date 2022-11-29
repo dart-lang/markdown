@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../line.dart';
 import '../patterns.dart';
 import '../util.dart';
 import 'block_syntax.dart';
@@ -19,21 +20,21 @@ class CodeBlockSyntax extends BlockSyntax {
   const CodeBlockSyntax();
 
   @override
-  List<String?> parseChildLines(BlockParser parser) {
-    final childLines = <String?>[];
+  List<Line> parseChildLines(BlockParser parser) {
+    final childLines = <Line>[];
 
     while (!parser.isDone) {
-      final isBlankLine = parser.current.isBlank;
+      final isBlankLine = parser.current.isBlankLine;
       if (isBlankLine && _shouldEnd(parser)) {
         break;
       }
 
       if (!isBlankLine &&
           childLines.isNotEmpty &&
-          pattern.hasMatch(parser.current) != true) {
+          pattern.hasMatch(parser.current.content) != true) {
         break;
       }
-      childLines.add(parser.current.dedent().text);
+      childLines.add(Line(parser.current.content.dedent().text));
 
       parser.advance();
     }
@@ -46,9 +47,9 @@ class CodeBlockSyntax extends BlockSyntax {
     final childLines = parseChildLines(parser);
 
     // The Markdown tests expect a trailing newline.
-    childLines.add('');
+    childLines.add(Line(''));
 
-    var content = childLines.join('\n');
+    var content = childLines.map((e) => e.content).join('\n');
     if (parser.document.encodeHtml) {
       content = escapeHtml(content);
     }
@@ -67,12 +68,12 @@ class CodeBlockSyntax extends BlockSyntax {
 
       // It does not matter how many blank lines between chunks:
       // https://spec.commonmark.org/0.30/#example-111
-      if (nextLine.isBlank) {
+      if (nextLine.isBlankLine) {
         i++;
         continue;
       }
 
-      return pattern.hasMatch(nextLine) == false;
+      return pattern.hasMatch(nextLine.content) == false;
     }
   }
 }

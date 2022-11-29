@@ -19,11 +19,11 @@ class UnorderedListSyntax extends ListSyntax {
     // ```
     // * * *
     // ```
-    if (hrPattern.hasMatch(parser.current)) {
+    if (hrPattern.hasMatch(parser.current.content)) {
       return false;
     }
 
-    return pattern.hasMatch(parser.current);
+    return pattern.hasMatch(parser.current.content);
   }
 
   @override

@@ -27,7 +27,7 @@ class DummyBlockSyntax extends BlockSyntax {
     final childLines = <String>[];
 
     while (!BlockSyntax.isAtBlockEnd(parser)) {
-      childLines.add(parser.current);
+      childLines.add(parser.current.content);
       parser.advance();
     }
 
