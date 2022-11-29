@@ -30,7 +30,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     ).join('\n');
 
     if (parser.document.encodeHtml) {
-      text = escapeHtml(text);
+      text = escapeHtml(text, escapeApos: false);
     }
     if (text.isNotEmpty) {
       text = '$text\n';

@@ -81,3 +81,7 @@ before `` tick ``` after
 
 <<<
 <p>before `` tick ``` after</p>
+>>> issue #497
+`'foo'`
+<<<
+<p><code>'foo'</code></p>

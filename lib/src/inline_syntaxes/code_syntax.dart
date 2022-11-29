@@ -58,7 +58,7 @@ class CodeSyntax extends InlineSyntax {
     code = code.replaceAll('\n', ' ');
 
     if (parser.encodeHtml) {
-      code = escapeHtml(code);
+      code = escapeHtml(code, escapeApos: false);
     }
 
     parser.addNode(Element.text('code', code));

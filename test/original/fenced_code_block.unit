@@ -1,0 +1,7 @@
+>>> issue #497
+```
+'foo'
+```
+<<<
+<pre><code>'foo'
+</code></pre>
