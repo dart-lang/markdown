@@ -47,7 +47,7 @@ class CodeBlockSyntax extends BlockSyntax {
     final childLines = parseChildLines(parser);
 
     // The Markdown tests expect a trailing newline.
-    childLines.add(const Line(''));
+    childLines.add(Line(''));
 
     var content = childLines.map((e) => e.content).join('\n');
     if (parser.document.encodeHtml) {

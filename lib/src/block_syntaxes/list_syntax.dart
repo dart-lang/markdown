@@ -107,7 +107,7 @@ abstract class ListSyntax extends BlockSyntax {
           break;
         }
         // Add a blank line to the current list item.
-        childLines.add(const Line(''));
+        childLines.add(Line(''));
       } else if (indent != null && indent.length <= leadingExpandedTabLength) {
         // Strip off indent and add to current item.
         final line = parser.current.content

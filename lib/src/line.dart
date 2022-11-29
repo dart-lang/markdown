@@ -38,10 +38,10 @@ class Line {
   // A line containing no characters, or a line containing only spaces
   // (`U+0020`) or tabs (`U+0009`), is called a blank line.
   // https://spec.commonmark.org/0.30/#blank-line
-  bool get isBlankLine => emptyPattern.hasMatch(content);
+  final bool isBlankLine;
 
-  const Line(
+  Line(
     this.content, {
     this.tabRemaining,
-  });
+  }) : isBlankLine = emptyPattern.hasMatch(content);
 }
