@@ -44,10 +44,4 @@ class Line {
     this.content, {
     this.tabRemaining,
   });
-
-  Map<String, dynamic> toMap() => {
-        'content': content,
-        'isBlankLine': isBlankLine,
-        if (tabRemaining != null) 'tabRemaining': tabRemaining,
-      };
 }

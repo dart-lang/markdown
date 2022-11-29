@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:markdown/markdown.dart';
 import 'package:markdown/src/util.dart';
 import 'package:test/test.dart';
 
@@ -51,4 +52,12 @@ void main() {
       ]);
     });
   });
+}
+
+extension LineX on Line {
+  Map<String, dynamic> toMap() => {
+        'content': content,
+        'isBlankLine': isBlankLine,
+        if (tabRemaining != null) 'tabRemaining': tabRemaining,
+      };
 }
