@@ -31,7 +31,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
     ).map((e) => e.content).join('\n');
 
     if (parser.document.encodeHtml) {
-      text = escapeHtml(text);
+      text = escapeHtml(text, escapeApos: false);
     }
     if (text.isNotEmpty) {
       text = '$text\n';

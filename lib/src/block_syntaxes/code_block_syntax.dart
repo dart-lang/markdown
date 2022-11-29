@@ -51,7 +51,7 @@ class CodeBlockSyntax extends BlockSyntax {
 
     var content = childLines.map((e) => e.content).join('\n');
     if (parser.document.encodeHtml) {
-      content = escapeHtml(content);
+      content = escapeHtml(content, escapeApos: false);
     }
 
     return Element('pre', [Element.text('code', content)]);

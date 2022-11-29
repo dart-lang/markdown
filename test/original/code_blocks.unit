@@ -58,3 +58,8 @@ three
 <<<
 <pre><code>&lt;&amp;&gt;
 </code></pre>
+>>> issue #497
+    'foo'
+<<<
+<pre><code>'foo'
+</code></pre>
