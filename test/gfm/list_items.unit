@@ -115,9 +115,11 @@ with two lines.</p>
   bar
 <<<
 <ul>
-<li>foo</li>
-</ul>
+<li>
+<p>foo</p>
 <p>bar</p>
+</li>
+</ul>
 >>> List items - 241
 1.  foo
 
@@ -152,11 +154,12 @@ with two lines.</p>
 <li>
 <p>Foo</p>
 <pre><code>bar
+
+
+baz
 </code></pre>
 </li>
 </ul>
-<pre><code>  baz
-</code></pre>
 >>> List items - 243
 123456789. ok
 <<<
@@ -312,10 +315,9 @@ bar
   foo
 <<<
 <ul>
-<li>
-<p>foo</p>
-</li>
+<li></li>
 </ul>
+<p>foo</p>
 >>> List items - 259
 - foo
 -

@@ -110,7 +110,14 @@ class BlockParser {
     return regex.hasMatch(next!.content);
   }
 
-  List<Node> parseLines() {
+  /// The parent [BlockSyntax] when it is running inside a nested syntax.
+  BlockSyntax? get parentSyntax => _parentSyntax;
+  BlockSyntax? _parentSyntax;
+
+  List<Node> parseLines({
+    BlockSyntax? parentSyntax,
+  }) {
+    _parentSyntax = parentSyntax;
     final blocks = <Node>[];
 
     // If the `_pos` does not change before and after `parse()`, never try to

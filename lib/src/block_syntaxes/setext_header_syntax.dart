@@ -65,7 +65,6 @@ class SetextHeaderSyntax extends BlockSyntax {
           headerPattern.hasMatch(line) ||
           blockquotePattern.hasMatch(line) ||
           hrPattern.hasMatch(line) ||
-          ulPattern.hasMatch(line) ||
-          olPattern.hasMatch(line) ||
+          listPattern.hasMatch(line) ||
           emptyPattern.hasMatch(line));
 }

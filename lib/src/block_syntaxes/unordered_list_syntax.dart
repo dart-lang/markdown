@@ -9,7 +9,7 @@ import 'list_syntax.dart';
 /// Parses unordered lists.
 class UnorderedListSyntax extends ListSyntax {
   @override
-  RegExp get pattern => ulPattern;
+  RegExp get pattern => listPattern;
 
   @override
   bool canParse(BlockParser parser) {
@@ -25,9 +25,6 @@ class UnorderedListSyntax extends ListSyntax {
 
     return pattern.hasMatch(parser.current.content);
   }
-
-  @override
-  String get listTag => 'ul';
 
   const UnorderedListSyntax();
 }

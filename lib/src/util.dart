@@ -136,6 +136,20 @@ String escapePunctuation(String input) {
 }
 
 extension StringExtensions on String {
+  /// Calculates the length of indentation a `String` has.
+  ///
+  // The behavior of tabs: https://spec.commonmark.org/0.30/#tabs
+  int indentation() {
+    var length = 0;
+    for (final char in codeUnits) {
+      if (char != $space && char != $tab) {
+        break;
+      }
+      length += char == $tab ? 4 - (length % 4) : 1;
+    }
+    return length;
+  }
+
   /// Removes up to [length] characters of leading whitespace.
   // The way of handling tabs: https://spec.commonmark.org/0.30/#tabs
   DedentedText dedent([int length = 4]) {
@@ -172,11 +186,17 @@ extension StringExtensions on String {
     return DedentedText(substring(start), tabRemaining);
   }
 
+  /// Adds [width] of spaces to the beginning of this string.
+  String prependSpace(int width) => '${" " * width}$this';
+
   /// Whether this string contains only whitespaces.
   bool get isBlank => trim().isEmpty;
 
   /// Converts this string to a list of [Line].
   List<Line> toLines() => LineSplitter.split(this).map(Line.new).toList();
+
+  /// Returns the last character.
+  String last([int n = 1]) => substring(length - n);
 }
 
 /// A class that describes a dedented text.
