@@ -19,6 +19,8 @@
 * Add a new public method `parse(String text)` for `Document`.
 * Add a new public method `parseLineList(List<Line> text)` for `Document`.
 * Add a new type: `Line`.
+* Add a new optional parameter `parentSyntax` for `parseLines()` of
+  `BlockParser`, which can be used when parsing nested blocks.
 
 ## 6.0.1
 
