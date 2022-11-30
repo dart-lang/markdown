@@ -28,10 +28,9 @@ enum TaskListItemState { checked, unchecked }
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
   @override
-  bool canParse(BlockParser parser) {
-    return pattern.hasMatch(parser.current.content) &&
-        !hrPattern.hasMatch(parser.current.content);
-  }
+  bool canParse(BlockParser parser) =>
+      pattern.hasMatch(parser.current.content) &&
+      !hrPattern.hasMatch(parser.current.content);
 
   @override
   bool canEndBlock(BlockParser parser) {
