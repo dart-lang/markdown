@@ -234,4 +234,21 @@ nyan''',
         ''',
         inlineOnly: true);
   });
+
+  group('ExtensionSet', () {
+    test(
+      '3 asterisks separated with spaces horizontal rule while it is '
+      'gitHubFlavored',
+      () {
+        // Because `gitHubFlavored` will put `UnorderedListWithCheckboxSyntax`
+        // before `HorizontalRuleSyntax`, the `* * *` will be parsed into an
+        // empty unordered list if `ListSyntax` does not skip the horizontal
+        // rule structure.
+        expect(
+          markdownToHtml('* * *', extensionSet: ExtensionSet.gitHubFlavored),
+          '<hr />\n',
+        );
+      },
+    );
+  });
 }
