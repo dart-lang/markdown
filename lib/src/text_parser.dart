@@ -1,3 +1,6 @@
+// Copyright (c) 2022, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
 import 'charcode.dart';
 
 /// A parser to parse a segment of source text.
@@ -8,7 +11,7 @@ class TextParser {
 
   /// The current read position.
   var _position = 0;
-  int get position => _position;
+  int get pos => _position;
 
   /// Whether the read position has reached the end of [source].
   bool get isDone => _position == length;

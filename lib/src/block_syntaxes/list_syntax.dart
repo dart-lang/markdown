@@ -28,6 +28,12 @@ enum TaskListItemState { checked, unchecked }
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
   @override
+  bool canParse(BlockParser parser) {
+    return pattern.hasMatch(parser.current.content) &&
+        !hrPattern.hasMatch(parser.current.content);
+  }
+
+  @override
   bool canEndBlock(BlockParser parser) {
     // An empty list cannot interrupt a paragraph. See
     // https://spec.commonmark.org/0.29/#example-255.
@@ -118,25 +124,6 @@ abstract class ListSyntax extends BlockSyntax {
     int? blankLines;
 
     while (!parser.isDone) {
-      /*
-      <<<<<<< Updated upstream
-      final leadingSpace =
-          _whitespaceRe.matchAsPrefix(parser.current.content)!.group(0)!;
-      final leadingExpandedTabLength = _expandedTabLength(leadingSpace);
-      if (parser.current.isBlankLine) {
-        if (parser.next?.isBlankLine ?? true) {
-          // Two blank lines ends a list.
-          break;
-        }
-        // Add a blank line to the current list item.
-        childLines.add(Line(''));
-      } else if (indent != null && indent.length <= leadingExpandedTabLength) {
-        // Strip off indent and add to current item.
-        final line = parser.current.content
-            .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
-            .replaceFirst(indent, '');
-        childLines.add(Line(parseTaskListItem(line)));
-      */
       final currentIndent = parser.current.content.indentation() +
           (parser.current.tabRemaining ?? 0);
 
@@ -169,7 +156,7 @@ abstract class ListSyntax extends BlockSyntax {
         final match = possibleMatch!;
         final textParser = TextParser(parser.current.content);
         var precedingWhitespaces = textParser.moveThroughWhitespace();
-        final markerStart = textParser.position;
+        final markerStart = textParser.pos;
         final digits = match[1] ?? '';
         if (digits.isNotEmpty) {
           startNumber ??= int.parse(digits);
@@ -180,7 +167,7 @@ abstract class ListSyntax extends BlockSyntax {
         // See https://spec.commonmark.org/0.30/#ordered-list-marker
         final marker = textParser.substring(
           markerStart,
-          textParser.position,
+          textParser.pos,
         );
 
         var isBlank = true;
@@ -192,7 +179,7 @@ abstract class ListSyntax extends BlockSyntax {
           containsTab = textParser.charAt() == $tab;
           // Skip the first whitespace.
           textParser.advance();
-          contentBlockStart = textParser.position;
+          contentBlockStart = textParser.pos;
           if (!textParser.isDone) {
             contentWhitespances = textParser.moveThroughWhitespace();
 

@@ -34,13 +34,13 @@ final blockquoteFencePattern = RegExp(r'^>{3}\s*$');
 /// SETEXT should win.
 final hrPattern = RegExp(r'^ {0,3}([-*_])[ \t]*\1[ \t]*\1(?:\1|[ \t])*$');
 
-/// **Unordered list**  
+/// **Unordered list**
 /// A line starting with one of these markers: `-`, `*`, `+`. May have up to
 /// three leading spaces before the marker and any number of spaces or tabs
 /// after.
 ///
 /// **Ordered list**
-/// 
+///
 /// A line starting with a number like `123.`. May have up to three leading
 /// spaces before the marker and any number of spaces or tabs after.
 final listPattern =
