@@ -8,6 +8,7 @@ import '../document.dart';
 import '../patterns.dart';
 import '../util.dart';
 import 'block_syntax.dart';
+import 'setext_header_syntax.dart';
 
 /// Parses paragraphs of regular text.
 class ParagraphSyntax extends BlockSyntax {
@@ -27,13 +28,25 @@ class ParagraphSyntax extends BlockSyntax {
   bool canParse(BlockParser parser) => true;
 
   @override
-  Node parse(BlockParser parser) {
-    final childLines = <String>[];
+  Node? parse(BlockParser parser) {
+    final childLines = <String>[parser.current.content];
 
+    parser.advance();
+    var interruptedBySetextHeading = false;
     // Eat until we hit something that ends a paragraph.
-    while (!BlockSyntax.isAtBlockEnd(parser)) {
+    while (!parser.isDone) {
+      final syntax = interruptedBy(parser);
+      if (syntax != null) {
+        interruptedBySetextHeading = syntax is SetextHeaderSyntax;
+        break;
+      }
       childLines.add(parser.current.content);
       parser.advance();
+    }
+
+    // It is not a paragraph, but a setext heading.
+    if (interruptedBySetextHeading) {
+      return null;
     }
 
     final paragraphLines = _extractReflinkDefinitions(parser, childLines);

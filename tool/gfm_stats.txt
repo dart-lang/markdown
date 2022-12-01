@@ -21,7 +21,7 @@
    8 of    8 – 100.0%  Paragraphs
    1 of    1 – 100.0%  Precedence
   21 of   21 – 100.0%  Raw HTML
-  26 of   27 –  96.3%  Setext headings
+  27 of   27 – 100.0%  Setext headings
    2 of    2 – 100.0%  Soft line breaks
    2 of    2 – 100.0%  Strikethrough (extension)
    8 of    8 – 100.0%  Tables (extension)

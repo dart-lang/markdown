@@ -34,6 +34,19 @@ abstract class BlockSyntax {
     return childLines;
   }
 
+  /// Returns the block which interrupts current syntax parsing if there is one,
+  /// otherwise returns `null`.
+  ///
+  /// Make sure to check if [parser] `isDone` is `false` first.
+  BlockSyntax? interruptedBy(BlockParser parser) {
+    for (final syntax in parser.blockSyntaxes) {
+      if (syntax.canParse(parser) && syntax.canEndBlock(parser)) {
+        return syntax;
+      }
+    }
+    return null;
+  }
+
   /// Gets whether or not [parser]'s current line should end the previous block.
   static bool isAtBlockEnd(BlockParser parser) {
     if (parser.isDone) return true;
