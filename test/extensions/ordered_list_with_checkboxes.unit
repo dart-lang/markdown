@@ -45,21 +45,19 @@
 <li>five</li>
 </ol>
 >>> mixed leading spaces
-1.[ ] zero
-2. [ ] one
-3.  [ ] two
-4.   [ ] three
-5.    [ ] four
-6.     [ ] five
+1. [ ] zero
+2.  [ ] one
+3.   [ ] two
+4.    [ ] three
+5.     [ ] four
 <<<
-<p>1.[ ] zero</p>
-<ol start="2" class="contains-task-list">
+<ol class="contains-task-list">
+<li class="task-list-item"><input type="checkbox"></input>zero</li>
 <li class="task-list-item"><input type="checkbox"></input>one</li>
 <li class="task-list-item"><input type="checkbox"></input>two</li>
 <li class="task-list-item"><input type="checkbox"></input>three</li>
-<li class="task-list-item"><input type="checkbox"></input>four</li>
 <li>
-<pre><code>[ ] five
+<pre><code>[ ] four
 </code></pre>
 </li>
 </ol>

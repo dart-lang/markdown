@@ -36,10 +36,8 @@ Foo
 The number of windows in my house is
 14.  The number of doors is 6.
 <<<
-<p>The number of windows in my house is</p>
-<ol start="14">
-<li>The number of doors is 6.</li>
-</ol>
+<p>The number of windows in my house is
+14.  The number of doors is 6.</p>
 >>> Lists - 285
 The number of windows in my house is
 1.  The number of doors is 6.
@@ -63,9 +61,9 @@ The number of windows in my house is
 <li>
 <p>bar</p>
 </li>
-</ul>
-<ul>
-<li>baz</li>
+<li>
+<p>baz</p>
+</li>
 </ul>
 >>> Lists - 287
 - foo
@@ -80,14 +78,15 @@ The number of windows in my house is
 <ul>
 <li>bar
 <ul>
-<li>baz</li>
-</ul>
+<li>
+<p>baz</p>
+<p>bim</p>
 </li>
 </ul>
 </li>
 </ul>
-<pre><code>  bim
-</code></pre>
+</li>
+</ul>
 >>> Lists - 288
 - foo
 - bar
@@ -275,11 +274,12 @@ The number of windows in my house is
 <li>a</li>
 <li>
 <pre><code>b
+
+
 </code></pre>
 </li>
+<li>c</li>
 </ul>
-<pre><code>- c
-</code></pre>
 >>> Lists - 299
 - a
   - b

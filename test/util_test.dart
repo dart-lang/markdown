@@ -52,6 +52,29 @@ void main() {
       ]);
     });
   });
+
+  group('String.indentation()', () {
+    test('only spaces', () {
+      expect('   '.indentation(), 3);
+      expect('    '.indentation(), 4);
+      expect('     '.indentation(), 5);
+    });
+
+    test('spaces and tabs', () {
+      expect('\t  '.indentation(), 6);
+      expect(' \t '.indentation(), 5);
+      expect('  \t'.indentation(), 4);
+      expect('\t\t  '.indentation(), 10);
+      expect(' \t\t '.indentation(), 9);
+      expect('  \t\t'.indentation(), 8);
+    });
+
+    test('spaces, tabs and non whitespace characters', () {
+      expect('\t  foo'.indentation(), 6);
+      expect(' \t foo'.indentation(), 5);
+      expect('  \tfoo'.indentation(), 4);
+    });
+  });
 }
 
 extension on Line {

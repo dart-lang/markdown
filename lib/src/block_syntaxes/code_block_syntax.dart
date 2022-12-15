@@ -34,7 +34,11 @@ class CodeBlockSyntax extends BlockSyntax {
           pattern.hasMatch(parser.current.content) != true) {
         break;
       }
-      childLines.add(Line(parser.current.content.dedent().text));
+
+      childLines.add(Line(
+        parser.current.content.dedent().text,
+        tabRemaining: parser.current.tabRemaining,
+      ));
 
       parser.advance();
     }
@@ -49,7 +53,9 @@ class CodeBlockSyntax extends BlockSyntax {
     // The Markdown tests expect a trailing newline.
     childLines.add(Line(''));
 
-    var content = childLines.map((e) => e.content).join('\n');
+    var content = childLines
+        .map((e) => e.content.prependSpace(e.tabRemaining ?? 0))
+        .join('\n');
     if (parser.document.encodeHtml) {
       content = escapeHtml(content, escapeApos: false);
     }

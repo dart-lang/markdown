@@ -4,8 +4,11 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../charcode.dart';
 import '../line.dart';
 import '../patterns.dart';
+import '../text_parser.dart';
+import '../util.dart';
 import 'block_syntax.dart';
 import 'ordered_list_with_checkbox_syntax.dart';
 import 'unordered_list_with_checkbox_syntax.dart';
@@ -25,6 +28,11 @@ enum TaskListItemState { checked, unchecked }
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
   @override
+  bool canParse(BlockParser parser) =>
+      pattern.hasMatch(parser.current.content) &&
+      !hrPattern.hasMatch(parser.current.content);
+
+  @override
   bool canEndBlock(BlockParser parser) {
     // An empty list cannot interrupt a paragraph. See
     // https://spec.commonmark.org/0.29/#example-255.
@@ -32,12 +40,27 @@ abstract class ListSyntax extends BlockSyntax {
     // which accepts a [BlockParser], but this would be a breaking change,
     // so we're going with this temporarily.
     final match = pattern.firstMatch(parser.current.content)!;
-    // The seventh group, in both [olPattern] and [ulPattern] is the text
-    // after the delimiter.
-    return match[7]?.isNotEmpty ?? false;
-  }
 
-  String get listTag;
+    // Allow only lists starting with 1 to interrupt paragraphs, if it is an
+    // ordered list. See https://spec.commonmark.org/0.30/#example-304.
+    // But there shuold be an exception for nested ordered lists, for example:
+    // ```
+    // 1. one
+    // 2. two
+    //   3. three
+    //   4. four
+    // 5. five
+    // ```
+    if (parser.parentSyntax is! ListSyntax &&
+        match[1] != null &&
+        match[1] != '1') {
+      return false;
+    }
+
+    // An empty list item cannot interrupt a paragraph. See
+    // https://spec.commonmark.org/0.30/#example-285
+    return match[2]?.isNotEmpty ?? false;
+  }
 
   const ListSyntax();
 
@@ -47,14 +70,14 @@ abstract class ListSyntax extends BlockSyntax {
     headerPattern,
     hrPattern,
     indentPattern,
-    ulPattern,
-    olPattern
+    listPattern,
   ];
-
-  static final _whitespaceRe = RegExp('[ \t]*');
 
   @override
   Node parse(BlockParser parser) {
+    final match = pattern.firstMatch(parser.current.content);
+    final ordered = match![1] != null;
+
     final taskListParserEnabled = this is UnorderedListWithCheckboxSyntax ||
         this is OrderedListWithCheckboxSyntax;
     final items = <ListItem>[];
@@ -92,72 +115,117 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     String? listMarker;
-    String? indent;
+    int? indent;
     // In case the first number in an ordered list is not 1, use it as the
     // "start".
     int? startNumber;
 
+    int? blankLines;
+
     while (!parser.isDone) {
-      final leadingSpace =
-          _whitespaceRe.matchAsPrefix(parser.current.content)!.group(0)!;
-      final leadingExpandedTabLength = _expandedTabLength(leadingSpace);
+      final currentIndent = parser.current.content.indentation() +
+          (parser.current.tabRemaining ?? 0);
+
       if (parser.current.isBlankLine) {
-        if (parser.next?.isBlankLine ?? true) {
-          // Two blank lines ends a list.
+        childLines.add(parser.current);
+
+        if (blankLines != null) {
+          blankLines++;
+        }
+      } else if (indent != null && indent <= currentIndent) {
+        // A list item can begin with at most one blank line. See:
+        // https://spec.commonmark.org/0.30/#example-280
+        if (blankLines != null && blankLines > 1) {
           break;
         }
-        // Add a blank line to the current list item.
-        childLines.add(Line(''));
-      } else if (indent != null && indent.length <= leadingExpandedTabLength) {
-        // Strip off indent and add to current item.
-        final line = parser.current.content
-            .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
-            .replaceFirst(indent, '');
-        childLines.add(Line(parseTaskListItem(line)));
+
+        final indentedLine = parser.current.content.dedent(indent);
+
+        childLines.add(Line(
+          blankLines == null
+              ? indentedLine.text
+              : parseTaskListItem(indentedLine.text),
+          tabRemaining: indentedLine.tabRemaining,
+        ));
       } else if (tryMatch(hrPattern)) {
         // Horizontal rule takes precedence to a new list item.
         break;
-      } else if (tryMatch(ulPattern) || tryMatch(olPattern)) {
+      } else if (tryMatch(listPattern)) {
+        blankLines = null;
         final match = possibleMatch!;
-        final precedingWhitespace = match[1]!;
-        final digits = match[2] ?? '';
-        if (startNumber == null && digits.isNotEmpty) {
-          startNumber = int.parse(digits);
+        final textParser = TextParser(parser.current.content);
+        var precedingWhitespaces = textParser.moveThroughWhitespace();
+        final markerStart = textParser.pos;
+        final digits = match[1] ?? '';
+        if (digits.isNotEmpty) {
+          startNumber ??= int.parse(digits);
+          textParser.advanceBy(digits.length);
         }
-        final marker = match[3]!;
-        final firstWhitespace = match[5] ?? '';
-        final restWhitespace = match[6] ?? '';
-        final content = match[7] ?? '';
-        final isBlank = content.isEmpty;
-        if (listMarker != null && listMarker != marker) {
-          // Changing the bullet or ordered list delimiter starts a new list.
+        textParser.advance();
+
+        // See https://spec.commonmark.org/0.30/#ordered-list-marker
+        final marker = textParser.substring(
+          markerStart,
+          textParser.pos,
+        );
+
+        var isBlank = true;
+        var contentWhitespances = 0;
+        var containsTab = false;
+        int? contentBlockStart;
+
+        if (!textParser.isDone) {
+          containsTab = textParser.charAt() == $tab;
+          // Skip the first whitespace.
+          textParser.advance();
+          contentBlockStart = textParser.pos;
+          if (!textParser.isDone) {
+            contentWhitespances = textParser.moveThroughWhitespace();
+
+            if (!textParser.isDone) {
+              isBlank = false;
+            }
+          }
+        }
+
+        // Changing the bullet or ordered list delimiter starts a new list.
+        if (listMarker != null && listMarker.last() != marker.last()) {
           break;
         }
+
+        // End the current list item and start a new one.
+        endItem();
+
+        // Start a new list item, the last item will be ended up outside of the
+        // `while` loop.
         listMarker = marker;
-        final markerAsSpaces = ' ' * (digits.length + marker.length);
+        precedingWhitespaces += digits.length + 2;
         if (isBlank) {
-          // See http://spec.commonmark.org/0.28/#list-items under "3. Item
-          // starting with a blank line."
-          //
-          // If the list item starts with a blank line, the final piece of the
-          // indentation is just a single space.
-          indent = '$precedingWhitespace$markerAsSpaces ';
-        } else if (restWhitespace.length >= 4) {
-          // See http://spec.commonmark.org/0.28/#list-items under "2. Item
-          // starting with indented code."
+          // See https://spec.commonmark.org/0.30/#example-278.
+          blankLines = 1;
+          indent = precedingWhitespaces;
+        } else if (contentWhitespances >= 4) {
+          // See https://spec.commonmark.org/0.30/#example-270.
           //
           // If the list item starts with indented code, we need to _not_ count
           // any indentation past the required whitespace character.
-          indent = precedingWhitespace + markerAsSpaces + firstWhitespace;
+          indent = precedingWhitespaces;
         } else {
-          indent = precedingWhitespace +
-              markerAsSpaces +
-              firstWhitespace +
-              restWhitespace;
+          indent = precedingWhitespaces + contentWhitespances;
         }
-        // End the current list item and start a new one.
-        endItem();
-        childLines.add(Line(parseTaskListItem('$restWhitespace$content')));
+
+        var content = contentBlockStart != null && !isBlank
+            ? parseTaskListItem(textParser.substring(contentBlockStart))
+            : '';
+
+        if (content.isEmpty && containsTab) {
+          content = content.prependSpace(2);
+        }
+
+        childLines.add(Line(
+          content,
+          tabRemaining: containsTab ? 2 : null,
+        ));
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
@@ -195,7 +263,7 @@ abstract class ListSyntax extends BlockSyntax {
       }
 
       final itemParser = BlockParser(item.lines, parser.document);
-      final children = itemParser.parseLines();
+      final children = itemParser.parseLines(parentSyntax: this);
       final itemElement = checkboxToInsert == null
           ? Element('li', children)
           : (Element('li', [checkboxToInsert, ...children])
@@ -227,8 +295,8 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
 
-    final listElement = Element(listTag, itemNodes);
-    if (listTag == 'ol' && startNumber != 1) {
+    final listElement = Element(ordered ? 'ol' : 'ul', itemNodes);
+    if (ordered && startNumber != 1) {
       listElement.attributes['start'] = '$startNumber';
     }
 
@@ -258,13 +326,5 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
     return anyEmpty;
-  }
-
-  static int _expandedTabLength(String input) {
-    var length = 0;
-    for (final char in input.codeUnits) {
-      length += char == 0x9 ? 4 - (length % 4) : 1;
-    }
-    return length;
   }
 }

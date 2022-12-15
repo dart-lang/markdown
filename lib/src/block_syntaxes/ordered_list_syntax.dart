@@ -8,10 +8,7 @@ import 'list_syntax.dart';
 /// Parses ordered lists.
 class OrderedListSyntax extends ListSyntax {
   @override
-  RegExp get pattern => olPattern;
-
-  @override
-  String get listTag => 'ol';
+  RegExp get pattern => listPattern;
 
   const OrderedListSyntax();
 }
