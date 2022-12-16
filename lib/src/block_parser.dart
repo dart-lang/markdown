@@ -42,9 +42,9 @@ class BlockParser {
   /// some blocks, for example:
   /// When the [ParagraphSyntax] parsing process is interrupted by the
   /// [SetextHeaderSyntax], so this structure is not a paragraph but a setext
-  /// heading, then the [ParagraphSyntax] does not have to retreat the reading
-  /// position, it only needs to return `null`, the [SetextHeaderSyntax] will
-  /// pick up the lines in [linesToConsume].
+  /// heading, then the [ParagraphSyntax.parse] does not have to retreat the
+  /// reading position, it only needs to return `null`, the [SetextHeaderSyntax]
+  /// will pick up the lines in [linesToConsume].
   List<Line> get linesToConsume => lines.getRange(_start, _pos + 1).toList();
 
   /// Whether the parser has encountered a blank line between two block-level
@@ -126,11 +126,12 @@ class BlockParser {
   BlockSyntax? get parentSyntax => _parentSyntax;
   BlockSyntax? _parentSyntax;
 
-  /// If the [SetextHeadingSyntax] is disabled temporarily
+  /// Whether the [SetextHeadingSyntax] is disabled temporarily.
   bool get setextHeadingDisabled => _setextHeadingDisabled;
   bool _setextHeadingDisabled = false;
 
   /// The [BlockSyntax] which is running now.
+  /// The value is `null` until we found the first matched [BlockSyntax].
   BlockSyntax? get currentSyntax => _currentSyntax;
   BlockSyntax? _currentSyntax;
 

@@ -19,8 +19,8 @@ class BlockquoteSyntax extends BlockSyntax {
 
   const BlockquoteSyntax();
 
-  /// If this blockquote is ended up at a lazy continuation line.
-  // The definition of  lazy continuation lines:
+  /// Whether this blockquote ends with a lazy continuation line.
+  // The definition of lazy continuation lines:
   // https://spec.commonmark.org/0.30/#lazy-continuation-line
   static var _lazyContinuation = false;
   @override
