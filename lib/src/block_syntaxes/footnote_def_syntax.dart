@@ -1,5 +1,6 @@
 import '../ast.dart' show Element, Node;
 import '../block_parser.dart' show BlockParser;
+import '../line.dart';
 import '../patterns.dart' show footnotePattern;
 import 'block_syntax.dart' show BlockSyntax;
 import 'empty_block_syntax.dart';
@@ -14,7 +15,7 @@ class FootnoteDefSyntax extends BlockSyntax {
 
   @override
   Node? parse(BlockParser parser) {
-    final current = parser.current;
+    final current = parser.current.content;
     final match = pattern.firstMatch(current)!;
     final label = match[2]!;
     final refs = parser.document.footnoteReferences;
@@ -23,7 +24,7 @@ class FootnoteDefSyntax extends BlockSyntax {
     final id = Uri.encodeComponent(label);
     parser.advance();
     final lines = [
-      current.substring(match[0]!.length),
+      Line(current.substring(match[0]!.length)),
       ...parseChildLines(parser),
     ];
     // Linebreak in secondary paragraph did not match LineBreakSyntax
@@ -35,11 +36,11 @@ class FootnoteDefSyntax extends BlockSyntax {
   }
 
   @override
-  List<String> parseChildLines(BlockParser parser) {
+  List<Line> parseChildLines(BlockParser parser) {
     final children = <String>[];
     var nextIsBlock = false;
     while (!parser.isDone) {
-      final line = parser.current;
+      final line = parser.current.content;
       if (line.trim().isEmpty) {
         children.add(line);
         parser.advance();
@@ -56,7 +57,7 @@ class FootnoteDefSyntax extends BlockSyntax {
         parser.advance();
       }
     }
-    return children;
+    return children.map(Line.new).toList(growable: false);
   }
 
   static const _invalidSecondaryBlock = <Type>[

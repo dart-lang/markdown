@@ -110,7 +110,7 @@ test footnote[^first].
 "Smartypants, double quotes" and 'single quotes'
 <<<
 <p>test footnote<sup class="footnote-ref"><a href="#fn-first" id="fnref-first">1</a></sup>.</p>
-<p>"Smartypants, double quotes" and 'single quotes'</p>
+<p>&quot;Smartypants, double quotes&quot; and 'single quotes'</p>
 <section class="footnotes">
 <ol>
 <li id="fn-first">
