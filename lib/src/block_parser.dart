@@ -35,6 +35,18 @@ class BlockParser {
   /// Index of the current line.
   int _pos = 0;
 
+  /// Starting line of the last unconsumed content.
+  int _start = 0;
+
+  /// The lines from [_start] to [_pos] (inclusive), it works as a buffer for
+  /// some blocks, for example:
+  /// When the [ParagraphSyntax] parsing process is interrupted by the
+  /// [SetextHeaderSyntax], so this structure is not a paragraph but a setext
+  /// heading, then the [ParagraphSyntax.parse] does not have to retreat the
+  /// reading position, it only needs to return `null`, the [SetextHeaderSyntax]
+  /// will pick up the lines in [linesToConsume].
+  List<Line> get linesToConsume => lines.getRange(_start, _pos + 1).toList();
+
   /// Whether the parser has encountered a blank line between two block-level
   /// elements.
   bool encounteredBlankLine = false;
@@ -114,10 +126,22 @@ class BlockParser {
   BlockSyntax? get parentSyntax => _parentSyntax;
   BlockSyntax? _parentSyntax;
 
+  /// Whether the [SetextHeadingSyntax] is disabled temporarily.
+  bool get setextHeadingDisabled => _setextHeadingDisabled;
+  bool _setextHeadingDisabled = false;
+
+  /// The [BlockSyntax] which is running now.
+  /// The value is `null` until we found the first matched [BlockSyntax].
+  BlockSyntax? get currentSyntax => _currentSyntax;
+  BlockSyntax? _currentSyntax;
+
   List<Node> parseLines({
     BlockSyntax? parentSyntax,
+    bool disabledSetextHeading = false,
   }) {
     _parentSyntax = parentSyntax;
+    _setextHeadingDisabled = disabledSetextHeading;
+
     final blocks = <Node>[];
 
     // If the `_pos` does not change before and after `parse()`, never try to
@@ -134,12 +158,17 @@ class BlockParser {
         }
 
         if (syntax.canParse(this)) {
+          _currentSyntax = syntax;
           final positionBefore = _pos;
           final block = syntax.parse(this);
           if (block != null) {
             blocks.add(block);
           }
           neverMatch = _pos != positionBefore ? null : syntax;
+
+          if (block != null || syntax is EmptyBlockSyntax) {
+            _start = _pos;
+          }
 
           break;
         }

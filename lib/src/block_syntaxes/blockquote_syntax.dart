@@ -19,10 +19,15 @@ class BlockquoteSyntax extends BlockSyntax {
 
   const BlockquoteSyntax();
 
+  /// Whether this blockquote ends with a lazy continuation line.
+  // The definition of lazy continuation lines:
+  // https://spec.commonmark.org/0.30/#lazy-continuation-line
+  static var _lazyContinuation = false;
   @override
   List<Line> parseChildLines(BlockParser parser) {
     // Grab all of the lines that form the blockquote, stripping off the ">".
     final childLines = <Line>[];
+    _lazyContinuation = false;
 
     while (!parser.isDone) {
       final currentLine = parser.current;
@@ -47,6 +52,7 @@ class BlockquoteSyntax extends BlockSyntax {
         }
         childLines.add(Line(currentLine.content.substring(markerEnd)));
         parser.advance();
+        _lazyContinuation = false;
         continue;
       }
 
@@ -65,6 +71,7 @@ class BlockquoteSyntax extends BlockSyntax {
           (otherMatched is CodeBlockSyntax &&
               !indentPattern.hasMatch(lastLine.content))) {
         childLines.add(parser.current);
+        _lazyContinuation = true;
         parser.advance();
       } else {
         break;
@@ -79,7 +86,12 @@ class BlockquoteSyntax extends BlockSyntax {
     final childLines = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
-    final children = BlockParser(childLines, parser.document).parseLines();
+    final children = BlockParser(childLines, parser.document).parseLines(
+      // The setext heading underline cannot be a lazy continuation line in a
+      // block quote.
+      // https://spec.commonmark.org/0.30/#example-93
+      disabledSetextHeading: _lazyContinuation,
+    );
 
     return Element('blockquote', children);
   }

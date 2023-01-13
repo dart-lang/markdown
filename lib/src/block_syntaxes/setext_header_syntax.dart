@@ -6,65 +6,39 @@ import '../ast.dart';
 import '../block_parser.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
+import 'paragraph_syntax.dart';
 
 /// Parses setext-style headers.
 class SetextHeaderSyntax extends BlockSyntax {
   @override
-  RegExp get pattern => dummyPattern;
+  RegExp get pattern => setextPattern;
 
   const SetextHeaderSyntax();
 
   @override
   bool canParse(BlockParser parser) {
-    if (!_interperableAsParagraph(parser.current.content)) return false;
-    var i = 1;
-    while (true) {
-      final nextLine = parser.peek(i);
-      if (nextLine == null) {
-        // We never reached an underline.
-        return false;
-      }
-      if (setextPattern.hasMatch(nextLine.content)) {
-        return true;
-      }
-      // Ensure that we're still in something like paragraph text.
-      if (!_interperableAsParagraph(nextLine.content)) {
-        return false;
-      }
-      i++;
+    final lastSyntax = parser.currentSyntax;
+    if (parser.setextHeadingDisabled || lastSyntax is! ParagraphSyntax) {
+      return false;
     }
+    return pattern.hasMatch(parser.current.content);
   }
 
   @override
-  Node parse(BlockParser parser) {
-    final lines = <String>[];
-    String? tag;
-    while (!parser.isDone) {
-      final match = setextPattern.firstMatch(parser.current.content);
-      if (match == null) {
-        // More text.
-        lines.add(parser.current.content);
-        parser.advance();
-        continue;
-      } else {
-        // The underline.
-        tag = (match[1]![0] == '=') ? 'h1' : 'h2';
-        parser.advance();
-        break;
-      }
+  Node? parse(BlockParser parser) {
+    final lines = parser.linesToConsume;
+    if (lines.length < 2) {
+      return null;
     }
 
-    final contents = UnparsedContent(lines.join('\n').trimRight());
+    // Remove the last line which is a marker.
+    lines.removeLast();
 
-    return Element(tag!, [contents]);
+    final marker = parser.current.content.trim();
+    final level = (marker[0] == '=') ? '1' : '2';
+    final content = lines.map((e) => e.content).join('\n').trimRight();
+
+    parser.advance();
+    return Element('h$level', [UnparsedContent(content)]);
   }
-
-  bool _interperableAsParagraph(String line) =>
-      !(indentPattern.hasMatch(line) ||
-          codeFencePattern.hasMatch(line) ||
-          headerPattern.hasMatch(line) ||
-          blockquotePattern.hasMatch(line) ||
-          hrPattern.hasMatch(line) ||
-          listPattern.hasMatch(line) ||
-          emptyPattern.hasMatch(line));
 }

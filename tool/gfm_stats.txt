@@ -21,12 +21,12 @@
    8 of    8 – 100.0%  Paragraphs
    1 of    1 – 100.0%  Precedence
   21 of   21 – 100.0%  Raw HTML
-  26 of   27 –  96.3%  Setext headings
+  27 of   27 – 100.0%  Setext headings
    2 of    2 – 100.0%  Soft line breaks
    2 of    2 – 100.0%  Strikethrough (extension)
    8 of    8 – 100.0%  Tables (extension)
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 662 of  671 –  98.7%  TOTAL
- 643 of  662 –  97.1%  TOTAL Strict
+ 663 of  671 –  98.8%  TOTAL
+ 644 of  663 –  97.1%  TOTAL Strict

@@ -115,9 +115,10 @@ bar
 ===
 <<<
 <blockquote>
-<p>foo</p>
+<p>foo
+bar
+===</p>
 </blockquote>
-<h1>bar</h1>
 >>> Setext headings - 64
 - Foo
 ---

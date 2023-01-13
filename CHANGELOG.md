@@ -21,6 +21,8 @@
 * Add a new type: `Line`.
 * Add a new optional parameter `parentSyntax` for `parseLines()` of
   `BlockParser`, which can be used when parsing nested blocks.
+* Add a new optional parameter `disabledSetextHeading` for `parseLines()` of
+  `BlockParser`, which is used to disable the `SetextHeaderSyntax`.
 
 ## 6.0.1
 
