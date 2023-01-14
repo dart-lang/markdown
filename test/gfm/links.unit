@@ -310,6 +310,7 @@ bar>)</p>
 [ref[]: /uri
 <<<
 <p>[foo][ref[]</p>
+<p>[ref[]: /uri</p>
 >>> Links - 555
 [foo][ref[bar]]
 

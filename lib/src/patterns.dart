@@ -142,3 +142,6 @@ final htmlCharactersPattern = RegExp(
   '&(?:([a-z0-9]+)|#([0-9]{1,7})|#x([a-f0-9]{1,6}));',
   caseSensitive: false,
 );
+
+/// A line starts with `[`.
+final linkReferenceDefinitionPattern = RegExp(r'[ ]{0,3}\[');
