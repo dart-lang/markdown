@@ -52,28 +52,28 @@ class LinkParser extends TextParser {
       return;
     }
 
-    final validTitle = _parseTitle();
+    final hasValidTitle = _parseTitle();
     // For example: `[foo]: <bar> "baz` is a invalid definition, but this one is
     // valid:
     // ```
     // [foo]: <bar>
     // "baz
     // ```
-    if (!validTitle && !multiline) {
+    if (!hasValidTitle && !multiline) {
       return;
     }
 
-    if (validTitle) {
+    if (hasValidTitle) {
       moveThroughWhitespace();
       if (!isDone && charAt() != $lf) {
         // It is not a valid definition if the title is followed by
-        // non-whitespace character, for example: `[foo]: <bar> "baz" hello`.
+        // non-whitespace characters, for example: `[foo]: <bar> "baz" hello`.
         // See https://spec.commonmark.org/0.30/#example-209.
         if (!multiline) {
           return;
         }
-        // But if it is valid if the definition is multiline, see
-        // https://spec.commonmark.org/0.30/#example-210.
+        // But it is a valid link reference definition if this definition is
+        // multiline, see https://spec.commonmark.org/0.30/#example-210.
         title = null;
       }
     }
@@ -87,7 +87,7 @@ class LinkParser extends TextParser {
     valid = true;
   }
 
-  /// Parses the link label, returns `true` there is a valid link label found.
+  /// Parses the link label, returns `true` if there is a valid link label.
   bool parseLabel() {
     moveThroughWhitespace(multiLine: true);
 
@@ -136,7 +136,7 @@ class LinkParser extends TextParser {
   }
 
   /// Parses the link destination, returns `true` there is a valid link
-  /// destination found.
+  /// destination.
   bool _parseDestination() {
     moveThroughWhitespace(multiLine: true);
     if (isDone) {
@@ -154,7 +154,7 @@ class LinkParser extends TextParser {
   /// current position of the parser must be the first character of the
   /// destination.
   ///
-  /// Returns `true` if there is a valid link destination found.
+  /// Returns `true` if there is a valid link destination.
   bool _parseBracketedDestination() {
     // Walk past the opening `<`.
     advance();
@@ -186,7 +186,7 @@ class LinkParser extends TextParser {
   /// current position of the parser must be the first character of the
   /// destination.
   ///
-  /// Returns `true` if there is a valid link destination found.
+  /// Returns `true` if there is a valid link destination.
   bool _parseBareDestination() {
     var parenCount = 0;
     final start = pos;
@@ -220,7 +220,7 @@ class LinkParser extends TextParser {
   }
 
   /// Parses the **optional** link title, returns `true` if there is a valid
-  /// link title found.
+  /// link title.
   bool _parseTitle() {
     // See: https://spec.commonmark.org/0.30/#link-title
     // The whitespace should be followed by a title delimiter.
