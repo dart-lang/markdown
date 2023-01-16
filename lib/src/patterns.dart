@@ -50,7 +50,8 @@ final listPattern =
 final tablePattern = RegExp(
     r'^[ ]{0,3}\|?([ \t]*:?\-+:?[ \t]*\|)+([ \t]|[ \t]*:?\-+:?[ \t]*)?$');
 
-/// Just keep the same with github.
+/// A line starts with `[^` and contains with `]:`, but without special chars
+/// (`\] \r\n\x00\t`) between. Same with GitHub.
 final footnotePattern = RegExp(r'(^[ ]{0,3})\[\^([^\] \r\n\x00\t]+)\]:[ \t]*');
 
 /// A pattern which should never be used. It just satisfies non-nullability of

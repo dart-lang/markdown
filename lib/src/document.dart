@@ -14,9 +14,9 @@ import 'util.dart';
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = {};
-  // keys are case sensitive.
+  // Save footnote ref count, keys are case-sensitive and added by define syntax.
   final footnoteReferences = <String, int>{};
-  // Keep footnotes appearing order, and labels are case insensitive.
+  // Keep footnotes appearing order, labels are case-insensitive and added by ref syntax.
   final footnoteLabels = <String>[];
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;
@@ -104,6 +104,9 @@ class Document {
     }
   }
 
+  /// Footnotes could be defined in arbitrary position of an article, we need
+  /// distinguish them and put them behind; and every footnote definition may
+  /// have multiple backrefs, we need append backrefs for it.
   void _filterFootnotes(List<Node> nodes) {
     final footnotes = <Element>[];
     final blocks = <Node>[];
@@ -117,7 +120,7 @@ class Document {
           footnotes.add(node);
           final children = node.children;
           if (children != null) {
-            _appendAnchor(children, Uri.encodeComponent(label), count);
+            _appendBackref(children, Uri.encodeComponent(label), count);
           }
         }
       } else {
@@ -129,7 +132,7 @@ class Document {
       ..addAll(blocks);
 
     if (footnotes.isNotEmpty) {
-      // sort footnotes by appeared order
+      // Sort footnotes by appearing order.
       final ordinal = <String, int>{
         for (int i = 0; i < footnoteLabels.length; i++)
           'fn-${footnoteLabels[i]}': i,
@@ -141,15 +144,16 @@ class Document {
       });
       final list = Element('ol', footnotes);
 
-      // Ignore github's attribute: <data-footnotes>.
+      // Ignore GitHub's attribute: <data-footnotes>.
       final section = Element('section', [list])
         ..attributes['class'] = 'footnotes';
       nodes.add(section);
     }
   }
 
-  void _appendAnchor(List<Node> children, String ref, int count) {
-    final anchors = () sync* {
+  /// Generate backref nodes, append them to footnote definition's last child.
+  void _appendBackref(List<Node> children, String ref, int count) {
+    final refs = () sync* {
       for (var i = 0; i < count; i++) {
         yield Text(' ');
         final num = '${i + 1}';
@@ -160,19 +164,19 @@ class Document {
             Element('sup', [Text(num)])..attributes['class'] = 'footnote-ref',
         ])
 
-          // Ignore github's attributes: <data-footnote-backref aria-label="Back to content">.
+          // Ignore GitHub's attributes: <data-footnote-backref aria-label="Back to content">.
           ..attributes['href'] = '#fnref-$ref$suffix'
           ..attributes['class'] = 'footnote-backref';
       }
     }();
     if (children.isEmpty) {
-      children.addAll(anchors);
+      children.addAll(refs);
     } else {
       final last = children.last;
       if (last is Element) {
-        last.children?.addAll(anchors);
+        last.children?.addAll(refs);
       } else {
-        children.last = Element('p', [last, ...anchors]);
+        children.last = Element('p', [last, ...refs]);
       }
     }
   }

@@ -1,14 +1,9 @@
 import '../ast.dart' show Element, Node, Text;
 import '../charcode.dart';
-import '../inline_parser.dart' show InlineParser;
 import 'link_syntax.dart' show LinkContext;
 
-// Footnotes syntax share the same heading '[' with Reference Link, this makes
-// a lot of mass, if extends `LinkSyntax`, it will have to override
-// `_tryCreateReferenceLink`, and also need other context info, so just a
-// separated class is enough.
 class FootnoteRefSyntax {
-  static String? _footnoteLabel(InlineParser parser, String key) {
+  static String? _footnoteLabel(String key) {
     if (key.isEmpty || key.codeUnitAt(0) != $caret) {
       return null;
     }
@@ -21,18 +16,19 @@ class FootnoteRefSyntax {
 
   static Iterable<Node>? tryCreateFootnoteLink(
     LinkContext context,
-    String text,
-    bool secondary,
-  ) {
+    String text, {
+    bool? secondary,
+  }) {
+    secondary ??= false;
     final parser = context.parser;
-    final key = _footnoteLabel(parser, text);
+    final key = _footnoteLabel(text);
     final refs = parser.document.footnoteReferences;
     // `label` is what footnoteReferences stored, it is case sensitive.
     final label =
         refs.keys.firstWhere((k) => k.toLowerCase() == key, orElse: () => '');
-    // `count != null` means footnote was valid
+    // `count != null` means footnote was valid.
     var count = refs[label];
-    // And then check if footnote was matched
+    // And then check if footnote was matched.
     if (key == null || count == null) {
       return null;
     }
@@ -59,7 +55,7 @@ class FootnoteRefSyntax {
     final id = Uri.encodeComponent(label);
     final suffix = count > 1 ? '-$count' : '';
     final link = Element('a', [Text('${pos + 1}')])
-      // Ignore github's attribute: <data-footnote-ref>.
+      // Ignore GitHub's attribute: <data-footnote-ref>.
       ..attributes['href'] = '#fn-$id'
       ..attributes['id'] = 'fnref-$id$suffix';
     final sup = Element('sup', [link])..attributes['class'] = 'footnote-ref';

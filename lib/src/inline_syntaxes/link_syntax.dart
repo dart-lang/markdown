@@ -185,7 +185,7 @@ class LinkSyntax extends DelimiterSyntax {
     return FootnoteRefSyntax.tryCreateFootnoteLink(
       context,
       label,
-      secondary ?? false,
+      secondary: secondary,
     );
   }
 
