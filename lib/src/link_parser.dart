@@ -8,22 +8,27 @@ import 'util.dart';
 
 class LinkParser extends TextParser {
   /// If there is a valid link formed.
-  bool valid = false;
+  bool get valid => _valid;
+  bool _valid = false;
 
   /// Link label.
-  String? label;
+  String? get label => _label;
+  String? _label;
 
   /// Link destination.
-  String? destination;
+  String? get destination => _destination;
+  String? _destination;
 
   /// Link title.
-  String? title;
+  String? get title => _title;
+  String? _title;
 
   LinkParser(super.source);
 
   /// How many lines of the [source] have been consumed by link reference
   /// definition.
-  int unconsumedLines = 0;
+  int get unconsumedLines => _unconsumedLines;
+  int _unconsumedLines = 0;
 
   /// Parses [source] to a link reference definition.
   void parseDefinition() {
@@ -39,7 +44,7 @@ class LinkParser extends TextParser {
 
     var precedingWhitespaces = moveThroughWhitespace();
     if (isDone) {
-      valid = true;
+      _valid = true;
       return;
     }
 
@@ -48,7 +53,7 @@ class LinkParser extends TextParser {
 
     // The title must be preceded by whitespaces.
     if (precedingWhitespaces == 0 || isDone) {
-      valid = isDone;
+      _valid = isDone;
       return;
     }
 
@@ -74,7 +79,7 @@ class LinkParser extends TextParser {
         }
         // But it is a valid link reference definition if this definition is
         // multiline, see https://spec.commonmark.org/0.30/#example-210.
-        title = null;
+        _title = null;
       }
     }
 
@@ -82,9 +87,9 @@ class LinkParser extends TextParser {
     if (linesUnconsumed.isNotEmpty && linesUnconsumed.first.isBlank) {
       linesUnconsumed.removeAt(0);
     }
-    unconsumedLines = linesUnconsumed.length;
+    _unconsumedLines = linesUnconsumed.length;
 
-    valid = true;
+    _valid = true;
   }
 
   /// Parses the link label, returns `true` if there is a valid link label.
@@ -131,7 +136,7 @@ class LinkParser extends TextParser {
 
     // Advance past the closing `]`.
     advance();
-    label = text;
+    _label = text;
     return true;
   }
 
@@ -175,7 +180,7 @@ class LinkParser extends TextParser {
       }
     }
 
-    destination = substring(start, pos);
+    _destination = substring(start, pos);
 
     // Advance past the closing `>`.
     advance();
@@ -215,7 +220,7 @@ class LinkParser extends TextParser {
       }
     }
 
-    destination = substring(start, pos);
+    _destination = substring(start, pos);
     return true;
   }
 
@@ -256,7 +261,7 @@ class LinkParser extends TextParser {
       return false;
     }
 
-    title = substring(start, pos);
+    _title = substring(start, pos);
 
     // Advance past the closing delimiter.
     advance();
