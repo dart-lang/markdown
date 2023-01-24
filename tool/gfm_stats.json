@@ -123,7 +123,7 @@
   "359": "strict"
  },
  "Disallowed Raw HTML (extension)": {
-  "653": "fail"
+  "652": "fail"
  },
  "Emphasis and strong emphasis": {
   "360": "strict",
@@ -309,6 +309,7 @@
   "117": "strict"
  },
  "Hard line breaks": {
+  "653": "strict",
   "654": "strict",
   "655": "strict",
   "656": "strict",
@@ -322,8 +323,7 @@
   "664": "strict",
   "665": "strict",
   "666": "strict",
-  "667": "strict",
-  "668": "strict"
+  "667": "strict"
  },
  "HTML blocks": {
   "118": "loose",
@@ -634,15 +634,14 @@
   "641": "strict",
   "642": "strict",
   "643": "strict",
-  "644": "strict",
-  "645": "strict",
+  "644": "loose",
+  "645": "loose",
   "646": "strict",
   "647": "strict",
   "648": "strict",
   "649": "strict",
   "650": "strict",
-  "651": "strict",
-  "652": "strict"
+  "651": "strict"
  },
  "Setext headings": {
   "50": "strict",
@@ -674,8 +673,8 @@
   "76": "strict"
  },
  "Soft line breaks": {
-  "669": "strict",
-  "670": "strict"
+  "668": "strict",
+  "669": "strict"
  },
  "Strikethrough (extension)": {
   "491": "strict",
@@ -705,9 +704,9 @@
   "11": "strict"
  },
  "Textual content": {
+  "670": "strict",
   "671": "strict",
-  "672": "strict",
-  "673": "strict"
+  "672": "strict"
  },
  "Thematic breaks": {
   "13": "strict",

@@ -1,10 +1,10 @@
->>> Soft line breaks - 669
+>>> Soft line breaks - 668
 foo
 baz
 <<<
 <p>foo
 baz</p>
->>> Soft line breaks - 670
+>>> Soft line breaks - 669
 foo 
  baz
 <<<

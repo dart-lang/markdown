@@ -57,43 +57,39 @@ bim!bop /&gt;</p>
 <<<
 <p>&lt;/a href=&quot;foo&quot;&gt;</p>
 >>> Raw HTML - 644
-foo <!-- this is a
-comment - with hyphen -->
+foo <!-- this is a --
+comment - with hyphens -->
 <<<
-<p>foo <!-- this is a
-comment - with hyphen --></p>
+<p>foo &lt;!-- this is a --
+comment - with hyphens --&gt;</p>
 >>> Raw HTML - 645
-foo <!-- not a comment -- two hyphens -->
-<<<
-<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
->>> Raw HTML - 646
 foo <!--> foo -->
 
-foo <!-- foo--->
+foo <!---> foo -->
 <<<
 <p>foo &lt;!--&gt; foo --&gt;</p>
-<p>foo &lt;!-- foo---&gt;</p>
->>> Raw HTML - 647
+<p>foo &lt;!---&gt; foo --&gt;</p>
+>>> Raw HTML - 646
 foo <?php echo $a; ?>
 <<<
 <p>foo <?php echo $a; ?></p>
->>> Raw HTML - 648
+>>> Raw HTML - 647
 foo <!ELEMENT br EMPTY>
 <<<
 <p>foo <!ELEMENT br EMPTY></p>
->>> Raw HTML - 649
+>>> Raw HTML - 648
 foo <![CDATA[>&<]]>
 <<<
 <p>foo <![CDATA[>&<]]></p>
->>> Raw HTML - 650
+>>> Raw HTML - 649
 foo <a href="&ouml;">
 <<<
 <p>foo <a href="&ouml;"></p>
->>> Raw HTML - 651
+>>> Raw HTML - 650
 foo <a href="\*">
 <<<
 <p>foo <a href="\*"></p>
->>> Raw HTML - 652
+>>> Raw HTML - 651
 <a href="\"">
 <<<
 <p>&lt;a href=&quot;&quot;&quot;&gt;</p>
