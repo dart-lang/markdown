@@ -166,9 +166,9 @@ compliance with [CommonMark].
 
 [Perl Markdown]: https://daringfireball.net/projects/markdown/
 [CommonMark]: https://commonmark.org/
-[commonMark-raw-html]: https://spec.commonmark.org/0.28/#raw-html
+[commonMark-raw-html]: https://spec.commonmark.org/0.30/#raw-html
 [CommonMark source]: https://github.com/commonmark/commonmark-spec
-[GitHub Flavored]: https://github.github.com/gfm/
+[GitHub Flavored]: https://github.github.io/gfm/
 [pandoc-auto_identifiers]: https://pandoc.org/MANUAL.html#extension-auto_identifiers
 ["Markdown's XSS Vulnerability (and how to mitigate it)"]: https://github.com/showdownjs/showdown/wiki/Markdown%27s-XSS-Vulnerability-(and-how-to-mitigate-it)
 [NodeValidator]: https://api.dart.dev/stable/dart-html/NodeValidator-class.html
