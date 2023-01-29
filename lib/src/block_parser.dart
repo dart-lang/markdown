@@ -11,6 +11,7 @@ import 'block_syntaxes/empty_block_syntax.dart';
 import 'block_syntaxes/header_syntax.dart';
 import 'block_syntaxes/horizontal_rule_syntax.dart';
 import 'block_syntaxes/html_block_syntax.dart';
+import 'block_syntaxes/link_reference_definition_syntax.dart';
 import 'block_syntaxes/ordered_list_syntax.dart';
 import 'block_syntaxes/paragraph_syntax.dart';
 import 'block_syntaxes/setext_header_syntax.dart';
@@ -62,6 +63,7 @@ class BlockParser {
     const HorizontalRuleSyntax(),
     const UnorderedListSyntax(),
     const OrderedListSyntax(),
+    const LinkReferenceDefinitionSyntax(),
     const ParagraphSyntax()
   ];
 
@@ -100,12 +102,19 @@ class BlockParser {
     return lines[_pos + linesAhead];
   }
 
+  /// Advances the reading position by one line.
   void advance() {
     _pos++;
   }
 
+  /// Retreats the reading position by one line.
   void retreat() {
     _pos--;
+  }
+
+  /// Retreats the reading position by [count] lines.
+  void retreatBy(int count) {
+    _pos -= count;
   }
 
   bool get isDone => _pos >= lines.length;
@@ -166,7 +175,9 @@ class BlockParser {
           }
           neverMatch = _pos != positionBefore ? null : syntax;
 
-          if (block != null || syntax is EmptyBlockSyntax) {
+          if (block != null ||
+              syntax is EmptyBlockSyntax ||
+              syntax is LinkReferenceDefinitionSyntax) {
             _start = _pos;
           }
 

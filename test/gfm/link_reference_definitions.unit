@@ -25,10 +25,7 @@
 
 [Foo bar]
 <<<
-<p>[Foo bar]:
-<my url>
-'title'</p>
-<p>[Foo bar]</p>
+<p><a href="my%20url" title="title">Foo bar</a></p>
 >>> Link reference definitions - 165
 [foo]: /url '
 title
@@ -72,20 +69,20 @@ with blank line'
 
 [foo]
 <<<
-<p><a href="%3C%3E">foo</a></p>
+<p><a href="">foo</a></p>
 >>> Link reference definitions - 170
 [foo]: <bar>(baz)
 
 [foo]
 <<<
-<p><a href="bar" title="baz">foo</a></p>
+<p>[foo]: <bar>(baz)</p>
+<p>[foo]</p>
 >>> Link reference definitions - 171
 [foo]: /url\bar\*baz "foo\"bar\baz"
 
 [foo]
 <<<
-<p>[foo]: /url\bar*baz &quot;foo&quot;bar\baz&quot;</p>
-<p>[foo]</p>
+<p><a href="/url%5Cbar*baz" title="foo&quot;bar\baz">foo</a></p>
 >>> Link reference definitions - 172
 [foo]
 
@@ -173,16 +170,15 @@ bar
 ===
 [foo]
 <<<
-<h1>[foo]: /url
-bar</h1>
-<p>[foo]</p>
+<h1>bar</h1>
+<p><a href="/url">foo</a></p>
 >>> Link reference definitions - 185
 [foo]: /url
 ===
 [foo]
 <<<
-<h1>[foo]: /url</h1>
-<p>[foo]</p>
+<p>===
+<a href="/url">foo</a></p>
 >>> Link reference definitions - 186
 [foo]: /foo-url "foo"
 [bar]: /bar-url
