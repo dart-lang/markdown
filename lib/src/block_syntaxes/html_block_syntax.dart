@@ -87,6 +87,12 @@ class HtmlBlockSyntax extends BlockSyntax {
   @override
   Node parse(BlockParser parser) {
     final childLines = parseChildLines(parser);
-    return Text(childLines.map((e) => e.content).join('\n').trimRight());
+
+    var text = childLines.map((e) => e.content).join('\n').trimRight();
+    if (parser.previousSyntax != null) {
+      text = '\n$text';
+    }
+
+    return Text(text);
   }
 }

@@ -144,6 +144,10 @@ class BlockParser {
   BlockSyntax? get currentSyntax => _currentSyntax;
   BlockSyntax? _currentSyntax;
 
+  /// The [BlockSyntax] which is running before the [currentSyntax].
+  BlockSyntax? get previousSyntax => _previousSyntax;
+  BlockSyntax? _previousSyntax;
+
   List<Node> parseLines({
     BlockSyntax? parentSyntax,
     bool disabledSetextHeading = false,
@@ -167,6 +171,7 @@ class BlockParser {
         }
 
         if (syntax.canParse(this)) {
+          _previousSyntax = _currentSyntax;
           _currentSyntax = syntax;
           final positionBefore = _pos;
           final block = syntax.parse(this);

@@ -25,6 +25,7 @@
   `BlockParser`, which can be used when parsing nested blocks.
 * Add a new optional parameter `disabledSetextHeading` for `parseLines()` of
   `BlockParser`, which is used to disable the `SetextHeaderSyntax`.
+* Add a new public property `previousSyntax` for `BlockParser`.
 
 ## 6.0.1
 
