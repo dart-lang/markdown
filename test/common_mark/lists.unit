@@ -99,7 +99,8 @@ The number of windows in my house is
 <ul>
 <li>foo</li>
 <li>bar</li>
-</ul><!-- -->
+</ul>
+<!-- -->
 <ul>
 <li>baz</li>
 <li>bim</li>
@@ -123,7 +124,8 @@ The number of windows in my house is
 <li>
 <p>foo</p>
 </li>
-</ul><!-- -->
+</ul>
+<!-- -->
 <pre><code>code
 </code></pre>
 >>> Lists - 310

@@ -57,7 +57,7 @@ void main() {
         final document = Document();
         final nodes = BlockParser(contents.toLines(), document).parseLines();
         final result = HtmlRenderer().render(nodes);
-        expect(result, '<p>\n</p><pre>\n A\n B\n</pre>');
+        expect(result, '<p>\n</p>\n<pre>\n A\n B\n</pre>');
       });
 
       test('encode double quotes, greater than, and less than when escaped',

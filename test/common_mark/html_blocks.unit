@@ -11,7 +11,8 @@ _world_.
 <pre>
 **Hello**,
 <p><em>world</em>.
-</pre></p></td></tr></table>
+</pre></p>
+</td></tr></table>
 >>> HTML blocks - 149
 <table>
   <tr>
@@ -53,7 +54,8 @@ okay.
 </DIV>
 <<<
 <DIV CLASS="foo">
-<p><em>Markdown</em></p></DIV>
+<p><em>Markdown</em></p>
+</DIV>
 >>> HTML blocks - 153
 <div id="foo"
   class="bar">
@@ -165,7 +167,8 @@ int x = 33;
 </del>
 <<<
 <del>
-<p><em>foo</em></p></del>
+<p><em>foo</em></p>
+</del>
 >>> HTML blocks - 168
 <del>*foo*</del>
 <<<
@@ -360,7 +363,8 @@ Foo
 bar
 </div>
 <<<
-<p>Foo</p><div>
+<p>Foo</p>
+<div>
 bar
 </div>
 >>> HTML blocks - 186
@@ -389,7 +393,8 @@ baz</p>
 </div>
 <<<
 <div>
-<p><em>Emphasized</em> text.</p></div>
+<p><em>Emphasized</em> text.</p>
+</div>
 >>> HTML blocks - 189
 <div>
 *Emphasized* text.
@@ -436,5 +441,6 @@ Hi
 <pre><code>&lt;td&gt;
   Hi
 &lt;/td&gt;
-</code></pre>  </tr>
+</code></pre>
+  </tr>
 </table>

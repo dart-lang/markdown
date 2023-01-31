@@ -123,7 +123,7 @@
   "359": "strict"
  },
  "Disallowed Raw HTML (extension)": {
-  "652": "fail"
+  "652": "loose"
  },
  "Emphasis and strong emphasis": {
   "360": "strict",
@@ -326,11 +326,11 @@
   "667": "strict"
  },
  "HTML blocks": {
-  "118": "loose",
+  "118": "strict",
   "119": "strict",
   "120": "strict",
   "121": "strict",
-  "122": "loose",
+  "122": "strict",
   "123": "strict",
   "124": "strict",
   "125": "strict",
@@ -345,7 +345,7 @@
   "134": "strict",
   "135": "strict",
   "136": "strict",
-  "137": "loose",
+  "137": "strict",
   "138": "strict",
   "139": "strict",
   "140": "strict",
@@ -362,13 +362,13 @@
   "151": "strict",
   "152": "strict",
   "153": "strict",
-  "154": "loose",
+  "154": "strict",
   "155": "strict",
   "156": "strict",
-  "157": "loose",
+  "157": "strict",
   "158": "strict",
   "159": "strict",
-  "160": "loose"
+  "160": "strict"
  },
  "Images": {
   "580": "strict",
@@ -588,8 +588,8 @@
   "285": "strict",
   "286": "strict",
   "287": "strict",
-  "288": "loose",
-  "289": "loose",
+  "288": "strict",
+  "289": "strict",
   "290": "strict",
   "291": "strict",
   "292": "strict",
