@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert' show jsonEncode, jsonDecode;
+import 'dart:convert' show jsonDecode, jsonEncode;
 import 'dart:io' show Directory, File, Platform, Process, exitCode;
 
 import 'package:args/args.dart' show ArgParser;

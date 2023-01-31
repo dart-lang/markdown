@@ -1,4 +1,4 @@
-## 7.0.0-dev
+## 7.0.0
 
 * **Breaking change**: `close()` of `DelimiterSyntax` and `LinkSyntax`
   returns multiple nodes instead of single one.
