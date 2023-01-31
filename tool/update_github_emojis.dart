@@ -10,10 +10,6 @@ import 'package:markdown/src/legacy_emojis.dart' as legacy;
 
 import 'update_shared.dart';
 
-/// Regular expression to match GitHub emoji API output filenames.
-RegExp gitHubEmojiApiPattern =
-    RegExp(r'^[\ \t]+"(.*?)".*unicode\/([A-Fa-f0-9\-]+)\.png');
-
 /// Regular expression to parse unicode from GitHub emoji API output filenames.
 RegExp gitHubEmojiUnicodeFromFilenamePattern =
     RegExp(r'.*unicode\/([A-Fa-f0-9\-]+)\.png');
@@ -36,7 +32,7 @@ const legacyEmojis = legacy.emojis;
 /// during the reconciliation process with the legacy emoji.
 /// This array is ONLY USED when the --useGitHubUnicodes option is used to
 /// minimize the visual differences in the output emoji.
-const legacyEmojisUsedVariationModifier = [
+const legacyEmojisUsedVariationModifier = {
   '263a',
   '2600',
   '2601',
@@ -98,7 +94,7 @@ const legacyEmojisUsedVariationModifier = [
   '2663',
   '2665',
   '2666',
-];
+};
 
 /// Special replacement character '�'
 const errorSpecialReplacement = '\u{FFFD}';

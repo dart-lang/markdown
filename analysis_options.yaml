@@ -6,14 +6,12 @@ analyzer:
     strict-casts: true
     strict-inference: true
     strict-raw-types: true
+
   errors:
-    dead_code: error
-    unused_element: error
-    unused_import: error
-    unused_local_variable: error
     # The example app explicitly takes a String of user-generated HTML and
     # inserts it straight into a <div> using innerHtml.
     unsafe_html: ignore
+
 linter:
   rules:
     # https://github.com/dart-lang/linter/issues/574

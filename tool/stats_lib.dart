@@ -10,12 +10,12 @@ import 'package:html/dom.dart' show Element;
 import 'package:html/parser.dart' show parseFragment;
 import 'package:markdown/markdown.dart'
     show
-        markdownToHtml,
-        InlineSyntax,
-        BlockSyntax,
         AutolinkExtensionSyntax,
+        BlockSyntax,
+        InlineSyntax,
         StrikethroughSyntax,
-        TableSyntax;
+        TableSyntax,
+        markdownToHtml;
 import 'package:path/path.dart' as p;
 
 import '../test/util.dart';
