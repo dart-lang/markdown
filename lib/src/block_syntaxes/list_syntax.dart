@@ -284,12 +284,21 @@ abstract class ListSyntax extends BlockSyntax {
       for (final item in itemNodes) {
         final children = item.children;
         if (children != null) {
+          Node? lastNode;
           for (var i = 0; i < children.length; i++) {
             final child = children[i];
             if (child is Element && child.tag == 'p') {
-              children.removeAt(i);
-              children.insertAll(i, child.children!);
+              final childContent = child.children!;
+              if (lastNode is Element) {
+                childContent.insert(0, Text('\n'));
+              }
+
+              children
+                ..removeAt(i)
+                ..insertAll(i, childContent);
             }
+
+            lastNode = child;
           }
         }
       }
