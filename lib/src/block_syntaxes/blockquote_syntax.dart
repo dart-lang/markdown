@@ -91,6 +91,7 @@ class BlockquoteSyntax extends BlockSyntax {
       // block quote.
       // https://spec.commonmark.org/0.30/#example-93
       disabledSetextHeading: _lazyContinuation,
+      parentSyntax: this,
     );
 
     return Element('blockquote', children);

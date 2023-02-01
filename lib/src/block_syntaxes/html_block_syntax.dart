@@ -7,6 +7,7 @@ import '../block_parser.dart';
 import '../line.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
+import 'list_syntax.dart';
 
 /// Parse HTML blocks.
 // There are seven kinds of HTML block defined in the CommonMark spec:
@@ -89,8 +90,11 @@ class HtmlBlockSyntax extends BlockSyntax {
     final childLines = parseChildLines(parser);
 
     var text = childLines.map((e) => e.content).join('\n').trimRight();
-    if (parser.previousSyntax != null) {
+    if (parser.previousSyntax != null || parser.parentSyntax != null) {
       text = '\n$text';
+      if (parser.parentSyntax is ListSyntax) {
+        text = '$text\n';
+      }
     }
 
     return Text(text);
