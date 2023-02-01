@@ -19,13 +19,13 @@ jobs:
 
     steps:
       - name: clone dart-lang/markdown
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           repository: dart-lang/markdown
           path: markdown
 
       - name: clone flutter/packages
-        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
         with:
           repository: flutter/packages
           path: flutter_packages
