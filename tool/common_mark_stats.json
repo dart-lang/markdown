@@ -565,7 +565,7 @@
   "297": "strict",
   "298": "strict",
   "299": "strict",
-  "300": "loose"
+  "300": "strict"
  },
  "Lists": {
   "301": "strict",

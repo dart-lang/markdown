@@ -250,6 +250,7 @@ abstract class ListSyntax extends BlockSyntax {
     final anyEmptyLines = _removeTrailingEmptyLines(items);
     var anyEmptyLinesBetweenBlocks = false;
     var containsTaskList = false;
+    const taskListClass = 'task-list-item';
 
     for (final item in items) {
       Element? checkboxToInsert;
@@ -267,7 +268,7 @@ abstract class ListSyntax extends BlockSyntax {
       final itemElement = checkboxToInsert == null
           ? Element('li', children)
           : (Element('li', [checkboxToInsert, ...children])
-            ..attributes['class'] = 'task-list-item');
+            ..attributes['class'] = taskListClass);
 
       itemNodes.add(itemElement);
       anyEmptyLinesBetweenBlocks =
@@ -282,14 +283,24 @@ abstract class ListSyntax extends BlockSyntax {
       // We must post-process the list items, converting any top-level paragraph
       // elements to just text elements.
       for (final item in itemNodes) {
+        final isTaskList = item.attributes['class'] == taskListClass;
         final children = item.children;
         if (children != null) {
+          Node? lastNode;
           for (var i = 0; i < children.length; i++) {
             final child = children[i];
             if (child is Element && child.tag == 'p') {
-              children.removeAt(i);
-              children.insertAll(i, child.children!);
+              final childContent = child.children!;
+              if (lastNode is Element && !isTaskList) {
+                childContent.insert(0, Text('\n'));
+              }
+
+              children
+                ..removeAt(i)
+                ..insertAll(i, childContent);
             }
+
+            lastNode = child;
           }
         }
       }
