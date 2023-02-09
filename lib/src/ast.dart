@@ -19,6 +19,7 @@ class Element implements Node {
   final List<Node>? children;
   final Map<String, String> attributes;
   String? generatedId;
+  String? footnoteLabel;
 
   /// Instantiates a [tag] Element with [children].
   Element(this.tag, this.children) : attributes = {};

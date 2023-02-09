@@ -113,8 +113,8 @@ class Document {
     for (final node in nodes) {
       if (node is Element &&
           node.tag == 'li' &&
-          footnoteReferences.containsKey(node.attributes['_label_'])) {
-        final label = node.attributes.remove('_label_');
+          footnoteReferences.containsKey(node.footnoteLabel)) {
+        final label = node.footnoteLabel;
         var count = 0;
         if (label != null && (count = footnoteReferences[label] ?? 0) > 0) {
           footnotes.add(node);

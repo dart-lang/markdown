@@ -1,11 +1,8 @@
 import '../ast.dart' show Element, Node;
 import '../block_parser.dart' show BlockParser;
 import '../line.dart';
-import '../patterns.dart' show footnotePattern;
+import '../patterns.dart' show dummyPattern, emptyPattern, footnotePattern;
 import 'block_syntax.dart' show BlockSyntax;
-import 'empty_block_syntax.dart';
-import 'paragraph_syntax.dart';
-import 'setext_header_syntax.dart';
 
 /// Footnote definition could contain multiple line-children and children could
 /// be separated by one empty line.
@@ -37,7 +34,7 @@ class FootnoteDefSyntax extends BlockSyntax {
     final children = BlockParser(lines, parser.document).parseLines();
     return Element('li', children)
       ..attributes['id'] = 'fn-$id'
-      ..attributes['_label_'] = label;
+      ..footnoteLabel = label;
   }
 
   @override
@@ -48,7 +45,7 @@ class FootnoteDefSyntax extends BlockSyntax {
     Iterable<BlockSyntax>? syntaxList;
     Iterable<BlockSyntax> validSyntaxList() {
       return syntaxList ??= parser.blockSyntaxes
-          .where((s) => !_invalidSecondaryBlock.contains(s.runtimeType));
+          .where((s) => !_excludingPattern.contains(s.pattern));
     }
 
     while (!parser.isDone) {
@@ -72,10 +69,9 @@ class FootnoteDefSyntax extends BlockSyntax {
     return children.map(Line.new).toList(growable: false);
   }
 
-  static const _invalidSecondaryBlock = <Type>{
-    EmptyBlockSyntax,
-    ParagraphSyntax,
-    SetextHeaderSyntax,
+  static final _excludingPattern = {
+    emptyPattern,
+    dummyPattern,
   };
 
   static bool _isBlock(Iterable<BlockSyntax> syntaxList, String line) {
