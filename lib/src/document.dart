@@ -84,7 +84,9 @@ class Document {
     _parseInlineContent(nodes);
     // Do filter after parsing inline as we need ref count.
     final footnoteNodes = _filterFootnotes(nodes);
-    nodes..clear()..addAll(footnoteNodes);
+    nodes
+      ..clear()
+      ..addAll(footnoteNodes);
     return nodes;
   }
 
