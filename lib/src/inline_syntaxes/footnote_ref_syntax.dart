@@ -2,6 +2,9 @@ import '../ast.dart' show Element, Node, Text;
 import '../charcode.dart';
 import 'link_syntax.dart' show LinkContext;
 
+/// Footnote shares the same syntax with [LinkSyntax], but goes a different
+/// branch of handling close bracket.
+/// See [noMatch] label of [handle_close_bracket()] in cmark-gfm/src/inlines.c]
 class FootnoteRefSyntax {
   static String? _footnoteLabel(String key) {
     if (key.isEmpty || key.codeUnitAt(0) != $caret) {

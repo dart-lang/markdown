@@ -83,7 +83,8 @@ class Document {
     final nodes = BlockParser(lines, this).parseLines();
     _parseInlineContent(nodes);
     // Do filter after parsing inline as we need ref count.
-    _filterFootnotes(nodes);
+    final footnoteNodes = _filterFootnotes(nodes);
+    nodes..clear()..addAll(footnoteNodes);
     return nodes;
   }
 
@@ -104,10 +105,10 @@ class Document {
     }
   }
 
-  /// Footnotes could be defined in arbitrary position of an article, we need
-  /// distinguish them and put them behind; and every footnote definition may
-  /// have multiple backrefs, we need append backrefs for it.
-  void _filterFootnotes(List<Node> nodes) {
+  /// Footnotes could be defined in arbitrary positions of a document, we need
+  /// to distinguish them and put them behind; and every footnote definition
+  /// may have multiple backrefs, we need to append backrefs for it.
+  List<Node> _filterFootnotes(List<Node> nodes) {
     final footnotes = <Element>[];
     final blocks = <Node>[];
     for (final node in nodes) {
@@ -127,9 +128,6 @@ class Document {
         blocks.add(node);
       }
     }
-    nodes
-      ..clear()
-      ..addAll(blocks);
 
     if (footnotes.isNotEmpty) {
       // Sort footnotes by appearing order.
@@ -144,11 +142,12 @@ class Document {
       });
       final list = Element('ol', footnotes);
 
-      // Ignore GitHub's attribute: <data-footnotes>.
+      // Ignore GFM attribute: <data-footnotes>.
       final section = Element('section', [list])
         ..attributes['class'] = 'footnotes';
-      nodes.add(section);
+      blocks.add(section);
     }
+    return blocks;
   }
 
   /// Generate backref nodes, append them to footnote definition's last child.

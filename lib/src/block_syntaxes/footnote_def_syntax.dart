@@ -6,9 +6,9 @@ import 'block_syntax.dart' show BlockSyntax;
 
 /// Footnote definition could contain multiple line-children and children could
 /// be separated by one empty line.
-/// Its first child-line would be the remaining part of first line after taking
-/// definition leading, combining with other line-children parsed by
-/// `parseChildLines`, is feed into `BlockParser`.
+/// Its first child-line would be the remaining part of the first line after
+/// taking definition leading, combining with other child lines parsed by
+/// [parseChildLines], is fed into [BlockParser].
 class FootnoteDefSyntax extends BlockSyntax {
   const FootnoteDefSyntax();
 
@@ -29,8 +29,6 @@ class FootnoteDefSyntax extends BlockSyntax {
       Line(current.substring(match[0]!.length)),
       ...parseChildLines(parser),
     ];
-    // Linebreak in secondary paragraph did not match LineBreakSyntax
-    // so there is no `<br />`, unlike GitHub.
     final children = BlockParser(lines, parser.document).parseLines();
     return Element('li', children)
       ..attributes['id'] = 'fn-$id'
@@ -42,11 +40,8 @@ class FootnoteDefSyntax extends BlockSyntax {
     final children = <String>[];
     // As one empty line should not split footnote definition, use this flag.
     var shouldBeBlock = false;
-    Iterable<BlockSyntax>? syntaxList;
-    Iterable<BlockSyntax> validSyntaxList() {
-      return syntaxList ??= parser.blockSyntaxes
-          .where((s) => !_excludingPattern.contains(s.pattern));
-    }
+    late final syntaxList = parser.blockSyntaxes
+        .where((s) => !_excludingPattern.contains(s.pattern));
 
     while (!parser.isDone) {
       final line = parser.current.content;
@@ -59,7 +54,7 @@ class FootnoteDefSyntax extends BlockSyntax {
         children.add(line.substring(4));
         parser.advance();
         shouldBeBlock = false;
-      } else if (shouldBeBlock || _isBlock(validSyntaxList(), line)) {
+      } else if (shouldBeBlock || _isBlock(syntaxList, line)) {
         break;
       } else {
         children.add(line);
