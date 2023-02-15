@@ -13,7 +13,8 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   static const _linkPattern =
       // Autolinks can only come at the beginning of a line, after whitespace,
       // or any of the delimiting characters *, _, ~, and (.
-      r'(?<=^|[\s*_~(>])'
+      // Note: Disable it, as safari does not support lookarounds.
+      // r'(?<=^|[\s*_~(>])'
 
       // An extended url autolink will be recognised when one of the schemes
       // http://, or https://, followed by a valid domain. See
@@ -35,7 +36,9 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       // not be considered part of the autolink, though they may be included in
       // the interior of the link. See
       // https://github.github.com/gfm/#extended-autolink-path-validation.
-      '(?<![?!.,:*_~])';
+      // Note: Do not use negative lookbehind, as safari does not support it.
+      // '(?<![?!.,:*_~])'
+      r'[^\s<?!.,:*_~]';
 
   // An extended email autolink, see
   // https://github.github.com/gfm/#extended-email-autolink.
@@ -55,6 +58,14 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     if (startMatch == null) {
       return false;
     }
+
+    if (parser.pos > 0) {
+      final precededBy = String.fromCharCode(parser.charAt(parser.pos - 1));
+      if ([' ', '*', '_', '~', '(', '>'].contains(precededBy) == false) {
+        return false;
+      }
+    }
+
     parser.writeText();
     return onMatch(parser, startMatch);
   }

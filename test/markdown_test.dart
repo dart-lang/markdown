@@ -41,6 +41,10 @@ void main() async {
     'extensions/unordered_list_with_checkboxes.unit',
     blockSyntaxes: [const UnorderedListWithCheckboxSyntax()],
   );
+  testFile(
+    'extensions/autolink_extension.unit',
+    inlineSyntaxes: [AutolinkExtensionSyntax()],
+  );
 
   // Inline syntax extensions
   testFile(
