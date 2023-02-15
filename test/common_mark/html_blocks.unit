@@ -251,7 +251,8 @@ foo
 
 bar
 <<<
-<blockquote><div>
+<blockquote>
+<div>
 foo
 </blockquote>
 <p>bar</p>
@@ -260,7 +261,9 @@ foo
 - foo
 <<<
 <ul>
-<li><div></li>
+<li>
+<div>
+</li>
 <li>foo</li>
 </ul>
 >>> HTML blocks - 176

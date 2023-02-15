@@ -29,4 +29,4 @@
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
  670 of  670 – 100.0%  TOTAL
- 658 of  670 –  98.2%  TOTAL Strict
+ 660 of  670 –  98.5%  TOTAL Strict
