@@ -43,7 +43,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   // An extended email autolink, see
   // https://github.github.com/gfm/#extended-email-autolink.
   static const _emailPattern =
-      r'[-_.+a-z0-9]+@(?:[-_a-z0-9]+\.)+[-_a-z0-9]*[a-z0-9](?![-_])';
+      r'[-_.+a-z0-9]+@(?:[-_a-z0-9]+\.)+[-_a-z0-9]*[a-z0-9]';
 
   AutolinkExtensionSyntax()
       : super(
@@ -59,9 +59,19 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       return false;
     }
 
-    if (parser.pos > 0) {
+    // When it is a link and it is not preceded by `*`, `_`, `~`, `(`, or `>`,
+    // it is invalid.
+    if (startMatch[1] != null && parser.pos > 0) {
       final precededBy = String.fromCharCode(parser.charAt(parser.pos - 1));
       if ([' ', '*', '_', '~', '(', '>'].contains(precededBy) == false) {
+        return false;
+      }
+    }
+
+    // When it is an email link and followed by `_` or `-`, it is invalid.
+    if (startMatch[2] != null && parser.source.length > startMatch.end) {
+      final followedBy = String.fromCharCode(parser.charAt(startMatch.end));
+      if (['_', '-'].contains(followedBy)) {
         return false;
       }
     }
