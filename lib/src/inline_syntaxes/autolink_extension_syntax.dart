@@ -13,7 +13,8 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   static const _linkPattern =
       // Autolinks can only come at the beginning of a line, after whitespace,
       // or any of the delimiting characters *, _, ~, and (.
-      // Note: Disable it, as Safari does not support lookarounds.
+      // Note: Disable this piece for now, as Safari does not support
+      // lookarounds. Consider re-enabling later.
       // r'(?<=^|[\s*_~(>])'
 
       // An extended url autolink will be recognised when one of the schemes
@@ -60,18 +61,22 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     }
 
     // When it is a link and it is not preceded by `*`, `_`, `~`, `(`, or `>`,
-    // it is invalid.
+    // it is invalid. See
+    // https://github.github.com/gfm/#extended-autolink-path-validation.
     if (startMatch[1] != null && parser.pos > 0) {
       final precededBy = String.fromCharCode(parser.charAt(parser.pos - 1));
-      if ([' ', '*', '_', '~', '(', '>'].contains(precededBy) == false) {
+      const validPrecedingChars = {' ', '*', '_', '~', '(', '>'};
+      if (validPrecedingChars.contains(precededBy) == false) {
         return false;
       }
     }
 
-    // When it is an email link and followed by `_` or `-`, it is invalid.
+    // When it is an email link and followed by `_` or `-`, it is invalid. See
+    // https://github.github.com/gfm/#example-633
     if (startMatch[2] != null && parser.source.length > startMatch.end) {
       final followedBy = String.fromCharCode(parser.charAt(startMatch.end));
-      if (['_', '-'].contains(followedBy)) {
+      const invalidFollowingChars = {'_', '-'};
+      if (invalidFollowingChars.contains(followedBy)) {
         return false;
       }
     }
