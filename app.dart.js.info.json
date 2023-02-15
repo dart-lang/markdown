@@ -3,12 +3,12 @@
   "dump_minor_version": 1,
   "program": {
     "entrypoint": "function/org-dartlang-app:///example/app.dart::main",
-    "size": 357712,
-    "ramUsage": "254.719 MB",
+    "size": 359017,
+    "ramUsage": "255.938 MB",
     "dart2jsVersion": "3.0.0-218.0.dev",
-    "compilationMoment": "2023-02-10 13:59:21.447184",
-    "compilationDuration": 1195635,
-    "toJsonDuration": 8000,
+    "compilationMoment": "2023-02-15 11:01:38.253820",
+    "compilationDuration": 1201210,
+    "toJsonDuration": 7000,
     "dumpInfoDuration": 0,
     "noSuchMethodEnabled": false,
     "isRuntimeTypeUsed": false,
@@ -33,7 +33,7 @@
         "id": "library/dart:_interceptors::",
         "kind": "library",
         "name": "_interceptors",
-        "size": 11188,
+        "size": 11285,
         "children": [
           "class/dart:_interceptors::ArrayIterator",
           "class/dart:_interceptors::Interceptor",
@@ -102,7 +102,7 @@
         "id": "library/dart:_js_helper::",
         "kind": "library",
         "name": "_js_helper",
-        "size": 20846,
+        "size": 21069,
         "children": [
           "class/dart:_js_helper::BoundClosure",
           "class/dart:_js_helper::Closure",
@@ -280,7 +280,7 @@
         "id": "library/dart:_rti::",
         "kind": "library",
         "name": "rti",
-        "size": 17209,
+        "size": 17210,
         "children": [
           "class/dart:_rti::Rti",
           "class/dart:_rti::TypeRule",
@@ -415,7 +415,7 @@
         "id": "library/dart:collection::",
         "kind": "library",
         "name": "dart.collection",
-        "size": 5830,
+        "size": 6162,
         "children": [
           "class/dart:collection::IterableBase",
           "class/dart:collection::LinkedHashMap",
@@ -432,6 +432,8 @@
           "class/dart:collection::_LinkedHashSetIterator",
           "class/dart:collection::_LinkedIdentityHashSet",
           "class/dart:collection::_SetBase",
+          "class/dart:collection::_UnmodifiableSet",
+          "class/dart:collection::_UnmodifiableSetMixin",
           "field/dart:collection::_toStringVisiting",
           "function/dart:collection::_isToStringVisiting",
           "function/dart:collection::_iterablePartsToStrings"
@@ -525,7 +527,7 @@
         "id": "library/dart:html::",
         "kind": "library",
         "name": "dart.dom.html",
-        "size": 12476,
+        "size": 12571,
         "children": [
           "class/dart:html::AbortPaymentEvent",
           "class/dart:html::AnchorElement",
@@ -890,7 +892,7 @@
         "id": "library/package:markdown/src/block_parser.dart::",
         "kind": "library",
         "name": "<unnamed>",
-        "size": 958,
+        "size": 927,
         "children": [
           "class/package:markdown/src/block_parser.dart::BlockParser"
         ],
@@ -911,7 +913,7 @@
         "id": "library/package:markdown/src/block_syntaxes/blockquote_syntax.dart::",
         "kind": "library",
         "name": "<unnamed>",
-        "size": 840,
+        "size": 845,
         "children": [
           "class/package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax"
         ],
@@ -982,7 +984,7 @@
         "id": "library/package:markdown/src/block_syntaxes/html_block_syntax.dart::",
         "kind": "library",
         "name": "<unnamed>",
-        "size": 1038,
+        "size": 1086,
         "children": [
           "class/package:markdown/src/block_syntaxes/html_block_syntax.dart::HtmlBlockSyntax"
         ],
@@ -1107,7 +1109,7 @@
         "id": "library/package:markdown/src/extension_set.dart::",
         "kind": "library",
         "name": "<unnamed>",
-        "size": 885,
+        "size": 860,
         "children": [
           "class/package:markdown/src/extension_set.dart::ExtensionSet",
           "classType/package:markdown/src/extension_set.dart::ExtensionSet"
@@ -1140,7 +1142,7 @@
         "id": "library/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::",
         "kind": "library",
         "name": "<unnamed>",
-        "size": 840,
+        "size": 1004,
         "children": [
           "class/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax"
         ],
@@ -1255,7 +1257,7 @@
         "id": "library/package:markdown/src/inline_syntaxes/image_syntax.dart::",
         "kind": "library",
         "name": "<unnamed>",
-        "size": 502,
+        "size": 503,
         "children": [
           "class/package:markdown/src/inline_syntaxes/image_syntax.dart::ImageSyntax"
         ],
@@ -1577,7 +1579,7 @@
         "id": "class/dart:_interceptors::JSNull",
         "kind": "class",
         "name": "JSNull",
-        "size": 102,
+        "size": 110,
         "outputUnit": "outputUnit/main",
         "parent": "library/dart:_interceptors::",
         "modifiers": {
@@ -2296,7 +2298,7 @@
         "id": "class/dart:_js_helper::ConstantStringMap",
         "kind": "class",
         "name": "ConstantStringMap",
-        "size": 355,
+        "size": 405,
         "outputUnit": "outputUnit/main",
         "parent": "library/dart:_js_helper::",
         "modifiers": {
@@ -2311,6 +2313,7 @@
           "function/dart:_js_helper::ConstantStringMap._keysArray",
           "function/dart:_js_helper::ConstantStringMap.containsKey",
           "function/dart:_js_helper::ConstantStringMap.forEach",
+          "function/dart:_js_helper::ConstantStringMap.keys",
           "function/dart:_js_helper::ConstantStringMap.length"
         ],
         "supers": [
@@ -2465,7 +2468,7 @@
         "id": "class/dart:_js_helper::LinkedHashMapKeyIterable",
         "kind": "class",
         "name": "LinkedHashMapKeyIterable",
-        "size": 140,
+        "size": 172,
         "outputUnit": "outputUnit/main",
         "parent": "library/dart:_js_helper::",
         "modifiers": {
@@ -2474,6 +2477,7 @@
         "children": [
           "field/dart:_js_helper::LinkedHashMapKeyIterable._map",
           "function/dart:_js_helper::LinkedHashMapKeyIterable.LinkedHashMapKeyIterable",
+          "function/dart:_js_helper::LinkedHashMapKeyIterable.contains",
           "function/dart:_js_helper::LinkedHashMapKeyIterable.iterator",
           "function/dart:_js_helper::LinkedHashMapKeyIterable.length"
         ],
@@ -2752,14 +2756,17 @@
         "id": "class/dart:_js_helper::_ConstantMapKeyIterable",
         "kind": "class",
         "name": "_ConstantMapKeyIterable",
-        "size": 0,
+        "size": 141,
         "outputUnit": "outputUnit/main",
         "parent": "library/dart:_js_helper::",
         "modifiers": {
           "abstract": false
         },
         "children": [
-          "field/dart:_js_helper::_ConstantMapKeyIterable._map"
+          "field/dart:_js_helper::_ConstantMapKeyIterable._map",
+          "function/dart:_js_helper::_ConstantMapKeyIterable._ConstantMapKeyIterable",
+          "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+          "function/dart:_js_helper::_ConstantMapKeyIterable.length"
         ],
         "supers": [
           "class/dart:core::Iterable"
@@ -3728,13 +3735,14 @@
         "id": "class/dart:collection::MapMixin",
         "kind": "class",
         "name": "MapMixin",
-        "size": 454,
+        "size": 490,
         "outputUnit": "outputUnit/main",
         "parent": "library/dart:collection::",
         "modifiers": {
           "abstract": true
         },
         "children": [
+          "function/dart:collection::MapMixin.containsKey",
           "function/dart:collection::MapMixin.entries",
           "function/dart:collection::MapMixin.forEach",
           "function/dart:collection::MapMixin.length",
@@ -3800,7 +3808,7 @@
         "id": "class/dart:collection::_LinkedHashSet",
         "kind": "class",
         "name": "_LinkedHashSet",
-        "size": 1039,
+        "size": 1035,
         "outputUnit": "outputUnit/main",
         "parent": "library/dart:collection::",
         "modifiers": {
@@ -3908,6 +3916,42 @@
           "abstract": true
         },
         "children": [],
+        "supers": []
+      },
+      "dart:collection::_UnmodifiableSet": {
+        "id": "class/dart:collection::_UnmodifiableSet",
+        "kind": "class",
+        "name": "_UnmodifiableSet",
+        "size": 129,
+        "outputUnit": "outputUnit/main",
+        "parent": "library/dart:collection::",
+        "modifiers": {
+          "abstract": false
+        },
+        "children": [
+          "field/dart:collection::_UnmodifiableSet._map",
+          "function/dart:collection::_UnmodifiableSet.contains",
+          "function/dart:collection::_UnmodifiableSet.iterator",
+          "function/dart:collection::_UnmodifiableSet.length"
+        ],
+        "supers": [
+          "class/dart:collection::_SetBase"
+        ]
+      },
+      "dart:collection::_UnmodifiableSetMixin": {
+        "id": "class/dart:collection::_UnmodifiableSetMixin",
+        "kind": "class",
+        "name": "_UnmodifiableSetMixin",
+        "size": 62,
+        "outputUnit": "outputUnit/main",
+        "parent": "library/dart:collection::",
+        "modifiers": {
+          "abstract": true
+        },
+        "children": [
+          "function/dart:collection::_UnmodifiableSetMixin._throwUnmodifiable",
+          "function/dart:collection::_UnmodifiableSetMixin.add"
+        ],
         "supers": []
       },
       "dart:convert::AsciiCodec": {
@@ -7011,7 +7055,7 @@
         "id": "class/dart:html::Storage",
         "kind": "class",
         "name": "Storage",
-        "size": 369,
+        "size": 405,
         "outputUnit": "outputUnit/main",
         "parent": "library/dart:html::",
         "modifiers": {
@@ -7020,6 +7064,7 @@
         "children": [
           "function/dart:html::Storage.[]",
           "function/dart:html::Storage.[]=",
+          "function/dart:html::Storage.containsKey",
           "function/dart:html::Storage.forEach",
           "function/dart:html::Storage.keys",
           "function/dart:html::Storage.length"
@@ -7569,7 +7614,7 @@
         "id": "class/dart:html::_ElementAttributeMap",
         "kind": "class",
         "name": "_ElementAttributeMap",
-        "size": 136,
+        "size": 195,
         "outputUnit": "outputUnit/main",
         "parent": "library/dart:html::",
         "modifiers": {
@@ -9137,7 +9182,7 @@
         "id": "class/package:markdown/src/block_parser.dart::BlockParser",
         "kind": "class",
         "name": "BlockParser",
-        "size": 807,
+        "size": 776,
         "outputUnit": "outputUnit/main",
         "parent": "library/package:markdown/src/block_parser.dart::",
         "modifiers": {
@@ -9196,7 +9241,7 @@
         "id": "class/package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax",
         "kind": "class",
         "name": "BlockquoteSyntax",
-        "size": 833,
+        "size": 838,
         "outputUnit": "outputUnit/main",
         "parent": "library/package:markdown/src/block_syntaxes/blockquote_syntax.dart::",
         "modifiers": {
@@ -9350,7 +9395,7 @@
         "id": "class/package:markdown/src/block_syntaxes/html_block_syntax.dart::HtmlBlockSyntax",
         "kind": "class",
         "name": "HtmlBlockSyntax",
-        "size": 833,
+        "size": 881,
         "outputUnit": "outputUnit/main",
         "parent": "library/package:markdown/src/block_syntaxes/html_block_syntax.dart::",
         "modifiers": {
@@ -9725,7 +9770,7 @@
         "id": "class/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax",
         "kind": "class",
         "name": "AutolinkExtensionSyntax",
-        "size": 840,
+        "size": 1004,
         "outputUnit": "outputUnit/main",
         "parent": "library/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::",
         "modifiers": {
@@ -10000,7 +10045,7 @@
         "id": "class/package:markdown/src/inline_syntaxes/image_syntax.dart::ImageSyntax",
         "kind": "class",
         "name": "ImageSyntax",
-        "size": 435,
+        "size": 436,
         "outputUnit": "outputUnit/main",
         "parent": "library/package:markdown/src/inline_syntaxes/image_syntax.dart::",
         "modifiers": {
@@ -10555,7 +10600,7 @@
           }
         ],
         "sideEffects": "SideEffects(reads anything; writes nothing)",
-        "inlinedCount": 1,
+        "inlinedCount": 2,
         "code": "",
         "type": "dynamic Function(JSArray<ArrayIterator.E>)",
         "functionKind": 3
@@ -11611,7 +11656,7 @@
         "inferredReturnType": "[exact=ArrayIterator]",
         "parameters": [],
         "sideEffects": "SideEffects(reads anything; writes nothing)",
-        "inlinedCount": 0,
+        "inlinedCount": 1,
         "code": "gA(a){return new J.m(a,a.length)}",
         "type": "Iterator<JSArray.E> Function()",
         "functionKind": 2
@@ -16884,7 +16929,7 @@
         "inferredReturnType": "[exact=JSUnmodifiableArray]",
         "parameters": [],
         "sideEffects": "SideEffects(reads field; writes nothing)",
-        "inlinedCount": 1,
+        "inlinedCount": 3,
         "code": "",
         "type": "List<ConstantStringMap.K> Function()",
         "functionKind": 2
@@ -16945,6 +16990,29 @@
         "inlinedCount": 0,
         "code": "U(a,b){var t,s,r,q,p=this.c\nfor(t=p.length,s=this.b,r=0;r<t;++r){q=p[r]\nb.$2(q,s[q])}}",
         "type": "void Function(void Function(ConstantStringMap.K,ConstantStringMap.V))",
+        "functionKind": 2
+      },
+      "dart:_js_helper::ConstantStringMap.keys": {
+        "id": "function/dart:_js_helper::ConstantStringMap.keys",
+        "kind": "function",
+        "name": "keys",
+        "size": 48,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:_js_helper::ConstantStringMap",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "Iterable<ConstantStringMap.K>",
+        "inferredReturnType": "[exact=_ConstantMapKeyIterable]",
+        "parameters": [],
+        "sideEffects": "SideEffects(reads nothing; writes nothing)",
+        "inlinedCount": 0,
+        "code": "gv(a){return new A.XR(this,this.$ti.C(\"XR<1>\"))}",
+        "type": "Iterable<ConstantStringMap.K> Function()",
         "functionKind": 2
       },
       "dart:_js_helper::ConstantStringMap.length": {
@@ -18382,6 +18450,35 @@
         "type": "dynamic Function(JsLinkedHashMap<dynamic,dynamic>)",
         "functionKind": 3
       },
+      "dart:_js_helper::LinkedHashMapKeyIterable.contains": {
+        "id": "function/dart:_js_helper::LinkedHashMapKeyIterable.contains",
+        "kind": "function",
+        "name": "contains",
+        "size": 30,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:_js_helper::LinkedHashMapKeyIterable",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "bool",
+        "inferredReturnType": "[exact=JSBool]",
+        "parameters": [
+          {
+            "name": "element",
+            "type": "[exact=JSString]",
+            "declaredType": "Object?"
+          }
+        ],
+        "sideEffects": "SideEffects(reads anything; writes anything)",
+        "inlinedCount": 0,
+        "code": "tg(a,b){return this.a.x4(0,b)}",
+        "type": "bool Function(Object?)",
+        "functionKind": 2
+      },
       "dart:_js_helper::LinkedHashMapKeyIterable.iterator": {
         "id": "function/dart:_js_helper::LinkedHashMapKeyIterable.iterator",
         "kind": "function",
@@ -19762,6 +19859,81 @@
         "type": "bool Function()",
         "functionKind": 2
       },
+      "dart:_js_helper::_ConstantMapKeyIterable._ConstantMapKeyIterable": {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable._ConstantMapKeyIterable",
+        "kind": "function",
+        "name": "_ConstantMapKeyIterable",
+        "size": 0,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:_js_helper::_ConstantMapKeyIterable",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "dynamic",
+        "inferredReturnType": "[exact=_ConstantMapKeyIterable]",
+        "parameters": [
+          {
+            "name": "_map",
+            "type": "[exact=ConstantStringMap]",
+            "declaredType": "ConstantStringMap<_ConstantMapKeyIterable.K,dynamic>"
+          }
+        ],
+        "sideEffects": "SideEffects(reads nothing; writes nothing)",
+        "inlinedCount": 1,
+        "code": "",
+        "type": "dynamic Function(ConstantStringMap<_ConstantMapKeyIterable.K,dynamic>)",
+        "functionKind": 3
+      },
+      "dart:_js_helper::_ConstantMapKeyIterable.iterator": {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "kind": "function",
+        "name": "iterator",
+        "size": 48,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:_js_helper::_ConstantMapKeyIterable",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "Iterator<_ConstantMapKeyIterable.K>",
+        "inferredReturnType": "[exact=ArrayIterator]",
+        "parameters": [],
+        "sideEffects": "SideEffects(reads anything; writes anything)",
+        "inlinedCount": 0,
+        "code": "gA(a){var t=this.a.c\nreturn new J.m(t,t.length)}",
+        "type": "Iterator<_ConstantMapKeyIterable.K> Function()",
+        "functionKind": 2
+      },
+      "dart:_js_helper::_ConstantMapKeyIterable.length": {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.length",
+        "kind": "function",
+        "name": "length",
+        "size": 29,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:_js_helper::_ConstantMapKeyIterable",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "int",
+        "inferredReturnType": "[subclass=JSUInt32]",
+        "parameters": [],
+        "sideEffects": "SideEffects(reads anything; writes anything)",
+        "inlinedCount": 0,
+        "code": "gB(a){return this.a.c.length}",
+        "type": "int Function()",
+        "functionKind": 2
+      },
       "dart:_js_helper::_CyclicInitializationError._CyclicInitializationError": {
         "id": "function/dart:_js_helper::_CyclicInitializationError._CyclicInitializationError",
         "kind": "function",
@@ -19838,7 +20010,7 @@
           }
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
-        "inlinedCount": 23,
+        "inlinedCount": 25,
         "code": "q(a,b){return this.b[b]}",
         "type": "String? Function(int)",
         "functionKind": 2
@@ -19924,7 +20096,7 @@
           }
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
-        "inlinedCount": 26,
+        "inlinedCount": 28,
         "code": "",
         "type": "String? Function(int)",
         "functionKind": 2
@@ -21824,7 +21996,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "tW(a,b){if(u.C.b(b))if(b.$thrownJsError==null)b.$thrownJsError=a\nreturn b}",
+        "code": "tW(a,b){if(u.R.b(b))if(b.$thrownJsError==null)b.$thrownJsError=a\nreturn b}",
         "type": "Object Function(Object,Object)",
         "functionKind": 0
       },
@@ -26757,7 +26929,7 @@
         "id": "function/dart:_rti::_Universe._createFutureOrRti",
         "kind": "function",
         "name": "_createFutureOrRti",
-        "size": 240,
+        "size": 241,
         "outputUnit": "outputUnit/main",
         "parent": "class/dart:_rti::_Universe",
         "children": [],
@@ -26793,7 +26965,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "eV(a,b,c,d){var t,s,r\nif(d){t=b.x\nif(!A.A8(b))if(!(b===u.c))s=!1\nelse s=!0\nelse s=!0\nif(s||b===u.K)return b\nelse if(t===1)return A.Q2(a,\"b8\",[b])\nelse if(b===u.P||b===u.T)return u.n}r=new A.Jc(null,null)\nr.x=8\nr.y=b\nr.at=c\nreturn A.BD(a,r)}",
+        "code": "eV(a,b,c,d){var t,s,r\nif(d){t=b.x\nif(!A.A8(b))if(!(b===u.c))s=!1\nelse s=!0\nelse s=!0\nif(s||b===u.K)return b\nelse if(t===1)return A.Q2(a,\"b8\",[b])\nelse if(b===u.P||b===u.T)return u.bc}r=new A.Jc(null,null)\nr.x=8\nr.y=b\nr.at=c\nreturn A.BD(a,r)}",
         "type": "Rti Function(Object?,Rti,String,bool)",
         "functionKind": 0
       },
@@ -30737,7 +30909,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "We(a,b,c,d,e){var t,s,r,q,p,o,n,m,l,k\nif(b===d)return!0\nif(!A.A8(d))if(!(d===u.c))t=!1\nelse t=!0\nelse t=!0\nif(t)return!0\ns=b.x\nif(s===4)return!0\nif(A.A8(b))return!1\nif(b.x!==1)t=!1\nelse t=!0\nif(t)return!0\nr=s===14\nif(r)if(A.We(a,c[b.y],c,d,e))return!0\nq=d.x\nt=b===u.P||b===u.T\nif(t){if(q===8)return A.We(a,b,c,d.y,e)\nreturn d===u.P||d===u.T||q===7||q===6}if(d===u.K){if(s===8)return A.We(a,b.y,c,d,e)\nif(s===6)return A.We(a,b.y,c,d,e)\nreturn s!==7}if(s===6)return A.We(a,b.y,c,d,e)\nif(q===6){t=A.cz(a,d)\nreturn A.We(a,b,c,t,e)}if(s===8){if(!A.We(a,b.y,c,d,e))return!1\nreturn A.We(a,A.xZ(a,b),c,d,e)}if(s===7){t=A.We(a,u.P,c,d,e)\nreturn t&&A.We(a,b.y,c,d,e)}if(q===8){if(A.We(a,b,c,d.y,e))return!0\nreturn A.We(a,b,c,A.xZ(a,d),e)}if(q===7){t=A.We(a,b,c,u.P,e)\nreturn t||A.We(a,b,c,d.y,e)}if(r)return!1\nt=s!==12\nif((!t||s===13)&&d===u.Z)return!0\nif(q===13){if(b===u.g)return!0\nif(s!==13)return!1\np=b.z\no=d.z\nn=p.length\nif(n!==o.length)return!1\nc=c==null?p:p.concat(c)\ne=e==null?o:o.concat(e)\nfor(m=0;m<n;++m){l=p[m]\nk=o[m]\nif(!A.We(a,l,c,k,e)||!A.We(a,k,e,l,c))return!1}return A.bO(a,b.y,c,d.y,e)}if(q===12){if(b===u.g)return!0\nif(t)return!1\nreturn A.bO(a,b,c,d,e)}if(s===9){if(q!==9)return!1\nreturn A.pG(a,b,c,d,e)}t=s===11\nif(t&&d===u.U)return!0\nif(t&&q===11)return A.b6(a,b,c,d,e)\nreturn!1}",
+        "code": "We(a,b,c,d,e){var t,s,r,q,p,o,n,m,l,k\nif(b===d)return!0\nif(!A.A8(d))if(!(d===u.c))t=!1\nelse t=!0\nelse t=!0\nif(t)return!0\ns=b.x\nif(s===4)return!0\nif(A.A8(b))return!1\nif(b.x!==1)t=!1\nelse t=!0\nif(t)return!0\nr=s===14\nif(r)if(A.We(a,c[b.y],c,d,e))return!0\nq=d.x\nt=b===u.P||b===u.T\nif(t){if(q===8)return A.We(a,b,c,d.y,e)\nreturn d===u.P||d===u.T||q===7||q===6}if(d===u.K){if(s===8)return A.We(a,b.y,c,d,e)\nif(s===6)return A.We(a,b.y,c,d,e)\nreturn s!==7}if(s===6)return A.We(a,b.y,c,d,e)\nif(q===6){t=A.cz(a,d)\nreturn A.We(a,b,c,t,e)}if(s===8){if(!A.We(a,b.y,c,d,e))return!1\nreturn A.We(a,A.xZ(a,b),c,d,e)}if(s===7){t=A.We(a,u.P,c,d,e)\nreturn t&&A.We(a,b.y,c,d,e)}if(q===8){if(A.We(a,b,c,d.y,e))return!0\nreturn A.We(a,b,c,A.xZ(a,d),e)}if(q===7){t=A.We(a,b,c,u.P,e)\nreturn t||A.We(a,b,c,d.y,e)}if(r)return!1\nt=s!==12\nif((!t||s===13)&&d===u.Z)return!0\nif(q===13){if(b===u.g)return!0\nif(s!==13)return!1\np=b.z\no=d.z\nn=p.length\nif(n!==o.length)return!1\nc=c==null?p:p.concat(c)\ne=e==null?o:o.concat(e)\nfor(m=0;m<n;++m){l=p[m]\nk=o[m]\nif(!A.We(a,l,c,k,e)||!A.We(a,k,e,l,c))return!1}return A.bO(a,b.y,c,d.y,e)}if(q===12){if(b===u.g)return!0\nif(t)return!1\nreturn A.bO(a,b,c,d,e)}if(s===9){if(q!==9)return!1\nreturn A.pG(a,b,c,d,e)}t=s===11\nif(t&&d===u.V)return!0\nif(t&&q===11)return A.b6(a,b,c,d,e)\nreturn!1}",
         "type": "bool Function(Object?,Rti,Object?,Rti,Object?)",
         "functionKind": 0
       },
@@ -32558,7 +32730,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "Dl(a,b){var t,s,r\ntry{if(B.NU===$.X3){a.$1(b)\nreturn}A.yv(null,null,this,a,b)}catch(r){t=A.Ru(r)\ns=A.ts(r)\nA.Si(t,s)}}\nm1(a,b){return this.Dl(a,b,u.W)}",
+        "code": "Dl(a,b){var t,s,r\ntry{if(B.NU===$.X3){a.$1(b)\nreturn}A.yv(null,null,this,a,b)}catch(r){t=A.Ru(r)\ns=A.ts(r)\nA.Si(t,s)}}\nm1(a,b){return this.Dl(a,b,u.u)}",
         "type": "void Function<#A extends Object?>(void Function(#A),#A)",
         "functionKind": 2
       },
@@ -32942,7 +33114,7 @@
         "parameters": [
           {
             "name": "iterable",
-            "type": "Union([subclass=JSArray], [subclass=_LinkedHashSet], [subtype=ListMixin])",
+            "type": "Union([subclass=JSArray], [subclass=_SetBase], [subtype=ListMixin])",
             "declaredType": "Iterable<dynamic>"
           },
           {
@@ -33775,6 +33947,35 @@
         "inlinedCount": 0,
         "code": "$2(a,b){var t,s=this.a\nif(!s.a)this.b.a+=\", \"\ns.a=!1\ns=this.b\nt=s.a+=A.Ej(a)\ns.a=t+\": \"\ns.a+=A.Ej(b)}",
         "type": "void Function(Object?,Object?)",
+        "functionKind": 2
+      },
+      "dart:collection::MapMixin.containsKey": {
+        "id": "function/dart:collection::MapMixin.containsKey",
+        "kind": "function",
+        "name": "containsKey",
+        "size": 34,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:collection::MapMixin",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "bool",
+        "inferredReturnType": "[exact=JSBool]",
+        "parameters": [
+          {
+            "name": "key",
+            "type": "[exact=JSString]",
+            "declaredType": "Object?"
+          }
+        ],
+        "sideEffects": "SideEffects(reads anything; writes anything)",
+        "inlinedCount": 0,
+        "code": "x4(a,b){return J.vs(this.gv(a),b)}",
+        "type": "bool Function(Object?)",
         "functionKind": 2
       },
       "dart:collection::MapMixin.entries": {
@@ -34645,6 +34846,133 @@
         "code": "",
         "type": "dynamic Function()",
         "functionKind": 3
+      },
+      "dart:collection::_UnmodifiableSet.contains": {
+        "id": "function/dart:collection::_UnmodifiableSet.contains",
+        "kind": "function",
+        "name": "contains",
+        "size": 0,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:collection::_UnmodifiableSet",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "bool",
+        "inferredReturnType": "[exact=JSBool]",
+        "parameters": [
+          {
+            "name": "element",
+            "type": "[exact=JSString]",
+            "declaredType": "Object?"
+          }
+        ],
+        "sideEffects": "SideEffects(reads anything; writes anything)",
+        "inlinedCount": 2,
+        "code": "",
+        "type": "bool Function(Object?)",
+        "functionKind": 2
+      },
+      "dart:collection::_UnmodifiableSet.iterator": {
+        "id": "function/dart:collection::_UnmodifiableSet.iterator",
+        "kind": "function",
+        "name": "iterator",
+        "size": 31,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:collection::_UnmodifiableSet",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "Iterator<_UnmodifiableSet.E>",
+        "inferredReturnType": "Union([exact=ArrayIterator], [exact=LinkedHashMapKeyIterator])",
+        "parameters": [],
+        "sideEffects": "SideEffects(reads anything; writes anything)",
+        "inlinedCount": 0,
+        "code": "gA(a){return J.I(J.Dj(this.a))}",
+        "type": "Iterator<_UnmodifiableSet.E> Function()",
+        "functionKind": 2
+      },
+      "dart:collection::_UnmodifiableSet.length": {
+        "id": "function/dart:collection::_UnmodifiableSet.length",
+        "kind": "function",
+        "name": "length",
+        "size": 26,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:collection::_UnmodifiableSet",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "int",
+        "inferredReturnType": "[subclass=JSInt]",
+        "parameters": [],
+        "sideEffects": "SideEffects(reads anything; writes anything)",
+        "inlinedCount": 0,
+        "code": "gB(a){return J.Hm(this.a)}",
+        "type": "int Function()",
+        "functionKind": 2
+      },
+      "dart:collection::_UnmodifiableSetMixin._throwUnmodifiable": {
+        "id": "function/dart:collection::_UnmodifiableSetMixin._throwUnmodifiable",
+        "kind": "function",
+        "name": "_throwUnmodifiable",
+        "size": 58,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:collection::_UnmodifiableSetMixin",
+        "children": [],
+        "modifiers": {
+          "static": true,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "Never",
+        "inferredReturnType": "[empty]",
+        "parameters": [],
+        "sideEffects": "SideEffects(reads nothing; writes nothing)",
+        "inlinedCount": 0,
+        "code": "hH(){throw A.b(A.u0(\"Cannot change an unmodifiable set\"))}",
+        "type": "Never Function()",
+        "functionKind": 0
+      },
+      "dart:collection::_UnmodifiableSetMixin.add": {
+        "id": "function/dart:collection::_UnmodifiableSetMixin.add",
+        "kind": "function",
+        "name": "add",
+        "size": 22,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:collection::_UnmodifiableSetMixin",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "bool",
+        "inferredReturnType": "[empty]",
+        "parameters": [
+          {
+            "name": "value",
+            "type": "[null|subclass=Object]",
+            "declaredType": "_UnmodifiableSetMixin.E"
+          }
+        ],
+        "sideEffects": "SideEffects(reads nothing; writes nothing)",
+        "inlinedCount": 0,
+        "code": "AN(a,b){return A.hH()}",
+        "type": "bool Function(Object?)",
+        "functionKind": 2
       },
       "dart:collection::_isToStringVisiting": {
         "id": "function/dart:collection::_isToStringVisiting",
@@ -37717,7 +38045,7 @@
           }
         ],
         "sideEffects": "SideEffects(reads nothing; writes anything)",
-        "inlinedCount": 29,
+        "inlinedCount": 31,
         "code": "",
         "type": "String Function(int)",
         "functionKind": 3
@@ -37892,7 +38220,7 @@
           },
           {
             "name": "objects",
-            "type": "Union([subclass=JSArray], [subclass=_LinkedHashSet], [subtype=ListMixin])",
+            "type": "Union([subclass=JSArray], [subclass=_SetBase], [subtype=ListMixin])",
             "declaredType": "Iterable<dynamic>"
           },
           {
@@ -38133,7 +38461,7 @@
         "parameters": [
           {
             "name": "objects",
-            "type": "Union([subclass=JSArray], [subclass=_LinkedHashSet], [subtype=ListMixin])",
+            "type": "Union([subclass=JSArray], [subclass=_SetBase], [subtype=ListMixin])",
             "declaredType": "Iterable<dynamic>"
           },
           {
@@ -40505,6 +40833,35 @@
         "type": "void Function(Object?,Object?)",
         "functionKind": 2
       },
+      "dart:html::Storage.containsKey": {
+        "id": "function/dart:html::Storage.containsKey",
+        "kind": "function",
+        "name": "containsKey",
+        "size": 34,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:html::Storage",
+        "children": [],
+        "modifiers": {
+          "static": false,
+          "const": false,
+          "factory": false,
+          "external": false
+        },
+        "returnType": "bool",
+        "inferredReturnType": "[exact=JSBool]",
+        "parameters": [
+          {
+            "name": "key",
+            "type": "[exact=JSString]",
+            "declaredType": "Object?"
+          }
+        ],
+        "sideEffects": "SideEffects(reads anything; writes anything)",
+        "inlinedCount": 0,
+        "code": "x4(a,b){return a.getItem(b)!=null}",
+        "type": "bool Function(Object?)",
+        "functionKind": 2
+      },
       "dart:html::Storage.forEach": {
         "id": "function/dart:html::Storage.forEach",
         "kind": "function",
@@ -40977,7 +41334,7 @@
         "id": "function/dart:html::_ElementAttributeMap.containsKey",
         "kind": "function",
         "name": "containsKey",
-        "size": 0,
+        "size": 57,
         "outputUnit": "outputUnit/main",
         "parent": "class/dart:html::_ElementAttributeMap",
         "children": [],
@@ -40992,13 +41349,13 @@
         "parameters": [
           {
             "name": "key",
-            "type": "Value([exact=JSString], value: \"checked\")",
+            "type": "[exact=JSString]",
             "declaredType": "Object?"
           }
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 1,
-        "code": "",
+        "code": "x4(a,b){var t=this.a.hasAttribute(b)\nt.toString\nreturn t}",
         "type": "bool Function(Object?)",
         "functionKind": 2
       },
@@ -42455,7 +42812,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "h(a){var t,s,r,q,p,o,n=$.a().value\nn.toString\nr=$.Cz()\nq=A.pS(n,$.n)\np=$.vB()\nr.textContent=null\nr.appendChild(B.p6.n(r,q,p,null)).toString\nr=r.querySelectorAll(\"pre code\")\nr.toString\nr=new A.wz(r,u.V)\nr=new A.a7(r,r.gB(r))\nq=A.Lh(r).c\nfor(;r.G();){p=r.d\nt=p==null?q.a(p):p\ntry{hljs.highlightElement(t)}catch(o){s=A.Ru(o)\nwindow.toString\np=typeof console!=\"undefined\"\np.toString\nif(p)window.console.error(\"Error highlighting markdown:\")\nwindow.toString\np=typeof console!=\"undefined\"\np.toString\nif(p)window.console.error(s)}}if(a!=null)window.localStorage.setItem(\"markdown\",n)}\nr(A,\"z\",0,null,[\"$1\",\"$0\"],[\"h\",function(){return A.h(null)}],23,0)",
+        "code": "h(a){var t,s,r,q,p,o,n=$.a().value\nn.toString\nr=$.Cz()\nq=A.pS(n,$.n)\np=$.vB()\nr.textContent=null\nr.appendChild(B.p6.n(r,q,p,null)).toString\nr=r.querySelectorAll(\"pre code\")\nr.toString\nr=new A.wz(r,u.W)\nr=new A.a7(r,r.gB(r))\nq=A.Lh(r).c\nfor(;r.G();){p=r.d\nt=p==null?q.a(p):p\ntry{hljs.highlightElement(t)}catch(o){s=A.Ru(o)\nwindow.toString\np=typeof console!=\"undefined\"\np.toString\nif(p)window.console.error(\"Error highlighting markdown:\")\nwindow.toString\np=typeof console!=\"undefined\"\np.toString\nif(p)window.console.error(s)}}if(a!=null)window.localStorage.setItem(\"markdown\",n)}\nr(A,\"z\",0,null,[\"$1\",\"$0\"],[\"h\",function(){return A.h(null)}],23,0)",
         "type": "void Function([Event?])",
         "functionKind": 0
       },
@@ -42596,7 +42953,7 @@
         "parameters": [],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "E2(){var t,s,r,q,p=\"Markdown is the **best**!\\n\\n* It has lists.\\n* It has [links](https://dart.dev).\\n* It has...\\n  ```dart\\n  void sourceCode() {}\\n  ```\\n* ...and _so much more_...\",o=\"click\"\n$.J().textContent=\"v7.0.0\"\nt=$.a()\nA.B(t,\"keyup\",A.z(),!1)\ns=window.localStorage.getItem(\"markdown\")\nif(s!=null&&s.length!==0&&s!==p){t.value=s\nt.focus()\nA.h(null)}else A.p(p,82)\nt=$.l()\nt.setAttribute(\"checked\",\"\")\nt.querySelector(\".glyph\").textContent=\"radio_button_checked\"\nr=$.v()\nq=t.id\nq.toString\n$.n=r.q(0,q)\nA.h(null)\nA.B($.G(),o,A.C(),!1)\nA.B($.f(),o,A.C(),!1)\nA.B(t,o,A.C(),!1)}",
+        "code": "E2(){var t,s,r,q,p=\"Markdown is the **best**!\\n\\n* It has lists.\\n* It has [links](https://dart.dev).\\n* It has...\\n  ```dart\\n  void sourceCode() {}\\n  ```\\n* ...and _so much more_...\",o=\"click\"\n$.J().textContent=\"v7.0.1\"\nt=$.a()\nA.B(t,\"keyup\",A.z(),!1)\ns=window.localStorage.getItem(\"markdown\")\nif(s!=null&&s.length!==0&&s!==p){t.value=s\nt.focus()\nA.h(null)}else A.p(p,82)\nt=$.l()\nt.setAttribute(\"checked\",\"\")\nt.querySelector(\".glyph\").textContent=\"radio_button_checked\"\nr=$.v()\nq=t.id\nq.toString\n$.n=r.q(0,q)\nA.h(null)\nA.B($.G(),o,A.C(),!1)\nA.B($.f(),o,A.C(),!1)\nA.B(t,o,A.C(),!1)}",
         "type": "void Function()",
         "functionKind": 0
       },
@@ -43187,10 +43544,10 @@
           "external": false
         },
         "returnType": "BlockSyntax?",
-        "inferredReturnType": "[null|subclass=ListSyntax]",
+        "inferredReturnType": "Union(null, [exact=BlockquoteSyntax], [subclass=ListSyntax])",
         "parameters": [],
         "sideEffects": "SideEffects(reads field; writes nothing)",
-        "inlinedCount": 1,
+        "inlinedCount": 3,
         "code": "",
         "type": "BlockSyntax? Function()",
         "functionKind": 2
@@ -43199,7 +43556,7 @@
         "id": "function/package:markdown/src/block_parser.dart::BlockParser.parseLines",
         "kind": "function",
         "name": "parseLines",
-        "size": 445,
+        "size": 416,
         "outputUnit": "outputUnit/main",
         "parent": "class/package:markdown/src/block_parser.dart::BlockParser",
         "children": [],
@@ -43219,13 +43576,13 @@
           },
           {
             "name": "parentSyntax",
-            "type": "[null|subclass=ListSyntax]",
+            "type": "Union(null, [exact=BlockquoteSyntax], [subclass=ListSyntax])",
             "declaredType": "BlockSyntax?"
           }
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "B9(a,b){var t,s,r,q,p,o,n,m,l,k,j=this\nj.w=b\nj.x=a\nt=A.QI([],u._)\nfor(s=j.a,r=j.c,q=null;j.d<s.length;)for(p=r.length,o=0;o<r.length;r.length===p||(0,A.lk)(r),++o){n=r[o]\nif(q==null?n==null:q===n)continue\nif(n.qf(j)){j.z=j.y\nj.y=n\nm=j.d\nl=n.pI(j)\np=l==null\nif(!p)t.push(l)\nk=j.d\nq=k!==m?null:n\nif(!p||n instanceof A.Fb||n instanceof A.MU)j.e=k\nbreak}}return t}\nnj(){return this.B9(!1,null)}\nMt(a){return this.B9(!1,a)}\nc8(a){return this.B9(a,null)}",
+        "code": "B9(a,b){var t,s,r,q,p,o,n,m,l,k,j=this\nj.w=b\nj.x=a\nt=A.QI([],u._)\nfor(s=j.a,r=j.c,q=null;j.d<s.length;)for(p=r.length,o=0;o<r.length;r.length===p||(0,A.lk)(r),++o){n=r[o]\nif(q==null?n==null:q===n)continue\nif(n.qf(j)){j.z=j.y\nj.y=n\nm=j.d\nl=n.pI(j)\np=l==null\nif(!p)t.push(l)\nk=j.d\nq=k!==m?null:n\nif(!p||n instanceof A.Fb||n instanceof A.MU)j.e=k\nbreak}}return t}\nnj(){return this.B9(!1,null)}\nMt(a){return this.B9(!1,a)}",
         "type": "List<Node> Function({bool disabledSetextHeading,BlockSyntax? parentSyntax})",
         "functionKind": 2
       },
@@ -43536,7 +43893,7 @@
         "id": "function/package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax.parse",
         "kind": "function",
         "name": "parse",
-        "size": 86,
+        "size": 91,
         "outputUnit": "outputUnit/main",
         "parent": "class/package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax",
         "children": [],
@@ -43557,7 +43914,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "pI(a){var t=u.N\nreturn new A.cv(\"blockquote\",A.zY(this.zL(a),a.b).c8($.BH),A.Fl(t,t))}",
+        "code": "pI(a){var t=u.N\nreturn new A.cv(\"blockquote\",A.zY(this.zL(a),a.b).B9($.BH,this),A.Fl(t,t))}",
         "type": "Node Function(BlockParser)",
         "functionKind": 2
       },
@@ -44325,7 +44682,7 @@
         "id": "function/package:markdown/src/block_syntaxes/html_block_syntax.dart::HtmlBlockSyntax.parse",
         "kind": "function",
         "name": "parse",
-        "size": 189,
+        "size": 237,
         "outputUnit": "outputUnit/main",
         "parent": "class/package:markdown/src/block_syntaxes/html_block_syntax.dart::HtmlBlockSyntax",
         "children": [
@@ -44348,7 +44705,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "pI(a){var t=this.zL(a),s=B.xB.OF(new A.lJ(t,new A.Dr(),A.t6(t).C(\"lJ<1,qU>\")).zV(0,\"\\n\"))\nreturn new A.kJ(a.z!=null?\"\\n\"+s:s)}",
+        "code": "pI(a){var t=this.zL(a),s=B.xB.OF(new A.lJ(t,new A.Dr(),A.t6(t).C(\"lJ<1,qU>\")).zV(0,\"\\n\"))\nif(a.z!=null||a.w!=null){s=\"\\n\"+s\nif(a.w instanceof A.Xx)s+=\"\\n\"}return new A.kJ(s)}",
         "type": "Node Function(BlockParser)",
         "functionKind": 2
       },
@@ -45576,7 +45933,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "aE(a){var t,s,r,q,p,o,n,m,l\nfor(t=J.U6(a),s=u.r,r=u.R,q=u._,p=0;p<t.gB(a);++p){o=t.q(a,p)\nif(o instanceof A.nF){n=o.a\nm=new A.kY(n,this,A.QI([],s),A.QI([],r),A.QI([],q))\nm.PJ(n,this)\nl=m.oK()\nt.W4(a,p)\nt.UG(a,p,l)\np+=l.length-1}else if(o instanceof A.cv&&o.b!=null){n=o.b\nn.toString\nthis.aE(n)}}}",
+        "code": "aE(a){var t,s,r,q,p,o,n,m,l\nfor(t=J.U6(a),s=u.r,r=u.U,q=u._,p=0;p<t.gB(a);++p){o=t.q(a,p)\nif(o instanceof A.nF){n=o.a\nm=new A.kY(n,this,A.QI([],s),A.QI([],r),A.QI([],q))\nm.PJ(n,this)\nl=m.oK()\nt.W4(a,p)\nt.UG(a,p,l)\np+=l.length-1}else if(o instanceof A.cv&&o.b!=null){n=o.b\nn.toString\nthis.aE(n)}}}",
         "type": "void Function(List<Node>)",
         "functionKind": 2
       },
@@ -46154,7 +46511,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "pS(a,b){var t,s,r=A.r2(u.B),q=A.r2(u.t),p=b==null?null:b.b.length!==0\np=p===!0\nt=new A.QF(A.Fl(u.N,u.q),null,null,!0,!0,!0,r,q,p)\nr.FV(0,B.xD)\nq.FV(0,B.dn)\nif(b==null){p=$.Rn()\nr.FV(0,p.a)\nq.FV(0,p.b)}else{r.FV(0,b.a)\nq.FV(0,b.b)}r=A.DF(a)\nr=A.K1(r,A.xq(),A.Lh(r).C(\"Ly.E\"),u.d)\ns=A.zY(A.Y1(r,!0,A.Lh(r).C(\"Ly.E\")),t).nj()\nt.aE(s)\nreturn A.pH(!1).dd(s)+\"\\n\"}",
+        "code": "pS(a,b){var t,s,r=A.r2(u.B),q=A.r2(u.t),p=b==null?null:b.b.length!==0\np=p===!0\nt=new A.QF(A.Fl(u.N,u.q),null,null,!0,!0,!0,r,q,p)\nr.FV(0,B.xD)\nq.FV(0,B.dn)\nif(b==null){p=$.Rn()\nr.FV(0,p.a)\nq.FV(0,p.b)}else{r.FV(0,b.a)\nq.FV(0,b.b)}r=A.DF(a)\nr=A.K1(r,A.xq(),A.Lh(r).C(\"Ly.E\"),u.j)\ns=A.zY(A.Y1(r,!0,A.Lh(r).C(\"Ly.E\")),t).nj()\nt.aE(s)\nreturn A.pH(!1).dd(s)+\"\\n\"}",
         "type": "String Function(String,{Iterable<BlockSyntax> blockSyntaxes,bool enableTagfilter,bool encodeHtml,ExtensionSet? extensionSet,Node? Function(String,[String?])? imageLinkResolver,bool inlineOnly,Iterable<InlineSyntax> inlineSyntaxes,Node? Function(String,[String?])? linkResolver,bool withDefaultBlockSyntaxes,bool withDefaultInlineSyntaxes})",
         "functionKind": 0
       },
@@ -46313,7 +46670,7 @@
         "parameters": [],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "cJ(){var t,s,r,q,p,o,n,m,l=this,k=l.f,j=B.Nm.WN(k,new A.bm())\nif(j===-1){l.r.push(new A.kJ(\"]\"))\nl.e=++l.d\nreturn}t=u.j.a(k[j])\nif(!t.d){B.Nm.W4(k,j)\nl.r.push(new A.kJ(\"]\"))\nl.e=++l.d\nreturn}s=t.r\nif(s instanceof A.Hr&&B.Nm.V(l.c,new A.Dk())){r=l.r\nq=B.Nm.WN(r,new A.H2(t))\np=s.Jc(0,l,t,null,new A.X8(l,j,q))\nif(p!=null){B.Nm.W4(k,j)\nif(t.b===91)for(k=B.Nm.aM(k,0,j),o=k.length,n=0;n<k.length;k.length===o||(0,A.lk)(k),++n){m=k[n]\nif(m.gPw()===91)m.sHy(!1)}B.Nm.i7(r,q,r.length,p)\nl.e=++l.d}else{B.Nm.W4(k,j)\nk=l.e\nl.d=k\nl.d=k+1}}else throw A.b(A.PV('Non-link syntax delimiter found with character \"'+t.b+'\"'))}",
+        "code": "cJ(){var t,s,r,q,p,o,n,m,l=this,k=l.f,j=B.Nm.WN(k,new A.bm())\nif(j===-1){l.r.push(new A.kJ(\"]\"))\nl.e=++l.d\nreturn}t=u.n.a(k[j])\nif(!t.d){B.Nm.W4(k,j)\nl.r.push(new A.kJ(\"]\"))\nl.e=++l.d\nreturn}s=t.r\nif(s instanceof A.Hr&&B.Nm.V(l.c,new A.Dk())){r=l.r\nq=B.Nm.WN(r,new A.H2(t))\np=s.Jc(0,l,t,null,new A.X8(l,j,q))\nif(p!=null){B.Nm.W4(k,j)\nif(t.b===91)for(k=B.Nm.aM(k,0,j),o=k.length,n=0;n<k.length;k.length===o||(0,A.lk)(k),++n){m=k[n]\nif(m.gPw()===91)m.sHy(!1)}B.Nm.i7(r,q,r.length,p)\nl.e=++l.d}else{B.Nm.W4(k,j)\nk=l.e\nl.d=k\nl.d=k+1}}else throw A.b(A.PV('Non-link syntax delimiter found with character \"'+t.b+'\"'))}",
         "type": "void Function()",
         "functionKind": 2
       },
@@ -46647,7 +47004,7 @@
           }
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
-        "inlinedCount": 22,
+        "inlinedCount": 24,
         "code": "",
         "type": "int Function(int)",
         "functionKind": 2
@@ -46923,7 +47280,7 @@
         "id": "function/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax.tryMatch",
         "kind": "function",
         "name": "tryMatch",
-        "size": 86,
+        "size": 250,
         "outputUnit": "outputUnit/main",
         "parent": "class/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax",
         "children": [],
@@ -46944,7 +47301,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "Bh(a){var t=a.d,s=this.a.wL(0,a.a,t)\nif(s==null)return!1\na.bB()\nthis.jS(a,s)\nreturn!0}",
+        "code": "Bh(a){var t,s=a.d,r=a.a,q=this.a.wL(0,r,s)\nif(q==null)return!1\nt=q.b\nif(t[1]!=null&&a.d>0)if(!J.on(B.Uo.a,A.Lw(B.xB.O2(r,a.d-1))))return!1\nif(t[2]!=null&&r.length>q.geX())if(J.on(B.Bu.a,A.Lw(B.xB.O2(r,q.geX()))))return!1\na.bB()\nthis.jS(a,q)\nreturn!0}",
         "type": "bool Function(InlineParser,[int?])",
         "functionKind": 2
       },
@@ -47985,7 +48342,7 @@
         "id": "function/package:markdown/src/inline_syntaxes/image_syntax.dart::ImageSyntax.createNode",
         "kind": "function",
         "name": "createNode",
-        "size": 330,
+        "size": 331,
         "outputUnit": "outputUnit/main",
         "parent": "class/package:markdown/src/inline_syntaxes/image_syntax.dart::ImageSyntax",
         "children": [
@@ -48018,7 +48375,7 @@
         ],
         "sideEffects": "SideEffects(reads anything; writes anything)",
         "inlinedCount": 0,
-        "code": "Sn(a,b,c){var t,s=u.N\ns=A.Fl(s,s)\nt=c.$0()\ns.t(0,\"src\",a)\ns.t(0,\"alt\",J.M1(t,new A.Ez(),u.u).eC(0))\nif(b!=null&&b.length!==0)s.t(0,\"title\",B.V3.WJ(A.yD(b,$.bA(),A.YI(),null)))\nreturn new A.cv(\"img\",null,s)}",
+        "code": "Sn(a,b,c){var t,s=u.N\ns=A.Fl(s,s)\nt=c.$0()\ns.t(0,\"src\",a)\ns.t(0,\"alt\",J.M1(t,new A.Ez(),u.aD).eC(0))\nif(b!=null&&b.length!==0)s.t(0,\"title\",B.V3.WJ(A.yD(b,$.bA(),A.YI(),null)))\nreturn new A.cv(\"img\",null,s)}",
         "type": "Element Function(String,String?,{List<Node> Function() getChildren})",
         "functionKind": 2
       },
@@ -52194,6 +52551,18 @@
         "code": "",
         "type": "_LinkedHashSet<_LinkedHashSetIterator.E>"
       },
+      "dart:collection::_UnmodifiableSet._map": {
+        "id": "field/dart:collection::_UnmodifiableSet._map",
+        "kind": "field",
+        "name": "_map",
+        "size": 0,
+        "outputUnit": "outputUnit/main",
+        "parent": "class/dart:collection::_UnmodifiableSet",
+        "children": [],
+        "inferredType": "[null|subtype=Map]",
+        "code": "",
+        "type": "Map<_UnmodifiableSet.E,Null>"
+      },
       "dart:collection::_toStringVisiting": {
         "id": "field/dart:collection::_toStringVisiting",
         "kind": "field",
@@ -53478,7 +53847,7 @@
         "outputUnit": "outputUnit/main",
         "parent": "class/package:markdown/src/block_parser.dart::BlockParser",
         "children": [],
-        "inferredType": "[null|subclass=ListSyntax]",
+        "inferredType": "Union(null, [exact=BlockquoteSyntax], [subclass=ListSyntax])",
         "code": "",
         "type": "BlockSyntax?"
       },
@@ -53846,12 +54215,12 @@
         "id": "field/package:markdown/src/extension_set.dart::ExtensionSet.gitHubWeb",
         "kind": "field",
         "name": "gitHubWeb",
-        "size": 684,
+        "size": 659,
         "outputUnit": "outputUnit/main",
         "parent": "class/package:markdown/src/extension_set.dart::ExtensionSet",
         "children": [],
         "inferredType": "[null|exact=ExtensionSet]",
-        "code": "t($,\"DD\",\"EB\",()=>A.jw(A.AF(A.QI([B.hM,B.Ta,B.X8,B.I7,B.vj,B.nU],u.I),u.B),A.AF(A.QI([A.RO(),new A.dL(!0,!0,A.QI([A.Wd(\"del\",2)],u.e),A.nu(\"~+\",!0,!0),126),new A.An(A.nu(\":([a-z0-9_+-]+):\",!0,!0),null),new A.Ye(A.nu(\"`((#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8}))|([Rr][Gg][Bb][Aa]?\\\\((\\\\d+[%]?),(\\\\d+[%]?),(\\\\d+[%]?),?(\\\\d+\\\\.?\\\\d+[%]?)?\\\\))|([Hh][Ss][Ll][Aa]?\\\\((\\\\d+[%]?),(\\\\d+[%]?),(\\\\d+[%]?),?(\\\\d+\\\\.?\\\\d+[%]?)?\\\\)))`\",!0,!0),null),new A.oQ(A.nu(\"((?<=^|[\\\\s*_~(>])(?:(?:https?|ftp):\\\\/\\\\/|www\\\\.)(?:[-_a-z0-9]+\\\\.)*(?:[-a-z0-9]+\\\\.[-a-z0-9]+)[^\\\\s<]*(?<![?!.,:*_~]))|([-_.+a-z0-9]+@(?:[-_a-z0-9]+\\\\.)+[-_a-z0-9]*[a-z0-9](?![-_]))\",!1,!0),null)],u.r),u.t)))",
+        "code": "t($,\"DD\",\"EB\",()=>A.jw(A.AF(A.QI([B.hM,B.Ta,B.X8,B.I7,B.vj,B.nU],u.I),u.B),A.AF(A.QI([A.RO(),new A.dL(!0,!0,A.QI([A.Wd(\"del\",2)],u.e),A.nu(\"~+\",!0,!0),126),new A.An(A.nu(\":([a-z0-9_+-]+):\",!0,!0),null),new A.Ye(A.nu(\"`((#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8}))|([Rr][Gg][Bb][Aa]?\\\\((\\\\d+[%]?),(\\\\d+[%]?),(\\\\d+[%]?),?(\\\\d+\\\\.?\\\\d+[%]?)?\\\\))|([Hh][Ss][Ll][Aa]?\\\\((\\\\d+[%]?),(\\\\d+[%]?),(\\\\d+[%]?),?(\\\\d+\\\\.?\\\\d+[%]?)?\\\\)))`\",!0,!0),null),new A.oQ(A.nu(\"((?:(?:https?|ftp):\\\\/\\\\/|www\\\\.)(?:[-_a-z0-9]+\\\\.)*(?:[-a-z0-9]+\\\\.[-a-z0-9]+)[^\\\\s<]*[^\\\\s<?!.,:*_~])|([-_.+a-z0-9]+@(?:[-_a-z0-9]+\\\\.)+[-_a-z0-9]*[a-z0-9])\",!1,!0),null)],u.r),u.t)))",
         "type": "ExtensionSet"
       },
       "package:markdown/src/extension_set.dart::ExtensionSet.inlineSyntaxes": {
@@ -54744,6 +55113,14 @@
       }
     },
     "constant": {
+      "B.Bu=new A.ZY(B.a3,u.C)": {
+        "id": "constant/B.Bu=new A.ZY(B.a3,u.C)",
+        "kind": "constant",
+        "name": "",
+        "size": 23,
+        "outputUnit": "outputUnit/main",
+        "code": "B.Bu=new A.ZY(B.a3,u.C)"
+      },
       "B.DG=J.c5.prototype": {
         "id": "constant/B.DG=J.c5.prototype",
         "kind": "constant",
@@ -54751,6 +55128,14 @@
         "size": 19,
         "outputUnit": "outputUnit/main",
         "code": "B.DG=J.c5.prototype"
+      },
+      "B.EV=new A.LP(6,{\" \":null,\"*\":null,_:null,\"~\":null,\"(\":null,\">\":null},B.m4,u.d)": {
+        "id": "constant/B.EV=new A.LP(6,{\" \":null,\"*\":null,_:null,\"~\":null,\"(\":null,\">\":null},B.m4,u.d)",
+        "kind": "constant",
+        "name": "",
+        "size": 79,
+        "outputUnit": "outputUnit/main",
+        "code": "B.EV=new A.LP(6,{\" \":null,\"*\":null,_:null,\"~\":null,\"(\":null,\">\":null},B.m4,u.d)"
       },
       "B.Eq=new A.k5()": {
         "id": "constant/B.Eq=new A.k5()",
@@ -54928,6 +55313,14 @@
         "outputUnit": "outputUnit/main",
         "code": "B.Ub=J.MF.prototype"
       },
+      "B.Uo=new A.ZY(B.EV,u.C)": {
+        "id": "constant/B.Uo=new A.ZY(B.EV,u.C)",
+        "kind": "constant",
+        "name": "",
+        "size": 23,
+        "outputUnit": "outputUnit/main",
+        "code": "B.Uo=new A.ZY(B.EV,u.C)"
+      },
       "B.V3=new A.Rc(B.to)": {
         "id": "constant/B.V3=new A.Rc(B.to)",
         "kind": "constant",
@@ -54999,6 +55392,14 @@
         "size": 19,
         "outputUnit": "outputUnit/main",
         "code": "B.ZQ=J.iC.prototype"
+      },
+      "B.a3=new A.LP(2,{_:null,\"-\":null},B.wl,u.d)": {
+        "id": "constant/B.a3=new A.LP(2,{_:null,\"-\":null},B.wl,u.d)",
+        "kind": "constant",
+        "name": "",
+        "size": 43,
+        "outputUnit": "outputUnit/main",
+        "code": "B.a3=new A.LP(2,{_:null,\"-\":null},B.wl,u.d)"
       },
       "B.az=new A.ly()": {
         "id": "constant/B.az=new A.ly()",
@@ -55104,6 +55505,14 @@
         "outputUnit": "outputUnit/main",
         "code": "B.ll=new A.Fj()"
       },
+      "B.m4=A.QI(t([\" \",\"*\",\"_\",\"~\",\"(\",\">\"]),u.s)": {
+        "id": "constant/B.m4=A.QI(t([\" \",\"*\",\"_\",\"~\",\"(\",\">\"]),u.s)",
+        "kind": "constant",
+        "name": "",
+        "size": 43,
+        "outputUnit": "outputUnit/main",
+        "code": "B.m4=A.QI(t([\" \",\"*\",\"_\",\"~\",\"(\",\">\"]),u.s)"
+      },
       "B.nU=new A.Tb()": {
         "id": "constant/B.nU=new A.Tb()",
         "kind": "constant",
@@ -55207,6 +55616,14 @@
         "size": 469,
         "outputUnit": "outputUnit/main",
         "code": "B.wb=function(getTagFallback) {\n  return function(hooks) {\n    if (typeof navigator != \"object\") return hooks;\n    var ua = navigator.userAgent;\n    if (ua.indexOf(\"DumpRenderTree\") >= 0) return hooks;\n    if (ua.indexOf(\"Chrome\") >= 0) {\n      function confirm(p) {\n        return typeof window == \"object\" && window[p] && window[p].name == p;\n      }\n      if (confirm(\"Window\") && confirm(\"HTMLElement\")) return hooks;\n    }\n    hooks.getTag = getTagFallback;\n  };\n}"
+      },
+      "B.wl=A.QI(t([\"_\",\"-\"]),u.s)": {
+        "id": "constant/B.wl=A.QI(t([\"_\",\"-\"]),u.s)",
+        "kind": "constant",
+        "name": "",
+        "size": 27,
+        "outputUnit": "outputUnit/main",
+        "code": "B.wl=A.QI(t([\"_\",\"-\"]),u.s)"
       },
       "B.xB=J.Ac.prototype": {
         "id": "constant/B.xB=J.Ac.prototype",
@@ -56323,6 +56740,14 @@
         "id": "function/dart:_late_helper::throwLateFieldADI"
       }
     ],
+    "field/dart:_js_helper::_ConstantMapKeyIterable._map": [
+      {
+        "id": "function/dart:_js_helper::throwCyclicInit"
+      },
+      {
+        "id": "function/dart:_late_helper::throwLateFieldADI"
+      }
+    ],
     "field/dart:_js_helper::_CyclicInitializationError.variableName": [
       {
         "id": "function/dart:_js_helper::throwCyclicInit"
@@ -56508,6 +56933,14 @@
       }
     ],
     "field/dart:collection::_LinkedHashSetIterator._set": [
+      {
+        "id": "function/dart:_js_helper::throwCyclicInit"
+      },
+      {
+        "id": "function/dart:_late_helper::throwLateFieldADI"
+      }
+    ],
+    "field/dart:collection::_UnmodifiableSet._map": [
       {
         "id": "function/dart:_js_helper::throwCyclicInit"
       },
@@ -59455,6 +59888,10 @@
         "mask": "inlined"
       },
       {
+        "id": "function/dart:_interceptors::ArrayIterator.ArrayIterator",
+        "mask": "inlined"
+      },
+      {
         "id": "function/dart:_interceptors::ArrayIterator.ArrayIterator"
       }
     ],
@@ -61366,6 +61803,10 @@
         "mask": "[subtype=Iterable]"
       },
       {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "mask": "[subtype=Iterable]"
+      },
+      {
         "id": "function/dart:_js_helper::_StringAllMatchesIterable.iterator",
         "mask": "[subtype=Iterable]"
       },
@@ -61375,6 +61816,10 @@
       },
       {
         "id": "function/dart:collection::_LinkedHashSet.iterator",
+        "mask": "[subtype=Iterable]"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.iterator",
         "mask": "[subtype=Iterable]"
       },
       {
@@ -61418,6 +61863,10 @@
         "mask": "[subtype=Iterable]"
       },
       {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.length",
+        "mask": "[subtype=Iterable]"
+      },
+      {
         "id": "function/dart:_native_typed_data::NativeTypedArray.length",
         "mask": "[subtype=Iterable]"
       },
@@ -61427,6 +61876,10 @@
       },
       {
         "id": "function/dart:collection::_LinkedHashSet.length",
+        "mask": "[subtype=Iterable]"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.length",
         "mask": "[subtype=Iterable]"
       },
       {
@@ -62355,6 +62808,10 @@
         "mask": "[subtype=Iterable]"
       },
       {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "mask": "[subtype=Iterable]"
+      },
+      {
         "id": "function/dart:_js_helper::_StringAllMatchesIterable.iterator",
         "mask": "[subtype=Iterable]"
       },
@@ -62364,6 +62821,10 @@
       },
       {
         "id": "function/dart:collection::_LinkedHashSet.iterator",
+        "mask": "[subtype=Iterable]"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.iterator",
         "mask": "[subtype=Iterable]"
       },
       {
@@ -62824,6 +63285,18 @@
       },
       {
         "id": "function/dart:_js_helper::jsPropertyAccess"
+      }
+    ],
+    "function/dart:_js_helper::ConstantStringMap.keys": [
+      {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable._ConstantMapKeyIterable",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable._ConstantMapKeyIterable"
+      },
+      {
+        "id": "function/dart:_rti::Rti._eval"
       }
     ],
     "function/dart:_js_helper::ConstantStringMap.length": [
@@ -63710,6 +64183,15 @@
         "id": "field/dart:_js_helper::JsNoSuchMethodError._receiver"
       }
     ],
+    "function/dart:_js_helper::LinkedHashMapKeyIterable.contains": [
+      {
+        "id": "field/dart:_js_helper::LinkedHashMapKeyIterable._map"
+      },
+      {
+        "id": "function/dart:_js_helper::JsLinkedHashMap.containsKey",
+        "mask": "[subclass=JsLinkedHashMap]"
+      }
+    ],
     "function/dart:_js_helper::LinkedHashMapKeyIterable.iterator": [
       {
         "id": "field/dart:_js_helper::JsLinkedHashMap._first"
@@ -64484,6 +64966,46 @@
         "id": "function/dart:_js_helper::_MatchImplementation.start"
       }
     ],
+    "function/dart:_js_helper::_ConstantMapKeyIterable.iterator": [
+      {
+        "id": "field/dart:_js_helper::ConstantStringMap._keys"
+      },
+      {
+        "id": "field/dart:_js_helper::_ConstantMapKeyIterable._map"
+      },
+      {
+        "id": "function/dart:_interceptors::ArrayIterator.ArrayIterator"
+      },
+      {
+        "id": "function/dart:_interceptors::JSArray.iterator",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_interceptors::JSArray.iterator"
+      },
+      {
+        "id": "function/dart:_js_helper::ConstantStringMap._keysArray",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_js_helper::ConstantStringMap._keysArray"
+      }
+    ],
+    "function/dart:_js_helper::_ConstantMapKeyIterable.length": [
+      {
+        "id": "field/dart:_js_helper::ConstantStringMap._keys"
+      },
+      {
+        "id": "field/dart:_js_helper::_ConstantMapKeyIterable._map"
+      },
+      {
+        "id": "function/dart:_js_helper::ConstantStringMap._keysArray",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_js_helper::ConstantStringMap._keysArray"
+      }
+    ],
     "function/dart:_js_helper::_CyclicInitializationError.toString": [
       {
         "id": "field/dart:_js_helper::_CyclicInitializationError.variableName"
@@ -64492,6 +65014,14 @@
     "function/dart:_js_helper::_MatchImplementation.[]": [
       {
         "id": "field/dart:_js_helper::_MatchImplementation._match"
+      },
+      {
+        "id": "function/dart:_js_helper::_MatchImplementation.group",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_js_helper::_MatchImplementation.group",
+        "mask": "inlined"
       },
       {
         "id": "function/dart:_js_helper::_MatchImplementation.group",
@@ -64852,6 +65382,10 @@
         "mask": "[subclass=Object]"
       },
       {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.length",
+        "mask": "[subclass=Object]"
+      },
+      {
         "id": "function/dart:_native_typed_data::NativeTypedArray.length",
         "mask": "[subclass=Object]"
       },
@@ -64868,6 +65402,10 @@
       },
       {
         "id": "function/dart:collection::_LinkedHashSet.length",
+        "mask": "[subclass=Object]"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.length",
         "mask": "[subclass=Object]"
       },
       {
@@ -76212,6 +76750,31 @@
         "id": "function/dart:core::StringBuffer.write"
       }
     ],
+    "function/dart:collection::MapMixin.containsKey": [
+      {
+        "id": "function/dart:_interceptors::JSArray.contains",
+        "mask": "Union([exact=JSExtendableArray], [exact=LinkedHashMapKeyIterable])"
+      },
+      {
+        "id": "function/dart:_interceptors::getNativeInterceptor"
+      },
+      {
+        "id": "function/dart:_js_helper::JsLinkedHashMap.keys",
+        "mask": "[subtype=MapMixin]"
+      },
+      {
+        "id": "function/dart:_js_helper::LinkedHashMapKeyIterable.contains",
+        "mask": "Union([exact=JSExtendableArray], [exact=LinkedHashMapKeyIterable])"
+      },
+      {
+        "id": "function/dart:html::Storage.keys",
+        "mask": "[subtype=MapMixin]"
+      },
+      {
+        "id": "function/dart:html::_AttributeMap.keys",
+        "mask": "[subtype=MapMixin]"
+      }
+    ],
     "function/dart:collection::MapMixin.entries": [
       {
         "id": "function/dart:_interceptors::JSArray.map",
@@ -76605,7 +77168,11 @@
       },
       {
         "id": "function/dart:collection::_LinkedHashSet.add",
-        "mask": "[subclass=_LinkedHashSet]"
+        "mask": "[subclass=_SetBase]"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSetMixin.add",
+        "mask": "[subclass=_SetBase]"
       }
     ],
     "function/dart:collection::SetMixin.toString": [
@@ -77059,6 +77626,83 @@
         "id": "function/dart:core::ConcurrentModificationError.ConcurrentModificationError"
       }
     ],
+    "function/dart:collection::_UnmodifiableSet.iterator": [
+      {
+        "id": "field/dart:collection::_UnmodifiableSet._map"
+      },
+      {
+        "id": "function/dart:_interceptors::JSArray.iterator",
+        "mask": "Union([exact=JSExtendableArray], [exact=LinkedHashMapKeyIterable], [exact=_ConstantMapKeyIterable])"
+      },
+      {
+        "id": "function/dart:_interceptors::getNativeInterceptor"
+      },
+      {
+        "id": "function/dart:_js_helper::ConstantStringMap.keys",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:_js_helper::JsLinkedHashMap.keys",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:_js_helper::LinkedHashMapKeyIterable.iterator",
+        "mask": "Union([exact=JSExtendableArray], [exact=LinkedHashMapKeyIterable], [exact=_ConstantMapKeyIterable])"
+      },
+      {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "mask": "Union([exact=JSExtendableArray], [exact=LinkedHashMapKeyIterable], [exact=_ConstantMapKeyIterable])"
+      },
+      {
+        "id": "function/dart:html::Storage.keys",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:html::_AttributeMap.keys",
+        "mask": "[subtype=Map]"
+      }
+    ],
+    "function/dart:collection::_UnmodifiableSet.length": [
+      {
+        "id": "field/dart:collection::_UnmodifiableSet._map"
+      },
+      {
+        "id": "function/dart:_interceptors::getNativeInterceptor"
+      },
+      {
+        "id": "function/dart:_js_helper::ConstantStringMap.length",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:_js_helper::JsLinkedHashMap.length",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:collection::MapMixin.length",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:html::Storage.length",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:html::_ElementAttributeMap.length",
+        "mask": "[subtype=Map]"
+      }
+    ],
+    "function/dart:collection::_UnmodifiableSetMixin._throwUnmodifiable": [
+      {
+        "id": "function/dart:_js_helper::wrapException"
+      },
+      {
+        "id": "function/dart:core::UnsupportedError.UnsupportedError"
+      }
+    ],
+    "function/dart:collection::_UnmodifiableSetMixin.add": [
+      {
+        "id": "function/dart:collection::_UnmodifiableSetMixin._throwUnmodifiable"
+      }
+    ],
     "function/dart:collection::_isToStringVisiting": [
       {
         "id": "field/dart:collection::_toStringVisiting"
@@ -77135,6 +77779,10 @@
       {
         "id": "function/dart:_js_helper::_AllMatchesIterator.moveNext",
         "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "mask": "[subclass=Iterable]"
       },
       {
         "id": "function/dart:_js_helper::_StringAllMatchesIterable.iterator",
@@ -78046,6 +78694,10 @@
         "mask": "[subtype=Iterator]"
       },
       {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "mask": "[subclass=Iterable]"
+      },
+      {
         "id": "function/dart:_js_helper::_StringAllMatchesIterable.iterator",
         "mask": "[subclass=Iterable]"
       },
@@ -78252,6 +78904,10 @@
       {
         "id": "function/dart:_js_helper::_AllMatchesIterator.moveNext",
         "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "mask": "[subclass=Iterable]"
       },
       {
         "id": "function/dart:_js_helper::_CyclicInitializationError.toString",
@@ -78504,6 +79160,10 @@
         "mask": "[subtype=Iterator]"
       },
       {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "mask": "[subclass=Iterable]"
+      },
+      {
         "id": "function/dart:_js_helper::_StringAllMatchesIterable.iterator",
         "mask": "[subclass=Iterable]"
       },
@@ -78648,6 +79308,10 @@
         "mask": "[subtype=Iterator]"
       },
       {
+        "id": "function/dart:_js_helper::_ConstantMapKeyIterable.iterator",
+        "mask": "[subtype=Iterable]"
+      },
+      {
         "id": "function/dart:_js_helper::_StringAllMatchesIterable.iterator",
         "mask": "[subtype=Iterable]"
       },
@@ -78680,6 +79344,10 @@
       {
         "id": "function/dart:collection::_LinkedHashSetIterator.moveNext",
         "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.iterator",
+        "mask": "[subtype=Iterable]"
       },
       {
         "id": "function/dart:convert::_LineSplitIterable.iterator",
@@ -78924,15 +79592,15 @@
     "function/dart:core::StringBuffer._writeAll": [
       {
         "id": "function/dart:_interceptors::ArrayIterator.current",
-        "mask": "Union([exact=ArrayIterator], [exact=FixedSizeListIterator], [exact=ListIterator], [exact=_LinkedHashSetIterator])"
+        "mask": "[subtype=Iterator]"
       },
       {
         "id": "function/dart:_interceptors::ArrayIterator.moveNext",
-        "mask": "Union([exact=ArrayIterator], [exact=FixedSizeListIterator], [exact=ListIterator], [exact=_LinkedHashSetIterator])"
+        "mask": "[subtype=Iterator]"
       },
       {
         "id": "function/dart:_interceptors::JSArray.iterator",
-        "mask": "Union([subclass=JSArray], [subclass=_LinkedHashSet], [subtype=ListMixin])"
+        "mask": "Union([subclass=JSArray], [subclass=_SetBase], [subtype=ListMixin])"
       },
       {
         "id": "function/dart:_interceptors::JSString.isEmpty",
@@ -78946,11 +79614,35 @@
       },
       {
         "id": "function/dart:_internal::ListIterator.current",
-        "mask": "Union([exact=ArrayIterator], [exact=FixedSizeListIterator], [exact=ListIterator], [exact=_LinkedHashSetIterator])"
+        "mask": "[subtype=Iterator]"
       },
       {
         "id": "function/dart:_internal::ListIterator.moveNext",
-        "mask": "Union([exact=ArrayIterator], [exact=FixedSizeListIterator], [exact=ListIterator], [exact=_LinkedHashSetIterator])"
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_internal::MappedIterator.current",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_internal::MappedIterator.moveNext",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_internal::WhereIterator.current",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_internal::WhereIterator.moveNext",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_js_helper::LinkedHashMapKeyIterator.current",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_js_helper::LinkedHashMapKeyIterator.moveNext",
+        "mask": "[subtype=Iterator]"
       },
       {
         "id": "function/dart:_js_helper::Primitives.stringConcatUnchecked"
@@ -78959,20 +79651,48 @@
         "id": "function/dart:_js_helper::S"
       },
       {
+        "id": "function/dart:_js_helper::_AllMatchesIterator.current",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_js_helper::_AllMatchesIterator.moveNext",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_js_helper::_StringAllMatchesIterator.current",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:_js_helper::_StringAllMatchesIterator.moveNext",
+        "mask": "[subtype=Iterator]"
+      },
+      {
         "id": "function/dart:collection::ListMixin.iterator",
-        "mask": "Union([subclass=JSArray], [subclass=_LinkedHashSet], [subtype=ListMixin])"
+        "mask": "Union([subclass=JSArray], [subclass=_SetBase], [subtype=ListMixin])"
       },
       {
         "id": "function/dart:collection::_LinkedHashSet.iterator",
-        "mask": "Union([subclass=JSArray], [subclass=_LinkedHashSet], [subtype=ListMixin])"
+        "mask": "Union([subclass=JSArray], [subclass=_SetBase], [subtype=ListMixin])"
       },
       {
         "id": "function/dart:collection::_LinkedHashSetIterator.current",
-        "mask": "Union([exact=ArrayIterator], [exact=FixedSizeListIterator], [exact=ListIterator], [exact=_LinkedHashSetIterator])"
+        "mask": "[subtype=Iterator]"
       },
       {
         "id": "function/dart:collection::_LinkedHashSetIterator.moveNext",
-        "mask": "Union([exact=ArrayIterator], [exact=FixedSizeListIterator], [exact=ListIterator], [exact=_LinkedHashSetIterator])"
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.iterator",
+        "mask": "Union([subclass=JSArray], [subclass=_SetBase], [subtype=ListMixin])"
+      },
+      {
+        "id": "function/dart:convert::_LineSplitIterator.current",
+        "mask": "[subtype=Iterator]"
+      },
+      {
+        "id": "function/dart:convert::_LineSplitIterator.moveNext",
+        "mask": "[subtype=Iterator]"
       },
       {
         "id": "function/dart:core::StringBuffer._writeOne",
@@ -78995,15 +79715,15 @@
       },
       {
         "id": "function/dart:html::FixedSizeListIterator.current",
-        "mask": "Union([exact=ArrayIterator], [exact=FixedSizeListIterator], [exact=ListIterator], [exact=_LinkedHashSetIterator])"
+        "mask": "[subtype=Iterator]"
       },
       {
         "id": "function/dart:html::FixedSizeListIterator.moveNext",
-        "mask": "Union([exact=ArrayIterator], [exact=FixedSizeListIterator], [exact=ListIterator], [exact=_LinkedHashSetIterator])"
+        "mask": "[subtype=Iterator]"
       },
       {
         "id": "function/dart:html::ImmutableListMixin.iterator",
-        "mask": "Union([subclass=JSArray], [subclass=_LinkedHashSet], [subtype=ListMixin])"
+        "mask": "Union([subclass=JSArray], [subclass=_SetBase], [subtype=ListMixin])"
       }
     ],
     "function/dart:core::StringBuffer._writeOne": [
@@ -81041,6 +81761,11 @@
       {
         "id": "function/dart:html::Element.setAttribute",
         "mask": "inlined"
+      }
+    ],
+    "function/dart:html::_ElementAttributeMap.containsKey": [
+      {
+        "id": "field/dart:html::_AttributeMap._element"
       }
     ],
     "function/dart:html::_ElementAttributeMap.length": [
@@ -83386,8 +84111,7 @@
         "id": "function/package:markdown/src/block_parser.dart::BlockParser.BlockParser"
       },
       {
-        "id": "function/package:markdown/src/block_parser.dart::BlockParser.parseLines",
-        "mask": "[exact=BlockParser]"
+        "id": "function/package:markdown/src/block_parser.dart::BlockParser.parseLines"
       },
       {
         "id": "function/package:markdown/src/block_syntaxes/blockquote_syntax.dart::BlockquoteSyntax.parseChildLines"
@@ -84449,6 +85173,9 @@
     ],
     "function/package:markdown/src/block_syntaxes/html_block_syntax.dart::HtmlBlockSyntax.parse": [
       {
+        "id": "field/package:markdown/src/block_parser.dart::BlockParser._parentSyntax"
+      },
+      {
         "id": "field/package:markdown/src/block_parser.dart::BlockParser._previousSyntax"
       },
       {
@@ -84482,6 +85209,17 @@
       },
       {
         "id": "function/package:markdown/src/ast.dart::Text.Text"
+      },
+      {
+        "id": "function/package:markdown/src/block_parser.dart::BlockParser.parentSyntax",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/package:markdown/src/block_parser.dart::BlockParser.parentSyntax",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/package:markdown/src/block_parser.dart::BlockParser.parentSyntax"
       },
       {
         "id": "function/package:markdown/src/block_parser.dart::BlockParser.previousSyntax",
@@ -88258,6 +88996,12 @@
     ],
     "function/package:markdown/src/inline_syntaxes/autolink_extension_syntax.dart::AutolinkExtensionSyntax.tryMatch": [
       {
+        "id": "field/dart:_js_helper::_MatchImplementation._match"
+      },
+      {
+        "id": "field/dart:collection::_UnmodifiableSet._map"
+      },
+      {
         "id": "field/package:markdown/src/inline_parser.dart::InlineParser.pos"
       },
       {
@@ -88267,7 +89011,89 @@
         "id": "field/package:markdown/src/inline_syntaxes/inline_syntax.dart::InlineSyntax.pattern"
       },
       {
+        "id": "function/dart:_interceptors::JSString.codeUnitAt"
+      },
+      {
+        "id": "function/dart:_interceptors::getNativeInterceptor"
+      },
+      {
+        "id": "function/dart:_js_helper::ConstantStringMap.containsKey",
+        "mask": "[subtype=Map]"
+      },
+      {
         "id": "function/dart:_js_helper::JSSyntaxRegExp.matchAsPrefix"
+      },
+      {
+        "id": "function/dart:_js_helper::JsLinkedHashMap.containsKey",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:_js_helper::Primitives.stringFromCharCode"
+      },
+      {
+        "id": "function/dart:_js_helper::_MatchImplementation.[]",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_js_helper::_MatchImplementation.[]",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:_js_helper::_MatchImplementation.[]"
+      },
+      {
+        "id": "function/dart:_js_helper::_MatchImplementation.end"
+      },
+      {
+        "id": "function/dart:_js_helper::_MatchImplementation.group"
+      },
+      {
+        "id": "function/dart:_rti::findType"
+      },
+      {
+        "id": "function/dart:collection::MapMixin.containsKey",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.contains",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.contains",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:collection::_UnmodifiableSet.contains"
+      },
+      {
+        "id": "function/dart:core::String.String.fromCharCode",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:core::String.String.fromCharCode",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/dart:core::String.String.fromCharCode"
+      },
+      {
+        "id": "function/dart:html::Storage.containsKey",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/dart:html::_ElementAttributeMap.containsKey",
+        "mask": "[subtype=Map]"
+      },
+      {
+        "id": "function/package:markdown/src/inline_parser.dart::InlineParser.charAt",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/package:markdown/src/inline_parser.dart::InlineParser.charAt",
+        "mask": "inlined"
+      },
+      {
+        "id": "function/package:markdown/src/inline_parser.dart::InlineParser.charAt"
       },
       {
         "id": "function/package:markdown/src/inline_parser.dart::InlineParser.writeText"
@@ -91618,7 +92444,7 @@
       "id": "outputUnit/main",
       "kind": "outputUnit",
       "name": "main",
-      "size": 357712,
+      "size": 359017,
       "filename": "app.dart.js",
       "imports": []
     }
