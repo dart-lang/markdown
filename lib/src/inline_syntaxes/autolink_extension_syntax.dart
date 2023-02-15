@@ -13,7 +13,9 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   static const _linkPattern =
       // Autolinks can only come at the beginning of a line, after whitespace,
       // or any of the delimiting characters *, _, ~, and (.
-      r'(?<=^|[\s*_~(>])'
+      // Note: Disable this piece for now, as Safari does not support
+      // lookarounds. Consider re-enabling later.
+      // r'(?<=^|[\s*_~(>])'
 
       // An extended url autolink will be recognised when one of the schemes
       // http://, or https://, followed by a valid domain. See
@@ -35,12 +37,14 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       // not be considered part of the autolink, though they may be included in
       // the interior of the link. See
       // https://github.github.com/gfm/#extended-autolink-path-validation.
-      '(?<![?!.,:*_~])';
+      // Note: Do not use negative lookbehind, as Safari does not support it.
+      // '(?<![?!.,:*_~])'
+      r'[^\s<?!.,:*_~]';
 
   // An extended email autolink, see
   // https://github.github.com/gfm/#extended-email-autolink.
   static const _emailPattern =
-      r'[-_.+a-z0-9]+@(?:[-_a-z0-9]+\.)+[-_a-z0-9]*[a-z0-9](?![-_])';
+      r'[-_.+a-z0-9]+@(?:[-_a-z0-9]+\.)+[-_a-z0-9]*[a-z0-9]';
 
   AutolinkExtensionSyntax()
       : super(
@@ -55,6 +59,28 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     if (startMatch == null) {
       return false;
     }
+
+    // When it is a link and it is not preceded by `*`, `_`, `~`, `(`, or `>`,
+    // it is invalid. See
+    // https://github.github.com/gfm/#extended-autolink-path-validation.
+    if (startMatch[1] != null && parser.pos > 0) {
+      final precededBy = String.fromCharCode(parser.charAt(parser.pos - 1));
+      const validPrecedingChars = {' ', '*', '_', '~', '(', '>'};
+      if (validPrecedingChars.contains(precededBy) == false) {
+        return false;
+      }
+    }
+
+    // When it is an email link and followed by `_` or `-`, it is invalid. See
+    // https://github.github.com/gfm/#example-633
+    if (startMatch[2] != null && parser.source.length > startMatch.end) {
+      final followedBy = String.fromCharCode(parser.charAt(startMatch.end));
+      const invalidFollowingChars = {'_', '-'};
+      if (invalidFollowingChars.contains(followedBy)) {
+        return false;
+      }
+    }
+
     parser.writeText();
     return onMatch(parser, startMatch);
   }

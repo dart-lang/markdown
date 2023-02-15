@@ -1,5 +1,7 @@
 ## 7.0.1-dev
 
+* Remove RegExp lookarounds from autolink extension patterns.
+
 ## 7.0.0
 
 * **Breaking change**: `close()` of `DelimiterSyntax` and `LinkSyntax`
