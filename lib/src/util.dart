@@ -161,7 +161,7 @@ extension StringExtensions on String {
     final whitespaces = whitespaceMatch?[0];
     if (whitespaces != null) {
       var indentLength = 0;
-      for (start; start < whitespaces.length; start++) {
+      for (; start < whitespaces.length; start++) {
         final isTab = whitespaces[start] == '\t';
         if (isTab) {
           indentLength += tabSize;
