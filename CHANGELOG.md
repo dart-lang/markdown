@@ -1,6 +1,7 @@
-## 7.0.1-dev
+## 7.0.1
 
-* Remove RegExp lookarounds from autolink extension patterns.
+* Remove RegExp lookarounds from autolink extension patterns. (Fixes issues when
+  running on Safari.)
 
 ## 7.0.0
 
