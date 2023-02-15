@@ -13,7 +13,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
   static const _linkPattern =
       // Autolinks can only come at the beginning of a line, after whitespace,
       // or any of the delimiting characters *, _, ~, and (.
-      // Note: Disable it, as safari does not support lookarounds.
+      // Note: Disable it, as Safari does not support lookarounds.
       // r'(?<=^|[\s*_~(>])'
 
       // An extended url autolink will be recognised when one of the schemes
@@ -36,7 +36,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       // not be considered part of the autolink, though they may be included in
       // the interior of the link. See
       // https://github.github.com/gfm/#extended-autolink-path-validation.
-      // Note: Do not use negative lookbehind, as safari does not support it.
+      // Note: Do not use negative lookbehind, as Safari does not support it.
       // '(?<![?!.,:*_~])'
       r'[^\s<?!.,:*_~]';
 
