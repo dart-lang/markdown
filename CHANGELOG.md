@@ -1,3 +1,8 @@
+## 7.0.2-dev
+
+* Fix an issue in `HeaderWithIdSyntax`, do not generate heading IDs for headings
+  with no content.
+
 ## 7.0.1
 
 * Remove RegExp lookarounds from autolink extension patterns. (Fixes issues when
