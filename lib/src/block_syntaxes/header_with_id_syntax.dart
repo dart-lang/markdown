@@ -14,7 +14,7 @@ class HeaderWithIdSyntax extends HeaderSyntax {
   @override
   Node parse(BlockParser parser) {
     final element = super.parse(parser) as Element;
-    
+
     if (element.children?.isNotEmpty ?? false) {
       element.generatedId = BlockSyntax.generateAnchorHash(element);
     }
