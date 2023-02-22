@@ -4,3 +4,21 @@ tags:
     presets:
       crash_test:
         skip: false # Don't skip when running in -P crash_test
+
+  browser:
+    timeout: 2x
+
+    # Browsers can sometimes randomly time out while starting, especially on
+    # Travis which is pretty slow. Don't retry locally because it makes
+    # debugging more annoying.
+    presets:
+      retry: 3
+
+  dart2js:
+    add_tags: [browser]
+    timeout: 2x
+
+  safari:
+    add_tags: [dart2js]
+    test_on: mac-os
+    platforms: safari

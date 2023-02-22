@@ -79,7 +79,7 @@ jobs:
         name: Install dependencies
         run: dart pub get
       - name: Run browser tests with safari
-        run: dart test --platform safari
+        run: dart test -P safari
         if: always() && steps.install.outcome == 'success'
 
   coverage:
