@@ -60,6 +60,28 @@ jobs:
         run: dart test --platform vm
         if: always() && steps.install.outcome == 'success'
 
+  test_safari:
+    # Test package:cupertino_http use flutter integration tests.
+    needs: analyze
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Add macos-latest and/or windows-latest if relevant for this package.
+        os: [macos-latest]
+        sdk: [2.17.0, dev]
+    steps:
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: dart-lang/setup-dart@a57a6c04cf7d4840e88432aad6281d1e125f0d46
+        with:
+          sdk: ${{ matrix.sdk }}
+      - id: install
+        name: Install dependencies
+        run: dart pub get
+      - name: Run browser tests with safari
+        run: dart test --platform safari
+        if: always() && steps.install.outcome == 'success'
+
   coverage:
     needs: test
     runs-on: ubuntu-latest
