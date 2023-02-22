@@ -1,3 +1,7 @@
+## 7.0.2-dev
+
+* Require Dart 2.19
+
 ## 7.0.1
 
 * Remove RegExp lookarounds from autolink extension patterns. (Fixes issues when
