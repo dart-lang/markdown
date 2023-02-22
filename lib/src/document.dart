@@ -14,9 +14,11 @@ import 'util.dart';
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = {};
-  // Save footnote ref count, keys are case-sensitive and added by define syntax.
+
+  /// Footnote ref count, keys are case-sensitive and added by define syntax.
   final footnoteReferences = <String, int>{};
-  // Keep footnotes appearing order, labels are case-insensitive and added by ref syntax.
+
+  /// Footnotes labels by appearing order, are case-insensitive and added by ref syntax.
   final footnoteLabels = <String>[];
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;
@@ -83,11 +85,7 @@ class Document {
     final nodes = BlockParser(lines, this).parseLines();
     _parseInlineContent(nodes);
     // Do filter after parsing inline as we need ref count.
-    final footnoteNodes = _filterFootnotes(nodes);
-    nodes
-      ..clear()
-      ..addAll(footnoteNodes);
-    return nodes;
+    return _filterFootnotes(nodes);
   }
 
   /// Parses the given inline Markdown [text] to a series of AST nodes.
@@ -133,8 +131,8 @@ class Document {
 
     if (footnotes.isNotEmpty) {
       // Sort footnotes by appearing order.
-      final ordinal = <String, int>{
-        for (int i = 0; i < footnoteLabels.length; i++)
+      final ordinal = {
+        for (var i = 0; i < footnoteLabels.length; i++)
           'fn-${footnoteLabels[i]}': i,
       };
       footnotes.sort((l, r) {
@@ -154,22 +152,12 @@ class Document {
 
   /// Generate backref nodes, append them to footnote definition's last child.
   void _appendBackref(List<Node> children, String ref, int count) {
-    final refs = () sync* {
-      for (var i = 0; i < count; i++) {
-        yield Text(' ');
-        final num = '${i + 1}';
-        final suffix = i > 0 ? '-$num' : '';
-        yield Element('a', [
-          Text('\u21a9'),
-          if (i > 0)
-            Element('sup', [Text(num)])..attributes['class'] = 'footnote-ref',
-        ])
-
-          // Ignore GitHub's attributes: <data-footnote-backref aria-label="Back to content">.
-          ..attributes['href'] = '#fnref-$ref$suffix'
-          ..attributes['class'] = 'footnote-backref';
-      }
-    }();
+    final refs = [
+      for (var i = 0; i < count; i++) ...[
+        Text(' '),
+        _ElementExt.footnoteAnchor(ref, i)
+      ]
+    ];
     if (children.isEmpty) {
       children.addAll(refs);
     } else {
@@ -181,6 +169,25 @@ class Document {
       }
     }
   }
+}
+
+extension _ElementExt on Element {
+  static Element footnoteAnchor(String ref, int i) {
+    final num = '${i + 1}';
+    final suffix = i > 0 ? '-$num' : '';
+    final e = Element.empty('tag');
+    e.match;
+    return Element('a', [
+      Text('\u21a9'),
+      if (i > 0)
+        Element('sup', [Text(num)])..attributes['class'] = 'footnote-ref',
+    ])
+      // Ignore GFM's attributes: <data-footnote-backref aria-label="Back to content">.
+      ..attributes['href'] = '#fnref-$ref$suffix'
+      ..attributes['class'] = 'footnote-backref';
+  }
+
+  String get match => tag;
 }
 
 /// A [link reference

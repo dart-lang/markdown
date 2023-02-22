@@ -43,6 +43,7 @@ class FootnoteDefSyntax extends BlockSyntax {
     late final syntaxList = parser.blockSyntaxes
         .where((s) => !_excludingPattern.contains(s.pattern));
 
+    // Every line is footnote's children util two blank lines or a block
     while (!parser.isDone) {
       final line = parser.current.content;
       if (line.trim().isEmpty) {
@@ -64,11 +65,13 @@ class FootnoteDefSyntax extends BlockSyntax {
     return children.map(Line.new).toList(growable: false);
   }
 
+  // Patterns that would be used to decide if one line is a block
   static final _excludingPattern = {
     emptyPattern,
     dummyPattern,
   };
 
+  // Whether this line is one kind of block, if true footnotes block should end.
   static bool _isBlock(Iterable<BlockSyntax> syntaxList, String line) {
     return syntaxList.any((s) => s.pattern.hasMatch(line));
   }
