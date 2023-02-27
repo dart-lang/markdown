@@ -65,13 +65,13 @@ class FootnoteDefSyntax extends BlockSyntax {
     return children.map(Line.new).toList(growable: false);
   }
 
-  // Patterns that would be used to decide if one line is a block
+  /// Patterns that would be used to decide if one line is a block.
   static final _excludingPattern = {
     emptyPattern,
     dummyPattern,
   };
 
-  // Whether this line is one kind of block, if true footnotes block should end.
+  /// Whether this line is one kind of block, if true footnotes block should end.
   static bool _isBlock(Iterable<BlockSyntax> syntaxList, String line) {
     return syntaxList.any((s) => s.pattern.hasMatch(line));
   }
