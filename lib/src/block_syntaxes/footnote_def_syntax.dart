@@ -43,7 +43,7 @@ class FootnoteDefSyntax extends BlockSyntax {
     late final syntaxList = parser.blockSyntaxes
         .where((s) => !_excludingPattern.contains(s.pattern));
 
-    // Every line is footnote's children util two blank lines or a block
+    // Every line is footnote's children util two blank lines or a block.
     while (!parser.isDone) {
       final line = parser.current.content;
       if (line.trim().isEmpty) {
