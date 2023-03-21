@@ -4,6 +4,9 @@ import '../line.dart';
 import '../patterns.dart' show dummyPattern, emptyPattern, footnotePattern;
 import 'block_syntax.dart' show BlockSyntax;
 
+/// The spec of GFM about footnotes is [missing](https://github.com/github/cmark-gfm/issues/283#issuecomment-1378868725).
+/// For online source code of cmark-gfm, see [master@c32ef78](https://github.com/github/cmark-gfm/blob/c32ef78/src/blocks.c#L1212).
+/// A Rust implementation is also [available](https://github.com/wooorm/markdown-rs/blob/2498e31eecead798efc649502bbf5f86feaa94be/src/construct/gfm_footnote_definition.rs).
 /// Footnote definition could contain multiple line-children and children could
 /// be separated by one empty line.
 /// Its first child-line would be the remaining part of the first line after
