@@ -1,4 +1,4 @@
-## 7.0.2-dev
+## 7.0.2
 
 * Require Dart 2.19
 * Fix an issue in `HeaderWithIdSyntax`, do not generate heading IDs for headings
