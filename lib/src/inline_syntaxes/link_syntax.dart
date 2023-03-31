@@ -8,15 +8,16 @@ import '../document.dart';
 import '../inline_parser.dart';
 import '../util.dart';
 import 'delimiter_syntax.dart';
+import 'footnote_ref_syntax.dart';
 
 /// A helper class holds params of link context.
 /// Footnote creation needs other info in [_tryCreateReferenceLink].
-class _LinkContext {
+class LinkContext {
   final InlineParser parser;
   final SimpleDelimiter opener;
   final List<Node> Function() getChildren;
 
-  const _LinkContext(this.parser, this.opener, this.getChildren);
+  const LinkContext(this.parser, this.opener, this.getChildren);
 }
 
 /// Matches links like `[blah][label]` and `[blah](url)`.
@@ -40,7 +41,7 @@ class LinkSyntax extends DelimiterSyntax {
     String? tag,
     required List<Node> Function() getChildren,
   }) {
-    final context = _LinkContext(parser, opener, getChildren);
+    final context = LinkContext(parser, opener, getChildren);
     final text = parser.source.substring(opener.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('
@@ -92,7 +93,7 @@ class LinkSyntax extends DelimiterSyntax {
       }
       final label = _parseReferenceLinkLabel(parser);
       if (label != null) {
-        return _tryCreateReferenceLink(context, label);
+        return _tryCreateReferenceLink(context, label, secondary: true);
       }
       return null;
     }
@@ -167,9 +168,10 @@ class LinkSyntax extends DelimiterSyntax {
   ///
   /// Returns the nodes if it was successfully created, `null` otherwise.
   Iterable<Node>? _tryCreateReferenceLink(
-    _LinkContext context,
-    String label,
-  ) {
+    LinkContext context,
+    String label, {
+    bool? secondary,
+  }) {
     final parser = context.parser;
     final getChildren = context.getChildren;
     final link = _resolveReferenceLink(
@@ -180,8 +182,11 @@ class LinkSyntax extends DelimiterSyntax {
     if (link != null) {
       return [link];
     }
-    // TODO: add footnote creation here
-    return null;
+    return FootnoteRefSyntax.tryCreateFootnoteLink(
+      context,
+      label,
+      secondary: secondary,
+    );
   }
 
   // Tries to create an inline link node.

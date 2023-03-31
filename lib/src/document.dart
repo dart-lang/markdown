@@ -14,6 +14,12 @@ import 'util.dart';
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = {};
+
+  /// Footnote ref count, keys are case-sensitive and added by define syntax.
+  final footnoteReferences = <String, int>{};
+
+  /// Footnotes labels by appearing order, are case-insensitive and added by ref syntax.
+  final footnoteLabels = <String>[];
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;
   final bool encodeHtml;
@@ -78,7 +84,8 @@ class Document {
   List<Node> parseLineList(List<Line> lines) {
     final nodes = BlockParser(lines, this).parseLines();
     _parseInlineContent(nodes);
-    return nodes;
+    // Do filter after parsing inline as we need ref count.
+    return _filterFootnotes(nodes);
   }
 
   /// Parses the given inline Markdown [text] to a series of AST nodes.
@@ -97,6 +104,90 @@ class Document {
       }
     }
   }
+
+  /// Footnotes could be defined in arbitrary positions of a document, we need
+  /// to distinguish them and put them behind; and every footnote definition
+  /// may have multiple backrefs, we need to append backrefs for it.
+  List<Node> _filterFootnotes(List<Node> nodes) {
+    final footnotes = <Element>[];
+    final blocks = <Node>[];
+    for (final node in nodes) {
+      if (node is Element &&
+          node.tag == 'li' &&
+          footnoteReferences.containsKey(node.footnoteLabel)) {
+        final label = node.footnoteLabel;
+        var count = 0;
+        if (label != null && (count = footnoteReferences[label] ?? 0) > 0) {
+          footnotes.add(node);
+          final children = node.children;
+          if (children != null) {
+            _appendBackref(children, Uri.encodeComponent(label), count);
+          }
+        }
+      } else {
+        blocks.add(node);
+      }
+    }
+
+    if (footnotes.isNotEmpty) {
+      // Sort footnotes by appearing order.
+      final ordinal = {
+        for (var i = 0; i < footnoteLabels.length; i++)
+          'fn-${footnoteLabels[i]}': i,
+      };
+      footnotes.sort((l, r) {
+        final idl = l.attributes['id']?.toLowerCase() ?? '';
+        final idr = r.attributes['id']?.toLowerCase() ?? '';
+        return (ordinal[idl] ?? 0) - (ordinal[idr] ?? 0);
+      });
+      final list = Element('ol', footnotes);
+
+      // Ignore GFM attribute: <data-footnotes>.
+      final section = Element('section', [list])
+        ..attributes['class'] = 'footnotes';
+      blocks.add(section);
+    }
+    return blocks;
+  }
+
+  /// Generate backref nodes, append them to footnote definition's last child.
+  void _appendBackref(List<Node> children, String ref, int count) {
+    final refs = [
+      for (var i = 0; i < count; i++) ...[
+        Text(' '),
+        _ElementExt.footnoteAnchor(ref, i)
+      ]
+    ];
+    if (children.isEmpty) {
+      children.addAll(refs);
+    } else {
+      final last = children.last;
+      if (last is Element) {
+        last.children?.addAll(refs);
+      } else {
+        children.last = Element('p', [last, ...refs]);
+      }
+    }
+  }
+}
+
+extension _ElementExt on Element {
+  static Element footnoteAnchor(String ref, int i) {
+    final num = '${i + 1}';
+    final suffix = i > 0 ? '-$num' : '';
+    final e = Element.empty('tag');
+    e.match;
+    return Element('a', [
+      Text('\u21a9'),
+      if (i > 0)
+        Element('sup', [Text(num)])..attributes['class'] = 'footnote-ref',
+    ])
+      // Ignore GFM's attributes: <data-footnote-backref aria-label="Back to content">.
+      ..attributes['href'] = '#fnref-$ref$suffix'
+      ..attributes['class'] = 'footnote-backref';
+  }
+
+  String get match => tag;
 }
 
 /// A [link reference
