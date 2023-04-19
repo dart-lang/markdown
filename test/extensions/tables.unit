@@ -328,3 +328,11 @@ too | many | cells | here
 </tr>
 </tbody>
 </table>
+>>> issue #531
+| A | [B](url) | C |
+|---|---|
+|  a | b | c |
+<<<
+<p>| A | <a href="url">B</a> | C |
+|---|---|
+|  a | b | c |</p>
