@@ -148,4 +148,4 @@ final htmlCharactersPattern = RegExp(
 );
 
 /// A line starts with `[`.
-final linkReferenceDefinitionPattern = RegExp(r'[ ]{0,3}\[');
+final linkReferenceDefinitionPattern = RegExp(r'^[ ]{0,3}\[');
