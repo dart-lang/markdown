@@ -164,7 +164,9 @@ class BlockParser {
     // number of cells, which makes a table like structure not be recognized.
     BlockSyntax? neverMatch;
 
+    var iterationsWithoutProgress = 0;
     while (!isDone) {
+      final positionBefore = _pos;
       for (final syntax in blockSyntaxes) {
         if (neverMatch == syntax) {
           continue;
@@ -173,7 +175,6 @@ class BlockParser {
         if (syntax.canParse(this)) {
           _previousSyntax = _currentSyntax;
           _currentSyntax = syntax;
-          final positionBefore = _pos;
           final block = syntax.parse(this);
           if (block != null) {
             blocks.add(block);
@@ -188,6 +189,25 @@ class BlockParser {
 
           break;
         }
+      }
+      // Count the number of iterations without progress.
+      // This ensures that we don't have an infinite loop. And if we have an
+      // infinite loop, it's easier to gracefully recover from an error, than
+      // it is to discover an kill an isolate that's stuck in an infinite loop.
+      // Technically, it should be perfectly safe to remove this check
+      // But as it's possible to inject custom BlockSyntax implementations and
+      // combine existing ones, it is hard to promise that no combination can't
+      // trigger an infinite loop
+      if (positionBefore == _pos) {
+        iterationsWithoutProgress++;
+        if (iterationsWithoutProgress > 2) {
+          // If this happens we throw an error to avoid having the parser
+          // running in an infinite loop. An error is easier to handle.
+          // If you see this error in production please file a bug!
+          throw AssertionError('BlockParser.parseLines is not advancing');
+        }
+      } else {
+        iterationsWithoutProgress = 0;
       }
     }
 
