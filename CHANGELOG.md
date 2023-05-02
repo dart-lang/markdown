@@ -1,3 +1,8 @@
+## 7.1.0
+
+ * Support for [footnotes](https://pandoc.org/MANUAL.html#footnotes).
+ * Fixed bug causing infinite loop for links inside tables.
+
 ## 7.0.2
 
 * Require Dart 2.19
