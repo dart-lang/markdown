@@ -48,7 +48,7 @@ final listPattern =
 
 /// A line of hyphens separated by at least one pipe.
 final tablePattern = RegExp(
-    r'^[ ]{0,3}\|?([ \t]*:?\-+:?[ \t]*\|)+([ \t]|[ \t]*:?\-+:?[ \t]*)?$');
+    r'^[ ]{0,3}\|?([ \t]*:?\-+:?[ \t]*\|[ \t]*)+([ \t]|[ \t]*:?\-+:?[ \t]*)?$');
 
 /// A line starting with `[^` and contains with `]:`, but without special chars
 /// (`\] \r\n\x00\t`) between. Same as [GFM](cmark-gfm/src/scanners.re:318).
