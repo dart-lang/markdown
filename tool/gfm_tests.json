@@ -3572,7 +3572,7 @@
   },
   {
     "markdown": "__foo, __bar__, baz__\n",
-    "html": "<p><strong>foo, <strong>bar</strong>, baz</strong></p>\n",
+    "html": "<p><strong>foo, bar, baz</strong></p>\n",
     "example": 398,
     "start_line": 6926,
     "end_line": 6930,
@@ -3824,7 +3824,7 @@
   },
   {
     "markdown": "foo******bar*********baz\n",
-    "html": "<p>foo<strong><strong><strong>bar</strong></strong></strong>***baz</p>\n",
+    "html": "<p>foo<strong>bar</strong>***baz</p>\n",
     "example": 426,
     "start_line": 7197,
     "end_line": 7201,
@@ -3896,7 +3896,7 @@
   },
   {
     "markdown": "__foo __bar__ baz__\n",
-    "html": "<p><strong>foo <strong>bar</strong> baz</strong></p>\n",
+    "html": "<p><strong>foo bar baz</strong></p>\n",
     "example": 434,
     "start_line": 7268,
     "end_line": 7272,
@@ -3905,7 +3905,7 @@
   },
   {
     "markdown": "____foo__ bar__\n",
-    "html": "<p><strong><strong>foo</strong> bar</strong></p>\n",
+    "html": "<p><strong>foo bar</strong></p>\n",
     "example": 435,
     "start_line": 7275,
     "end_line": 7279,
@@ -3914,7 +3914,7 @@
   },
   {
     "markdown": "**foo **bar****\n",
-    "html": "<p><strong>foo <strong>bar</strong></strong></p>\n",
+    "html": "<p><strong>foo bar</strong></p>\n",
     "example": 436,
     "start_line": 7282,
     "end_line": 7286,
@@ -4247,7 +4247,7 @@
   },
   {
     "markdown": "****foo****\n",
-    "html": "<p><strong><strong>foo</strong></strong></p>\n",
+    "html": "<p><strong>foo</strong></p>\n",
     "example": 473,
     "start_line": 7567,
     "end_line": 7571,
@@ -4256,7 +4256,7 @@
   },
   {
     "markdown": "____foo____\n",
-    "html": "<p><strong><strong>foo</strong></strong></p>\n",
+    "html": "<p><strong>foo</strong></p>\n",
     "example": 474,
     "start_line": 7574,
     "end_line": 7578,
@@ -4265,7 +4265,7 @@
   },
   {
     "markdown": "******foo******\n",
-    "html": "<p><strong><strong><strong>foo</strong></strong></strong></p>\n",
+    "html": "<p><strong>foo</strong></p>\n",
     "example": 475,
     "start_line": 7585,
     "end_line": 7589,
@@ -4283,7 +4283,7 @@
   },
   {
     "markdown": "_____foo_____\n",
-    "html": "<p><em><strong><strong>foo</strong></strong></em></p>\n",
+    "html": "<p><em><strong>foo</strong></em></p>\n",
     "example": 477,
     "start_line": 7601,
     "end_line": 7605,
