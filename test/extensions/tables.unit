@@ -336,3 +336,22 @@ too | many | cells | here
 <p>| A | <a href="url">B</a> | C |
 |---|---|
 |  a | b | c |</p>
+>>> trailing whitespace after delimiter row
+| Name    | Value |
+| ---     | ---   |     
+| Foo     | bar   |
+<<<
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Foo</td>
+<td>bar</td>
+</tr>
+</tbody>
+</table>
