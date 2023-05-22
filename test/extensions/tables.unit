@@ -355,3 +355,24 @@ too | many | cells | here
 </tr>
 </tbody>
 </table>
+>>> can interrupt a paragraph
+paragraph
+foo | bar
+--- | ---
+baz | bim
+<<<
+<p>paragraph</p>
+<table>
+<thead>
+<tr>
+<th>foo</th>
+<th>bar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baz</td>
+<td>bim</td>
+</tr>
+</tbody>
+</table>
