@@ -93,11 +93,10 @@ foo
 ```
 <<<
 <blockquote>
-<pre><code>foo
-</code></pre>
+<pre><code></code></pre>
 </blockquote>
-<pre><code>
-</code></pre>
+<p>foo</p>
+<pre><code></code></pre>
 >>> Block quotes - 216
 > foo
     - bar
@@ -198,8 +197,8 @@ baz
 <<<
 <blockquote>
 <p>bar</p>
-<p>baz</p>
 </blockquote>
+<p>baz</p>
 >>> Block quotes - 228
 > > > foo
 bar

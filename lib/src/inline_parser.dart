@@ -7,14 +7,17 @@ import 'charcode.dart';
 import 'document.dart';
 import 'inline_syntaxes/autolink_syntax.dart';
 import 'inline_syntaxes/code_syntax.dart';
+import 'inline_syntaxes/decode_html_syntax.dart';
 import 'inline_syntaxes/delimiter_syntax.dart';
 import 'inline_syntaxes/email_autolink_syntax.dart';
 import 'inline_syntaxes/emphasis_syntax.dart';
+import 'inline_syntaxes/escape_html_syntax.dart';
 import 'inline_syntaxes/escape_syntax.dart';
 import 'inline_syntaxes/image_syntax.dart';
 import 'inline_syntaxes/inline_syntax.dart';
 import 'inline_syntaxes/line_break_syntax.dart';
 import 'inline_syntaxes/link_syntax.dart';
+import 'inline_syntaxes/soft_line_break_syntax.dart';
 import 'inline_syntaxes/text_syntax.dart';
 
 /// Maintains the internal state needed to parse inline span elements in
@@ -25,31 +28,13 @@ class InlineParser {
     EmailAutolinkSyntax(),
     AutolinkSyntax(),
     LineBreakSyntax(),
-    // Allow any punctuation to be escaped.
-    EscapeSyntax(),
-    // "*" surrounded by spaces is left alone.
-    TextSyntax(r' \* ', startCharacter: $space),
-    // "_" surrounded by spaces is left alone.
-    TextSyntax(' _ ', startCharacter: $space),
     // Parse "**strong**" and "*emphasis*" tags.
     EmphasisSyntax.asterisk(),
     // Parse "__strong__" and "_emphasis_" tags.
     EmphasisSyntax.underscore(),
     CodeSyntax(),
+    SoftLineBreakSyntax(),
     // We will add the LinkSyntax once we know about the specific link resolver.
-  ]);
-
-  static final List<InlineSyntax> _htmlSyntaxes =
-      List<InlineSyntax>.unmodifiable(<InlineSyntax>[
-    // Leave already-encoded HTML entities alone. Ensures we don't turn
-    // "&amp;" into "&amp;amp;"
-    TextSyntax('&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
-    // Encode "&".
-    TextSyntax('&', sub: '&amp;', startCharacter: $ampersand),
-    // Encode "<".
-    TextSyntax('<', sub: '&lt;', startCharacter: $lt),
-    // Encode ">".
-    TextSyntax('>', sub: '&gt;', startCharacter: $gt),
   ]);
 
   /// The string of Markdown being parsed.
@@ -58,7 +43,7 @@ class InlineParser {
   /// The Markdown document this parser is parsing.
   final Document document;
 
-  final List<InlineSyntax> syntaxes = <InlineSyntax>[];
+  final syntaxes = <InlineSyntax>[];
 
   /// The current read position.
   int pos = 0;
@@ -92,6 +77,8 @@ class InlineParser {
     if (document.withDefaultInlineSyntaxes) {
       // Custom link resolvers go after the generic text syntax.
       syntaxes.addAll([
+        EscapeSyntax(),
+        DecodeHtmlSyntax(),
         LinkSyntax(linkResolver: document.linkResolver),
         ImageSyntax(linkResolver: document.imageLinkResolver)
       ]);
@@ -100,7 +87,12 @@ class InlineParser {
     }
 
     if (encodeHtml) {
-      syntaxes.addAll(_htmlSyntaxes);
+      syntaxes.addAll([
+        EscapeHtmlSyntax(),
+        // Leave already-encoded HTML entities alone. Ensures we don't turn
+        // "&amp;" into "&amp;amp;"
+        TextSyntax('&[#a-zA-Z0-9]*;', startCharacter: $ampersand),
+      ]);
     }
   }
 
@@ -153,9 +145,9 @@ class InlineParser {
       return;
     }
     final syntax = delimiter.syntax;
-    if (syntax is LinkSyntax && syntaxes.any(((e) => e is LinkSyntax))) {
+    if (syntax is LinkSyntax && syntaxes.any((e) => e is LinkSyntax)) {
       final nodeIndex = _tree.lastIndexWhere((n) => n == delimiter.node);
-      final linkNode = syntax.close(this, delimiter, null, getChildren: () {
+      final linkNodes = syntax.close(this, delimiter, null, getChildren: () {
         _processDelimiterRun(index);
         // All of the nodes which lie past [index] are children of this
         // link/image.
@@ -163,14 +155,14 @@ class InlineParser {
         _tree.removeRange(nodeIndex + 1, _tree.length);
         return children;
       });
-      if (linkNode != null) {
+      if (linkNodes != null) {
         _delimiterStack.removeAt(index);
         if (delimiter.char == $lbracket) {
           for (final d in _delimiterStack.sublist(0, index)) {
             if (d.char == $lbracket) d.isActive = false;
           }
         }
-        _tree[nodeIndex] = linkNode;
+        _tree.replaceRange(nodeIndex, _tree.length, linkNodes);
         advanceBy(1);
         start = pos;
       } else {
@@ -240,7 +232,7 @@ class InlineParser {
         final openerTextNodeIndex = _tree.indexOf(openerTextNode);
         final closerTextNode = closer.node;
         var closerTextNodeIndex = _tree.indexOf(closerTextNode);
-        final node = opener.syntax.close(
+        final nodes = opener.syntax.close(
           this,
           opener,
           closer,
@@ -255,7 +247,7 @@ class InlineParser {
         _tree.replaceRange(
           openerTextNodeIndex + 1,
           closerTextNodeIndex,
-          [node!],
+          nodes!,
         );
         // Slide [closerTextNodeIndex] back accordingly.
         closerTextNodeIndex = openerTextNodeIndex + 2;

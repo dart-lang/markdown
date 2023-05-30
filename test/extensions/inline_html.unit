@@ -14,4 +14,4 @@ Not HTML: &lt;3&gt;, &lt;_a&gt;, &lt;&gt;</p>
 Text <a href="_foo_">And "_foo_"</a>.
 
 <<<
-<p>Text <a href="_foo_">And "<em>foo</em>"</a>.</p>
+<p>Text <a href="_foo_">And &quot;<em>foo</em>&quot;</a>.</p>

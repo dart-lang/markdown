@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../line.dart';
 import '../patterns.dart';
 import 'block_syntax.dart';
 
@@ -15,12 +16,12 @@ class FencedBlockquoteSyntax extends BlockSyntax {
   RegExp get pattern => blockquoteFencePattern;
 
   @override
-  List<String> parseChildLines(BlockParser parser) {
-    final childLines = <String>[];
+  List<Line> parseChildLines(BlockParser parser) {
+    final childLines = <Line>[];
     parser.advance();
 
     while (!parser.isDone) {
-      final match = pattern.hasMatch(parser.current);
+      final match = pattern.hasMatch(parser.current.content);
       if (!match) {
         childLines.add(parser.current);
         parser.advance();

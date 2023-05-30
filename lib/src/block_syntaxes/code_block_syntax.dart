@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../line.dart';
 import '../patterns.dart';
 import '../util.dart';
 import 'block_syntax.dart';
@@ -19,29 +20,29 @@ class CodeBlockSyntax extends BlockSyntax {
   const CodeBlockSyntax();
 
   @override
-  List<String?> parseChildLines(BlockParser parser) {
-    final childLines = <String?>[];
+  List<Line> parseChildLines(BlockParser parser) {
+    final childLines = <Line>[];
 
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
-      if (match != null) {
-        childLines.add(match[1]);
-        parser.advance();
-      } else {
-        // If there's a codeblock, then a newline, then a codeblock, keep the
-        // code blocks together.
-        final nextMatch =
-            parser.next != null ? pattern.firstMatch(parser.next!) : null;
-        if (parser.current.trim() == '' && nextMatch != null) {
-          childLines.add('');
-          childLines.add(nextMatch[1]);
-          parser.advance();
-          parser.advance();
-        } else {
-          break;
-        }
+      final isBlankLine = parser.current.isBlankLine;
+      if (isBlankLine && _shouldEnd(parser)) {
+        break;
       }
+
+      if (!isBlankLine &&
+          childLines.isNotEmpty &&
+          pattern.hasMatch(parser.current.content) != true) {
+        break;
+      }
+
+      childLines.add(Line(
+        parser.current.content.dedent().text,
+        tabRemaining: parser.current.tabRemaining,
+      ));
+
+      parser.advance();
     }
+
     return childLines;
   }
 
@@ -50,13 +51,35 @@ class CodeBlockSyntax extends BlockSyntax {
     final childLines = parseChildLines(parser);
 
     // The Markdown tests expect a trailing newline.
-    childLines.add('');
+    childLines.add(Line(''));
 
-    var content = childLines.join('\n');
+    var content = childLines
+        .map((e) => e.content.prependSpace(e.tabRemaining ?? 0))
+        .join('\n');
     if (parser.document.encodeHtml) {
-      content = escapeHtml(content);
+      content = escapeHtml(content, escapeApos: false);
     }
 
     return Element('pre', [Element.text('code', content)]);
+  }
+
+  bool _shouldEnd(BlockParser parser) {
+    var i = 1;
+    while (true) {
+      final nextLine = parser.peek(i);
+      // EOF
+      if (nextLine == null) {
+        return true;
+      }
+
+      // It does not matter how many blank lines between chunks:
+      // https://spec.commonmark.org/0.30/#example-111
+      if (nextLine.isBlankLine) {
+        i++;
+        continue;
+      }
+
+      return pattern.hasMatch(nextLine.content) == false;
+    }
   }
 }

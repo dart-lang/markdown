@@ -4,9 +4,10 @@
 
 import '../../markdown.dart';
 import '../charcode.dart';
+import '../patterns.dart';
 
 /// Leave inline HTML tags alone, from
-/// [CommonMark 0.28](http://spec.commonmark.org/0.28/#raw-html).
+/// [CommonMark 0.30](http://spec.commonmark.org/0.30/#raw-html).
 ///
 /// This is not actually a good definition (nor CommonMark's) of an HTML tag,
 /// but it is fast. It will leave text like `<a href='hi">` alone, which is
@@ -15,9 +16,29 @@ import '../charcode.dart';
 /// TODO(srawlins): improve accuracy while ensuring performance, once
 /// Markdown benchmarking is more mature.
 class InlineHtmlSyntax extends TextSyntax {
+  static const _pattern = '(?:$namedTagDefinition)'
+      // Or
+      '|'
+
+      // HTML comment, see
+      // https://spec.commonmark.org/0.30/#html-comment.
+      '<!--(?:(?:[^-<>]+-[^-<>]+)+|[^-<>]+)-->'
+      '|'
+
+      // Processing-instruction, see
+      // https://spec.commonmark.org/0.30/#processing-instruction
+      r'<\?.*?\?>'
+      '|'
+
+      // Declaration, see
+      // https://spec.commonmark.org/0.30/#declaration.
+      '(<![a-z]+.*?>)'
+      '|'
+
+      // CDATA section, see
+      // https://spec.commonmark.org/0.30/#cdata-section.
+      r'(<!\[CDATA\[.*?]]>)';
+
   InlineHtmlSyntax()
-      : super(
-          r'<[/!?]?[A-Za-z][A-Za-z0-9-]*(?:\s[^>]*)?>',
-          startCharacter: $lt,
-        );
+      : super(_pattern, startCharacter: $lt, caseSensitive: false);
 }

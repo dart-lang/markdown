@@ -11,7 +11,7 @@ import 'block_syntax.dart';
 /// Parses tables.
 class TableSyntax extends BlockSyntax {
   @override
-  bool canEndBlock(BlockParser parser) => false;
+  bool canEndBlock(BlockParser parser) => true;
 
   @override
   RegExp get pattern => dummyPattern;
@@ -32,10 +32,11 @@ class TableSyntax extends BlockSyntax {
   /// * many body rows of body cells (`<td>` cells)
   @override
   Node? parse(BlockParser parser) {
-    final alignments = _parseAlignments(parser.next!);
+    final alignments = _parseAlignments(parser.next!.content);
     final columnCount = alignments.length;
     final headRow = _parseRow(parser, alignments, 'th');
     if (headRow.children!.length != columnCount) {
+      parser.retreat();
       return null;
     }
     final head = Element('thead', [headRow]);
@@ -50,7 +51,7 @@ class TableSyntax extends BlockSyntax {
       if (children != null) {
         while (children.length < columnCount) {
           // Insert synthetic empty cells.
-          children.add(Element.empty('td'));
+          children.add(Element('td', []));
         }
         while (children.length > columnCount) {
           children.removeLast();
@@ -71,29 +72,42 @@ class TableSyntax extends BlockSyntax {
   }
 
   List<String?> _parseAlignments(String line) {
-    final startIndex = _walkPastOpeningPipe(line);
+    final columns = <String?>[];
+    // Set the value to `true` when hitting a non whitespace character other
+    // than the first pipe character.
+    var started = false;
+    var hitDash = false;
+    String? alignment;
 
-    var endIndex = line.length - 1;
-    while (endIndex > 0) {
-      final ch = line.codeUnitAt(endIndex);
-      if (ch == $pipe) {
-        endIndex--;
-        break;
+    for (var i = 0; i < line.length; i++) {
+      final char = line.codeUnitAt(i);
+      if (char == $space || char == $tab || (!started && char == $pipe)) {
+        continue;
       }
-      if (ch != $space && ch != $tab) {
-        break;
+      started = true;
+
+      if (char == $colon) {
+        if (hitDash) {
+          alignment = alignment == 'left' ? 'center' : 'right';
+        } else {
+          alignment = 'left';
+        }
       }
-      endIndex--;
+
+      if (char == $pipe) {
+        columns.add(alignment);
+        hitDash = false;
+        alignment = null;
+      } else {
+        hitDash = true;
+      }
     }
 
-    // Optimization: We walk [line] too many times. One lap should do it.
-    return line.substring(startIndex, endIndex + 1).split('|').map((column) {
-      column = column.trim();
-      if (column.startsWith(':') && column.endsWith(':')) return 'center';
-      if (column.startsWith(':')) return 'left';
-      if (column.endsWith(':')) return 'right';
-      return null;
-    }).toList();
+    if (hitDash) {
+      columns.add(alignment);
+    }
+
+    return columns;
   }
 
   /// Parses a table row at the current line into a table row element, with
@@ -108,19 +122,19 @@ class TableSyntax extends BlockSyntax {
   ) {
     final line = parser.current;
     final cells = <String>[];
-    var index = _walkPastOpeningPipe(line);
+    var index = _walkPastOpeningPipe(line.content);
     final cellBuffer = StringBuffer();
 
     while (true) {
-      if (index >= line.length) {
+      if (index >= line.content.length) {
         // This row ended without a trailing pipe, which is fine.
         cells.add(cellBuffer.toString().trimRight());
         cellBuffer.clear();
         break;
       }
-      final ch = line.codeUnitAt(index);
+      final ch = line.content.codeUnitAt(index);
       if (ch == $backslash) {
-        if (index == line.length - 1) {
+        if (index == line.content.length - 1) {
           // A table row ending in a backslash is not well-specified, but it
           // looks like GitHub just allows the character as part of the text of
           // the last cell.
@@ -129,7 +143,7 @@ class TableSyntax extends BlockSyntax {
           cellBuffer.clear();
           break;
         }
-        final escaped = line.codeUnitAt(index + 1);
+        final escaped = line.content.codeUnitAt(index + 1);
         if (escaped == $pipe) {
           // GitHub Flavored Markdown has a strange bit here; the pipe is to be
           // escaped before any other inline processing. One consequence, for
@@ -149,8 +163,8 @@ class TableSyntax extends BlockSyntax {
         cellBuffer.clear();
         // Walk forward past any whitespace which leads the next cell.
         index++;
-        index = _walkPastWhitespace(line, index);
-        if (index >= line.length) {
+        index = _walkPastWhitespace(line.content, index);
+        if (index >= line.content.length) {
           // This row ended with a trailing pipe.
           break;
         }
@@ -166,7 +180,7 @@ class TableSyntax extends BlockSyntax {
 
     for (var i = 0; i < row.length && i < alignments.length; i++) {
       if (alignments[i] == null) continue;
-      row[i].attributes['style'] = 'text-align: ${alignments[i]};';
+      row[i].attributes['align'] = '${alignments[i]}';
     }
 
     return Element('tr', row);

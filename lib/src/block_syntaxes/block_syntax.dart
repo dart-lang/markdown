@@ -4,6 +4,7 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../line.dart';
 
 abstract class BlockSyntax {
   const BlockSyntax();
@@ -14,23 +15,36 @@ abstract class BlockSyntax {
   bool canEndBlock(BlockParser parser) => true;
 
   bool canParse(BlockParser parser) {
-    return pattern.hasMatch(parser.current);
+    return pattern.hasMatch(parser.current.content);
   }
 
   Node? parse(BlockParser parser);
 
-  List<String?> parseChildLines(BlockParser parser) {
+  List<Line?> parseChildLines(BlockParser parser) {
     // Grab all of the lines that form the block element.
-    final childLines = <String?>[];
+    final childLines = <Line?>[];
 
     while (!parser.isDone) {
-      final match = pattern.firstMatch(parser.current);
+      final match = pattern.firstMatch(parser.current.content);
       if (match == null) break;
-      childLines.add(match[1]);
+      childLines.add(parser.current);
       parser.advance();
     }
 
     return childLines;
+  }
+
+  /// Returns the block which interrupts current syntax parsing if there is one,
+  /// otherwise returns `null`.
+  ///
+  /// Make sure to check if [parser] `isDone` is `false` first.
+  BlockSyntax? interruptedBy(BlockParser parser) {
+    for (final syntax in parser.blockSyntaxes) {
+      if (syntax.canParse(parser) && syntax.canEndBlock(parser)) {
+        return syntax;
+      }
+    }
+    return null;
   }
 
   /// Gets whether or not [parser]'s current line should end the previous block.

@@ -2,18 +2,18 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+@TestOn('vm')
+library;
+
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 
-import 'util.dart';
-
 void main() {
   test('check versions', () async {
-    final packageRoot = await markdownPackageRoot;
-    final binary = p.normalize(p.join(packageRoot, 'bin', 'markdown.dart'));
+    final binary = p.join(p.current, 'bin', 'markdown.dart');
     final dartBin = Platform.executable;
     final result = Process.runSync(dartBin, [binary, '--version']);
     expect(
@@ -26,7 +26,7 @@ void main() {
 
     final binVersion = (result.stdout as String).trim();
 
-    final pubspecFile = p.normalize(p.join(packageRoot, 'pubspec.yaml'));
+    final pubspecFile = p.join(p.current, 'pubspec.yaml');
 
     final pubspecContent =
         loadYaml(File(pubspecFile).readAsStringSync()) as YamlMap;

@@ -47,3 +47,8 @@ text</p>
 <p>quote</p>
 </blockquote>
 <hr />
+>>> issue #495
+  >
+<<<
+<blockquote>
+</blockquote>

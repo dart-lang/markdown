@@ -2,9 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert';
-
 import 'package:markdown/markdown.dart';
+import 'package:markdown/src/util.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -20,7 +19,7 @@ void main() {
     });
 
     group('with encodeHtml enabled', () {
-      final document = Document(encodeHtml: true);
+      final document = Document();
 
       test('encodes HTML in an inline code snippet', () {
         final result =
@@ -33,8 +32,8 @@ void main() {
       });
 
       test('encodes HTML in a fenced code block', () {
-        final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.split('\n');
-        final result = document.parseLines(lines);
+        final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.toLines();
+        final result = document.parseLineList(lines);
         final codeBlock = result.single as Element;
         expect(
           codeBlock.textContent,
@@ -43,8 +42,8 @@ void main() {
       });
 
       test('encodes HTML in an indented code block', () {
-        final lines = '    <p>Hello <em>Markdown</em></p>\n'.split('\n');
-        final result = document.parseLines(lines);
+        final lines = '    <p>Hello <em>Markdown</em></p>\n'.toLines();
+        final result = document.parseLineList(lines);
         final codeBlock = result.single as Element;
         expect(
           codeBlock.textContent,
@@ -54,18 +53,17 @@ void main() {
 
       test('encodeHtml spaces are preserved in text', () {
         // Example to get a <p> tag rendered before a text node.
-        final contents = 'Sample\n\n<pre>\n A\n B\n</pre>';
-        final document = Document(encodeHtml: true);
-        final lines = LineSplitter.split(contents).toList();
-        final nodes = BlockParser(lines, document).parseLines();
+        const contents = 'Sample\n\n<pre>\n A\n B\n</pre>';
+        final document = Document();
+        final nodes = BlockParser(contents.toLines(), document).parseLines();
         final result = HtmlRenderer().render(nodes);
-        expect(result, '<p>\n</p><pre>\n A\n B\n</pre>');
+        expect(result, '<p>\n</p>\n<pre>\n A\n B\n</pre>');
       });
 
       test('encode double quotes, greater than, and less than when escaped',
           () {
-        final contents = r'\>\"\< Hello';
-        final document = Document(encodeHtml: true);
+        const contents = r'\>\"\< Hello';
+        final document = Document();
         final nodes = document.parseInline(contents);
         expect(nodes, hasLength(1));
         expect(
@@ -93,8 +91,8 @@ void main() {
       });
 
       test('leaves HTML alone, in a fenced code block', () {
-        final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.split('\n');
-        final result = document.parseLines(lines);
+        final lines = '```\n<p>Hello <em>Markdown</em></p>\n```\n'.toLines();
+        final result = document.parseLineList(lines);
         final codeBlock = result.single as Element;
         expect(
           codeBlock.textContent,
@@ -103,8 +101,8 @@ void main() {
       });
 
       test('leaves HTML alone, in an indented code block', () {
-        final lines = '    <p>Hello <em>Markdown</em></p>\n'.split('\n');
-        final result = document.parseLines(lines);
+        final lines = '    <p>Hello <em>Markdown</em></p>\n'.toLines();
+        final result = document.parseLineList(lines);
         final codeBlock = result.single as Element;
         expect(
           codeBlock.textContent,
@@ -113,7 +111,7 @@ void main() {
       });
 
       test('leave double quotes, greater than, and less than when escaped', () {
-        final contents = r'\>\"\< Hello';
+        const contents = r'\>\"\< Hello';
         final document = Document(encodeHtml: false);
         final nodes = document.parseInline(contents);
         expect(nodes, hasLength(1));

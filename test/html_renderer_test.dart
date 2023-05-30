@@ -40,7 +40,6 @@ void main() {
     test('with only default block syntaxes', () {
       final result = markdownToHtml(
         text,
-        withDefaultBlockSyntaxes: true,
         withDefaultInlineSyntaxes: false,
         encodeHtml: false,
       );
@@ -55,7 +54,6 @@ void main() {
       final result = markdownToHtml(
         text,
         withDefaultBlockSyntaxes: false,
-        withDefaultInlineSyntaxes: true,
         encodeHtml: false,
       );
 
@@ -70,7 +68,6 @@ void main() {
         text,
         withDefaultBlockSyntaxes: false,
         withDefaultInlineSyntaxes: false,
-        encodeHtml: true,
       );
 
       expect(

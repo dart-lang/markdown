@@ -2,15 +2,22 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+@TestOn('vm')
+library;
+
 import 'package:markdown/markdown.dart';
 import 'package:test/test.dart';
 
 import 'util.dart';
 
 void main() async {
-  await testDirectory('original');
+  testDirectory('original');
 
-  // Block syntax extensions
+  // Block syntax extensions.
+  testFile(
+    'extensions/fenced_blockquotes.unit',
+    blockSyntaxes: [const FencedBlockquoteSyntax()],
+  );
   testFile(
     'extensions/fenced_code_blocks.unit',
     blockSyntaxes: [const FencedCodeBlockSyntax()],
@@ -18,6 +25,10 @@ void main() async {
   testFile(
     'extensions/headers_with_ids.unit',
     blockSyntaxes: [const HeaderWithIdSyntax()],
+  );
+  testFile(
+    'extensions/ordered_list_with_checkboxes.unit',
+    blockSyntaxes: [const OrderedListWithCheckboxSyntax()],
   );
   testFile(
     'extensions/setext_headers_with_ids.unit',
@@ -28,8 +39,12 @@ void main() async {
     blockSyntaxes: [const TableSyntax()],
   );
   testFile(
-    'extensions/fenced_blockquotes.unit',
-    blockSyntaxes: [const FencedBlockquoteSyntax()],
+    'extensions/unordered_list_with_checkboxes.unit',
+    blockSyntaxes: [const UnorderedListWithCheckboxSyntax()],
+  );
+  testFile(
+    'extensions/autolink_extension.unit',
+    inlineSyntaxes: [AutolinkExtensionSyntax()],
   );
 
   // Inline syntax extensions
@@ -45,9 +60,13 @@ void main() async {
     'extensions/strikethrough.unit',
     inlineSyntaxes: [StrikethroughSyntax()],
   );
+  testFile(
+    'extensions/footnote_block.unit',
+    blockSyntaxes: [const FootnoteDefSyntax()],
+  );
 
-  await testDirectory('common_mark');
-  await testDirectory('gfm', extensionSet: ExtensionSet.gitHubFlavored);
+  testDirectory('common_mark');
+  testDirectory('gfm');
 
   group('Corner cases', () {
     validateCore('Incorrect Links', '''
@@ -66,7 +85,7 @@ void main() async {
     validateCore('Unicode ellipsis as punctuation', '''
 "Connecting dot **A** to **B.**…"
 ''', '''
-<p>"Connecting dot <strong>A</strong> to <strong>B.</strong>…"</p>
+<p>&quot;Connecting dot <strong>A</strong> to <strong>B.</strong>…&quot;</p>
 ''');
   });
 
@@ -225,5 +244,22 @@ nyan''',
         1. This will not be an <ol>.
         ''',
         inlineOnly: true);
+  });
+
+  group('ExtensionSet', () {
+    test(
+      '3 asterisks separated with spaces horizontal rule while it is '
+      'gitHubFlavored',
+      () {
+        // Because `gitHubFlavored` will put `UnorderedListWithCheckboxSyntax`
+        // before `HorizontalRuleSyntax`, the `* * *` will be parsed into an
+        // empty unordered list if `ListSyntax` does not skip the horizontal
+        // rule structure.
+        expect(
+          markdownToHtml('* * *', extensionSet: ExtensionSet.gitHubFlavored),
+          '<hr />\n',
+        );
+      },
+    );
   });
 }

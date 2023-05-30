@@ -8,6 +8,17 @@ import '../document.dart';
 import '../inline_parser.dart';
 import '../util.dart';
 import 'delimiter_syntax.dart';
+import 'footnote_ref_syntax.dart';
+
+/// A helper class holds params of link context.
+/// Footnote creation needs other info in [_tryCreateReferenceLink].
+class LinkContext {
+  final InlineParser parser;
+  final SimpleDelimiter opener;
+  final List<Node> Function() getChildren;
+
+  const LinkContext(this.parser, this.opener, this.getChildren);
+}
 
 /// Matches links like `[blah][label]` and `[blah](url)`.
 class LinkSyntax extends DelimiterSyntax {
@@ -23,13 +34,14 @@ class LinkSyntax extends DelimiterSyntax {
         super(pattern, startCharacter: startCharacter);
 
   @override
-  Node? close(
+  Iterable<Node>? close(
     InlineParser parser,
     covariant SimpleDelimiter opener,
     Delimiter? closer, {
     String? tag,
     required List<Node> Function() getChildren,
   }) {
+    final context = LinkContext(parser, opener, getChildren);
     final text = parser.source.substring(opener.endPos, parser.pos);
     // The current character is the `]` that closed the link text. Examine the
     // next character, to determine what type of link we might have (a '('
@@ -37,7 +49,7 @@ class LinkSyntax extends DelimiterSyntax {
     if (parser.pos + 1 >= parser.source.length) {
       // The `]` is at the end of the document, but this may still be a valid
       // shortcut reference link.
-      return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
+      return _tryCreateReferenceLink(context, text);
     }
 
     // Peek at the next character; don't advance, so as to avoid later stepping
@@ -50,11 +62,13 @@ class LinkSyntax extends DelimiterSyntax {
       final leftParenIndex = parser.pos;
       final inlineLink = _parseInlineLink(parser);
       if (inlineLink != null) {
-        return _tryCreateInlineLink(
-          parser,
-          inlineLink,
-          getChildren: getChildren,
-        );
+        return [
+          _tryCreateInlineLink(
+            parser,
+            inlineLink,
+            getChildren: getChildren,
+          ),
+        ];
       }
       // At this point, we've matched `[...](`, but that `(` did not pan out to
       // be an inline link. We must now check if `[...]` is simply a shortcut
@@ -63,7 +77,7 @@ class LinkSyntax extends DelimiterSyntax {
       // Reset the parser position.
       parser.pos = leftParenIndex;
       parser.advanceBy(-1);
-      return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
+      return _tryCreateReferenceLink(context, text);
     }
 
     if (char == $lbracket) {
@@ -75,18 +89,18 @@ class LinkSyntax extends DelimiterSyntax {
         // That opening `[` is not actually part of the link. Maybe a
         // *shortcut* reference link (followed by a `[`).
         parser.advanceBy(1);
-        return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
+        return _tryCreateReferenceLink(context, text);
       }
       final label = _parseReferenceLinkLabel(parser);
       if (label != null) {
-        return _tryCreateReferenceLink(parser, label, getChildren: getChildren);
+        return _tryCreateReferenceLink(context, label, secondary: true);
       }
       return null;
     }
 
     // The link text (inside `[...]`) was not followed with a opening `(` nor
     // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
-    return _tryCreateReferenceLink(parser, text, getChildren: getChildren);
+    return _tryCreateReferenceLink(context, text);
   }
 
   /// Resolve a possible reference link.
@@ -139,25 +153,39 @@ class LinkSyntax extends DelimiterSyntax {
   }) {
     final children = getChildren();
     final element = Element('a', children);
-    element.attributes['href'] = escapeAttribute(destination);
+    element.attributes['href'] = normalizeLinkDestination(
+      escapePunctuation(destination),
+    );
     if (title != null && title.isNotEmpty) {
-      element.attributes['title'] = escapeAttribute(title);
+      element.attributes['title'] = normalizeLinkTitle(
+        escapePunctuation(title),
+      );
     }
     return element;
   }
 
   /// Tries to create a reference link node.
   ///
-  /// Returns the link if it was successfully created, `null` otherwise.
-  Node? _tryCreateReferenceLink(
-    InlineParser parser,
+  /// Returns the nodes if it was successfully created, `null` otherwise.
+  Iterable<Node>? _tryCreateReferenceLink(
+    LinkContext context,
     String label, {
-    required List<Node> Function() getChildren,
+    bool? secondary,
   }) {
-    return _resolveReferenceLink(
+    final parser = context.parser;
+    final getChildren = context.getChildren;
+    final link = _resolveReferenceLink(
       label,
       parser.document.linkReferences,
       getChildren: getChildren,
+    );
+    if (link != null) {
+      return [link];
+    }
+    return FootnoteRefSyntax.tryCreateFootnoteLink(
+      context,
+      label,
+      secondary: secondary,
     );
   }
 

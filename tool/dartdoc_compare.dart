@@ -2,7 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:convert' show jsonEncode, jsonDecode;
+import 'dart:convert' show jsonDecode, jsonEncode;
 import 'dart:io' show Directory, File, Platform, Process, exitCode;
 
 import 'package:args/args.dart' show ArgParser;
@@ -27,7 +27,6 @@ void main(List<String> arguments) {
     )
     ..addFlag(
       _sdk,
-      defaultsTo: false,
       negatable: false,
       help: 'Is the package the SDK?',
     )
@@ -121,7 +120,7 @@ class DartdocCompare {
       }
       final out = Directory.systemTemp
           .createTempSync('dartdoc-compare-${markdownRef}__');
-      final cmd = 'dart';
+      const cmd = 'dart';
       final args = [dartdocBin, '--output=${out.path}'];
 
       if (sdk) {
@@ -146,12 +145,14 @@ class DartdocCompare {
     // make modifiable copy
     dartdocPubspec = jsonDecode(jsonEncode(dartdocPubspec)) as Map;
 
+    final dependencies = dartdocPubspec['dependencies'] as Map;
+
     if (markdownRef == 'local') {
-      dartdocPubspec['dependencies']['markdown'] = {
+      dependencies['markdown'] = {
         'path': markdownPath,
       };
     } else {
-      dartdocPubspec['dependencies']['markdown'] = {
+      dependencies['markdown'] = {
         'git': {
           'url': 'git://github.com/dart-lang/markdown.git',
           'ref': markdownRef

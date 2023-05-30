@@ -4,26 +4,34 @@
 
 import '../ast.dart';
 import '../block_parser.dart';
+import '../charcode.dart';
+import '../line.dart';
 import '../patterns.dart';
+import '../text_parser.dart';
+import '../util.dart';
 import 'block_syntax.dart';
+import 'ordered_list_with_checkbox_syntax.dart';
+import 'unordered_list_with_checkbox_syntax.dart';
 
 class ListItem {
-  ListItem(this.lines);
+  const ListItem(
+    this.lines, {
+    this.taskListItemState,
+  });
 
-  bool forceBlock = false;
-  final List<String> lines;
+  final List<Line> lines;
+  final TaskListItemState? taskListItemState;
 }
 
-/// Invisible string used to placehold for an *unchecked* CheckBox.
-/// The character is Unicode Zero Width Space (U+200B).
-const indicatorForUncheckedCheckBox = '\u{200B}';
-
-/// Invisible string used to placehold for a *checked* CheckBox.
-/// This is 2 Unicode Zero Width Space (U+200B) characters.
-const indicatorForCheckedCheckBox = '\u{200B}\u{200B}';
+enum TaskListItemState { checked, unchecked }
 
 /// Base class for both ordered and unordered lists.
 abstract class ListSyntax extends BlockSyntax {
+  @override
+  bool canParse(BlockParser parser) =>
+      pattern.hasMatch(parser.current.content) &&
+      !hrPattern.hasMatch(parser.current.content);
+
   @override
   bool canEndBlock(BlockParser parser) {
     // An empty list cannot interrupt a paragraph. See
@@ -31,13 +39,28 @@ abstract class ListSyntax extends BlockSyntax {
     // Ideally, [BlockSyntax.canEndBlock] should be changed to be a method
     // which accepts a [BlockParser], but this would be a breaking change,
     // so we're going with this temporarily.
-    final match = pattern.firstMatch(parser.current)!;
-    // The seventh group, in both [olPattern] and [ulPattern] is the text
-    // after the delimiter.
-    return match[7]?.isNotEmpty ?? false;
-  }
+    final match = pattern.firstMatch(parser.current.content)!;
 
-  String get listTag;
+    // Allow only lists starting with 1 to interrupt paragraphs, if it is an
+    // ordered list. See https://spec.commonmark.org/0.30/#example-304.
+    // But there shuold be an exception for nested ordered lists, for example:
+    // ```
+    // 1. one
+    // 2. two
+    //   3. three
+    //   4. four
+    // 5. five
+    // ```
+    if (parser.parentSyntax is! ListSyntax &&
+        match[1] != null &&
+        match[1] != '1') {
+      return false;
+    }
+
+    // An empty list item cannot interrupt a paragraph. See
+    // https://spec.commonmark.org/0.30/#example-285
+    return match[2]?.isNotEmpty ?? false;
+  }
 
   const ListSyntax();
 
@@ -47,132 +70,169 @@ abstract class ListSyntax extends BlockSyntax {
     headerPattern,
     hrPattern,
     indentPattern,
-    ulPattern,
-    olPattern
+    listPattern,
   ];
-
-  static final _whitespaceRe = RegExp('[ \t]*');
 
   @override
   Node parse(BlockParser parser) {
+    final match = pattern.firstMatch(parser.current.content);
+    final ordered = match![1] != null;
+
+    final taskListParserEnabled = this is UnorderedListWithCheckboxSyntax ||
+        this is OrderedListWithCheckboxSyntax;
     final items = <ListItem>[];
-    var childLines = <String>[];
-    final isCheckboxListSubclass =
-        (listTag == 'ol_with_checkbox' || listTag == 'ul_with_checkbox');
+    var childLines = <Line>[];
+    TaskListItemState? taskListItemState;
 
     void endItem() {
       if (childLines.isNotEmpty) {
-        items.add(ListItem(childLines));
-        childLines = <String>[];
+        items.add(ListItem(childLines, taskListItemState: taskListItemState));
+        childLines = <Line>[];
+      }
+    }
+
+    String parseTaskListItem(String text) {
+      final pattern = RegExp(r'^ {0,3}\[([ xX])\][ \t]');
+
+      if (taskListParserEnabled && pattern.hasMatch(text)) {
+        return text.replaceFirstMapped(pattern, (match) {
+          taskListItemState = match[1] == ' '
+              ? TaskListItemState.unchecked
+              : TaskListItemState.checked;
+
+          return '';
+        });
+      } else {
+        taskListItemState = null;
+        return text;
       }
     }
 
     late Match? possibleMatch;
     bool tryMatch(RegExp pattern) {
-      possibleMatch = pattern.firstMatch(parser.current);
+      possibleMatch = pattern.firstMatch(parser.current.content);
       return possibleMatch != null;
     }
 
     String? listMarker;
-    String? indent;
+    int? indent;
     // In case the first number in an ordered list is not 1, use it as the
     // "start".
     int? startNumber;
 
+    int? blankLines;
+
     while (!parser.isDone) {
-      final leadingSpace =
-          _whitespaceRe.matchAsPrefix(parser.current)!.group(0)!;
-      final leadingExpandedTabLength = _expandedTabLength(leadingSpace);
-      if (tryMatch(emptyPattern)) {
-        if (emptyPattern.hasMatch(parser.next ?? '')) {
-          // Two blank lines ends a list.
+      final currentIndent = parser.current.content.indentation() +
+          (parser.current.tabRemaining ?? 0);
+
+      if (parser.current.isBlankLine) {
+        childLines.add(parser.current);
+
+        if (blankLines != null) {
+          blankLines++;
+        }
+      } else if (indent != null && indent <= currentIndent) {
+        // A list item can begin with at most one blank line. See:
+        // https://spec.commonmark.org/0.30/#example-280
+        if (blankLines != null && blankLines > 1) {
           break;
         }
-        // Add a blank line to the current list item.
-        childLines.add('');
-      } else if (indent != null && indent.length <= leadingExpandedTabLength) {
-        // Strip off indent and add to current item.
-        final line = parser.current
-            .replaceFirst(leadingSpace, ' ' * leadingExpandedTabLength)
-            .replaceFirst(indent, '');
-        childLines.add(line);
+
+        final indentedLine = parser.current.content.dedent(indent);
+
+        childLines.add(Line(
+          blankLines == null
+              ? indentedLine.text
+              : parseTaskListItem(indentedLine.text),
+          tabRemaining: indentedLine.tabRemaining,
+        ));
       } else if (tryMatch(hrPattern)) {
         // Horizontal rule takes precedence to a new list item.
         break;
-      } else if ((isCheckboxListSubclass &&
-              (tryMatch(ulWithCheckBoxPattern) ||
-                  tryMatch(olWithCheckBoxPattern))) ||
-          tryMatch(ulPattern) ||
-          tryMatch(olPattern)) {
-        // We know we have a valid [possibleMatch] now, so capture it.
-        final successfulMatch = possibleMatch!;
-        // The checkbox "subclass" patterns ([ulWithCheckBoxPattern] and
-        // [olWithCheckBoxPattern]) have 2 extra capturing groups at the 5
-        // position to capture the checkbox. These shift the other groups
-        // forward by 2 slots.
-        final cbGroupOffset = isCheckboxListSubclass ? 2 : 0;
-        final precedingWhitespace = successfulMatch[1]!;
-        final digits = successfulMatch[2] ?? '';
-        if (startNumber == null && digits.isNotEmpty) {
-          startNumber = int.parse(digits);
+      } else if (tryMatch(listPattern)) {
+        blankLines = null;
+        final match = possibleMatch!;
+        final textParser = TextParser(parser.current.content);
+        var precedingWhitespaces = textParser.moveThroughWhitespace();
+        final markerStart = textParser.pos;
+        final digits = match[1] ?? '';
+        if (digits.isNotEmpty) {
+          startNumber ??= int.parse(digits);
+          textParser.advanceBy(digits.length);
         }
-        final marker = successfulMatch[3]!;
-        // [checkBoxIndicator] is always empty unless a checkbox was found.
-        String checkBoxIndicator = '';
-        if (isCheckboxListSubclass) {
-          // Look at checkbox capture group and get checkbox state.
-          // If we find a checked or unchecked checkbox then we will
-          // set [checkBoxIndicator] to one of our invisible
-          // codes that we can later detect to know if we need to insert
-          // a check or unchecked checkbox when we are inserting the
-          // listitem li node.
-          final String checkboxGroup = successfulMatch[5]!.toLowerCase();
-          if (checkboxGroup == '[ ]') {
-            checkBoxIndicator = indicatorForUncheckedCheckBox;
-          } else if (checkboxGroup == '[x]') {
-            checkBoxIndicator = indicatorForCheckedCheckBox;
+        textParser.advance();
+
+        // See https://spec.commonmark.org/0.30/#ordered-list-marker
+        final marker = textParser.substring(
+          markerStart,
+          textParser.pos,
+        );
+
+        var isBlank = true;
+        var contentWhitespances = 0;
+        var containsTab = false;
+        int? contentBlockStart;
+
+        if (!textParser.isDone) {
+          containsTab = textParser.charAt() == $tab;
+          // Skip the first whitespace.
+          textParser.advance();
+          contentBlockStart = textParser.pos;
+          if (!textParser.isDone) {
+            contentWhitespances = textParser.moveThroughWhitespace();
+
+            if (!textParser.isDone) {
+              isBlank = false;
+            }
           }
         }
-        final firstWhitespace = successfulMatch[5 + cbGroupOffset] ?? '';
-        final restWhitespace = successfulMatch[6 + cbGroupOffset] ?? '';
-        final content = successfulMatch[7 + cbGroupOffset] ?? '';
-        final isBlank = content.isEmpty;
-        if (listMarker != null && listMarker != marker) {
-          // Changing the bullet or ordered list delimiter starts a new list.
+
+        // Changing the bullet or ordered list delimiter starts a new list.
+        if (listMarker != null && listMarker.last() != marker.last()) {
           break;
         }
+
+        // End the current list item and start a new one.
+        endItem();
+
+        // Start a new list item, the last item will be ended up outside of the
+        // `while` loop.
         listMarker = marker;
-        final markerAsSpaces = ' ' * (digits.length + marker.length);
+        precedingWhitespaces += digits.length + 2;
         if (isBlank) {
-          // See http://spec.commonmark.org/0.28/#list-items under "3. Item
-          // starting with a blank line."
-          //
-          // If the list item starts with a blank line, the final piece of the
-          // indentation is just a single space.
-          indent = '$precedingWhitespace$markerAsSpaces ';
-        } else if (restWhitespace.length >= 4) {
-          // See http://spec.commonmark.org/0.28/#list-items under "2. Item
-          // starting with indented code."
+          // See https://spec.commonmark.org/0.30/#example-278.
+          blankLines = 1;
+          indent = precedingWhitespaces;
+        } else if (contentWhitespances >= 4) {
+          // See https://spec.commonmark.org/0.30/#example-270.
           //
           // If the list item starts with indented code, we need to _not_ count
           // any indentation past the required whitespace character.
-          indent = precedingWhitespace + markerAsSpaces + firstWhitespace;
+          indent = precedingWhitespaces;
         } else {
-          indent = precedingWhitespace +
-              markerAsSpaces +
-              firstWhitespace +
-              restWhitespace;
+          indent = precedingWhitespaces + contentWhitespances;
         }
-        // End the current list item and start a new one.
-        endItem();
-        childLines.add('$checkBoxIndicator$restWhitespace$content');
+
+        var content = contentBlockStart != null && !isBlank
+            ? parseTaskListItem(textParser.substring(contentBlockStart))
+            : '';
+
+        if (content.isEmpty && containsTab) {
+          content = content.prependSpace(2);
+        }
+
+        childLines.add(Line(
+          content,
+          tabRemaining: containsTab ? 2 : null,
+        ));
       } else if (BlockSyntax.isAtBlockEnd(parser)) {
         // Done with the list.
         break;
       } else {
         // If the previous item is a blank line, this means we're done with the
         // list and are starting a new top-level paragraph.
-        if ((childLines.isNotEmpty) && (childLines.last == '')) {
+        if (childLines.isNotEmpty && childLines.last.isBlankLine) {
           parser.encounteredBlankLine = true;
           break;
         }
@@ -189,34 +249,28 @@ abstract class ListSyntax extends BlockSyntax {
     items.forEach(_removeLeadingEmptyLine);
     final anyEmptyLines = _removeTrailingEmptyLines(items);
     var anyEmptyLinesBetweenBlocks = false;
+    var containsTaskList = false;
+    const taskListClass = 'task-list-item';
 
     for (final item in items) {
-      final itemParser = BlockParser(item.lines, parser.document);
-      final children = itemParser.parseLines();
-      // If this is a checkbox sublass of ListSyntax then we must check
-      // for possible invisible checkbox placeholder characters at
-      // the start of first node's text to see if we need to insert a checkbox.
       Element? checkboxToInsert;
-      if (isCheckboxListSubclass) {
-        if (children.isNotEmpty) {
-          if (children.first.textContent
-              .startsWith(indicatorForCheckedCheckBox)) {
-            checkboxToInsert = Element.withTag('input')
-              ..attributes['type'] = 'checkbox'
-              ..attributes['checked'] = 'true';
-          } else if (children.first.textContent
-              .startsWith(indicatorForUncheckedCheckBox)) {
-            checkboxToInsert = Element.withTag('input')
-              ..attributes['type'] = 'checkbox';
-          }
+      if (item.taskListItemState != null) {
+        containsTaskList = true;
+        checkboxToInsert = Element.withTag('input')
+          ..attributes['type'] = 'checkbox';
+        if (item.taskListItemState == TaskListItemState.checked) {
+          checkboxToInsert.attributes['checked'] = 'true';
         }
       }
-      if (checkboxToInsert != null) {
-        itemNodes.add(Element('li', [checkboxToInsert, ...children])
-          ..attributes['class'] = 'task-list-item');
-      } else {
-        itemNodes.add(Element('li', children));
-      }
+
+      final itemParser = BlockParser(item.lines, parser.document);
+      final children = itemParser.parseLines(parentSyntax: this);
+      final itemElement = checkboxToInsert == null
+          ? Element('li', children)
+          : (Element('li', [checkboxToInsert, ...children])
+            ..attributes['class'] = taskListClass);
+
+      itemNodes.add(itemElement);
       anyEmptyLinesBetweenBlocks =
           anyEmptyLinesBetweenBlocks || itemParser.encounteredBlankLine;
     }
@@ -229,38 +283,42 @@ abstract class ListSyntax extends BlockSyntax {
       // We must post-process the list items, converting any top-level paragraph
       // elements to just text elements.
       for (final item in itemNodes) {
+        final isTaskList = item.attributes['class'] == taskListClass;
         final children = item.children;
         if (children != null) {
+          Node? lastNode;
           for (var i = 0; i < children.length; i++) {
             final child = children[i];
             if (child is Element && child.tag == 'p') {
-              children.removeAt(i);
-              children.insertAll(i, child.children!);
+              final childContent = child.children!;
+              if (lastNode is Element && !isTaskList) {
+                childContent.insert(0, Text('\n'));
+              }
+
+              children
+                ..removeAt(i)
+                ..insertAll(i, childContent);
             }
+
+            lastNode = child;
           }
         }
       }
     }
 
-    if (listTag == 'ol_with_checkbox') {
-      final olWithCheckbox = Element('ol', itemNodes)
-        ..attributes['class'] = 'contains-task-list';
-      if (startNumber != 1) {
-        olWithCheckbox.attributes['start'] = '$startNumber';
-      }
-      return olWithCheckbox;
-    } else if (listTag == 'ul_with_checkbox') {
-      return Element('ul', itemNodes)
-        ..attributes['class'] = 'contains-task-list';
-    } else if (listTag == 'ol' && startNumber != 1) {
-      return Element(listTag, itemNodes)..attributes['start'] = '$startNumber';
-    } else {
-      return Element(listTag, itemNodes);
+    final listElement = Element(ordered ? 'ol' : 'ul', itemNodes);
+    if (ordered && startNumber != 1) {
+      listElement.attributes['start'] = '$startNumber';
     }
+
+    if (containsTaskList) {
+      listElement.attributes['class'] = 'contains-task-list';
+    }
+    return listElement;
   }
 
   void _removeLeadingEmptyLine(ListItem item) {
-    if (item.lines.isNotEmpty && emptyPattern.hasMatch(item.lines.first)) {
+    if (item.lines.isNotEmpty && item.lines.first.isBlankLine) {
       item.lines.removeAt(0);
     }
   }
@@ -271,8 +329,7 @@ abstract class ListSyntax extends BlockSyntax {
     var anyEmpty = false;
     for (var i = 0; i < items.length; i++) {
       if (items[i].lines.length == 1) continue;
-      while (items[i].lines.isNotEmpty &&
-          emptyPattern.hasMatch(items[i].lines.last)) {
+      while (items[i].lines.isNotEmpty && items[i].lines.last.isBlankLine) {
         if (i < items.length - 1) {
           anyEmpty = true;
         }
@@ -280,13 +337,5 @@ abstract class ListSyntax extends BlockSyntax {
       }
     }
     return anyEmpty;
-  }
-
-  static int _expandedTabLength(String input) {
-    var length = 0;
-    for (final char in input.codeUnits) {
-      length += char == 0x9 ? 4 - (length % 4) : 1;
-    }
-    return length;
   }
 }

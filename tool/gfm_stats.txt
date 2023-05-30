@@ -1,32 +1,32 @@
-  17 of   18 –  94.4%  ATX headings
-  17 of   19 –  89.5%  Autolinks
-   7 of   11 –  63.6%  Autolinks (extension)
-  12 of   13 –  92.3%  Backslash escapes
+  18 of   18 – 100.0%  ATX headings
+  19 of   19 – 100.0%  Autolinks
+  11 of   11 – 100.0%  Autolinks (extension)
+  13 of   13 – 100.0%  Backslash escapes
    1 of    1 – 100.0%  Blank lines
-  23 of   25 –  92.0%  Block quotes
+  25 of   25 – 100.0%  Block quotes
   22 of   22 – 100.0%  Code spans
-   0 of    1 –   0.0%  Disallowed Raw HTML (extension)
- 130 of  131 –  99.2%  Emphasis and strong emphasis
-  14 of   17 –  82.4%  Entity and numeric character references
-  28 of   29 –  96.6%  Fenced code blocks
+   1 of    1 – 100.0%  Disallowed Raw HTML (extension)
+ 131 of  131 – 100.0%  Emphasis and strong emphasis
+  17 of   17 – 100.0%  Entity and numeric character references
+  29 of   29 – 100.0%  Fenced code blocks
   15 of   15 – 100.0%  Hard line breaks
   43 of   43 – 100.0%  HTML blocks
-  21 of   22 –  95.5%  Images
-  11 of   12 –  91.7%  Indented code blocks
+  22 of   22 – 100.0%  Images
+  12 of   12 – 100.0%  Indented code blocks
    1 of    1 – 100.0%  Inlines
-  21 of   28 –  75.0%  Link reference definitions
-  82 of   87 –  94.3%  Links
-  45 of   48 –  93.8%  List items
-  22 of   26 –  84.6%  Lists
+  28 of   28 – 100.0%  Link reference definitions
+  87 of   87 – 100.0%  Links
+  48 of   48 – 100.0%  List items
+  26 of   26 – 100.0%  Lists
    8 of    8 – 100.0%  Paragraphs
    1 of    1 – 100.0%  Precedence
-  15 of   21 –  71.4%  Raw HTML
-  26 of   27 –  96.3%  Setext headings
+  20 of   20 – 100.0%  Raw HTML
+  27 of   27 – 100.0%  Setext headings
    2 of    2 – 100.0%  Soft line breaks
    2 of    2 – 100.0%  Strikethrough (extension)
-   7 of    8 –  87.5%  Tables (extension)
+   8 of    8 – 100.0%  Tables (extension)
   11 of   11 – 100.0%  Tabs
    3 of    3 – 100.0%  Textual content
   19 of   19 – 100.0%  Thematic breaks
- 626 of  671 –  93.3%  TOTAL
- 551 of  626 –  88.0%  TOTAL Strict
+ 670 of  670 – 100.0%  TOTAL
+ 660 of  670 –  98.5%  TOTAL Strict

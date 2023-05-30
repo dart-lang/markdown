@@ -1,0 +1,6 @@
+tags:
+  crash_test:
+    skip: 'Only run crash_test tests manually with `dart test -P crash_test`'
+    presets:
+      crash_test:
+        skip: false # Don't skip when running in -P crash_test

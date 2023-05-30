@@ -1,5 +1,7 @@
 [![Build Status](https://github.com/dart-lang/markdown/workflows/Dart%20CI/badge.svg)](https://github.com/dart-lang/markdown/actions?query=workflow%3A"Dart+CI"+branch%3Amaster)
 [![Pub](https://img.shields.io/pub/v/markdown.svg)](https://pub.dev/packages/markdown)
+[![package publisher](https://img.shields.io/pub/publisher/markdown.svg)](https://pub.dev/packages/markdown/publisher)
+[![Coverage Status](https://coveralls.io/repos/github/dart-lang/markdown/badge.svg?branch=master)](https://coveralls.io/github/dart-lang/markdown?branch=master)
 
 A portable Markdown library written in Dart. It can parse Markdown into
 HTML on both the client and server.
@@ -164,9 +166,9 @@ compliance with [CommonMark].
 
 [Perl Markdown]: https://daringfireball.net/projects/markdown/
 [CommonMark]: https://commonmark.org/
-[commonMark-raw-html]: https://spec.commonmark.org/0.28/#raw-html
+[commonMark-raw-html]: https://spec.commonmark.org/0.30/#raw-html
 [CommonMark source]: https://github.com/commonmark/commonmark-spec
-[GitHub Flavored]: https://github.github.com/gfm/
+[GitHub Flavored]: https://github.github.io/gfm/
 [pandoc-auto_identifiers]: https://pandoc.org/MANUAL.html#extension-auto_identifiers
 ["Markdown's XSS Vulnerability (and how to mitigate it)"]: https://github.com/showdownjs/showdown/wiki/Markdown%27s-XSS-Vulnerability-(and-how-to-mitigate-it)
 [NodeValidator]: https://api.dart.dev/stable/dart-html/NodeValidator-class.html
