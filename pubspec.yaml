@@ -1,5 +1,5 @@
 name: markdown
-version: 7.1.1
+version: 7.1.2-wip
 
 description: >-
   A portable Markdown library written in Dart that can parse Markdown into HTML.
@@ -24,7 +24,7 @@ dev_dependencies:
   collection: ^1.15.0
   dart_flutter_team_lints: ^1.0.0
   html: ^0.15.0
-  http: ^0.13.5
+  http: '>=0.13.5 <2.0.0'
   io: ^1.0.0
   js: ^0.6.3
   path: ^1.8.0
