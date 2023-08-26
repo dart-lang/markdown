@@ -74,7 +74,8 @@ class FootnoteDefSyntax extends BlockSyntax {
     dummyPattern,
   };
 
-  /// Whether this line is one kind of block, if true footnotes block should end.
+  /// Whether this line is any kind of block.
+  /// If `true`, the footnote block should end.
   static bool _isBlock(Iterable<BlockSyntax> syntaxList, String line) {
     return syntaxList.any((s) => s.pattern.hasMatch(line));
   }

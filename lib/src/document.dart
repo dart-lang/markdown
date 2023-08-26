@@ -18,7 +18,9 @@ class Document {
   /// Footnote ref count, keys are case-sensitive and added by define syntax.
   final footnoteReferences = <String, int>{};
 
-  /// Footnotes labels by appearing order, are case-insensitive and added by ref syntax.
+  /// Footnote labels by appearing order.
+  ///
+  /// They are case-insensitive and added by ref syntax.
   final footnoteLabels = <String>[];
   final Resolver? linkResolver;
   final Resolver? imageLinkResolver;
@@ -182,7 +184,8 @@ extension _ElementExt on Element {
       if (i > 0)
         Element('sup', [Text(num)])..attributes['class'] = 'footnote-ref',
     ])
-      // Ignore GFM's attributes: <data-footnote-backref aria-label="Back to content">.
+      // Ignore GFM's attributes:
+      // <data-footnote-backref aria-label="Back to content">.
       ..attributes['href'] = '#fnref-$ref$suffix'
       ..attributes['class'] = 'footnote-backref';
   }

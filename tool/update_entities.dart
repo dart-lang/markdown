@@ -14,7 +14,7 @@ void main() {
   final map = Map<String, Map<String, dynamic>>.from(jsonDecode(json) as Map);
 
   final result = <String, String>{};
-  for (var name in map.keys) {
+  for (final name in map.keys) {
     if (name.endsWith(';')) {
       final value = map[name]!['characters'] as String;
       result[name] = value;

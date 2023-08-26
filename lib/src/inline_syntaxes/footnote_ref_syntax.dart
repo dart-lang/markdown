@@ -2,10 +2,13 @@ import '../ast.dart' show Element, Node, Text;
 import '../charcode.dart';
 import 'link_syntax.dart' show LinkContext;
 
-/// The spec of GFM about footnotes is [missing](https://github.com/github/cmark-gfm/issues/283#issuecomment-1378868725).
-/// For source code of cmark-gfm, See [noMatch] label of [handle_close_bracket] function in [master@c32ef78](https://github.com/github/cmark-gfm/blob/c32ef78/src/inlines.c#L1236).
+/// The spec of GFM about footnotes is
+/// [missing](https://github.com/github/cmark-gfm/issues/283#issuecomment-1378868725).
+/// For source code of cmark-gfm, see the `noMatch` label of the
+/// `handle_close_bracket` function in [master@c32ef78](https://github.com/github/cmark-gfm/blob/c32ef78/src/inlines.c#L1236).
 /// A Rust implementation is also [available](https://github.com/wooorm/markdown-rs/blob/2498e31eecead798efc649502bbf5f86feaa94be/src/construct/gfm_label_start_footnote.rs).
-/// Footnote shares the same syntax with [LinkSyntax], but goes a different branch of handling close bracket.
+/// Footnotes shares the same syntax with [LinkSyntax],
+/// but have a different branch of handling the close bracket.
 class FootnoteRefSyntax {
   static String? _footnoteLabel(String key) {
     if (key.isEmpty || key.codeUnitAt(0) != $caret) {

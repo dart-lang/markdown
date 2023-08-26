@@ -31,7 +31,7 @@ class CodeBlockSyntax extends BlockSyntax {
 
       if (!isBlankLine &&
           childLines.isNotEmpty &&
-          pattern.hasMatch(parser.current.content) != true) {
+          !pattern.hasMatch(parser.current.content)) {
         break;
       }
 
@@ -79,7 +79,7 @@ class CodeBlockSyntax extends BlockSyntax {
         continue;
       }
 
-      return pattern.hasMatch(nextLine.content) == false;
+      return !pattern.hasMatch(nextLine.content);
     }
   }
 }

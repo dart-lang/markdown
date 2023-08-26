@@ -40,7 +40,9 @@ void main(List<String> arguments) {
   }
   if (options[_dartdocDir] == null || options[_markdownBefore] == null) {
     print(
-        'Invalid arguments: Options --$_dartdocDir and --$_markdownBefore must be specified');
+      'Invalid arguments: Options --$_dartdocDir and --$_markdownBefore '
+      'must be specified',
+    );
     print(parser.usage);
     exitCode = 1;
     return;
