@@ -1,5 +1,7 @@
 ## 7.1.2-wip
 
+* Update all CommonMark specification links to 0.30.
+
 ## 7.1.1
 
 * Fix delimiter row matching pattern for tables.

@@ -13,7 +13,7 @@ class DelimiterSyntax extends InlineSyntax {
   /// Whether this is parsed according to the same nesting rules as [emphasis
   /// delimiters][].
   ///
-  /// [emphasis delimiters]: http://spec.commonmark.org/0.28/#can-open-emphasis
+  /// [emphasis delimiters]: https://spec.commonmark.org/0.30/#can-open-emphasis
   final bool requiresDelimiterRun;
 
   /// Whether to allow intra-word delimiter runs. CommonMark emphasis and
@@ -302,14 +302,14 @@ class DelimiterRun implements Delimiter {
     }
 
     // If it is a left-flanking delimiter run, see
-    // http://spec.commonmark.org/0.30/#left-flanking-delimiter-run.
+    // https://spec.commonmark.org/0.30/#left-flanking-delimiter-run.
     final isLeftFlanking = !followedByWhitespace &&
         (!followedByPunctuation ||
             precededByWhitespace ||
             precededByPunctuation);
 
     // If it is a right-flanking delimiter run, see
-    // http://spec.commonmark.org/0.30/#right-flanking-delimiter-run.
+    // https://spec.commonmark.org/0.30/#right-flanking-delimiter-run.
     final isRightFlanking = !precededByWhitespace &&
         (!precededByPunctuation ||
             followedByWhitespace ||

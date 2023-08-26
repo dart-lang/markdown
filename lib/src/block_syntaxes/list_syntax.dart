@@ -35,7 +35,7 @@ abstract class ListSyntax extends BlockSyntax {
   @override
   bool canEndBlock(BlockParser parser) {
     // An empty list cannot interrupt a paragraph. See
-    // https://spec.commonmark.org/0.29/#example-255.
+    // https://spec.commonmark.org/0.30/#example-285.
     // Ideally, [BlockSyntax.canEndBlock] should be changed to be a method
     // which accepts a [BlockParser], but this would be a breaking change,
     // so we're going with this temporarily.
@@ -43,7 +43,7 @@ abstract class ListSyntax extends BlockSyntax {
 
     // Allow only lists starting with 1 to interrupt paragraphs, if it is an
     // ordered list. See https://spec.commonmark.org/0.30/#example-304.
-    // But there shuold be an exception for nested ordered lists, for example:
+    // But there should be an exception for nested ordered lists, for example:
     // ```
     // 1. one
     // 2. two
@@ -276,7 +276,7 @@ abstract class ListSyntax extends BlockSyntax {
     }
 
     // Must strip paragraph tags if the list is "tight".
-    // http://spec.commonmark.org/0.28/#lists
+    // https://spec.commonmark.org/0.30/#lists
     final listIsTight = !anyEmptyLines && !anyEmptyLinesBetweenBlocks;
 
     if (listIsTight) {

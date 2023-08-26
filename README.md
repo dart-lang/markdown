@@ -160,7 +160,7 @@ compliance with [CommonMark].
 
  3. Update the stats files as described above. Note any changes in the results.
  4. Update any references to the existing spec by search for
-    `https://spec.commonmark.org/0.28` in the repository. (Including this one.)
+    `https://spec.commonmark.org/0.30/` in the repository. (Including this one.)
     Verify the updated links are still valid.
  5. Commit changes, including a corresponding note in `CHANGELOG.md`.
 

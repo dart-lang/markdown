@@ -60,7 +60,7 @@ Map<String, List<CommonMarkTestCase>> loadCommonMarkSections(
 class Config {
   static final Config commonMarkConfig = Config._(
     'common_mark',
-    'http://spec.commonmark.org/0.28/',
+    'https://spec.commonmark.org/0.30/',
   );
   static final Config gfmConfig = Config._(
     'gfm',

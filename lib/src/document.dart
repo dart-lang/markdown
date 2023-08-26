@@ -191,19 +191,19 @@ extension _ElementExt on Element {
 }
 
 /// A [link reference
-/// definition](http://spec.commonmark.org/0.28/#link-reference-definitions).
+/// definition](https://spec.commonmark.org/0.30/#link-reference-definitions).
 class LinkReference {
-  /// The [link label](http://spec.commonmark.org/0.28/#link-label).
+  /// The [link label](https://spec.commonmark.org/0.30/#link-label).
   ///
   /// Temporarily, this class is also being used to represent the link data for
   /// an inline link (the destination and title), but this should change before
   /// the package is released.
   final String label;
 
-  /// The [link destination](http://spec.commonmark.org/0.28/#link-destination).
+  /// The [link destination](https://spec.commonmark.org/0.30/#link-destination).
   final String destination;
 
-  /// The [link title](http://spec.commonmark.org/0.28/#link-title).
+  /// The [link title](https://spec.commonmark.org/0.30/#link-title).
   final String? title;
 
   /// Construct a new [LinkReference], with all necessary fields.

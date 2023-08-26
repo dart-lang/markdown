@@ -11,7 +11,8 @@ import 'block_syntax.dart';
 
 /// Parses preformatted code blocks between two ~~~ or ``` sequences.
 ///
-/// See the CommonMark spec: https://spec.commonmark.org/0.29/#fenced-code-blocks
+/// See the CommonMark spec:
+/// https://spec.commonmark.org/0.30/#fenced-code-blocks
 class FencedCodeBlockSyntax extends BlockSyntax {
   @override
   RegExp get pattern => codeFencePattern;
