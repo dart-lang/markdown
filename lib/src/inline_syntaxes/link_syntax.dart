@@ -281,7 +281,7 @@ class LinkSyntax extends DelimiterSyntax {
         parser.advanceBy(1);
         final next = parser.charAt(parser.pos);
         // TODO: Follow the backslash spec better here.
-        // http://spec.commonmark.org/0.29/#backslash-escapes
+        // https://spec.commonmark.org/0.30/#backslash-escapes
         if (next != $backslash && next != $gt) {
           buffer.writeCharCode(char);
         }
@@ -327,7 +327,7 @@ class LinkSyntax extends DelimiterSyntax {
   /// Returns the link if it was successfully created, `null` otherwise.
   InlineLink? _parseInlineBareDestinationLink(InlineParser parser) {
     // According to
-    // [CommonMark](http://spec.commonmark.org/0.28/#link-destination):
+    // [CommonMark](https://spec.commonmark.org/0.30/#link-destination):
     //
     // > A link destination consists of [...] a nonempty sequence of
     // > characters [...], and includes parentheses only if (a) they are
@@ -348,7 +348,7 @@ class LinkSyntax extends DelimiterSyntax {
           final next = parser.charAt(parser.pos);
           // Parentheses may be escaped.
           //
-          // http://spec.commonmark.org/0.28/#example-467
+          // https://spec.commonmark.org/0.30/#example-494
           if (next != $backslash && next != $lparen && next != $rparen) {
             buffer.writeCharCode(char);
           }

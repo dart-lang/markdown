@@ -100,7 +100,7 @@ class InlineParser {
     while (!isDone) {
       // A right bracket (']') is special. Hitting this character triggers the
       // "look for link or image" procedure.
-      // See https://spec.commonmark.org/0.29/#an-algorithm-for-parsing-nested-emphasis-and-links.
+      // See https://spec.commonmark.org/0.30/#an-algorithm-for-parsing-nested-emphasis-and-links.
       if (charAt(pos) == $rbracket) {
         writeText();
         _linkOrImage();
@@ -125,7 +125,7 @@ class InlineParser {
   /// image.
   ///
   /// This is the "look for link or image" routine from the CommonMark spec:
-  /// https://spec.commonmark.org/0.29/#-look-for-link-or-image-.
+  /// https://spec.commonmark.org/0.30/#look-for-link-or-image.
   void _linkOrImage() {
     final index = _delimiterStack
         .lastIndexWhere((d) => d.char == $lbracket || d.char == $exclamation);

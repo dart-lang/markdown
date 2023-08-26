@@ -7,7 +7,7 @@ import '../charcode.dart';
 import '../patterns.dart';
 
 /// Leave inline HTML tags alone, from
-/// [CommonMark 0.30](http://spec.commonmark.org/0.30/#raw-html).
+/// [CommonMark 0.30](https://spec.commonmark.org/0.30/#raw-html).
 ///
 /// This is not actually a good definition (nor CommonMark's) of an HTML tag,
 /// but it is fast. It will leave text like `<a href='hi">` alone, which is
