@@ -18,8 +18,10 @@ RegExp gitHubEmojiUnicodeFromFilenamePattern =
 /// we don't change or break anything.
 /// There are essentially only TWO (2) emoji that change and the
 /// legacy emoji is still available with an alternate name.
-/// The 'beetle' emoji changes from `🐞` to `🪲`, legacy available as 'lady_beetle'.
-/// The 'cricket' emoji changes from `🏏` to `🦗`, legacy available as 'cricket_game'.
+/// The 'beetle' emoji changes from `🐞` to `🪲`,
+/// legacy available as 'lady_beetle'.
+/// The 'cricket' emoji changes from `🏏` to `🦗`,
+/// legacy available as 'cricket_game'.
 /// (if the -g flag us used to force using the GitHub Unicode sequences for the
 /// emoji then additionally the 'email' emoji changes from '✉️' to '📧').
 const _emojisJsonRawUrl = 'https://api.github.com/emojis';
@@ -125,10 +127,11 @@ for the tests to pass.
 ///  - "https://github.githubassets.com/images/icons/emoji/unicode/1f643.png?v8"
 ///  - "https://github.githubassets.com/images/icons/emoji/unicode/1f1fa-1f1fe.png?v8"
 ///  - "https://github.githubassets.com/images/icons/emoji/unicode/1f469-1f469-1f467-1f466.png?v8"
-/// NOTE: Some filenames will be GitHub 'custom' emoji that have no Unicode
-/// equivalent and these will not have hex codepoints, only the GitHub custom name.
-/// We will ingore these (there are only a 19 and they are mostly pixel art from
-/// the old Doom game).
+/// NOTE: Some filenames will be GitHub 'custom' emoji that have
+/// no Unicode equivalent and these will not have hex codepoints,
+/// only the GitHub custom name.
+/// We will ignore these (there are only a 19 and they are mostly pixel art
+/// from the old Doom game).
 /// Example GitHub custom emoji filename:
 ///  - "https://github.githubassets.com/images/icons/emoji/godmode.png?v8",
 String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
@@ -140,8 +143,8 @@ String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
         .firstMatch(emojiFilename)
         ?.group(1);
     if (rawHexList == null) {
-      // This is a GitHub custom emoji and it is represented by a PNG image only and
-      // there is no equivalent Unicode.  We have to ingore.
+      // This is a GitHub custom emoji and it is represented by a PNG image only
+      // and there is no equivalent Unicode. We have to ignore.
       return '';
     }
     var legacyUsedVariationCode = false;
@@ -159,7 +162,8 @@ String parseGitHubFilenameIntoUnicodeString(String emojiFilename) {
       codePointsHex.addAll(rawCodePointsHex);
       codePointsHex.add(variationSelector);
     } else {
-      // Now insert the join zero width and variation select modifying Unicode chars.
+      // Now insert the join zero width and
+      // variation select modifying Unicode chars.
       for (var i = 0; i < rawCodePointsHex.length; i++) {
         final codePointAtIndex = rawCodePointsHex[i];
         codePointsHex.add(codePointAtIndex);
@@ -204,8 +208,8 @@ Future<void> main(List<String> args) async {
           'tooltip':
               '(shortcode with a link to provide emoji name in tooltips)',
         },
-        help:
-            'Outputs all emoji shortcodes to stdout which can be used in markdown to show and tests all emoji.');
+        help: 'Outputs all emoji shortcodes to stdout which can be used '
+            'in markdown to show and tests all emoji.');
   late final ArgResults results;
 
   try {
@@ -231,12 +235,15 @@ Future<void> main(List<String> args) async {
   final dumpMarkdownToolTipShortCodes = shortCodes == 'tooltip';
 
   if (!useLegacyUnicodeSequences) {
-    // Issue warning of the implications of using full GitHub emjoi Unicode sequences.
+    // Issue warning of the implications of using
+    // full GitHub emoji Unicode sequences.
     print(useOfGitHubUnicodeSequencesWarning);
   }
   if (visualizeUnicodeDiffs) {
     print(
-        'The following emoji have different Unicode sequences from those of legacy versions:');
+      'The following emoji have different Unicode sequences '
+      'from those of legacy versions:',
+    );
   }
   final shortcodeToEmoji =
       (await downloadJson(_emojisJsonRawUrl) as Map<String, dynamic>).map(
@@ -246,8 +253,8 @@ Future<void> main(List<String> args) async {
     ),
   );
 
-  // Now before we proceed we need to 'mix in' any legacy emoji alias shortcodes that
-  // are missing from the GitHub emoji list.
+  // Now before we proceed we need to 'mix in' any legacy emoji alias shortcodes
+  // that are missing from the GitHub emoji list.
   legacyEmojis.forEach((String shortCodeAlias, String emojiUnicode) {
     if (!shortcodeToEmoji.containsKey(shortCodeAlias)) {
       shortcodeToEmoji[shortCodeAlias] = emojiUnicode;
@@ -282,7 +289,9 @@ Future<void> main(List<String> args) async {
       totalEmojiWithDifferentUnicodeSequences++;
       if (visualizeUnicodeDiffs) {
         print(
-            '$emojiUnicode was ${legacyEmojis[shortCodeAlias]} :$shortCodeAlias:');
+          '$emojiUnicode was ${legacyEmojis[shortCodeAlias]} '
+          ':$shortCodeAlias:',
+        );
       }
     }
     if (emojiUnicode != errorSpecialReplacement && emojiUnicode.isNotEmpty) {

@@ -44,8 +44,13 @@ Future<void> main() async {
   }
   emojisContent.writeln('};');
   File(_emojisFilePath).writeAsStringSync(emojisContent.toString());
-  print('WARNING: This updates only the LEGACY emoji - to update the active\n'
-      'emoji recognized by the markdown package, execute `update_github_emojis.dart`.\n');
-  print('Wrote data to $_emojisFilePath for $emojiCount emoji, '
-      'ignoring ${ignored.length}: ${ignored.join(', ')}.');
+  print(
+    'WARNING: This updates only the LEGACY emoji - to update the active '
+    'emoji recognized by the markdown package, '
+    'execute `update_github_emojis.dart`.',
+  );
+  print(
+    'Wrote data to $_emojisFilePath for $emojiCount emoji, '
+    'ignoring ${ignored.length}: ${ignored.join(', ')}.',
+  );
 }

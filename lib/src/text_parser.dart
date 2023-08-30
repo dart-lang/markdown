@@ -32,7 +32,7 @@ class TextParser {
           char != $vt &&
           char != $cr &&
           char != $ff &&
-          !(multiLine == true && char == $lf)) {
+          !(multiLine && char == $lf)) {
         return i;
       }
 

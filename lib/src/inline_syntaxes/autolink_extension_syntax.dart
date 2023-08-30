@@ -66,7 +66,7 @@ class AutolinkExtensionSyntax extends InlineSyntax {
     if (startMatch[1] != null && parser.pos > 0) {
       final precededBy = String.fromCharCode(parser.charAt(parser.pos - 1));
       const validPrecedingChars = {' ', '*', '_', '~', '(', '>'};
-      if (validPrecedingChars.contains(precededBy) == false) {
+      if (!validPrecedingChars.contains(precededBy)) {
         return false;
       }
     }

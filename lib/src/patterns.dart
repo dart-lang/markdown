@@ -23,7 +23,8 @@ final indentPattern = RegExp(r'^(?:    | {0,3}\t)(.*)$');
 
 /// Fenced code block.
 final codeFencePattern = RegExp(
-  r'^([ ]{0,3})(?:(?<backtick>`{3,})(?<backtickInfo>[^`]*)|(?<tilde>~{3,})(?<tildeInfo>.*))$',
+  '^([ ]{0,3})(?:(?<backtick>`{3,})(?<backtickInfo>[^`]*)|'
+  r'(?<tilde>~{3,})(?<tildeInfo>.*))$',
 );
 
 /// Fenced blockquotes.
@@ -102,35 +103,36 @@ const namedTagDefinition =
 /// The 7 conditions here correspond to the 7 start conditions in the Commonmark
 /// specification one by one: https://spec.commonmark.org/0.30/#html-block.
 final htmlBlockPattern = RegExp(
-    '^ {0,3}(?:'
-    '<(?<condition_1>pre|script|style|textarea)'
-    r'(?:\s|>|$)'
-    '|'
-    '(?<condition_2><!--)'
-    '|'
-    r'(?<condition_3><\?)'
-    '|'
-    '(?<condition_4><![a-z])'
-    '|'
-    r'(?<condition_5><!\[CDATA\[)'
-    '|'
-    '</?(?<condition_6>address|article|aside|base|basefont|blockquote|body|'
-    'caption|center|col|colgroup|dd|details|dialog|dir|DIV|dl|dt|fieldset|'
-    'figcaption|figure|footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|'
-    'header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|'
-    'optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|'
-    'thead|title|tr|track|ul)'
-    r'(?:\s|>|/>|$)'
-    '|'
+  '^ {0,3}(?:'
+  '<(?<condition_1>pre|script|style|textarea)'
+  r'(?:\s|>|$)'
+  '|'
+  '(?<condition_2><!--)'
+  '|'
+  r'(?<condition_3><\?)'
+  '|'
+  '(?<condition_4><![a-z])'
+  '|'
+  r'(?<condition_5><!\[CDATA\[)'
+  '|'
+  '</?(?<condition_6>address|article|aside|base|basefont|blockquote|body|'
+  'caption|center|col|colgroup|dd|details|dialog|dir|DIV|dl|dt|fieldset|'
+  'figcaption|figure|footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|'
+  'header|hr|html|iframe|legend|li|link|main|menu|menuitem|nav|noframes|ol|'
+  'optgroup|option|p|param|section|source|summary|table|tbody|td|tfoot|th|'
+  'thead|title|tr|track|ul)'
+  r'(?:\s|>|/>|$)'
+  '|'
 
-    // Here we are more restrictive than the Commonmark definition (Rule #7).
-    // Otherwise some raw HTML test cases will fail, for example:
-    // https://spec.commonmark.org/0.30/#example-618.
-    // Because if a line is treated as an HTML block, it will output as Text node
-    // directly, the RawHtmlSyntax does not have a chance to validate if this
-    // HTML tag is legal or not.
-    '(?<condition_7>(?:$namedTagDefinition)\\s*\$))',
-    caseSensitive: false);
+  // Here we are more restrictive than the Commonmark definition (Rule #7).
+  // Otherwise some raw HTML test cases will fail, for example:
+  // https://spec.commonmark.org/0.30/#example-618.
+  // Because if a line is treated as an HTML block, it will output as a
+  // Text node directly, and the RawHtmlSyntax will not have a chance to
+  // validate if this HTML tag is legal or not.
+  '(?<condition_7>(?:$namedTagDefinition)\\s*\$))',
+  caseSensitive: false,
+);
 
 /// ASCII punctuation characters.
 // See https://spec.commonmark.org/0.30/#unicode-whitespace-character.

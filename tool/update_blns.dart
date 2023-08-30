@@ -17,6 +17,7 @@ Future<void> main() async {
 // at ${DateTime.now()} by the script, tool/update_blns.dart.
 
 // ignore_for_file: text_direction_code_point_in_literal, use_raw_strings
+// ignore_for_file: lines_longer_than_80_chars
 
 ''');
   blnsContent.writeln('const blns = <String>[');
