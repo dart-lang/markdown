@@ -23,6 +23,7 @@ String markdownToHtml(
   bool enableTagfilter = false,
   bool withDefaultBlockSyntaxes = true,
   bool withDefaultInlineSyntaxes = true,
+  bool checkable = false,
 }) {
   final document = Document(
     blockSyntaxes: blockSyntaxes,
@@ -33,6 +34,7 @@ String markdownToHtml(
     encodeHtml: encodeHtml,
     withDefaultBlockSyntaxes: withDefaultBlockSyntaxes,
     withDefaultInlineSyntaxes: withDefaultInlineSyntaxes,
+    checkable: checkable,
   );
 
   if (inlineOnly) return renderToHtml(document.parseInline(markdown));

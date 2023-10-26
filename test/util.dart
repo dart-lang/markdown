@@ -84,6 +84,7 @@ void validateCore(
   Resolver? imageLinkResolver,
   bool inlineOnly = false,
   bool enableTagfilter = false,
+  bool checkable = true,
 }) {
   test(description, () {
     final result = markdownToHtml(
@@ -95,6 +96,7 @@ void validateCore(
       imageLinkResolver: imageLinkResolver,
       inlineOnly: inlineOnly,
       enableTagfilter: enableTagfilter,
+      checkable: checkable,
     );
 
     markdownPrintOnFailure(markdown, html, result);

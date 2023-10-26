@@ -39,6 +39,9 @@ class Document {
   final _inlineSyntaxes = <InlineSyntax>{};
   final bool hasCustomInlineSyntaxes;
 
+  /// Whether the checkbox in the check list is checkable.
+  final bool checkable;
+
   Iterable<BlockSyntax> get blockSyntaxes => _blockSyntaxes;
 
   Iterable<InlineSyntax> get inlineSyntaxes => _inlineSyntaxes;
@@ -52,6 +55,7 @@ class Document {
     this.encodeHtml = true,
     this.withDefaultBlockSyntaxes = true,
     this.withDefaultInlineSyntaxes = true,
+    this.checkable = false,
   }) : hasCustomInlineSyntaxes = (inlineSyntaxes?.isNotEmpty ?? false) ||
             (extensionSet?.inlineSyntaxes.isNotEmpty ?? false) {
     if (blockSyntaxes != null) {
@@ -76,15 +80,15 @@ class Document {
   }
 
   /// Parses the given [lines] of Markdown to a series of AST nodes.
-  List<Node> parseLines(List<String> lines) =>
-      parseLineList(lines.map(Line.new).toList());
+  List<Node> parseLines(List<String> lines, {int offset = 0}) =>
+      parseLineList(lines.map(Line.new).toList(), offset: offset);
 
   /// Parses the given [text] to a series of AST nodes.
   List<Node> parse(String text) => parseLineList(text.toLines());
 
   /// Parses the given [lines] of [Line] to a series of AST nodes.
-  List<Node> parseLineList(List<Line> lines) {
-    final nodes = BlockParser(lines, this).parseLines();
+  List<Node> parseLineList(List<Line> lines, {int offset = 0}) {
+    final nodes = BlockParser(lines, this, offset: offset).parseLines();
     _parseInlineContent(nodes);
     // Do filter after parsing inline as we need ref count.
     return _filterFootnotes(nodes);

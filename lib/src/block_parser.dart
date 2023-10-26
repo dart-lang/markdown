@@ -33,6 +33,10 @@ class BlockParser {
   /// turn. Order matters here.
   final List<BlockSyntax> blockSyntaxes = [];
 
+  /// Line number of the first line.
+  int offset;
+  int get pos => _pos;
+
   /// Index of the current line.
   int _pos = 0;
 
@@ -67,7 +71,7 @@ class BlockParser {
     const ParagraphSyntax()
   ];
 
-  BlockParser(this.lines, this.document) {
+  BlockParser(this.lines, this.document, {this.offset = 0}) {
     blockSyntaxes.addAll(document.blockSyntaxes);
 
     if (document.withDefaultBlockSyntaxes) {

@@ -17,10 +17,12 @@ class ListItem {
   const ListItem(
     this.lines, {
     this.taskListItemState,
+    this.offset = 0,
   });
 
   final List<Line> lines;
   final TaskListItemState? taskListItemState;
+  final int offset;
 }
 
 enum TaskListItemState { checked, unchecked }
@@ -83,12 +85,18 @@ abstract class ListSyntax extends BlockSyntax {
     final items = <ListItem>[];
     var childLines = <Line>[];
     TaskListItemState? taskListItemState;
+    var offset = 0; //offset of the first line of [childLines]
 
     void endItem() {
       if (childLines.isNotEmpty) {
-        items.add(ListItem(childLines, taskListItemState: taskListItemState));
+        items.add(ListItem(childLines, taskListItemState: taskListItemState,
+            offset: offset + parser.offset));
         childLines = <Line>[];
       }
+    }
+    void addChildLine(Line line) {
+      if (childLines.isEmpty) offset = parser.pos;
+      childLines.add(line);
     }
 
     String parseTaskListItem(String text) {
@@ -127,7 +135,7 @@ abstract class ListSyntax extends BlockSyntax {
           (parser.current.tabRemaining ?? 0);
 
       if (parser.current.isBlankLine) {
-        childLines.add(parser.current);
+        addChildLine(parser.current);
 
         if (blankLines != null) {
           blankLines++;
@@ -141,7 +149,7 @@ abstract class ListSyntax extends BlockSyntax {
 
         final indentedLine = parser.current.content.dedent(indent);
 
-        childLines.add(Line(
+        addChildLine(Line(
           blankLines == null
               ? indentedLine.text
               : parseTaskListItem(indentedLine.text),
@@ -222,7 +230,7 @@ abstract class ListSyntax extends BlockSyntax {
           content = content.prependSpace(2);
         }
 
-        childLines.add(Line(
+        addChildLine(Line(
           content,
           tabRemaining: containsTab ? 2 : null,
         ));
@@ -238,7 +246,7 @@ abstract class ListSyntax extends BlockSyntax {
         }
 
         // Anything else is paragraph continuation text.
-        childLines.add(parser.current);
+        addChildLine(parser.current);
       }
       parser.advance();
     }
@@ -258,12 +266,18 @@ abstract class ListSyntax extends BlockSyntax {
         containsTaskList = true;
         checkboxToInsert = Element.withTag('input')
           ..attributes['type'] = 'checkbox';
+        if (parser.document.checkable) {
+          checkboxToInsert.attributes['data-line'] = '${item.offset}';
+        } else {
+          checkboxToInsert.attributes['disabled'] = 'disabled';
+        }
         if (item.taskListItemState == TaskListItemState.checked) {
           checkboxToInsert.attributes['checked'] = 'true';
         }
       }
 
-      final itemParser = BlockParser(item.lines, parser.document);
+      final itemParser = BlockParser(item.lines, parser.document,
+          offset: parser.pos);
       final children = itemParser.parseLines(parentSyntax: this);
       final itemElement = checkboxToInsert == null
           ? Element('li', children)
