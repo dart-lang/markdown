@@ -262,4 +262,33 @@ nyan''',
       },
     );
   });
+
+  group('markd: CondensedHtmlRenderer', () {
+    test('Simple paragraphs', () {
+      expect(mdToCondensedHtml('''
+Good Starting Point
+Strong Expanding
+
+Great Ending'''), '''
+<p>Good Starting Point
+Strong Expanding</p>
+<p>Great Ending</p>''');
+    });
+
+    test('Simple list', () {
+      expect(mdToCondensedHtml('''
+* A
+  * A.1
+* B'''), '''
+<ul><li>A<ul><li>A.1</li></ul></li><li>B</li></ul>''');
+    });
+
+    test('List with paragraphs', () {
+      expect(mdToCondensedHtml('''
+* A
+
+* B'''), '''
+<ul><li><p>A</p></li><li><p>B</p></li></ul>''');
+    });
+  });
 }

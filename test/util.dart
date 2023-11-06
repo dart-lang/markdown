@@ -124,3 +124,8 @@ GOT:
 ${whitespaceColor(actual)}'''
 """);
 }
+
+String mdToCondensedHtml(String markdown)
+=> CondensedHtmlRenderer().render(
+    Document()
+    .parseLines(markdown.replaceAll('\r\n','\n').split('\n')));
