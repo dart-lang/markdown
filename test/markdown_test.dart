@@ -326,8 +326,7 @@ Strong Expanding</p>
 > * [ ] Item 2
 > * [x] Item 3
 - [ ] Item 4
-''',
-        '''
+''', '''
 <ul class="contains-task-list">
 <li class="task-list-item"><input type="checkbox" data-line="0"></input>Item 1</li>
 </ul>
@@ -352,8 +351,7 @@ Strong Expanding</p>
 > > * [x] Item 5
 > > * [x] Item 6
 - [ ] Item 7
-''',
-        '''
+''', '''
 <ul class="contains-task-list">
 <li class="task-list-item"><input type="checkbox" data-line="0"></input>Item 1</li>
 </ul>
@@ -375,4 +373,18 @@ Strong Expanding</p>
 </ul>
 ''', blockSyntaxes: [const UnorderedListWithCheckboxSyntax()]);
     });
+
+  group('markd: TextRenderer', () {
+    test('simple', () {
+      expect(mdToText('''
+**Bold** is not *Italic*
+2nd line
+
+Another issue'''), '''
+Bold is not Italic
+2nd line
+
+Another issue''');
+      });
+  });
 }

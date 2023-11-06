@@ -127,7 +127,7 @@ class CondensedHtmlRenderer implements NodeVisitor {
     }
     if (const {'br', 'p', 'li'}.contains(_lastVisitedTag)) {
       final lines = LineSplitter.split(content);
-      content = content.contains('<pre>')
+      content = !_trimLeft || content.contains('<pre>')
           ? lines.join('\n')
           : lines.map((line) => line.trimLeft()).join('\n');
       if (text.textContent.endsWith('\n')) {
@@ -146,6 +146,24 @@ class CondensedHtmlRenderer implements NodeVisitor {
       buffer.writeln();
     }
 
+    _writeOpenTagStart(element);
+    _lastVisitedTag = element.tag;
+
+    if (element.isEmpty) {
+      // Empty element like <hr/>.
+      _writeOpenTagEnd(element);
+      return false;
+    } else {
+      _elementStack.add(element);
+      _writeOpenTagEnd(element);
+      return true;
+    }
+  }
+
+  /// Whether to trim left if it is contained in `p` or `li`
+  bool get _trimLeft => true;
+
+  void _writeOpenTagStart(Element element) {
     buffer.write('<${element.tag}');
 
     for (final entry in element.attributes.entries) {
@@ -158,23 +176,22 @@ class CondensedHtmlRenderer implements NodeVisitor {
     if (generatedId != null) {
       buffer.write(' id="${uniquifyId(generatedId)}"');
     }
+  }
 
-    _lastVisitedTag = element.tag;
-
+  void _writeOpenTagEnd(Element element) {
     if (element.isEmpty) {
-      // Empty element like <hr/>.
       buffer.write(' />');
 
       if (element.tag == 'br') {
         buffer.writeln();
       }
-
-      return false;
     } else {
-      _elementStack.add(element);
       buffer.write('>');
-      return true;
     }
+  }
+
+  void _writeCloseTag(Element element) {
+    buffer.write('</${element.tag}>');
   }
 
   @override
@@ -189,7 +206,7 @@ class CondensedHtmlRenderer implements NodeVisitor {
     } else if (element.tag == 'blockquote') {
       buffer.writeln();
     }
-    buffer.write('</${element.tag}>');
+    _writeCloseTag(element);
 
     _lastVisitedTag = _elementStack.removeLast().tag;
   }
@@ -240,4 +257,23 @@ class HtmlRenderer extends CondensedHtmlRenderer {
   => _blockTags.contains(tag) || _listTags.contains(tag);
   @override
   bool _shallBreakBefore(String tag) => _isBlockTag(tag);
+}
+
+/// Translates a parsed AST to plain text.
+/// It is used to generate a text version of markdown.
+///
+/// For better, you can use just [EmptyBlockSyntax] and [ParagraphSyntax].
+class TextRenderer extends HtmlRenderer {
+  @override
+  bool get _trimLeft => false; //preserve the spaces
+  @override
+  void _writeOpenTagStart(Element element) {
+    if (_lastVisitedTag == 'p' && buffer.isNotEmpty) buffer.writeln();
+  }
+  @override
+  void _writeOpenTagEnd(Element element) {
+  }
+  @override
+  void _writeCloseTag(Element element) {
+  }
 }

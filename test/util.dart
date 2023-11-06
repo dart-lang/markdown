@@ -129,3 +129,8 @@ String mdToCondensedHtml(String markdown)
 => CondensedHtmlRenderer().render(
     Document()
     .parseLines(markdown.replaceAll('\r\n','\n').split('\n')));
+
+String mdToText(String markdown)
+=> TextRenderer().render(
+    Document()
+    .parseLines(markdown.replaceAll('\r\n','\n').split('\n')));
