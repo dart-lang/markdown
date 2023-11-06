@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:markdown/src/legacy_emojis.dart' as legacy;
+import 'package:markd/src/legacy_emojis.dart' as legacy;
 
 import 'update_shared.dart';
 

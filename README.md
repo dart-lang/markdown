@@ -3,6 +3,25 @@
 [![package publisher](https://img.shields.io/pub/publisher/markdown.svg)](https://pub.dev/packages/markdown/publisher)
 [![Coverage Status](https://coveralls.io/repos/github/dart-lang/markdown/badge.svg?branch=master)](https://coveralls.io/github/dart-lang/markdown?branch=master)
 
+> A fork of [dart-markdown](https://github.com/dart-lang/markdown)
+> for easy customization of Markdown syntaxes.
+
+**Differences**
+
+**Resources**
+
+* [API Reference](http://www.dartdocs.org/documentation/markd/2.0.2)
+* [Git Repos](https://github.com/tomyeh/markd)
+
+**Customizations**
+
+**Who Uses**
+
+* [Quire](https://quire.io) - an intuitive, collaborative, multi-level project management tool.
+* [Keikai](https://keikai.io) - a sophisticated spreadsheet for big data
+
+## Introduction
+
 A portable Markdown library written in Dart. It can parse Markdown into
 HTML on both the client and server.
 
@@ -12,7 +31,7 @@ Play with it at
 ### Usage
 
 ```dart
-import 'package:markdown/markdown.dart';
+import 'package:markd/markdown.dart';
 
 void main() {
   print(markdownToHtml('Hello *Markdown*'));
@@ -48,7 +67,7 @@ The currently supported block extension syntaxes are:
 For example:
 
 ```dart
-import 'package:markdown/markdown.dart';
+import 'package:markd/markdown.dart';
 
 void main() {
   print(markdownToHtml('Hello <span class="green">Markdown</span>',
@@ -115,7 +134,7 @@ parameter. Currently, there are four pre-defined extension sets:
 You can create and use your own syntaxes.
 
 ```dart
-import 'package:markdown/markdown.dart';
+import 'package:markd/markdown.dart';
 
 void main() {
   var syntaxes = [TextSyntax('nyan', sub: '~=[,,_,,]:3')];

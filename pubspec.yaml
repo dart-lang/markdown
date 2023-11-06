@@ -1,9 +1,9 @@
-name: markdown
-version: 7.1.2-wip
+name: markd
+version: 7.1.2
 
 description: >-
-  A portable Markdown library written in Dart that can parse Markdown into HTML.
-repository: https://github.com/dart-lang/markdown
+  A fork of dart-lang's markdown
+repository: https://github.com/tomyeh/markd
 topics:
  - markdown
 

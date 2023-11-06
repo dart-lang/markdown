@@ -5,7 +5,7 @@
 import 'dart:async';
 import 'dart:html';
 
-import 'package:markdown/markdown.dart' as md;
+import 'package:markd/markdown.dart' as md;
 
 import 'highlight.dart';
 

@@ -8,7 +8,7 @@ import 'dart:mirrors';
 
 import 'package:html/dom.dart' show Element;
 import 'package:html/parser.dart' show parseFragment;
-import 'package:markdown/markdown.dart'
+import 'package:markd/markdown.dart'
     show
         AutolinkExtensionSyntax,
         BlockSyntax,

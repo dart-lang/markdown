@@ -7,7 +7,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart' as http;
-import 'package:markdown/markdown.dart';
+import 'package:markd/markdown.dart';
 import 'package:pool/pool.dart';
 import 'package:tar/tar.dart';
 import 'package:test/test.dart';

@@ -5,7 +5,7 @@
 @TestOn('vm')
 library;
 
-import 'package:markdown/markdown.dart';
+import 'package:markd/markdown.dart';
 import 'package:test/test.dart';
 
 import 'util.dart';

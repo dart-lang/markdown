@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:markdown/markdown.dart';
+import 'package:markd/markdown.dart';
 
 final extensionSets = <String, ExtensionSet>{
   'none': ExtensionSet.none,

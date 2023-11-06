@@ -4,7 +4,7 @@
 
 import 'dart:io';
 
-import 'package:markdown/markdown.dart';
+import 'package:markd/markdown.dart';
 import 'package:path/path.dart' as p;
 
 const numTrials = 100;
