@@ -126,6 +126,15 @@ class TableSyntax extends BlockSyntax {
     final cellBuffer = StringBuffer();
 
     while (true) {
+      if (index < line.content.length) {
+        final j = escapeForward(parser, line.content, index);
+        if (j > index) {
+          cellBuffer.write(line.content.substring(index, j));
+          index = j;
+          continue;
+        }
+      }
+
       if (index >= line.content.length) {
         // This row ended without a trailing pipe, which is fine.
         cells.add(cellBuffer.toString().trimRight());
@@ -175,7 +184,8 @@ class TableSyntax extends BlockSyntax {
     }
     parser.advance();
     final row = [
-      for (final cell in cells) Element(cellType, [UnparsedContent(cell)])
+      for (final cell in cells)
+        Element(cellType, [UnparsedContent(processCellContent(parser, cell))])
     ];
 
     for (var i = 0; i < row.length && i < alignments.length; i++) {
@@ -222,4 +232,18 @@ class TableSyntax extends BlockSyntax {
     }
     return index;
   }
+
+  /// Escapes the character at [index], if necessary, by returning
+  /// the next index to continue the splitting of a row.
+  /// 
+  /// Default: it returns [index] directly. That is, no custom escape at all.
+  int escapeForward(BlockParser parser, String line, int index)
+  => index;
+
+  /// Processes the given cell content ([cellContent]).
+  /// It is a callback for subclasses to pre-process the cell's content
+  /// 
+  /// Default: return [cellContent]
+  String processCellContent(BlockParser parser, String cellContent)
+  => cellContent;
 }
