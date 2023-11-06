@@ -291,4 +291,88 @@ Strong Expanding</p>
 <ul><li><p>A</p></li><li><p>B</p></li></ul>''');
     });
   });
+
+  group('markd: data-line in check list', () {
+    validateCore(
+        'List item with number or asterisks',
+        '''
+* A
+* [ ] B
+  * C
+  * [ ] D
+* D
+''',
+        '''
+<ul class="contains-task-list">
+<li>A</li>
+<li class="task-list-item"><input type="checkbox" data-line="1"></input>B
+<ul class="contains-task-list">
+<li>C</li>
+<li class="task-list-item"><input type="checkbox" data-line="3"></input>D</li>
+</ul>
+</li>
+<li>D</li>
+</ul>
+''',
+    blockSyntaxes: [const OrderedListWithCheckboxSyntax(),
+      const UnorderedListWithCheckboxSyntax()]);
+  });
+
+  group('markd: checklist in blockquote', () {
+    validateCore(
+        'Checklist',
+        '''
+- [ ] Item 1
+> * [ ] Item 2
+> * [x] Item 3
+- [ ] Item 4
+''',
+        '''
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" data-line="0"></input>Item 1</li>
+</ul>
+<blockquote>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" data-line="1"></input>Item 2</li>
+<li class="task-list-item"><input type="checkbox" data-line="2" checked="true"></input>Item 3</li>
+</ul>
+</blockquote>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" data-line="3"></input>Item 4</li>
+</ul>
+''', blockSyntaxes: [const UnorderedListWithCheckboxSyntax()]);
+
+    validateCore(
+        'Checklist',
+        '''
+- [ ] Item 1
+> * [ ] Item 2
+> * [ ] Item 3
+> * [x] Item 4
+> > * [x] Item 5
+> > * [x] Item 6
+- [ ] Item 7
+''',
+        '''
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" data-line="0"></input>Item 1</li>
+</ul>
+<blockquote>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" data-line="1"></input>Item 2</li>
+<li class="task-list-item"><input type="checkbox" data-line="2"></input>Item 3</li>
+<li class="task-list-item"><input type="checkbox" data-line="3" checked="true"></input>Item 4</li>
+</ul>
+<blockquote>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" data-line="4" checked="true"></input>Item 5</li>
+<li class="task-list-item"><input type="checkbox" data-line="5" checked="true"></input>Item 6</li>
+</ul>
+</blockquote>
+</blockquote>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" data-line="6"></input>Item 7</li>
+</ul>
+''', blockSyntaxes: [const UnorderedListWithCheckboxSyntax()]);
+    });
 }

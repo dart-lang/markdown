@@ -36,10 +36,12 @@ class FencedBlockquoteSyntax extends BlockSyntax {
 
   @override
   Node? parse(BlockParser parser) {
+    final pos = parser.pos + parser.offset;
     final childLines = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
-    final children = BlockParser(childLines, parser.document).parseLines();
+    final children = BlockParser(childLines, parser.document,
+        offset: pos).parseLines();
     return Element('blockquote', children);
   }
 }

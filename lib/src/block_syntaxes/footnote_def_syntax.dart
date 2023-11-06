@@ -21,6 +21,7 @@ class FootnoteDefSyntax extends BlockSyntax {
   @override
   Node? parse(BlockParser parser) {
     final current = parser.current.content;
+    final pos = parser.pos + parser.offset;
     final match = pattern.firstMatch(current)!;
     final label = match[2]!;
     final refs = parser.document.footnoteReferences;
@@ -32,7 +33,8 @@ class FootnoteDefSyntax extends BlockSyntax {
       Line(current.substring(match[0]!.length)),
       ...parseChildLines(parser),
     ];
-    final children = BlockParser(lines, parser.document).parseLines();
+    final children = BlockParser(lines, parser.document,
+        offset: pos).parseLines();
     return Element('li', children)
       ..attributes['id'] = 'fn-$id'
       ..footnoteLabel = label;

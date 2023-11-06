@@ -277,7 +277,7 @@ abstract class ListSyntax extends BlockSyntax {
       }
 
       final itemParser = BlockParser(item.lines, parser.document,
-          offset: parser.pos);
+          offset: item.offset);
       final children = itemParser.parseLines(parentSyntax: this);
       final itemElement = checkboxToInsert == null
           ? Element('li', children)

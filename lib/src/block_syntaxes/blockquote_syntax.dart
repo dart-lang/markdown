@@ -83,10 +83,12 @@ class BlockquoteSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
+    final pos = parser.pos + parser.offset;
     final childLines = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
-    final children = BlockParser(childLines, parser.document).parseLines(
+    final children = BlockParser(childLines, parser.document,
+        offset: pos).parseLines(
       // The setext heading underline cannot be a lazy continuation line in a
       // block quote.
       // https://spec.commonmark.org/0.30/#example-93
