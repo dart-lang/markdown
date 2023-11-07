@@ -21,6 +21,9 @@ class DelimiterSyntax extends InlineSyntax {
   /// it on strikethrough.
   final bool allowIntraWord;
 
+  /// Whether to remove the opener's delimiter text once [close] is called.
+  bool get removeOpener => false;
+
   final List<DelimiterTag>? tags;
 
   /// Creates a new [DelimiterSyntax] which matches text on [pattern].
@@ -39,15 +42,16 @@ class DelimiterSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    final runLength = match.group(0)!.length;
-    final matchStart = parser.pos;
-    final matchEnd = parser.pos + runLength;
-    final text = Text(parser.source.substring(matchStart, matchEnd));
+    final m0 = match.group(0)!;
+    final runLength = m0.length;
+    final matchStart = match.start;
+    final matchEnd = match.end;
+    final text = Text(m0);
     if (!requiresDelimiterRun) {
       parser.pushDelimiter(SimpleDelimiter(
         node: text,
         length: runLength,
-        char: parser.source.codeUnitAt(matchStart),
+        char: m0.codeUnitAt(0),
         canOpen: true,
         canClose: false,
         syntax: this,
@@ -268,7 +272,7 @@ class DelimiterRun implements Delimiter {
   /// Tries to parse a delimiter run from [runStart] (inclusive) to [runEnd]
   /// (exclusive).
   static DelimiterRun? tryParse(
-    InlineParser parser,
+    SimpleParser parser,
     int runStart,
     int runEnd, {
     required DelimiterSyntax syntax,
