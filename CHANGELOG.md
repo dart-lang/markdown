@@ -1,6 +1,7 @@
 ## 7.1.2-wip
 
 * Update all CommonMark specification links to 0.30.
+* Fix beginning of line detection in `AutolinkExtensionSyntax`. 
 
 ## 7.1.1
 
