@@ -33,7 +33,7 @@ class FootnoteDefSyntax extends BlockSyntax {
       Line(current.substring(match[0]!.length)),
       ...parseChildLines(parser),
     ];
-    final children = BlockParser(lines, parser.document,
+    final children = parser.document.getBlockParser(lines,
         offset: pos).parseLines();
     return Element('li', children)
       ..attributes['id'] = 'fn-$id'

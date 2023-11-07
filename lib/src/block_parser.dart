@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: unnecessary_const
+
 import 'ast.dart';
 import 'block_syntaxes/block_syntax.dart';
 import 'block_syntaxes/blockquote_syntax.dart';
@@ -31,7 +33,7 @@ class BlockParser {
   ///
   /// To turn a series of lines into blocks, each of these will be tried in
   /// turn. Order matters here.
-  final List<BlockSyntax> blockSyntaxes = [];
+  final List<BlockSyntax> blockSyntaxes;
 
   /// Line number of the first line.
   int offset;
@@ -57,7 +59,7 @@ class BlockParser {
   bool encounteredBlankLine = false;
 
   /// The collection of built-in block parsers.
-  final List<BlockSyntax> standardBlockSyntaxes = [
+  static const List<BlockSyntax> standardBlockSyntaxes = [
     const EmptyBlockSyntax(),
     const HtmlBlockSyntax(),
     const SetextHeaderSyntax(),
@@ -71,7 +73,9 @@ class BlockParser {
     const ParagraphSyntax()
   ];
 
-  BlockParser(this.lines, this.document, {this.offset = 0}) {
+  BlockParser(this.lines, this.document, {
+    this.offset = 0,
+  }): blockSyntaxes = <BlockSyntax>[] {
     blockSyntaxes.addAll(document.blockSyntaxes);
 
     if (document.withDefaultBlockSyntaxes) {
@@ -80,6 +84,9 @@ class BlockParser {
       blockSyntaxes.add(const DummyBlockSyntax());
     }
   }
+  BlockParser.be(this.lines, this.document, this.blockSyntaxes, {
+    this.offset = 0,
+  });
 
   /// Gets the current line.
   Line get current => lines[_pos];

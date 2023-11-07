@@ -20,9 +20,35 @@ import 'inline_syntaxes/link_syntax.dart';
 import 'inline_syntaxes/soft_line_break_syntax.dart';
 import 'inline_syntaxes/text_syntax.dart';
 
+export 'inline_syntaxes/link_syntax.dart' show parseInlineLink;
+
+/// A simple parser for using with [DelimiterRun].
+class SimpleParser {
+  /// The string of Markdown being parsed.
+  final String source;
+
+  SimpleParser(this.source);
+
+  int charAt(int index) => source.codeUnitAt(index);
+}
+
+/// A simple parser
+class SimpleInlineParser extends SimpleParser {
+  /// The current read position.
+  int pos = 0;
+
+  SimpleInlineParser(super.source);
+
+  bool get isDone => pos == source.length;
+
+  void advanceBy(int length) {
+    pos += length;
+  }
+}
+
 /// Maintains the internal state needed to parse inline span elements in
 /// Markdown.
-class InlineParser {
+class InlineParser extends SimpleInlineParser {
   static final List<InlineSyntax> _defaultSyntaxes =
       List<InlineSyntax>.unmodifiable(<InlineSyntax>[
     EmailAutolinkSyntax(),
@@ -37,16 +63,10 @@ class InlineParser {
     // We will add the LinkSyntax once we know about the specific link resolver.
   ]);
 
-  /// The string of Markdown being parsed.
-  final String source;
-
   /// The Markdown document this parser is parsing.
   final Document document;
 
-  final syntaxes = <InlineSyntax>[];
-
-  /// The current read position.
-  int pos = 0;
+  final List<InlineSyntax> syntaxes;
 
   /// Starting position of the last unconsumed text.
   int start = 0;
@@ -58,7 +78,7 @@ class InlineParser {
   /// The tree of parsed HTML nodes.
   final _tree = <Node>[];
 
-  InlineParser(this.source, this.document) {
+  InlineParser(super.source, this.document): syntaxes = [] {
     // User specified syntaxes are the first syntaxes to be evaluated.
     syntaxes.addAll(document.inlineSyntaxes);
 
@@ -95,6 +115,8 @@ class InlineParser {
       ]);
     }
   }
+
+  InlineParser.be(super.source, this.document, this.syntaxes);
 
   List<Node> parse() {
     while (!isDone) {
@@ -258,7 +280,7 @@ class InlineParser {
 
         // Remove delimiter characters, possibly removing nodes from the tree
         // and Delimiters from the delimiter stack.
-        if (opener.length == indicatorLength) {
+        if (opener.length == indicatorLength || opener.syntax.removeOpener) {
           _tree.removeAt(openerTextNodeIndex);
           _delimiterStack.removeAt(openerIndex);
           // Slide [currentIndex] and [closerTextNodeIndex] back accordingly.
@@ -321,8 +343,6 @@ class InlineParser {
     }
   }
 
-  int charAt(int index) => source.codeUnitAt(index);
-
   void writeText() {
     if (pos == start) {
       return;
@@ -340,11 +360,9 @@ class InlineParser {
   /// Push [delimiter] onto the stack of [Delimiter]s.
   void pushDelimiter(Delimiter delimiter) => _delimiterStack.add(delimiter);
 
-  bool get isDone => pos == source.length;
-
-  void advanceBy(int length) {
-    pos += length;
-  }
+  /// Tests if a delimiter exists.
+  bool existsDilimiter(bool Function(Delimiter delimiter) test)
+  => _delimiterStack.any(test);
 
   void consume(int length) {
     pos += length;

@@ -19,6 +19,9 @@ class FencedCodeBlockSyntax extends BlockSyntax {
 
   const FencedCodeBlockSyntax();
 
+  ///Returns the CSS class of the given [language].
+  String getLanguageClass(String language) => 'language-$language';
+
   @override
   Node parse(BlockParser parser) {
     final openingFence = _FenceMatch.fromMatch(pattern.firstMatch(
@@ -44,7 +47,7 @@ class FencedCodeBlockSyntax extends BlockSyntax {
       if (parser.document.encodeHtml) {
         language = escapeHtmlAttribute(language);
       }
-      code.attributes['class'] = 'language-$language';
+      code.attributes['class'] = getLanguageClass(language);
     }
 
     return Element('pre', [code]);

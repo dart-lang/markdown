@@ -40,7 +40,7 @@ class FencedBlockquoteSyntax extends BlockSyntax {
     final childLines = parseChildLines(parser);
 
     // Recursively parse the contents of the blockquote.
-    final children = BlockParser(childLines, parser.document,
+    final children = parser.document.getBlockParser(childLines,
         offset: pos).parseLines();
     return Element('blockquote', children);
   }

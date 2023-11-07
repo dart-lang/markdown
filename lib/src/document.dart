@@ -11,6 +11,11 @@ import 'inline_syntaxes/inline_syntax.dart';
 import 'line.dart';
 import 'util.dart';
 
+typedef BlockParserBuilder = BlockParser Function(
+    List<Line> lines, Document document, {int offset});
+typedef InlineParserBuilder = InlineParser Function(
+    String text, Document document);
+
 /// Maintains the context needed to parse a Markdown document.
 class Document {
   final Map<String, LinkReference> linkReferences = {};
@@ -46,6 +51,13 @@ class Document {
 
   Iterable<InlineSyntax> get inlineSyntaxes => _inlineSyntaxes;
 
+  ///An application specific instance.
+  final dynamic options;
+  ///A customizable [BlockParser] builder
+  final BlockParserBuilder _blockParserBuilder;
+  ///A customizable [InlineParser] builder
+  final InlineParserBuilder _inlineParserBuilder;
+
   Document({
     Iterable<BlockSyntax>? blockSyntaxes,
     Iterable<InlineSyntax>? inlineSyntaxes,
@@ -56,8 +68,13 @@ class Document {
     this.withDefaultBlockSyntaxes = true,
     this.withDefaultInlineSyntaxes = true,
     this.checkable = false,
+    this.options,
+    BlockParserBuilder blockParserBuilder = BlockParser.new,
+    InlineParserBuilder inlineParserBuilder = InlineParser.new,
   }) : hasCustomInlineSyntaxes = (inlineSyntaxes?.isNotEmpty ?? false) ||
-            (extensionSet?.inlineSyntaxes.isNotEmpty ?? false) {
+            (extensionSet?.inlineSyntaxes.isNotEmpty ?? false),
+      _blockParserBuilder = blockParserBuilder,
+      _inlineParserBuilder = inlineParserBuilder {
     if (blockSyntaxes != null) {
       _blockSyntaxes.addAll(blockSyntaxes);
     }
@@ -79,6 +96,25 @@ class Document {
     }
   }
 
+  ///Constructs a fully customized [Document].
+  /// Usually used with [BlockParser.be] and [InlineParser.be].
+  Document.be(
+    this._blockParserBuilder, this._inlineParserBuilder, {
+    this.linkResolver,
+    this.imageLinkResolver,
+    this.encodeHtml = true,
+    this.withDefaultBlockSyntaxes = true, //useless if [BlockParser.be] used
+    this.withDefaultInlineSyntaxes = true, //useless if [InlineParser.be] used
+    this.hasCustomInlineSyntaxes = false, //useless if [InlineParser.be] used
+    this.checkable = false,
+    this.options,
+  });
+
+  BlockParser getBlockParser(List<Line> lines, {int offset = 0})
+  => _blockParserBuilder(lines, this, offset: offset);
+  InlineParser getInlineParser(String text)
+  => _inlineParserBuilder(text, this);
+
   /// Parses the given [lines] of Markdown to a series of AST nodes.
   List<Node> parseLines(List<String> lines, {int offset = 0}) =>
       parseLineList(lines.map(Line.new).toList(), offset: offset);
@@ -88,14 +124,14 @@ class Document {
 
   /// Parses the given [lines] of [Line] to a series of AST nodes.
   List<Node> parseLineList(List<Line> lines, {int offset = 0}) {
-    final nodes = BlockParser(lines, this, offset: offset).parseLines();
+    final nodes = getBlockParser(lines, offset: offset).parseLines();
     _parseInlineContent(nodes);
     // Do filter after parsing inline as we need ref count.
     return _filterFootnotes(nodes);
   }
 
   /// Parses the given inline Markdown [text] to a series of AST nodes.
-  List<Node> parseInline(String text) => InlineParser(text, this).parse();
+  List<Node> parseInline(String text) => getInlineParser(text).parse();
 
   void _parseInlineContent(List<Node> nodes) {
     for (var i = 0; i < nodes.length; i++) {
