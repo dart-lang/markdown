@@ -10,6 +10,21 @@ import '../util.dart';
 import 'delimiter_syntax.dart';
 import 'footnote_ref_syntax.dart';
 
+///Maps an URL (specified in a reference).
+///If nothing to change, just return [url].
+///It can return null (if not a link), a [String] or a [Link].
+typedef LinkMapper = String Function(InlineParser parser, String url);
+
+/// Parses a link starting at [start] and end at [end] (excludive)
+///
+/// * [start] - the position of the starting `(`
+InlineLink? parseInlineLink(String source, int start) {
+  final parser = SimpleInlineParser(source)..pos = start;
+  final link = LinkSyntax._parseInlineLink(parser);
+  if (link != null) link.end = parser.pos + 1;
+  return link;
+}
+
 /// A helper class holds params of link context.
 /// Footnote creation needs other info in [_tryCreateReferenceLink].
 class LinkContext {
@@ -25,13 +40,20 @@ class LinkSyntax extends DelimiterSyntax {
   static final _entirelyWhitespacePattern = RegExp(r'^\s*$');
 
   final Resolver linkResolver;
+  final LinkMapper? linkMapper;
 
   LinkSyntax({
     Resolver? linkResolver,
+    this.linkMapper,
     String pattern = r'\[',
     int startCharacter = $lbracket,
   })  : linkResolver = (linkResolver ?? ((String _, [String? __]) => null)),
         super(pattern, startCharacter: startCharacter);
+
+  String _map(InlineParser parser, String url) {
+    final mapper = linkMapper;
+    return mapper == null ? url: mapper(parser, url);
+  }
 
   @override
   Iterable<Node>? close(
@@ -49,7 +71,7 @@ class LinkSyntax extends DelimiterSyntax {
     if (parser.pos + 1 >= parser.source.length) {
       // The `]` is at the end of the document, but this may still be a valid
       // shortcut reference link.
-      return _tryCreateReferenceLink(context, text);
+      return _tryCreateReferenceLink(parser, context, text);
     }
 
     // Peek at the next character; don't advance, so as to avoid later stepping
@@ -77,7 +99,7 @@ class LinkSyntax extends DelimiterSyntax {
       // Reset the parser position.
       parser.pos = leftParenIndex;
       parser.advanceBy(-1);
-      return _tryCreateReferenceLink(context, text);
+      return _tryCreateReferenceLink(parser, context, text);
     }
 
     if (char == $lbracket) {
@@ -89,18 +111,18 @@ class LinkSyntax extends DelimiterSyntax {
         // That opening `[` is not actually part of the link. Maybe a
         // *shortcut* reference link (followed by a `[`).
         parser.advanceBy(1);
-        return _tryCreateReferenceLink(context, text);
+        return _tryCreateReferenceLink(parser, context, text);
       }
       final label = _parseReferenceLinkLabel(parser);
       if (label != null) {
-        return _tryCreateReferenceLink(context, label, secondary: true);
+        return _tryCreateReferenceLink(parser, context, label, secondary: true);
       }
       return null;
     }
 
     // The link text (inside `[...]`) was not followed with a opening `(` nor
     // an opening `[`. Perhaps just a simple shortcut reference link (`[...]`).
-    return _tryCreateReferenceLink(context, text);
+    return _tryCreateReferenceLink(parser, context, text);
   }
 
   /// Resolve a possible reference link.
@@ -114,6 +136,7 @@ class LinkSyntax extends DelimiterSyntax {
   ///
   /// [label] does not need to be normalized.
   Node? _resolveReferenceLink(
+    InlineParser parser,
     String label,
     Map<String, LinkReference> linkReferences, {
     required List<Node> Function() getChildren,
@@ -121,7 +144,8 @@ class LinkSyntax extends DelimiterSyntax {
     final linkReference = linkReferences[normalizeLinkLabel(label)];
     if (linkReference != null) {
       return createNode(
-        linkReference.destination,
+        parser,
+        _map(parser, linkReference.destination),
         linkReference.title,
         getChildren: getChildren,
       );
@@ -147,6 +171,7 @@ class LinkSyntax extends DelimiterSyntax {
 
   /// Create the node represented by a Markdown link.
   Node createNode(
+    InlineParser parser,
     String destination,
     String? title, {
     required List<Node> Function() getChildren,
@@ -168,6 +193,7 @@ class LinkSyntax extends DelimiterSyntax {
   ///
   /// Returns the nodes if it was successfully created, `null` otherwise.
   Iterable<Node>? _tryCreateReferenceLink(
+    InlineParser parser,
     LinkContext context,
     String label, {
     bool? secondary,
@@ -175,6 +201,7 @@ class LinkSyntax extends DelimiterSyntax {
     final parser = context.parser;
     final getChildren = context.getChildren;
     final link = _resolveReferenceLink(
+      parser,
       label,
       parser.document.linkReferences,
       getChildren: getChildren,
@@ -197,7 +224,8 @@ class LinkSyntax extends DelimiterSyntax {
     InlineLink link, {
     required List<Node> Function() getChildren,
   }) {
-    return createNode(link.destination, link.title, getChildren: getChildren);
+    return createNode(parser, _map(parser, link.destination),
+        link.title, getChildren: getChildren);
   }
 
   /// Parse a reference link label at the current position.
@@ -251,7 +279,7 @@ class LinkSyntax extends DelimiterSyntax {
   /// `(http://url "title")`.
   ///
   /// Returns the [InlineLink] if one was parsed, or `null` if not.
-  InlineLink? _parseInlineLink(InlineParser parser) {
+  static InlineLink? _parseInlineLink(SimpleInlineParser parser) {
     // Start walking to the character just after the opening `(`.
     parser.advanceBy(1);
 
@@ -271,7 +299,7 @@ class LinkSyntax extends DelimiterSyntax {
   /// character of the destination.
   ///
   /// Returns the link if it was successfully created, `null` otherwise.
-  InlineLink? _parseInlineBracketedLink(InlineParser parser) {
+  static InlineLink? _parseInlineBracketedLink(SimpleInlineParser parser) {
     parser.advanceBy(1);
 
     final buffer = StringBuffer();
@@ -325,7 +353,8 @@ class LinkSyntax extends DelimiterSyntax {
   /// character of the destination.
   ///
   /// Returns the link if it was successfully created, `null` otherwise.
-  InlineLink? _parseInlineBareDestinationLink(InlineParser parser) {
+  static
+  InlineLink? _parseInlineBareDestinationLink(SimpleInlineParser parser) {
     // According to
     // [CommonMark](https://spec.commonmark.org/0.30/#link-destination):
     //
@@ -399,7 +428,7 @@ class LinkSyntax extends DelimiterSyntax {
   }
 
   // Walk the parser forward through any whitespace.
-  void _moveThroughWhitespace(InlineParser parser) {
+  static void _moveThroughWhitespace(SimpleInlineParser parser) {
     while (!parser.isDone) {
       final char = parser.charAt(parser.pos);
       if (char != $space &&
@@ -419,7 +448,7 @@ class LinkSyntax extends DelimiterSyntax {
   /// destination.
   ///
   /// Returns the title if it was successfully parsed, `null` otherwise.
-  String? _parseTitle(InlineParser parser) {
+  static String? _parseTitle(SimpleInlineParser parser) {
     _moveThroughWhitespace(parser);
     if (parser.isDone) return null;
 
@@ -468,6 +497,8 @@ class LinkSyntax extends DelimiterSyntax {
 class InlineLink {
   final String destination;
   final String? title;
+  ///A position in the source that this link ends.
+  int? end;
 
   InlineLink(this.destination, {this.title});
 }

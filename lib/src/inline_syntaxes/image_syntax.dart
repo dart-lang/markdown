@@ -4,13 +4,14 @@
 
 import '../ast.dart';
 import '../charcode.dart';
+import '../inline_parser.dart' show InlineParser;
 import '../util.dart';
 import 'link_syntax.dart';
 
 /// Matches images like `![alternate text](url "optional title")` and
 /// `![alternate text][label]`.
 class ImageSyntax extends LinkSyntax {
-  ImageSyntax({super.linkResolver})
+  ImageSyntax({super.linkResolver, super.linkMapper})
       : super(
           pattern: r'!\[',
           startCharacter: $exclamation,
@@ -18,6 +19,7 @@ class ImageSyntax extends LinkSyntax {
 
   @override
   Element createNode(
+    InlineParser parser,
     String destination,
     String? title, {
     required List<Node> Function() getChildren,

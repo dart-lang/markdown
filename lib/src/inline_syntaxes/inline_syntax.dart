@@ -40,7 +40,7 @@ abstract class InlineSyntax {
       return false;
     }
 
-    final startMatch = pattern.matchAsPrefix(parser.source, startMatchPos);
+    final startMatch = matches(parser, startMatchPos);
     if (startMatch == null) return false;
 
     // Write any existing plain text up to this point.
@@ -49,6 +49,10 @@ abstract class InlineSyntax {
     if (onMatch(parser, startMatch)) parser.consume(startMatch.match.length);
     return true;
   }
+
+  ///Test if this syntax matches the current source.
+  Match? matches(InlineParser parser, int startMatchPos)
+  => pattern.matchAsPrefix(parser.source, startMatchPos);
 
   /// Processes [match], adding nodes to [parser] and possibly advancing
   /// [parser].
