@@ -8,6 +8,22 @@
 
 **Differences**
 
+* List with checkbox
+  * Add the data-line attribute to indicate which line the checkbox is in the markdown.
+* `TableSyntax`
+  * `escapeFoward` introduced for skiping pipe characters (`|`) that shall not be considered as a column separator.
+  * `processCellContent` introduced for pre-processing cell's content
+* Link enhancements:
+  * `LinkMapper` introduced to allow app for mapping to *application-specific* links.
+  * `parseInlineLink` introduced for parsing URL in inline link.
+* Easy to customize:
+  * `Document.be`, `InlineParser.be`, `BlockParser.be`, `blockParserBuilder` and `inlineParserBuilder` introduced that app can prepare syntax parsers in advance.
+  * `Document.options` introduced to provide *application-specfic* information for more control.
+  * `InlineSyntax.matches` introduced for easy overriding.
+  * `FencedCodeBlockSyntax.getLanguageClass` introduced for generating custom CSS class
+  * `CondensedHtmlRenderer` and `TextRenderer` introduced for customizing CSS easier.
+  * `DelimiterRun.tryParse` depends on `SimpleParser`, not `InlineParser`.
+
 **Resources**
 
 * [API Reference](http://www.dartdocs.org/documentation/markd/2.0.2)
