@@ -263,6 +263,18 @@ nyan''',
     );
   });
 
+  //-- markd --//
+  group('More corner cases', () {
+    validateCore(
+        'Emphasis not spaced with *',
+        '''
+a*b*c, ~~a~~foo, **a**foo
+''', '''
+<p>a<em>b</em>c, <del>a</del>foo, <strong>a</strong>foo</p>
+''',
+      inlineSyntaxes: [StrikethroughSyntax()]);
+  });
+
   group('markd: CondensedHtmlRenderer', () {
     test('Simple paragraphs', () {
       expect(mdToCondensedHtml('''

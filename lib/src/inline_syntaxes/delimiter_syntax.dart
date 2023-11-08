@@ -269,6 +269,17 @@ class DelimiterRun implements Delimiter {
             (!isLeftFlanking || allowIntraWord || isFollowedByPunctuation),
         isActive = true;
 
+  DelimiterRun({
+    required this.node,
+    required this.char,
+    required this.syntax,
+    required this.tags,
+    required this.canOpen,
+    required this.canClose,
+    required this.allowIntraWord,
+    this.isActive = true,
+  });
+
   /// Tries to parse a delimiter run from [runStart] (inclusive) to [runEnd]
   /// (exclusive).
   static DelimiterRun? tryParse(

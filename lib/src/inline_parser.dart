@@ -20,7 +20,12 @@ import 'inline_syntaxes/link_syntax.dart';
 import 'inline_syntaxes/soft_line_break_syntax.dart';
 import 'inline_syntaxes/text_syntax.dart';
 
-export 'inline_syntaxes/link_syntax.dart' show parseInlineLink;
+export 'inline_syntaxes/delimiter_syntax.dart'
+  show DelimiterRun, DelimiterSyntax, DelimiterTag;
+export 'inline_syntaxes/emphasis_syntax.dart'
+  show EmphasisSyntax;
+export 'inline_syntaxes/link_syntax.dart'
+  show InlineLink, parseInlineLink;
 
 /// A simple parser for using with [DelimiterRun].
 class SimpleParser {
@@ -117,6 +122,9 @@ class InlineParser extends SimpleInlineParser {
   }
 
   InlineParser.be(super.source, this.document, this.syntaxes);
+
+  ///The options passed to [document].
+  dynamic get options => document.options;
 
   List<Node> parse() {
     while (!isDone) {

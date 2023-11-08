@@ -9,7 +9,8 @@ import 'inline_syntax.dart';
 
 /// Encodes (`"`), (`<`), (`>`) and (`&`).
 class EscapeHtmlSyntax extends InlineSyntax {
-  EscapeHtmlSyntax() : super('["<>&]');
+  EscapeHtmlSyntax([super.pattern = '["<>&]']);
+
   @override
   bool onMatch(InlineParser parser, Match match) {
     final text = escapeHtml(match[0]!);

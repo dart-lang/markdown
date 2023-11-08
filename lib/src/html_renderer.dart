@@ -23,6 +23,7 @@ String markdownToHtml(
   bool enableTagfilter = false,
   bool withDefaultBlockSyntaxes = true,
   bool withDefaultInlineSyntaxes = true,
+  dynamic options,
   bool checkable = false,
 }) {
   final document = Document(
@@ -34,6 +35,7 @@ String markdownToHtml(
     encodeHtml: encodeHtml,
     withDefaultBlockSyntaxes: withDefaultBlockSyntaxes,
     withDefaultInlineSyntaxes: withDefaultInlineSyntaxes,
+    options: options,
     checkable: checkable,
   );
 
