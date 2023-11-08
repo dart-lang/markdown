@@ -60,12 +60,12 @@ class AutolinkExtensionSyntax extends InlineSyntax {
       return false;
     }
 
-    // When it is a link and it is not preceded by `*`, `_`, `~`, `(`, or `>`,
-    // it is invalid. See
-    // https://github.github.com/gfm/#extended-autolink-path-validation.
+    // When it is a link and it is not at the beginning of a line, or preceded
+    // by whitespace, `*`, `_`, `~`, `(`, or `>`, it is invalid. See
+    // https://github.github.com/gfm/#autolinks-extension-.
     if (startMatch[1] != null && parser.pos > 0) {
       final precededBy = String.fromCharCode(parser.charAt(parser.pos - 1));
-      const validPrecedingChars = {' ', '*', '_', '~', '(', '>'};
+      const validPrecedingChars = {'\n', ' ', '*', '_', '~', '(', '>'};
       if (!validPrecedingChars.contains(precededBy)) {
         return false;
       }
