@@ -182,12 +182,8 @@ Object? _convert(Object? obj) {
     return obj.name;
   }
   if (obj is Map) {
-    final map = <String, Object?>{};
-    obj.forEach((k, v) {
-      final newKey = k.toString();
-      map[newKey] = v;
-    });
-    return map;
+    return obj
+        .map<String, Object?>((key, value) => MapEntry(key.toString(), value));
   }
   return obj;
 }
