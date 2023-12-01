@@ -92,11 +92,10 @@ Iterable<DataCase> _dataCases({
   return results;
 }
 
-/// Parse and yield data cases (each a [DataCase]) from the directory containing
-/// [library], optionally under [subdirectory].
+/// Parse and yield data cases (each a [DataCase]) from [testDirectory].
 ///
 /// By default, only read data cases from files with a `.unit` extension. Data
-/// cases are read from files located immediately in [directory], or
+/// cases are read from files located immediately in [testDirectory], or
 /// recursively, according to [recursive].
 ///
 /// The typical use case of this method is to declare a library at the top of a

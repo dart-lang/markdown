@@ -179,18 +179,7 @@ Future<void> _processConfig(
 
 Object? _convert(Object? obj) {
   if (obj is CompareLevel) {
-    switch (obj) {
-      case CompareLevel.strict:
-        return 'strict';
-      case CompareLevel.error:
-        return 'error';
-      case CompareLevel.fail:
-        return 'fail';
-      case CompareLevel.loose:
-        return 'loose';
-      default:
-        throw ArgumentError('`$obj` is unknown.');
-    }
+    return obj.name;
   }
   if (obj is Map) {
     final map = <String, Object?>{};

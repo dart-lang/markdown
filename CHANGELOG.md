@@ -1,5 +1,6 @@
 ## 7.1.2-wip
 
+* Require Dart `^3.1.0`.
 * Update all CommonMark specification links to 0.30.
 * Fix beginning of line detection in `AutolinkExtensionSyntax`. 
 
