@@ -11,6 +11,8 @@ analyzer:
     # The example app explicitly takes a String of user-generated HTML and
     # inserts it straight into a <div> using innerHtml.
     unsafe_html: ignore
+    # Waiting on a couple of bug fixes and new features before this should be enabled
+    comment_references: ignore
 
 linter:
   rules:
@@ -25,15 +27,11 @@ linter:
     - missing_whitespace_between_adjacent_strings
     - no_adjacent_strings_in_list
     - package_api_docs
-    - prefer_const_constructors
     - prefer_const_declarations
     - prefer_final_locals
     - prefer_final_in_for_each
-    - prefer_relative_imports
-    - test_types_in_equals
     - unnecessary_await_in_return
     - unnecessary_raw_strings
     - use_if_null_to_convert_nulls_to_bools
     - use_raw_strings
     - use_string_buffers
-    - use_super_parameters
