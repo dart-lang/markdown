@@ -1,0 +1,7 @@
+>>> callout note
+> [!NOTE]
+> Test note callout.
+<<<
+<div><strong>NOTE</strong>
+<p>Test note callout.</p>
+</div>

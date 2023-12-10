@@ -43,6 +43,10 @@ void main() async {
     blockSyntaxes: [const UnorderedListWithCheckboxSyntax()],
   );
   testFile(
+    'extensions/callout_extension.unit',
+    blockSyntaxes: [const CalloutBlockSyntax()],
+  );
+  testFile(
     'extensions/autolink_extension.unit',
     inlineSyntaxes: [AutolinkExtensionSyntax()],
   );

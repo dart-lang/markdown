@@ -44,6 +44,7 @@ export 'src/ast.dart';
 export 'src/block_parser.dart';
 export 'src/block_syntaxes/block_syntax.dart';
 export 'src/block_syntaxes/blockquote_syntax.dart';
+export 'src/block_syntaxes/callout_block_syntax.dart';
 export 'src/block_syntaxes/code_block_syntax.dart';
 export 'src/block_syntaxes/dummy_block_syntax.dart';
 export 'src/block_syntaxes/empty_block_syntax.dart';
