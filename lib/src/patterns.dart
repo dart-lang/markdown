@@ -153,9 +153,8 @@ final htmlCharactersPattern = RegExp(
 final linkReferenceDefinitionPattern = RegExp(r'^[ ]{0,3}\[');
 
 /// Callout type patterns.
-/// A callout block starts with [!TYPE], and only 5 types are supported.
-/// The block should ends with a blank line.
+/// A callout block is similar to a blockquote,
+/// starts with `> [!TYPE]`, and only 5 types are supported.
 final calloutPattern = RegExp(
-  r'^> \[!(NOTE|TIP|IMPORTANT|CAUTION|WARNING)\]$',
-  multiLine: true,
+  r'^\s{0,3}>\s{0,3}\[!(NOTE|TIP|IMPORTANT|CAUTION|WARNING)\]\s*$',
 );
