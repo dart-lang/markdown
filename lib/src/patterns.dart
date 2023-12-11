@@ -156,5 +156,6 @@ final linkReferenceDefinitionPattern = RegExp(r'^[ ]{0,3}\[');
 /// A callout block is similar to a blockquote,
 /// starts with `> [!TYPE]`, and only 5 types are supported.
 final calloutPattern = RegExp(
-  r'^\s{0,3}>\s{0,3}\[!(NOTE|TIP|IMPORTANT|CAUTION|WARNING)\]\s*$',
+  r'^\s{0,3}>\s{0,3}\[!(note|tip|important|caution|warning)\]\s*$',
+  caseSensitive: false,
 );
