@@ -10,7 +10,7 @@ import 'block_syntax.dart';
 import 'code_block_syntax.dart';
 import 'paragraph_syntax.dart';
 
-/// Parses callout blocks.
+/// Parses GitHub callout blocks.
 /// https://github.com/orgs/community/discussions/16925
 class CalloutBlockSyntax extends BlockSyntax {
   const CalloutBlockSyntax();
@@ -69,7 +69,9 @@ class CalloutBlockSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
-    final type = pattern.firstMatch(parser.current.content)!.group(1)!;
+    // Parse the callout type from the first line.
+    final type =
+        pattern.firstMatch(parser.current.content)!.group(1)!.toLowerCase();
     parser.advance();
     final childLines = parseChildLines(parser);
     // Recursively parse the contents of the callout.
@@ -81,9 +83,18 @@ class CalloutBlockSyntax extends BlockSyntax {
       parentSyntax: this,
     );
 
-    return Element('div', [
-      Element('strong', [Text(type)]),
-      ...children,
-    ]);
+    // Mapping the callout title text.
+    final titleText = {
+      'note': 'Note',
+      'tip': 'Tip',
+      'important': 'Important',
+      'caution': 'Caution',
+      'warning': 'Warning',
+    }[type]!;
+    final titleElement = Element('p', [Text(titleText)])
+      ..attributes['class'] = 'markdown-alert-title';
+    final elementClass = 'markdown-alert markdown-alert-${type.toLowerCase()}';
+    return Element('div', [titleElement, ...children])
+      ..attributes['class'] = elementClass;
   }
 }
