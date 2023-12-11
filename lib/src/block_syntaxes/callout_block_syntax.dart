@@ -15,15 +15,20 @@ import 'paragraph_syntax.dart';
 class CalloutBlockSyntax extends BlockSyntax {
   const CalloutBlockSyntax();
 
-  static final _contentLineRegExp = RegExp(r'>?\s?(.*)*');
-
   @override
   RegExp get pattern => calloutPattern;
+
+  @override
+  bool canParse(BlockParser parser) {
+    return pattern.hasMatch(parser.current.content) &&
+        parser.lines.any((line) => _contentLineRegExp.hasMatch(line.content));
+  }
 
   /// Whether this callout ends with a lazy continuation line.
   // The definition of lazy continuation lines:
   // https://spec.commonmark.org/0.30/#lazy-continuation-line
-  static var _lazyContinuation = false;
+  static bool _lazyContinuation = false;
+  static final _contentLineRegExp = RegExp(r'>?\s?(.*)*');
 
   @override
   List<Line> parseChildLines(BlockParser parser) {
