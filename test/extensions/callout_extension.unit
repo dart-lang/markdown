@@ -1,7 +1,86 @@
->>> callout note
-> [!NOTE]
+>>> type note
+> [!NoTe]
 > Test note callout.
 <<<
-<div><strong>NOTE</strong>
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
 <p>Test note callout.</p>
+</div>
+>>> type tip
+> [!TiP]
+> Test tip callout.
+<<<
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>Test tip callout.</p>
+</div>
+>>> type important
+> [!ImpoRtanT]
+> Test important callout.
+<<<
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>Test important callout.</p>
+</div>
+>>> type warning
+> [!WarNinG]
+> Test warning callout.
+<<<
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Test warning callout.</p>
+</div>
+>>> type caution
+> [!CauTioN]
+> Test caution callout.
+<<<
+<div class="markdown-alert markdown-alert-caution">
+<p class="markdown-alert-title">Caution</p>
+<p>Test caution callout.</p>
+</div>
+>>> invalid type
+> [!foo]
+> Test foo callout.
+<<<
+<blockquote>
+<p>[!foo]
+Test foo callout.</p>
+</blockquote>
+>>> contents can both contain/not contain starting quote
+> [!NOTE]
+Test note callout.
+>Test note callout x2.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Test note callout.
+Test note callout x2.</p>
+</div>
+>>> spaces everywhere
+ >  [!NOTE]
+>   Test note callout.
+  > Test note callout x2.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Test note callout.
+Test note callout x2.</p>
+</div>
+>>> title has 3 more spaces then fallback to blockquote
+>    [!NOTE]
+>   Test blockquote.
+<<<
+<blockquote>
+<p>[!NOTE]
+Test blockquote.</p>
+</blockquote>
+>>>nested blockquote
+> [!NOTE]
+>> Test nested blockquote.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<blockquote>
+<p>Test nested blockquote.</p>
+</blockquote>
 </div>
