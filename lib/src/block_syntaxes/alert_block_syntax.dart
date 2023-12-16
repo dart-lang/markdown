@@ -12,7 +12,7 @@ import 'paragraph_syntax.dart';
 
 /// Parses GitHub Alerts blocks.
 ///
-/// See also: https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts
+/// See also: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts
 class AlertBlockSyntax extends BlockSyntax {
   const AlertBlockSyntax();
 
