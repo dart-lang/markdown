@@ -1,4 +1,4 @@
-## 7.1.2-wip
+## 7.2.0-wip
 
 * Require Dart `^3.1.0`.
 * Update all CommonMark specification links to 0.30.
