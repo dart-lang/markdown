@@ -43,15 +43,16 @@ void main() async {
     blockSyntaxes: [const UnorderedListWithCheckboxSyntax()],
   );
   testFile(
-    'extensions/callout_extension.unit',
-    blockSyntaxes: [const CalloutBlockSyntax()],
+    'extensions/alert_extension.unit',
+    blockSyntaxes: [const AlertBlockSyntax()],
   );
+
+  // Inline syntax extensions
   testFile(
     'extensions/autolink_extension.unit',
     inlineSyntaxes: [AutolinkExtensionSyntax()],
   );
 
-  // Inline syntax extensions
   testFile(
     'extensions/emojis.unit',
     inlineSyntaxes: [EmojiSyntax()],

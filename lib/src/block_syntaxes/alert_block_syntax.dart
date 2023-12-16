@@ -10,13 +10,14 @@ import 'block_syntax.dart';
 import 'code_block_syntax.dart';
 import 'paragraph_syntax.dart';
 
-/// Parses GitHub callout blocks.
-/// https://github.com/orgs/community/discussions/16925
-class CalloutBlockSyntax extends BlockSyntax {
-  const CalloutBlockSyntax();
+/// Parses GitHub Alerts blocks.
+///
+/// See also: https://docs.github.com/zh/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts
+class AlertBlockSyntax extends BlockSyntax {
+  const AlertBlockSyntax();
 
   @override
-  RegExp get pattern => calloutPattern;
+  RegExp get pattern => alertPattern;
 
   @override
   bool canParse(BlockParser parser) {
@@ -24,7 +25,7 @@ class CalloutBlockSyntax extends BlockSyntax {
         parser.lines.any((line) => _contentLineRegExp.hasMatch(line.content));
   }
 
-  /// Whether this callout ends with a lazy continuation line.
+  /// Whether this alert ends with a lazy continuation line.
   // The definition of lazy continuation lines:
   // https://spec.commonmark.org/0.30/#lazy-continuation-line
   static bool _lazyContinuation = false;
@@ -32,7 +33,7 @@ class CalloutBlockSyntax extends BlockSyntax {
 
   @override
   List<Line> parseChildLines(BlockParser parser) {
-    // Grab all of the lines that form the callout, stripping off the ">".
+    // Grab all of the lines that form the alert, stripping off the ">".
     final childLines = <Line>[];
     _lazyContinuation = false;
 
@@ -74,12 +75,12 @@ class CalloutBlockSyntax extends BlockSyntax {
 
   @override
   Node parse(BlockParser parser) {
-    // Parse the callout type from the first line.
+    // Parse the alert type from the first line.
     final type =
         pattern.firstMatch(parser.current.content)!.group(1)!.toLowerCase();
     parser.advance();
     final childLines = parseChildLines(parser);
-    // Recursively parse the contents of the callout.
+    // Recursively parse the contents of the alert.
     final children = BlockParser(childLines, parser.document).parseLines(
       // The setext heading underline cannot be a lazy continuation line in a
       // block quote.
@@ -88,7 +89,7 @@ class CalloutBlockSyntax extends BlockSyntax {
       parentSyntax: this,
     );
 
-    // Mapping the callout title text.
+    // Mapping the alert title text.
     final titleText = {
       'note': 'Note',
       'tip': 'Tip',
