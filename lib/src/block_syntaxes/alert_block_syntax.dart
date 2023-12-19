@@ -90,13 +90,14 @@ class AlertBlockSyntax extends BlockSyntax {
     );
 
     // Mapping the alert title text.
-    final titleText = {
+    const typeTextMap = {
       'note': 'Note',
       'tip': 'Tip',
       'important': 'Important',
       'caution': 'Caution',
       'warning': 'Warning',
-    }[type]!;
+    };
+    final titleText = typeTextMap[type]!;
     final titleElement = Element('p', [Text(titleText)])
       ..attributes['class'] = 'markdown-alert-title';
     final elementClass = 'markdown-alert markdown-alert-${type.toLowerCase()}';
