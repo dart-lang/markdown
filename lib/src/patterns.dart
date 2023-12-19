@@ -157,6 +157,6 @@ final linkReferenceDefinitionPattern = RegExp(r'^[ ]{0,3}\[');
 /// starts with `> [!TYPE]`, and only 5 types are supported
 /// with case-insensitive.
 final alertPattern = RegExp(
-  r'^\s{0,3}>\s{0,3}\[!(note|tip|important|caution|warning)\]\s*$',
+  r'^\s{0,3}>\s{0,3}\\?\[!(note|tip|important|caution|warning)\\?\]\s*$',
   caseSensitive: false,
 );
