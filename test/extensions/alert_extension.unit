@@ -1,0 +1,94 @@
+>>> type note
+> [!NoTe]
+> Test note alert.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Test note alert.</p>
+</div>
+>>> type tip
+> [!TiP]
+> Test tip alert.
+<<<
+<div class="markdown-alert markdown-alert-tip">
+<p class="markdown-alert-title">Tip</p>
+<p>Test tip alert.</p>
+</div>
+>>> type important
+> [!ImpoRtanT]
+> Test important alert.
+<<<
+<div class="markdown-alert markdown-alert-important">
+<p class="markdown-alert-title">Important</p>
+<p>Test important alert.</p>
+</div>
+>>> type warning
+> [!WarNinG]
+> Test warning alert.
+<<<
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Test warning alert.</p>
+</div>
+>>> type caution
+> [!CauTioN]
+> Test caution alert.
+<<<
+<div class="markdown-alert markdown-alert-caution">
+<p class="markdown-alert-title">Caution</p>
+<p>Test caution alert.</p>
+</div>
+>>> invalid type
+> [!foo]
+> Test foo alert.
+<<<
+<blockquote>
+<p>[!foo]
+Test foo alert.</p>
+</blockquote>
+>>> contents can both contain/not contain starting quote
+> [!NOTE]
+Test note alert.
+>Test note alert x2.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Test note alert.
+Test note alert x2.</p>
+</div>
+>>> spaces everywhere
+ >  [!NOTE]
+>   Test note alert.
+  > Test note alert x2.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Test note alert.
+Test note alert x2.</p>
+</div>
+>>> title has 3 more spaces then fallback to blockquote
+>    [!NOTE]
+>   Test blockquote.
+<<<
+<blockquote>
+<p>[!NOTE]
+Test blockquote.</p>
+</blockquote>
+>>>nested blockquote
+> [!NOTE]
+>> Test nested blockquote.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<blockquote>
+<p>Test nested blockquote.</p>
+</blockquote>
+</div>
+>>>escape brackets
+> \[!note\]
+> Test escape brackets.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>Test escape brackets.</p>
+</div>

@@ -42,6 +42,7 @@ import 'src/version.dart';
 
 export 'src/ast.dart';
 export 'src/block_parser.dart';
+export 'src/block_syntaxes/alert_block_syntax.dart';
 export 'src/block_syntaxes/block_syntax.dart';
 export 'src/block_syntaxes/blockquote_syntax.dart';
 export 'src/block_syntaxes/code_block_syntax.dart';

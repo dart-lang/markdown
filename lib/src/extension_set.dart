@@ -1,3 +1,4 @@
+import 'block_syntaxes/alert_block_syntax.dart';
 import 'block_syntaxes/block_syntax.dart';
 import 'block_syntaxes/fenced_code_block_syntax.dart';
 import 'block_syntaxes/footnote_def_syntax.dart';
@@ -60,6 +61,7 @@ class ExtensionSet {
         const UnorderedListWithCheckboxSyntax(),
         const OrderedListWithCheckboxSyntax(),
         const FootnoteDefSyntax(),
+        const AlertBlockSyntax(),
       ],
     ),
     List<InlineSyntax>.unmodifiable(
