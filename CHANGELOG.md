@@ -4,6 +4,7 @@
 * Update all CommonMark specification links to 0.30.
 * Fix beginning of line detection in `AutolinkExtensionSyntax`.
 * Add a new syntax `AlertBlockSyntax` to parse GitHub Alerts
+* `parseInlineLink` returns a record
 
 ## 7.1.1
 

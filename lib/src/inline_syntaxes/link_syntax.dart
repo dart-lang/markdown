@@ -15,14 +15,19 @@ import 'footnote_ref_syntax.dart';
 ///It can return null (if not a link), a [String] or a [Link].
 typedef LinkMapper = String Function(InlineParser parser, String url);
 
-/// Parses a link starting at [start] and end at [end] (excludive)
+/// Parses a link starting at [start].
+/// The link can be in two form: '<link>' or `(link)`.
 ///
-/// * [start] - the position of the starting `(`
-InlineLink? parseInlineLink(String source, int start) {
+/// The second form can have an optional title, i.e., it is part of
+/// markdown's link.
+/// For example, to parse the link in `[foo](link "title")`, pass [start]
+/// at `(`.
+(InlineLink link, int end)? parseInlineLink(
+      String source, int start) {
   final parser = SimpleInlineParser(source)..pos = start;
   final link = LinkSyntax._parseInlineLink(parser);
-  if (link != null) link.end = parser.pos + 1;
-  return link;
+  if (link != null) return (link, parser.pos + 1);
+  return null;
 }
 
 /// A helper class holds params of link context.
@@ -497,8 +502,6 @@ class LinkSyntax extends DelimiterSyntax {
 class InlineLink {
   final String destination;
   final String? title;
-  ///A position in the source that this link ends.
-  int? end;
 
   InlineLink(this.destination, {this.title});
 }
