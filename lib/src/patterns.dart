@@ -151,3 +151,12 @@ final htmlCharactersPattern = RegExp(
 
 /// A line starts with `[`.
 final linkReferenceDefinitionPattern = RegExp(r'^[ ]{0,3}\[');
+
+/// Alert type patterns.
+/// A alert block is similar to a blockquote,
+/// starts with `> [!TYPE]`, and only 5 types are supported
+/// with case-insensitive.
+final alertPattern = RegExp(
+  r'^\s{0,3}>\s{0,3}\\?\[!(note|tip|important|caution|warning)\\?\]\s*$',
+  caseSensitive: false,
+);
