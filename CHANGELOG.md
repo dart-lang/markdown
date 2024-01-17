@@ -1,9 +1,9 @@
-## 7.2.0-wip
+## 7.2.0
 
 * Require Dart `^3.1.0`.
 * Update all CommonMark specification links to 0.30.
 * Fix beginning of line detection in `AutolinkExtensionSyntax`.
-* Add a new syntax `AlertBlockSyntax` to parse GitHub Alerts
+* Add a new syntax `AlertBlockSyntax` to parse GitHub Alerts.
 
 ## 7.1.1
 
