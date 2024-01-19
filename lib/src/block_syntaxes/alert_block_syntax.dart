@@ -25,9 +25,10 @@ class AlertBlockSyntax extends BlockSyntax {
         parser.lines.any((line) => _contentLineRegExp.hasMatch(line.content));
   }
 
-  // Whether this alert ends with a lazy continuation line.
-  // The definition of lazy continuation lines:
-  // https://spec.commonmark.org/0.30/#lazy-continuation-line
+  /// Whether this alert ends with a lazy continuation line.
+  ///
+  /// The definition of lazy continuation lines:
+  /// https://spec.commonmark.org/0.30/#lazy-continuation-line
   static bool _lazyContinuation = false;
   static final _contentLineRegExp = RegExp(r'>?\s?(.*)*');
 
