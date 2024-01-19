@@ -26,8 +26,9 @@ class AlertBlockSyntax extends BlockSyntax {
   }
 
   /// Whether this alert ends with a lazy continuation line.
-  // The definition of lazy continuation lines:
-  // https://spec.commonmark.org/0.30/#lazy-continuation-line
+  ///
+  /// The definition of lazy continuation lines:
+  /// https://spec.commonmark.org/0.30/#lazy-continuation-line
   static bool _lazyContinuation = false;
   static final _contentLineRegExp = RegExp(r'>?\s?(.*)*');
 
@@ -40,7 +41,9 @@ class AlertBlockSyntax extends BlockSyntax {
     while (!parser.isDone) {
       final strippedContent =
           parser.current.content.replaceFirst(RegExp(r'^\s*>?\s*'), '');
-      final match = _contentLineRegExp.firstMatch(strippedContent);
+      final match = strippedContent.isEmpty
+          ? null
+          : _contentLineRegExp.firstMatch(strippedContent);
       if (match != null) {
         childLines.add(Line(strippedContent));
         parser.advance();
@@ -100,7 +103,7 @@ class AlertBlockSyntax extends BlockSyntax {
     final titleText = typeTextMap[type]!;
     final titleElement = Element('p', [Text(titleText)])
       ..attributes['class'] = 'markdown-alert-title';
-    final elementClass = 'markdown-alert markdown-alert-${type.toLowerCase()}';
+    final elementClass = 'markdown-alert markdown-alert-$type';
     return Element('div', [titleElement, ...children])
       ..attributes['class'] = elementClass;
   }

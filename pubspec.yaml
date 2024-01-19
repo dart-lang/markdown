@@ -1,5 +1,5 @@
 name: markdown
-version: 7.2.0
+version: 7.2.1
 
 description: >-
   A portable Markdown library written in Dart that can parse Markdown into HTML.
