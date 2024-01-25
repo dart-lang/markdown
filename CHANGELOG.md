@@ -1,4 +1,8 @@
-## 7.2.0-wip
+## 7.2.1
+
+* Address a termination issue with GitHub alert syntax parsing.
+
+## 7.2.0
 
 * Require Dart `^3.1.0`.
 * Update all CommonMark specification links to 0.30.
