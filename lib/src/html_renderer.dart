@@ -113,7 +113,6 @@ class HtmlRenderer implements NodeVisitor {
   @override
   void visitText(Text text) {
     var content = text.textContent;
-
     if (_tagfilterEnabled) {
       content = _filterTags(content);
     }

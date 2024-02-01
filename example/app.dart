@@ -2,33 +2,34 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:html';
 
+import 'package:kroki/kroki.dart';
 import 'package:markdown/markdown.dart' as md;
 
 import 'highlight.dart';
+import 'kroki_markdown_ext.dart';
 
 final markdownInput = querySelector('#markdown') as TextAreaElement;
 final htmlDiv = querySelector('#html') as DivElement;
 final versionSpan = querySelector('.version') as SpanElement;
 
 final nullSanitizer = NullTreeSanitizer();
-const typing = Duration(milliseconds: 150);
-const introText = '''Markdown is the **best**!
 
-* It has lists.
-* It has [links](https://dart.dev).
-* It has...
-  ```dart
-  void sourceCode() {}
-  ```
-* ...and _so much more_...''';
+String sampleDiagramsText = buildSamplesText(1, 10);
+bool useLocalStorageVersion = false;
 
 // Flavor support.
 final basicRadio = querySelector('#basic-radio') as HtmlElement;
 final commonmarkRadio = querySelector('#commonmark-radio') as HtmlElement;
 final gfmRadio = querySelector('#gfm-radio') as HtmlElement;
+
+// Samples group radio buttons.
+final group1Radio = querySelector('#group1-radio') as HtmlElement;
+final group2Radio = querySelector('#group2-radio') as HtmlElement;
+final group3Radio = querySelector('#group3-radio') as HtmlElement;
+
+// Extension set choices.
 md.ExtensionSet? extensionSet;
 
 final extensionSets = {
@@ -43,14 +44,15 @@ void main() {
 
   final savedMarkdown = window.localStorage['markdown'];
 
-  if (savedMarkdown != null &&
+  if (useLocalStorageVersion &&
+      savedMarkdown != null &&
       savedMarkdown.isNotEmpty &&
-      savedMarkdown != introText) {
+      savedMarkdown != sampleDiagramsText) {
     markdownInput.value = savedMarkdown;
     markdownInput.focus();
     _renderMarkdown();
   } else {
-    _typeItOut(introText, 82);
+    _setMarkdown(sampleDiagramsText);
   }
 
   // GitHub is the default extension set.
@@ -62,13 +64,25 @@ void main() {
   basicRadio.onClick.listen(_switchFlavor);
   commonmarkRadio.onClick.listen(_switchFlavor);
   gfmRadio.onClick.listen(_switchFlavor);
+
+  // Set default samples group.
+  group1Radio.attributes['checked'] = '';
+  group1Radio.querySelector('.glyph')!.text = 'radio_button_checked';
+
+  group1Radio.onClick.listen(_switchExamples);
+  group2Radio.onClick.listen(_switchExamples);
+  group3Radio.onClick.listen(_switchExamples);
 }
 
-void _renderMarkdown([Event? event]) {
+void _renderMarkdown([Event? event]) async {
   final markdown = markdownInput.value!;
 
+  final outputHtml = await md.markdownToHtmlWithAsyncTransforms(markdown,
+      blockSyntaxes: [diagramTransformingFencedCodeBlock],
+      extensionSet: extensionSet);
+
   htmlDiv.setInnerHtml(
-    md.markdownToHtml(markdown, extensionSet: extensionSet),
+    outputHtml,
     treeSanitizer: nullSanitizer,
   );
 
@@ -87,23 +101,10 @@ void _renderMarkdown([Event? event]) {
   }
 }
 
-void _typeItOut(String msg, int pos) {
-  late Timer timer;
-  markdownInput.onKeyUp.listen((_) {
-    timer.cancel();
-  });
-  void addCharacter() {
-    if (pos > msg.length) {
-      return;
-    }
-    markdownInput.value = msg.substring(0, pos);
-    markdownInput.focus();
-    _renderMarkdown();
-    pos++;
-    timer = Timer(typing, addCharacter);
-  }
-
-  timer = Timer(typing, addCharacter);
+void _setMarkdown(String newMarkdown) {
+  markdownInput.value = newMarkdown;
+  markdownInput.focus();
+  _renderMarkdown();
 }
 
 void _switchFlavor(Event e) {
@@ -129,7 +130,55 @@ void _switchFlavor(Event e) {
   }
 }
 
+void _switchExamples(Event e) {
+  final target = e.currentTarget as HtmlElement;
+  if (!target.attributes.containsKey('checked')) {
+    int groupStart = 0;
+    int groupLen = 10;
+    if (group1Radio != target) {
+      group1Radio.attributes.remove('checked');
+      group1Radio.querySelector('.glyph')!.text = 'radio_button_unchecked';
+    }
+    if (group2Radio != target) {
+      group2Radio.attributes.remove('checked');
+      group2Radio.querySelector('.glyph')!.text = 'radio_button_unchecked';
+    } else {
+      groupStart = 10;
+    }
+    if (group3Radio != target) {
+      group3Radio.attributes.remove('checked');
+      group3Radio.querySelector('.glyph')!.text = 'radio_button_unchecked';
+    } else {
+      groupStart = 20;
+      groupLen = 15;
+    }
+
+    target.attributes['checked'] = 'true';
+    target.querySelector('.glyph')!.text = 'radio_button_checked';
+    sampleDiagramsText = buildSamplesText(groupStart, groupLen);
+    _setMarkdown(sampleDiagramsText);
+  }
+}
+
 class NullTreeSanitizer implements NodeTreeSanitizer {
   @override
   void sanitizeTree(Node node) {}
+}
+
+String buildSamplesText(int startIndex, int numTests) {
+  final List<String> sampleTextBlocks = [];
+
+  for (var i = startIndex; i < (startIndex + numTests); i++) {
+    if (i >= KrokiSampleDiagrams.samples.length) break;
+    final sample = KrokiSampleDiagrams.samples[i];
+    sampleTextBlocks.add('''
+## [${sample.name}](${sample.url})
+----------------------------------
+```${sample.diagramType}
+${sample.diagramSource}
+```
+''');
+  }
+
+  return sampleTextBlocks.join('\n');
 }

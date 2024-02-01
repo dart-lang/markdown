@@ -9,7 +9,7 @@
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js" integrity="sha512-yUUc0qWm2rhM7X0EFe82LNnv2moqArj5nro/w1bi05A09hRVeIZbN6jlMoyu0+4I/Bu4Ck/85JQIU82T82M28w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/languages/dart.min.js" integrity="sha512-14QR6tzX5xTNeMJKXzSK+xCquDvtNEr1jM5NlKy/149BBY50Kv70qqxHtzo6zClbtc1gIG7G0CGWXuMgPIMt0g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script defer src="app.dart.js"></script>
-    <title>Dart Markdown Live Editor</title>
+    <title>Dart Markdown Live Editor using Krokio.io to render  to static SVGs</title>
     <style>
 .gfm-color_chip span {
   display: inline-block;
@@ -57,6 +57,20 @@ ul.contains-task-list, ol.contains-task-list {
         <div class="card">
           <div class="toolbar">
             <h2>Markdown</h2>
+            <span id="examplesbar" style="margin-left: auto;float:right;">Examples Group:&nbsp;
+            <div class="radio" id="group1-radio">
+              <i class="glyph">radio_button_unchecked</i>
+                #1
+            </div>
+            <div class="radio" id="group2-radio">
+              <i class="glyph">radio_button_unchecked</i>
+                #2
+            </div>
+            <div class="radio" id="group3-radio">
+              <i class="glyph">radio_button_unchecked</i>
+                #3
+            </div>
+            </span>
           </div>
           <div style="padding: 8px; display: flex; height: 100%;">
             <textarea id="markdown"></textarea>
