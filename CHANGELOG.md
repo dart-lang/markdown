@@ -1,3 +1,7 @@
+## 7.2.2-wip
+
+* Require Dart `^3.2.0`.
+
 ## 7.2.1
 
 * Address a termination issue with GitHub alert syntax parsing.
