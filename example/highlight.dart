@@ -3,9 +3,11 @@
 // BSD-style license that can be found in the LICENSE file.
 
 @JS('hljs')
-library hljs;
+library;
 
-import 'package:js/js.dart';
+import 'dart:js_interop';
+
+import 'package:web/web.dart';
 
 @JS()
-external void highlightElement(Object block);
+external void highlightElement(Node block);
