@@ -214,6 +214,7 @@ abstract class ListSyntax extends BlockSyntax {
           indent = precedingWhitespaces + contentWhitespances;
         }
 
+        taskListItemState = null;
         var content = contentBlockStart != null && !isBlank
             ? parseTaskListItem(textParser.substring(contentBlockStart))
             : '';

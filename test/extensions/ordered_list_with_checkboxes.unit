@@ -61,3 +61,19 @@
 </code></pre>
 </li>
 </ol>
+>>> checkbox with empty content
+1. [ ] one
+2.
+3. 
+4. four
+5. [ ] five
+6.
+<<<
+<ol class="contains-task-list">
+<li class="task-list-item"><input type="checkbox"></input>one</li>
+<li></li>
+<li></li>
+<li>four</li>
+<li class="task-list-item"><input type="checkbox"></input>five</li>
+<li></li>
+</ol>
