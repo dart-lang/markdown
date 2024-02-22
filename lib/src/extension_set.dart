@@ -1,5 +1,5 @@
-import 'block_syntaxes/alert_block_syntax.dart';
 import 'block_syntaxes/block_syntax.dart';
+import 'block_syntaxes/blockquote_syntax.dart';
 import 'block_syntaxes/fenced_code_block_syntax.dart';
 import 'block_syntaxes/footnote_def_syntax.dart';
 import 'block_syntaxes/header_with_id_syntax.dart';

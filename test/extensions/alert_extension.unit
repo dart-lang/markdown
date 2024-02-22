@@ -129,3 +129,12 @@ Additional markdown text.
 with two lines.</p>
 </div>
 <p>Additional markdown text.</p>
+>>> #584
+> [!CAUTION]
+>
+> some warning
+<<<
+<div class="markdown-alert markdown-alert-caution">
+<p class="markdown-alert-title">Caution</p>
+<p>some warning</p>
+</div>
