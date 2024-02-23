@@ -24,7 +24,9 @@ class ImageSyntax extends LinkSyntax {
   }) {
     final element = Element.empty('img');
     final children = getChildren();
-    element.attributes['src'] = destination;
+    element.attributes['src'] = normalizeLinkDestination(
+      escapePunctuation(destination),
+    );
     element.attributes['alt'] = children.map((node) {
       // See https://spec.commonmark.org/0.30/#image-description.
       // An image description may contain links. Fetch text from the alt
