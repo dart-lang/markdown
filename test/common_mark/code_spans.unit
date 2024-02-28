@@ -76,13 +76,13 @@ baz`
 <<<
 <p><a href="`">`</p>
 >>> Code spans - 345
-`<http://foo.bar.`baz>`
+`<https://foo.bar.`baz>`
 <<<
-<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>
+<p><code>&lt;https://foo.bar.</code>baz&gt;`</p>
 >>> Code spans - 346
-<http://foo.bar.`baz>`
+<https://foo.bar.`baz>`
 <<<
-<p><a href="http://foo.bar.%60baz">http://foo.bar.`baz</a>`</p>
+<p><a href="https://foo.bar.%60baz">https://foo.bar.`baz</a>`</p>
 >>> Code spans - 347
 ```foo``
 <<<

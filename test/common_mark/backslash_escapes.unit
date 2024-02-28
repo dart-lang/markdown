@@ -53,9 +53,9 @@ bar</p>
 <pre><code>\[\]
 </code></pre>
 >>> Backslash escapes - 20
-<http://example.com?find=\*>
+<https://example.com?find=\*>
 <<<
-<p><a href="http://example.com?find=%5C*">http://example.com?find=\*</a></p>
+<p><a href="https://example.com?find=%5C*">https://example.com?find=\*</a></p>
 >>> Backslash escapes - 21
 <a href="/bar\/)">
 <<<
