@@ -97,3 +97,65 @@ class BlockquoteSyntax extends BlockSyntax {
     return Element('blockquote', children);
   }
 }
+
+/// Parses GitHub Alerts blocks.
+///
+/// See also: https://docs.github.com/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#alerts
+class AlertBlockSyntax extends BlockSyntax {
+  @override
+  RegExp get pattern => alertPattern;
+
+  const AlertBlockSyntax();
+
+  @override
+  List<Line> parseChildLines(BlockParser parser) {
+    return const BlockquoteSyntax().parseChildLines(parser);
+  }
+
+  @override
+  Node parse(BlockParser parser) {
+    // Parse the alert type from the first line.
+    final type =
+        pattern.firstMatch(parser.current.content)!.group(1)!.toLowerCase();
+
+    final childLines = parseChildLines(parser);
+    // Until we've parse all the child lines, we can't actually know if this is
+    // a blockquote containing `[!note]` or if this is an alert-block.
+    //
+    // This is because `> [!note]` is not a valid alert-block!
+    final isBlockquote = childLines.length <= 1;
+
+    if (!isBlockquote) {
+      // Always remove the first line, this is the line that contained the type.
+      childLines.removeAt(0);
+    }
+
+    // Recursively parse the contents of the blockquote.
+    final children = BlockParser(childLines, parser.document).parseLines(
+      // The setext heading underline cannot be a lazy continuation line in a
+      // block quote.
+      // https://spec.commonmark.org/0.30/#example-93
+      disabledSetextHeading: BlockquoteSyntax._lazyContinuation,
+      parentSyntax: this,
+    );
+
+    if (isBlockquote) {
+      return Element('blockquote', children);
+    }
+
+    // Mapping the alert title text.
+    const typeTextMap = {
+      'note': 'Note',
+      'tip': 'Tip',
+      'important': 'Important',
+      'caution': 'Caution',
+      'warning': 'Warning',
+    };
+    final titleText = typeTextMap[type]!;
+    final titleElement = Element('p', [Text(titleText)])
+      ..attributes['class'] = 'markdown-alert-title';
+    final elementClass = 'markdown-alert markdown-alert-$type';
+    return Element('div', [titleElement, ...children])
+      ..attributes['class'] = elementClass;
+  }
+}
