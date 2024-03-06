@@ -39,9 +39,9 @@ class AlertBlockSyntax extends BlockSyntax {
     _lazyContinuation = false;
 
     while (!parser.isDone) {
-      final strippedContent =
-          parser.current.content.replaceFirst(RegExp(r'^\s*>?\s*'), '');
-      final match = strippedContent.isEmpty
+      final lineContent = parser.current.content.trimLeft();
+      final strippedContent = lineContent.replaceFirst(RegExp(r'^>?\s*'), '');
+      final match = strippedContent.isEmpty && !lineContent.startsWith('>')
           ? null
           : _contentLineRegExp.firstMatch(strippedContent);
       if (match != null) {
@@ -51,7 +51,7 @@ class AlertBlockSyntax extends BlockSyntax {
         continue;
       }
 
-      final lastLine = childLines.last;
+      final lastLine = childLines.isEmpty ? Line('') : childLines.last;
 
       // A paragraph continuation is OK. This is content that cannot be parsed
       // as any other syntax except Paragraph, and it doesn't match the bar in
