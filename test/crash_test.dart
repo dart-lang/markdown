@@ -92,18 +92,6 @@ void main() async {
               archiveUrl: entry['archive_url'] as String,
             ));
           }
-
-          // To analyze all package versions use the following lines.
-          // beware that this extremely, and probably scans that same files
-          // many times for no good reason.
-          /*packageVersions.addAll(
-            ((response['versions'] ?? <dynamic>[]) as List)
-                .map((entry) => PackageVersion(
-                      package: package,
-                      version: entry['version'] as String,
-                      archiveUrl: entry['archive_url'] as String,
-                    )),
-          );*/
           count++;
           status(
             () => 'Listed versions for $count / ${packages.length} packages',
@@ -140,7 +128,7 @@ void main() async {
             archive,
           );
 
-          // If tar decoding fails
+          // If tar decoding fails.
           if (result == null) {
             skipped++;
             return;
@@ -185,6 +173,14 @@ class PackageVersion {
   });
 }
 
+/// Scans [gzippedArchive] for markdown files and tries to parse them all.
+///
+/// Creates a list of issues that arose when parsing markdown files. The
+/// [package] and [version] strings are used to construct nice issues.
+/// An issue string may be multi-line, but should be printable.
+///
+/// Returns a list of issues, or `null` if decoding and parsing [gzippedArchive]
+/// failed.
 Future<List<String>?> _findMarkdownIssues(
   String package,
   String version,
@@ -225,6 +221,6 @@ Future<List<String>?> _findMarkdownIssues(
       return null;
     }
   }).timeout(const Duration(minutes: 2), onTimeout: () {
-    return ['package:$package-$version failed to be processed in 30s'];
+    return ['package:$package-$version failed to be processed in 2 minutes'];
   });
 }
