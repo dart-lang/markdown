@@ -21,8 +21,7 @@ class AlertBlockSyntax extends BlockSyntax {
 
   @override
   bool canParse(BlockParser parser) {
-    return pattern.hasMatch(parser.current.content) &&
-        parser.lines.any((line) => _contentLineRegExp.hasMatch(line.content));
+    return alertPattern.hasMatch(parser.current.content);
   }
 
   /// Whether this alert ends with a lazy continuation line.
