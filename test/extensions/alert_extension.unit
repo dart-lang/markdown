@@ -129,3 +129,34 @@ Additional markdown text.
 with two lines.</p>
 </div>
 <p>Additional markdown text.</p>
+>>> supports continuation lines
+> [!note]
+> A sample note
+with two lines.
+
+Additional markdown text.
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>A sample note
+with two lines.</p>
+</div>
+<p>Additional markdown text.</p>
+>>> crash repro #584.1
+> [!Warning]
+>
+> Some extensions won't work on dynamic types.
+<<<
+<div class="markdown-alert markdown-alert-warning">
+<p class="markdown-alert-title">Warning</p>
+<p>Some extensions won't work on dynamic types.</p>
+</div>
+>>> crash repro #584.2
+> [!NOTE]
+> 
+> if you receive the following error:
+<<<
+<div class="markdown-alert markdown-alert-note">
+<p class="markdown-alert-title">Note</p>
+<p>if you receive the following error:</p>
+</div>
