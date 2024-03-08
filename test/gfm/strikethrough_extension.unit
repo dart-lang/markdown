@@ -9,3 +9,11 @@ new paragraph~~.
 <<<
 <p>This ~~has a</p>
 <p>new paragraph~~.</p>
+>>> single tilde
+~Hi~ there.
+<<<
+<p><del>Hi</del> there.</p>
+>>> single tilde with double tilde
+~Hi~~ there.
+<<<
+<p><del>Hi</del>~ there.</p>
