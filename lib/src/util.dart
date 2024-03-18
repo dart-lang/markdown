@@ -53,15 +53,19 @@ String normalizeLinkDestination(String destination) {
 
   final regex = RegExp('%[0-9A-Fa-f]{2}');
   final matches = regex.allMatches(destination).toList();
-  final substrings = destination
-      .split(regex)
-      .map((e) => Uri.encodeFull(decodeHtmlCharacters(e)))
-      .toList();
+  final splitIterator = destination.split(regex).map((e) {
+    try {
+      e = Uri.decodeFull(e);
+    } catch (_) {}
+    return Uri.encodeFull(decodeHtmlCharacters(e));
+  }).iterator;
 
-  final buffer = StringBuffer(substrings[0]);
+  splitIterator.moveNext();
+  final buffer = StringBuffer(splitIterator.current);
   for (var i = 0; i < matches.length; i++) {
+    splitIterator.moveNext();
     buffer.write(matches[i].match);
-    buffer.write(substrings[i + 1]);
+    buffer.write(splitIterator.current);
   }
 
   return buffer.toString();
