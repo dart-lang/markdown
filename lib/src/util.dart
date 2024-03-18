@@ -47,7 +47,7 @@ String normalizeLinkLabel(String label) {
 // https://spec.commonmark.org/0.30/#example-502
 String normalizeLinkDestination(String destination) {
   // Split by url escaping characters
-  // Concat them with unmodified URL-escaping.
+  // Concatenate them with unmodified URL-escaping.
   // URL-escaping should be left alone inside the destination
   // Refer: https://spec.commonmark.org/0.30/#example-502.
 
