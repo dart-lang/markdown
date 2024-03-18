@@ -65,11 +65,6 @@ String normalizeLinkDestination(String destination) {
   }
 
   return buffer.toString();
-
-  try {
-    destination = Uri.decodeFull(destination);
-  } catch (_) {}
-  return Uri.encodeFull(decodeHtmlCharacters(destination));
 }
 
 /// Normalizes a link title, including the process of HTML characters decoding
