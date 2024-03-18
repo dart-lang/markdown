@@ -23,3 +23,7 @@
 
 <<<
 <p><img src="%22onerror=%22alert('XSS')" alt="Uh oh..." /></p>
+>>> image %2F shouldn't be encoded
+![](https://example/foo%2Fvar)
+<<<
+<p><img src="https://example/foo%2Fvar" alt="" /></p>
