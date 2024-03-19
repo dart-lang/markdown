@@ -52,23 +52,17 @@ String normalizeLinkDestination(String destination) {
   // Refer: https://spec.commonmark.org/0.30/#example-502.
 
   final regex = RegExp('%[0-9A-Fa-f]{2}');
-  final matches = regex.allMatches(destination).toList();
-  final splitIterator = destination.split(regex).map((e) {
-    try {
-      e = Uri.decodeFull(e);
-    } catch (_) {}
-    return Uri.encodeFull(decodeHtmlCharacters(e));
-  }).iterator;
 
-  splitIterator.moveNext();
-  final buffer = StringBuffer(splitIterator.current);
-  for (var i = 0; i < matches.length; i++) {
-    splitIterator.moveNext();
-    buffer.write(matches[i].match);
-    buffer.write(splitIterator.current);
-  }
-
-  return buffer.toString();
+  return destination.splitMapJoin(
+    regex,
+    onMatch: (m) => m.match,
+    onNonMatch: (e) {
+      try {
+        e = Uri.decodeFull(e);
+      } catch (_) {}
+      return Uri.encodeFull(decodeHtmlCharacters(e));
+    },
+  );
 }
 
 /// Normalizes a link title, including the process of HTML characters decoding
