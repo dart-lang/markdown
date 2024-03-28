@@ -13,6 +13,6 @@ class StrikethroughSyntax extends DelimiterSyntax {
           requiresDelimiterRun: true,
           allowIntraWord: true,
           startCharacter: $tilde,
-          tags: [DelimiterTag('del', 2)],
+          tags: [DelimiterTag('del', 1), DelimiterTag('del', 2)],
         );
 }

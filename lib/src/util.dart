@@ -41,21 +41,28 @@ String normalizeLinkLabel(String label) {
 }
 
 /// Normalizes a link destination, including the process of HTML characters
-/// decoding  and percent encoding.
+/// decoding and percent encoding.
 // See the description of these examples:
 // https://spec.commonmark.org/0.30/#example-501
 // https://spec.commonmark.org/0.30/#example-502
 String normalizeLinkDestination(String destination) {
-  // Decode first, because the destination might have been partly encoded.
-  // For example https://spec.commonmark.org/0.30/#example-502.
-  // With this function, `foo%20b&auml;` will be parsed in the following steps:
-  // 1. foo b&auml;
-  // 2. foo bä
-  // 3. foo%20b%C3%A4
-  try {
-    destination = Uri.decodeFull(destination);
-  } catch (_) {}
-  return Uri.encodeFull(decodeHtmlCharacters(destination));
+  // Split by url escaping characters
+  // Concatenate them with unmodified URL-escaping.
+  // URL-escaping should be left alone inside the destination
+  // Refer: https://spec.commonmark.org/0.30/#example-502.
+
+  final regex = RegExp('%[0-9A-Fa-f]{2}');
+
+  return destination.splitMapJoin(
+    regex,
+    onMatch: (m) => m.match,
+    onNonMatch: (e) {
+      try {
+        e = Uri.decodeFull(e);
+      } catch (_) {}
+      return Uri.encodeFull(decodeHtmlCharacters(e));
+    },
+  );
 }
 
 /// Normalizes a link title, including the process of HTML characters decoding
