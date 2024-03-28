@@ -63,3 +63,21 @@
 </code></pre>
 </li>
 </ul>
+>>> checkbox list separated with blank lines
+- [ ] A
+
+- [ ] B
+
+- [ ]
+<<<
+<ul class="contains-task-list">
+<li class="task-list-item">
+<p><input type="checkbox"></input>A</p>
+</li>
+<li class="task-list-item">
+<p><input type="checkbox"></input>B</p>
+</li>
+<li>
+<p>[ ]</p>
+</li>
+</ul>

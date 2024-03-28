@@ -268,7 +268,7 @@ abstract class ListSyntax extends BlockSyntax {
       final children = itemParser.parseLines(parentSyntax: this);
       final itemElement = checkboxToInsert == null
           ? Element('li', children)
-          : (Element('li', [checkboxToInsert, ...children])
+          : (Element('li', _addCheckbox(children, checkboxToInsert))
             ..attributes['class'] = taskListClass);
 
       itemNodes.add(itemElement);
@@ -316,6 +316,17 @@ abstract class ListSyntax extends BlockSyntax {
       listElement.attributes['class'] = 'contains-task-list';
     }
     return listElement;
+  }
+
+  List<Node> _addCheckbox(List<Node> children, Element checkbox) {
+    if (children.isNotEmpty) {
+      final firstChild = children.first;
+      if (firstChild is Element && firstChild.tag == 'p') {
+        firstChild.children!.insert(0, checkbox);
+        return children;
+      }
+    }
+    return [checkbox, ...children];
   }
 
   void _removeLeadingEmptyLine(ListItem item) {
