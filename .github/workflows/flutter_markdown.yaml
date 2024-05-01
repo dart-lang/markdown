@@ -32,7 +32,7 @@ jobs:
 
       # Install the Flutter SDK using the subosito/flutter-action GitHub action.
       - name: install the flutter sdk
-        uses: subosito/flutter-action@3d804929922b667a63a229bc59037807f969e885
+        uses: subosito/flutter-action@44ac965b96f18d999802d4b807e3256d5a3f9fa1
         with:
           channel: 'beta'
       
