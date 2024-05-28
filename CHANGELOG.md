@@ -1,3 +1,7 @@
+## 7.2.3
+
+* Fix an issue with checkbox list items separated with blank lines (#602).
+
 ## 7.2.2
 
 * Fix a crash parsing alert block syntax (#584).
