@@ -69,7 +69,7 @@ void main() {
 void _renderMarkdown([Event? event]) {
   final markdown = markdownInput.value;
 
-  htmlDiv.innerHTML = md.markdownToHtml(markdown, extensionSet: extensionSet);
+  htmlDiv.innerHtml = md.markdownToHtml(markdown, extensionSet: extensionSet);
 
   for (final block in htmlDiv.querySelectorAll('pre code').items) {
     try {
@@ -138,4 +138,11 @@ extension on NamedNodeMap {
   void safeRemove(String qualifiedName) {
     if (getNamedItem(qualifiedName) != null) removeNamedItem(qualifiedName);
   }
+}
+
+extension on HTMLDivElement {
+  // The default implementation allows `JSAny` to support trusted types. We only
+  // use `String`s, so prefer this to avoid manual conversions.
+  @JS('innerHTML')
+  external set innerHtml(String value);
 }

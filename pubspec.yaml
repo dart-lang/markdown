@@ -30,5 +30,5 @@ dev_dependencies:
   pool: ^1.5.1
   tar: ^1.0.3
   test: ^1.16.0
-  web: '>=0.4.2 <0.6.0'
+  web: '>=0.4.2 <2.0.0'
   yaml: ^3.0.0
