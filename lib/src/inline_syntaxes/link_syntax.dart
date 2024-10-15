@@ -273,6 +273,7 @@ class LinkSyntax extends DelimiterSyntax {
   /// Returns the link if it was successfully created, `null` otherwise.
   InlineLink? _parseInlineBracketedLink(InlineParser parser) {
     parser.advanceBy(1);
+    if (parser.isDone) return null;
 
     final buffer = StringBuffer();
     while (true) {
