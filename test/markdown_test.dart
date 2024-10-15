@@ -80,37 +80,37 @@ void main() async {
 <p>5 Ethernet ([Music](</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 1 - Bracketed link 1', '''
+    validateCore('Incorrect Links - Issue #623 - 1 - Bracketed link 1', '''
 [](<
 ''', '''
 <p>[](&lt;</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 2 - Bracketed link 2', '''
+    validateCore('Incorrect Links - Issue #623 - 2 - Bracketed link 2', '''
 [](<>
 ''', '''
 <p>[](&lt;&gt;</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 3 - Bracketed link 3', r'''
+    validateCore('Incorrect Links - Issue #623 - 3 - Bracketed link 3', r'''
 [](<\
 ''', r'''
 <p>[](&lt;\</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 4 - Link title 1', '''
+    validateCore('Incorrect Links - Issue #623 - 4 - Link title 1', '''
 [](www.example.com "
 ''', '''
 <p>[](www.example.com &quot;</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 5 - Link title 2', r'''
+    validateCore('Incorrect Links - Issue #623 - 5 - Link title 2', r'''
 [](www.example.com "\
 ''', r'''
 <p>[](www.example.com &quot;\</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 6 - Reference link label', r'''
+    validateCore('Incorrect Links - Issue #623 - 6 - Reference link label', r'''
 [][\
 ''', r'''
 <p>[][\</p>
