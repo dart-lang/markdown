@@ -281,6 +281,7 @@ class LinkSyntax extends DelimiterSyntax {
       final char = parser.charAt(parser.pos);
       if (char == $backslash) {
         parser.advanceBy(1);
+        if (parser.isDone) return null;
         final next = parser.charAt(parser.pos);
         // TODO: Follow the backslash spec better here.
         // https://spec.commonmark.org/0.30/#backslash-escapes
