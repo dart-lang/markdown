@@ -216,6 +216,7 @@ class LinkSyntax extends DelimiterSyntax {
       final char = parser.charAt(parser.pos);
       if (char == $backslash) {
         parser.advanceBy(1);
+        if (parser.isDone) return null;
         final next = parser.charAt(parser.pos);
         if (next != $backslash && next != $rbracket) {
           buffer.writeCharCode(char);
