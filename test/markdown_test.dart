@@ -104,6 +104,12 @@ void main() async {
 <p>[](www.example.com &quot;\</p>
 ''');
 
+    validateCore('Incorrect Links - Issue #xxx - 5 - Reference link label', r'''
+[][\
+''', r'''
+<p>[][\</p>
+''');
+
     validateCore('Escaping code block language', '''
 ```"/><a/href="url">arbitrary_html</a>
 ```
