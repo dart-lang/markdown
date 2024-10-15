@@ -92,19 +92,25 @@ void main() async {
 <p>[](&lt;&gt;</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 3 - Link title 1', '''
+    validateCore('Incorrect Links - Issue #xxx - 3 - Bracketed link 3', r'''
+[](<\
+''', r'''
+<p>[](&lt;\</p>
+''');
+
+    validateCore('Incorrect Links - Issue #xxx - 4 - Link title 1', '''
 [](www.example.com "
 ''', '''
 <p>[](www.example.com &quot;</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 4 - Link title 2', r'''
+    validateCore('Incorrect Links - Issue #xxx - 5 - Link title 2', r'''
 [](www.example.com "\
 ''', r'''
 <p>[](www.example.com &quot;\</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 5 - Reference link label', r'''
+    validateCore('Incorrect Links - Issue #xxx - 6 - Reference link label', r'''
 [][\
 ''', r'''
 <p>[][\</p>
