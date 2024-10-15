@@ -92,10 +92,16 @@ void main() async {
 <p>[](&lt;&gt;</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - 3 - Link title', '''
+    validateCore('Incorrect Links - Issue #xxx - 3 - Link title 1', '''
 [](www.example.com "
 ''', '''
 <p>[](www.example.com &quot;</p>
+''');
+
+    validateCore('Incorrect Links - Issue #xxx - 4 - Link title 2', r'''
+[](www.example.com "\
+''', r'''
+<p>[](www.example.com &quot;\</p>
 ''');
 
     validateCore('Escaping code block language', '''
