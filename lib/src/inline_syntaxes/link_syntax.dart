@@ -435,6 +435,7 @@ class LinkSyntax extends DelimiterSyntax {
 
     final closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
     parser.advanceBy(1);
+    if (parser.isDone) return null;
 
     // Now we look for an un-escaped closing delimiter.
     final buffer = StringBuffer();
