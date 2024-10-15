@@ -80,16 +80,22 @@ void main() async {
 <p>5 Ethernet ([Music](</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - Bracketed link 1', '''
+    validateCore('Incorrect Links - Issue #xxx - 1 - Bracketed link 1', '''
 [](<
 ''', '''
 <p>[](&lt;</p>
 ''');
 
-    validateCore('Incorrect Links - Issue #xxx - Bracketed link 2', '''
+    validateCore('Incorrect Links - Issue #xxx - 2 - Bracketed link 2', '''
 [](<>
 ''', '''
 <p>[](&lt;&gt;</p>
+''');
+
+    validateCore('Incorrect Links - Issue #xxx - 3 - Link title', '''
+[](www.example.com "
+''', '''
+<p>[](www.example.com &quot;</p>
 ''');
 
     validateCore('Escaping code block language', '''
