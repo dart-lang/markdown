@@ -1,11 +1,8 @@
-## 7.2.4
-
-* Fix several `RangeError` hazards in links (#623).
-
 ## 7.2.3
 
 * Fix an issue with checkbox list items separated with blank lines (#602).
 * Require package `web: '>=0.4.2 <2.0.0'`.
+* Fix several `RangeError` hazards in links (#623).
 
 ## 7.2.2
 
