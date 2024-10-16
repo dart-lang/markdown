@@ -216,6 +216,7 @@ class LinkSyntax extends DelimiterSyntax {
       final char = parser.charAt(parser.pos);
       if (char == $backslash) {
         parser.advanceBy(1);
+        if (parser.isDone) return null;
         final next = parser.charAt(parser.pos);
         if (next != $backslash && next != $rbracket) {
           buffer.writeCharCode(char);
@@ -273,12 +274,14 @@ class LinkSyntax extends DelimiterSyntax {
   /// Returns the link if it was successfully created, `null` otherwise.
   InlineLink? _parseInlineBracketedLink(InlineParser parser) {
     parser.advanceBy(1);
+    if (parser.isDone) return null;
 
     final buffer = StringBuffer();
     while (true) {
       final char = parser.charAt(parser.pos);
       if (char == $backslash) {
         parser.advanceBy(1);
+        if (parser.isDone) return null;
         final next = parser.charAt(parser.pos);
         // TODO: Follow the backslash spec better here.
         // https://spec.commonmark.org/0.30/#backslash-escapes
@@ -302,6 +305,7 @@ class LinkSyntax extends DelimiterSyntax {
     final destination = buffer.toString();
 
     parser.advanceBy(1);
+    if (parser.isDone) return null;
     final char = parser.charAt(parser.pos);
     if (char == $space || char == $lf || char == $cr || char == $ff) {
       final title = _parseTitle(parser);
@@ -433,6 +437,7 @@ class LinkSyntax extends DelimiterSyntax {
 
     final closeDelimiter = delimiter == $lparen ? $rparen : delimiter;
     parser.advanceBy(1);
+    if (parser.isDone) return null;
 
     // Now we look for an un-escaped closing delimiter.
     final buffer = StringBuffer();
@@ -440,6 +445,7 @@ class LinkSyntax extends DelimiterSyntax {
       final char = parser.charAt(parser.pos);
       if (char == $backslash) {
         parser.advanceBy(1);
+        if (parser.isDone) return null;
         final next = parser.charAt(parser.pos);
         if (next != $backslash && next != closeDelimiter) {
           buffer.writeCharCode(char);
