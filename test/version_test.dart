@@ -35,7 +35,7 @@ void main() {
       binVersion,
       pubspecContent['version'],
       reason: 'The version reported by bin/markdown.dart should match the '
-          'version in pubspec. Run `pub run build_runner build` to update.',
+          'version in pubspec. Run `dart run build_runner build` to update.',
     );
   });
 }
