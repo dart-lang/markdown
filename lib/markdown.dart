@@ -55,6 +55,7 @@ export 'src/block_syntaxes/header_syntax.dart';
 export 'src/block_syntaxes/header_with_id_syntax.dart';
 export 'src/block_syntaxes/horizontal_rule_syntax.dart';
 export 'src/block_syntaxes/html_block_syntax.dart';
+export 'src/block_syntaxes/link_reference_definition_syntax.dart';
 export 'src/block_syntaxes/list_syntax.dart';
 export 'src/block_syntaxes/ordered_list_syntax.dart';
 export 'src/block_syntaxes/ordered_list_with_checkbox_syntax.dart';
