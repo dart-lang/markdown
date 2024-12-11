@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> This repo has moved to https://github.com/dart-lang/tools/tree/main/pkgs/markdown
+
 [![Build Status](https://github.com/dart-lang/markdown/workflows/Dart%20CI/badge.svg)](https://github.com/dart-lang/markdown/actions?query=workflow%3A"Dart+CI"+branch%3Amaster)
 [![Pub](https://img.shields.io/pub/v/markdown.svg)](https://pub.dev/packages/markdown)
 [![package publisher](https://img.shields.io/pub/publisher/markdown.svg)](https://pub.dev/packages/markdown/publisher)
